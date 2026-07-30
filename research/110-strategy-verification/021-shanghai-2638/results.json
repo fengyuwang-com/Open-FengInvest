@@ -1,0 +1,15 @@
+{
+  "claim_id": 21,
+  "claim": "上证指数<2638时仓位≤30%, 比不控制的组合在6个月内回撤低>30%",
+  "h0": "Position control does not reduce drawdown",
+  "market": "CN",
+  "index_ticker": "000001.SS",
+  "threshold": 2638.0,
+  "forward_days": 126,
+  "signal_count": 3413,
+  "total_signal_days": 3413,
+  "avg_drawdown_A_pct": 4.88,
+  "avg_drawdown_B_pct": 15.02,
+  "reduction_pct": 67.2,
+  "claim_supported": true
+}

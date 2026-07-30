@@ -1,0 +1,142 @@
+{
+  "claim": "#39: A new stock must be at least 2x more undervalued than current holdings to be worth switching to",
+  "methodology": "Monthly simulation using price/52-week-high ratio as cheapness proxy. Holdings = stocks in deciles 5-10 (upper 60% of cheapness range). For each threshold T, candidate stocks must have cheapness <= holding_cheapness / T. Switch return = forward 6-month return of the cheapest qualifying candidate. Hold return = forward 6-month return of current holding. Two filter modes: (1) no PE filter, (2) trailing_pe < 50 filter (excludes extremely high-valuation stocks).",
+  "forward_period": "6 months (~126 trading days)",
+  "cheapness_metric": "close / 52-week-high (lower = more undervalued)",
+  "date_range": {
+    "start": "1927-12-30",
+    "end": "2026-07-22"
+  },
+  "results": {
+    "no_pe_filter": {
+      "filter": "none",
+      "months_processed": 619,
+      "threshold_levels": [
+        1.0,
+        1.5,
+        2.0,
+        3.0
+      ],
+      "win_rate_by_threshold": {
+        "1.0": 0.5408,
+        "1.5": 0.5417,
+        "2.0": 0.5633,
+        "3.0": 0.5997
+      },
+      "avg_return_by_threshold": {
+        "1.0": {
+          "hold": 0.085023,
+          "switch": 0.310164
+        },
+        "1.5": {
+          "hold": 0.085424,
+          "switch": 0.312978
+        },
+        "2.0": {
+          "hold": 0.088409,
+          "switch": 0.362854
+        },
+        "3.0": {
+          "hold": 0.088299,
+          "switch": 0.536668
+        }
+      },
+      "avg_excess_return_by_threshold": {
+        "1.0": 0.225141,
+        "1.5": 0.227555,
+        "2.0": 0.274445,
+        "3.0": 0.448368
+      },
+      "median_excess_return_by_threshold": {
+        "1.0": 0.049181,
+        "1.5": 0.050849,
+        "2.0": 0.084739,
+        "3.0": 0.168928
+      },
+      "std_excess_return_by_threshold": {
+        "1.0": 0.918359,
+        "1.5": 0.922857,
+        "2.0": 0.992067,
+        "3.0": 1.221033
+      },
+      "t_stat_excess_by_threshold": {
+        "1.0": 81.5327,
+        "1.5": 81.5414,
+        "2.0": 83.3572,
+        "3.0": 83.2752
+      },
+      "pair_count_by_threshold": {
+        "1.0": 110606,
+        "1.5": 109359,
+        "2.0": 90794,
+        "3.0": 51430
+      },
+      "optimal_threshold": 3.0
+    },
+    "pe_filtered_lt_50": {
+      "filter": "trailing_pe < 50",
+      "months_processed": 619,
+      "threshold_levels": [
+        1.0,
+        1.5,
+        2.0,
+        3.0
+      ],
+      "win_rate_by_threshold": {
+        "1.0": 0.5467,
+        "1.5": 0.5489,
+        "2.0": 0.5705,
+        "3.0": 0.6056
+      },
+      "avg_return_by_threshold": {
+        "1.0": {
+          "hold": 0.081768,
+          "switch": 0.256958
+        },
+        "1.5": {
+          "hold": 0.082467,
+          "switch": 0.262305
+        },
+        "2.0": {
+          "hold": 0.085318,
+          "switch": 0.320338
+        },
+        "3.0": {
+          "hold": 0.083238,
+          "switch": 0.501984
+        }
+      },
+      "avg_excess_return_by_threshold": {
+        "1.0": 0.175189,
+        "1.5": 0.179837,
+        "2.0": 0.23502,
+        "3.0": 0.418746
+      },
+      "median_excess_return_by_threshold": {
+        "1.0": 0.05068,
+        "1.5": 0.054607,
+        "2.0": 0.092775,
+        "3.0": 0.178086
+      },
+      "std_excess_return_by_threshold": {
+        "1.0": 0.830757,
+        "1.5": 0.840848,
+        "2.0": 0.939206,
+        "3.0": 1.184997
+      },
+      "t_stat_excess_by_threshold": {
+        "1.0": 63.1656,
+        "1.5": 63.1347,
+        "2.0": 64.4315,
+        "3.0": 66.4604
+      },
+      "pair_count_by_threshold": {
+        "1.0": 89721,
+        "1.5": 87139,
+        "2.0": 66299,
+        "3.0": 35372
+      },
+      "optimal_threshold": 3.0
+    }
+  }
+}

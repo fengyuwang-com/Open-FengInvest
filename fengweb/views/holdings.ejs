@@ -1,0 +1,40 @@
+<div class="page-header">
+  <h2>💼 持仓总览</h2>
+</div>
+
+<% if (holdings.length > 0) { %>
+<div class="card">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>标的</th>
+        <th>成本</th>
+        <th>现价</th>
+        <th>股数</th>
+        <th>市值</th>
+        <th>盈亏</th>
+        <th>类型</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% holdings.forEach(function(h) { %>
+      <% var pnl = h.position.current_price ? ((h.position.current_price / h.position.avg_cost) - 1) * 100 : 0; %>
+      <tr>
+        <td><a href="/holdings/<%= h.ticker %>"><%= h.ticker %></a></td>
+        <td><%= h.position.avg_cost.toFixed(2) %></td>
+        <td><%= (h.position.current_price || '—').toString() %></td>
+        <td><%= h.position.shares %></td>
+        <td>¥<%= (h.position.market_value || 0).toLocaleString() %></td>
+        <td style="color: <%= pnl >= 0 ? 'var(--green)' : 'var(--red)' %>"><%= pnl >= 0 ? '+' : '' %><%= pnl.toFixed(1) %>%</td>
+        <td><span class="badge badge-<%= h.account_type === 'INVESTMENT' ? 'primary' : 'neutral' %>"><%= h.account_type %></span></td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+<% } else { %>
+<div class="empty-state">
+  <h3>暂无持仓</h3>
+  <p>在 holdings/ 目录下创建 hold_*.json 文件添加持仓</p>
+</div>
+<% } %>

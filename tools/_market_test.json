@@ -1,0 +1,129 @@
+[*] Fetching indices...
+2026-07-19 03:31:00,715 | 29012 | 3292 | [open_context_base.py:411] _init_connect_sync: New connect ready: conn=7484328895152517783(1) context=<futu.quote.open_quote_context.OpenQuoteContext object at 0x000001DE96A043E0>
+[*] Fetching valuation...
+2026-07-19 03:31:00,973 | 29012 | 20972 | [open_context_base.py:521] on_disconnect: Disconnected: conn=0(1) reason=CallClose
+2026-07-19 03:31:00,984 | 29012 | 3292 | [open_context_base.py:411] _init_connect_sync: New connect ready: conn=7484328896272168521(2) context=<futu.quote.open_quote_context.OpenQuoteContext object at 0x000001DEBC908200>
+[*] Fetching top movers...
+2026-07-19 03:31:01,196 | 29012 | 20972 | [open_context_base.py:521] on_disconnect: Disconnected: conn=0(2) reason=CallClose
+2026-07-19 03:31:01,203 | 29012 | 3292 | [open_context_base.py:411] _init_connect_sync: New connect ready: conn=7484328897207384900(3) context=<futu.quote.open_quote_context.OpenQuoteContext object at 0x000001DEBF630F20>
+[*] Fetching breadth...
+2026-07-19 03:31:01,205 | 29012 | 20972 | [open_context_base.py:521] on_disconnect: Disconnected: conn=0(3) reason=CallClose
+2026-07-19 03:31:01,214 | 29012 | 3292 | [open_context_base.py:411] _init_connect_sync: New connect ready: conn=7484328897243169564(4) context=<futu.quote.open_quote_context.OpenQuoteContext object at 0x000001DEBF631280>
+[*] Fetching FedWatch...
+2026-07-19 03:31:01,266 | 29012 | 20972 | [open_context_base.py:521] on_disconnect: Disconnected: conn=0(4) reason=CallClose
+2026-07-19 03:31:01,273 | 29012 | 3292 | [open_context_base.py:411] _init_connect_sync: New connect ready: conn=7484328897493247329(5) context=<futu.quote.open_quote_context.OpenQuoteContext object at 0x000001DEBF6308C0>
+[*] Fetching economic calendar...
+2026-07-19 03:31:01,308 | 29012 | 20972 | [open_context_base.py:521] on_disconnect: Disconnected: conn=0(5) reason=CallClose
+2026-07-19 03:31:01,314 | 29012 | 3292 | [open_context_base.py:411] _init_connect_sync: New connect ready: conn=7484328897670747875(6) context=<futu.quote.open_quote_context.OpenQuoteContext object at 0x000001DEBF631E80>
+{
+  "fetched_at": "2026-07-19T03:30:56.414749",
+  "_warnings": [
+    "\u26a0\ufe0f S&P 500 \u4f7f\u7528 SPY ETF \u4f5c\u4e3a\u4ee3\u7406\uff08Futu \u65e0\u76f4\u63a5\u6307\u6570\u4ee3\u7801\uff09"
+  ],
+  "indices": {
+    "HK.800000": {
+      "name": "\u6052\u751f\u6307\u6570",
+      "code": "HK.800000",
+      "price": 24562.24,
+      "change_pct": -1.78,
+      "high": 25166.56,
+      "low": 24332.51,
+      "volume": 0.0,
+      "turnover": 347325308301.971,
+      "pe": null,
+      "pb": null,
+      "update_time": "2026-07-17 16:00:00"
+    },
+    "HK.800700": {
+      "name": "\u6052\u751f\u79d1\u6280",
+      "code": "HK.800700",
+      "price": 4623.17,
+      "change_pct": -4.37,
+      "high": 4846.95,
+      "low": 4570.39,
+      "volume": 0.0,
+      "turnover": 115509379524.0,
+      "pe": null,
+      "pb": null,
+      "update_time": "2026-07-17 16:00:00"
+    },
+    "HK.800100": {
+      "name": "\u56fd\u4f01\u6307\u6570",
+      "code": "HK.800100",
+      "price": 8136.73,
+      "change_pct": -2.18,
+      "high": 8372.7,
+      "low": 8047.57,
+      "volume": 0.0,
+      "turnover": 111342173095.0,
+      "pe": null,
+      "pb": null,
+      "update_time": "2026-07-17 16:00:00"
+    },
+    "HK.800122": {
+      "name": "\u6caa\u6df1300",
+      "code": "HK.800122",
+      "price": 4529.0953,
+      "change_pct": -3.6,
+      "high": 4663.5311,
+      "low": 4492.085,
+      "volume": 30262988600.0,
+      "turnover": 920822412822.0,
+      "pe": null,
+      "pb": null,
+      "update_time": "2026-07-17 16:00:00"
+    },
+    "US.SPY": {
+      "name": "S&P 500 (SPY)",
+      "code": "US.SPY",
+      "price": 743.29,
+      "change_pct": -0.99,
+      "high": 747.29,
+      "low": 740.8,
+      "volume": 62650961.0,
+      "turnover": 46653108204.0,
+      "pe": null,
+      "pb": null,
+      "update_time": "2026-07-17 20:01:12.982"
+    },
+    "US.QQQ": {
+      "name": "Nasdaq 100",
+      "code": "US.QQQ",
+      "price": 695.33,
+      "change_pct": -1.5,
+      "high": 702.3,
+      "low": 686.76,
+      "volume": 54109267.0,
+      "turnover": 37670985597.0,
+      "pe": null,
+      "pb": null,
+      "update_time": "2026-07-17 20:01:12.057"
+    }
+  },
+  "valuation": {
+    "hsi_pe_current": 11.593,
+    "hsi_pe_avg": 10.36,
+    "hsi_pe_percentile": 73.6541598,
+    "hsi_pb_current": 1.209,
+    "hsi_pb_avg": 1.1,
+    "hsi_pb_percentile": 69.5758564,
+    "hsi_ps_current": 1.465,
+    "hsi_ps_avg": 1.278,
+    "hsi_ps_percentile": 74.7960848
+  },
+  "top_movers": {
+    "hk": {},
+    "us": {}
+  },
+  "fedwatch": {
+    "meeting_date": null,
+    "target_range": null,
+    "probability": 87.2,
+    "_meetings": [
+      "meeting_date",
+      "target_range",
+      "probability"
+    ]
+  }
+}
+2026-07-19 03:31:01,352 | 29012 | 20972 | [open_context_base.py:521] on_disconnect: Disconnected: conn=0(6) reason=CallClose

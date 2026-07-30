@@ -1,0 +1,149 @@
+{
+  "date": "2026-07-14",
+  "collected_at": "2026-07-14T11:52:16.835512",
+  "raw": {
+    "spy": {
+      "ticker": "SPY",
+      "name": "State Street SPDR S&P 500 ETF T",
+      "price": 749.1699829101562,
+      "pe": 26.947767,
+      "pct_10y": 99.6,
+      "ma50": 740.6941333007812,
+      "ma200": 691.5513778686524,
+      "data_points": 8419
+    },
+    "spy_hist": {
+      "ticker": "SPY",
+      "price": 749.1699829101562,
+      "ma50": 740.6941333007812,
+      "ma200": 691.5513778686524,
+      "high_all": 758.4461093852723,
+      "low_all": 23.495844366569326,
+      "pct_10y": 99.6,
+      "ma50_above_ma200": true,
+      "vol_5d": 42908462.4,
+      "vol_20d": 56523910.6,
+      "vol_ratio_5_20": 0.76,
+      "data_points": 8419
+    },
+    "hsi": {
+      "ticker": "^HSI",
+      "price": 23998.5,
+      "ma50": 24829.9666796875,
+      "ma200": 25824.117900390625,
+      "high_all": 33484.078125,
+      "low_all": 1894.9000244140625,
+      "pct_10y": 44.7,
+      "ma50_above_ma200": false,
+      "vol_5d": 2889200000.0,
+      "vol_20d": 3567940000.0,
+      "vol_ratio_5_20": 0.81,
+      "data_points": 9754
+    },
+    "csi300": {
+      "ticker": "000300.SS",
+      "price": 4677.30517578125,
+      "ma50": 4871.504501953125,
+      "ma200": 4690.100173339843,
+      "high_all": 5378.47998046875,
+      "low_all": 3108.35009765625,
+      "pct_10y": 75.4,
+      "ma50_above_ma200": true,
+      "vol_5d": 660334782.4,
+      "vol_20d": 165326350.6,
+      "vol_ratio_5_20": 3.99,
+      "data_points": 1294
+    },
+    "vix": {
+      "vix": 17.15999984741211,
+      "pct_10y": 52.1,
+      "zone": "neutral",
+      "ma50": 17.370399990081786
+    },
+    "buffett": {
+      "available": true,
+      "ratio_pct": 214.1,
+      "estimated_market_cap_t": null,
+      "gdp_t": null,
+      "zone": "extreme_overvalued",
+      "source": "thebuffettindicator.com",
+      "note": "Scraped from thebuffettindicator.com"
+    },
+    "momentum": {
+      "return_1m_pct": 3.538594660909955
+    }
+  },
+  "external_benchmarks": {
+    "fear_greed_index": {
+      "available": true,
+      "score": 63,
+      "label": "greed",
+      "source": "cfgi.io",
+      "note": "CFGI Fear & Greed Index: 63/100 (greed)"
+    },
+    "buffett_indicator": {
+      "available": true,
+      "ratio_pct": 214.1,
+      "estimated_market_cap_t": null,
+      "gdp_t": null,
+      "zone": "extreme_overvalued",
+      "source": "thebuffettindicator.com",
+      "note": "Scraped from thebuffettindicator.com"
+    }
+  },
+  "temperature": {
+    "composite": 73.7,
+    "label": "greed",
+    "components": {
+      "vix_reverse": {
+        "score": 76.1,
+        "weight_pct": 25,
+        "value": 17.15999984741211,
+        "note": "VIX=17.15999984741211: low=greed"
+      },
+      "spy_vs_ma200": {
+        "score": 70.8,
+        "weight_pct": 15,
+        "value": 8.3,
+        "note": "SPY vs MA200: 8.3%"
+      },
+      "buffett_indicator": {
+        "score": 81.1,
+        "weight_pct": 10,
+        "value": 214.1,
+        "note": "TOTALSA/GDP=214.1% (src: thebuffettindicator.com)"
+      },
+      "cross_market_divergence": {
+        "score": 77.5,
+        "weight_pct": 15,
+        "value": 54.9,
+        "note": "SPY(99.6%) - HSI(44.7%) divergence"
+      },
+      "volume_anomaly": {
+        "score": 74.0,
+        "weight_pct": 10,
+        "value": 0.76,
+        "note": "Volume ratio (5d/20d)=0.76: near 1=neutral"
+      },
+      "short_term_momentum": {
+        "score": 67.7,
+        "weight_pct": 25,
+        "value": 3.538594660909955,
+        "note": "SPY 1m return=3.538594660909955%"
+      }
+    }
+  },
+  "behavior": {
+    "baseline": {
+      "reading": "greed",
+      "score": 73.7,
+      "summary": "\u5e02\u573a\u504f\u8d2a\u5a6a\u3002\u65b0\u4ed3\u4f4d\u9700\u66f4\u4e25\u683c\u7684\u5b89\u5168\u8fb9\u9645\u3002"
+    },
+    "alerts": [
+      {
+        "category": "valuation",
+        "message": "SPY PE=26.947767x \u2014 \u4f30\u503c\u504f\u9ad8, \u672a\u6765\u9884\u671f\u56de\u62a5\u7387\u964d\u4f4e"
+      }
+    ]
+  }
+}

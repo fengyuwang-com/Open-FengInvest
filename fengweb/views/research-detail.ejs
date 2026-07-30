@@ -1,0 +1,145 @@
+<div class="page-header">
+  <h2>🔬 <%= ticker %> 研究详情</h2>
+  <div class="breadcrumb"><a href="/research">研究</a> / <%= ticker %> <% if (name !== ticker) { %>— <%= name.replace(ticker + '-', '') %><% } %></div>
+</div>
+
+<% if (layers && layers.length > 0) { %>
+  <% var layerOrder = ['l0','m','l1','l2b','l2a','l3','l4','l4n']; %>
+  <% layerOrder.forEach(function(layerId) { %>
+    <% var layer = layers.find(function(x) { return x.layer === layerId; }); %>
+    <% if (!layer) return; %>
+    <div class="card">
+      <h3 style="margin-bottom:8px;">
+        <%= layerLabels[layer.layer] || layer.layer.toUpperCase() %>
+        <span class="badge badge-green"><%= layer.status %></span>
+      </h3>
+      <% if (layer.data) { %>
+        <% if (layer.data.m_layer) { %>
+          <!-- M layer display -->
+          <div class="detail-grid">
+            <% Object.keys(layer.data.m_layer).forEach(function(k) { %>
+              <% var v = layer.data.m_layer[k]; %>
+              <div class="result-row">
+                <span class="label"><%= k %></span>
+                <span class="value"><%= typeof v === 'object' ? (v.light || '') + ' ' + (v.summary || '') : v %></span>
+              </div>
+            <% }) %>
+          </div>
+        <% } else if (layer.data.rules) { %>
+          <!-- L1 discipline display — all 8 rules including DK -->
+          <% var dkRules = ['no_2638','no_chasing','no_first_mover','divergence_or_consensus']; %>
+          <% var coreRules = layer.data.rules.filter(function(r) { return dkRules.indexOf(r.check) === -1; }); %>
+          <% var dkOnly = layer.data.rules.filter(function(r) { return dkRules.indexOf(r.check) !== -1; }); %>
+
+          <h4 style="font-size:13px;color:var(--text-muted);margin-bottom:6px;">核心纪律</h4>
+          <% coreRules.forEach(function(r) { %>
+            <div class="result-row">
+              <span class="label"><%= r.check === 'no_knife' ? '不接飞刀' : r.check === 'no_fomo' ? '不蹭热点' : r.check === 'no_leverage' ? '杠杆=0' : r.check === 'true_value' ? '真价值' : r.check %></span>
+              <span class="value"><span class="badge badge-<%= r.light === 'RED' ? 'red' : r.light === 'YELLOW' ? 'yellow' : 'green' %>"><%= r.light %></span> <%= r.signal || '' %> — <%= r.reason %></span>
+            </div>
+          <% }) %>
+
+          <% if (dkOnly.length > 0) { %>
+          <h4 style="font-size:13px;color:#f57f17;margin:10px 0 6px;">DK 纪律规则</h4>
+          <% dkOnly.forEach(function(r) { %>
+            <div class="result-row">
+              <span class="label"><%= r.check === 'no_2638' ? '2638法则/大盘' : r.check === 'no_chasing' ? '年线追高' : r.check === 'no_first_mover' ? '后发制人' : r.check === 'divergence_or_consensus' ? '分歧共识' : r.check %></span>
+              <span class="value"><span class="badge badge-<%= r.light === 'RED' ? 'red' : r.light === 'YELLOW' ? 'yellow' : 'green' %>"><%= r.light %></span> <%= r.signal || '' %> — <%= r.reason %></span>
+            </div>
+          <% }) %>
+          <% } %>
+        <% } else if (layer.data.factor_analysis) { %>
+          <!-- L2b quant display -->
+          <div class="detail-grid">
+            <% (layer.data.factor_analysis.factors || []).forEach(function(f) { %>
+              <div class="result-row">
+                <span class="label"><%= f.factor %></span>
+                <span class="value"><span class="badge badge-<%= f.z_score > 0 ? 'green' : 'red' %>"><%= f.z_score ? f.z_score.toFixed(2) : '—' %></span> <%= f.signal || '' %></span>
+              </div>
+            <% }) %>
+          </div>
+        <% } else if (layer.data.decision) { %>
+          <!-- L3 collision display -->
+          <div class="detail-grid">
+            <div class="result-row">
+              <span class="label">决策</span>
+              <span class="value"><span class="badge badge-<%= layer.data.decision === 'PASS' ? 'red' : layer.data.decision === 'WAIT' ? 'yellow' : 'green' %>"><%= layer.data.decision %></span></span>
+            </div>
+            <div class="result-row">
+              <span class="label">置信度</span>
+              <span class="value"><%= layer.data.confidence || '—' %></span>
+            </div>
+            <div class="result-row">
+              <span class="label">仓位</span>
+              <span class="value"><%= layer.data.position_pct != null ? layer.data.position_pct + '%' : '—' %></span>
+            </div>
+            <div class="result-row">
+              <span class="label">命中规则</span>
+              <span class="value">#<%= layer.data.applicable_rule || '—' %></span>
+            </div>
+            <div class="result-row">
+              <span class="label">原因</span>
+              <span class="value"><%= layer.data.reason || '' %></span>
+            </div>
+            <% if (layer.data.next_steps) { %>
+            <div class="result-row">
+              <span class="label">下一步</span>
+              <span class="value"><%= layer.data.next_steps %></span>
+            </div>
+            <% } %>
+          </div>
+
+          <!-- DK Assessment if available -->
+          <% if (layer.data.dk_assessment) { %>
+          <h4 style="font-size:13px;color:#f57f17;margin:14px 0 8px;">DK 原则审计</h4>
+          <div class="detail-grid">
+            <div class="result-row">
+              <span class="label">坐标原则</span>
+              <span class="value"><span class="badge badge-<%= layer.data.dk_assessment.坐标原则 === 'RED' ? 'red' : layer.data.dk_assessment.坐标原则 === 'YELLOW' ? 'yellow' : 'green' %>"><%= layer.data.dk_assessment.坐标原则 || '—' %></span></span>
+            </div>
+            <div class="result-row">
+              <span class="label">家国原则</span>
+              <span class="value"><span class="badge badge-<%= layer.data.dk_assessment.家国原则 === 'RED' ? 'red' : layer.data.dk_assessment.家国原则 === 'YELLOW' ? 'yellow' : 'green' %>"><%= layer.data.dk_assessment.家国原则 || '—' %></span></span>
+            </div>
+            <div class="result-row">
+              <span class="label">息价原则</span>
+              <span class="value"><span class="badge badge-<%= layer.data.dk_assessment.息价原则 === 'RED' ? 'red' : layer.data.dk_assessment.息价原则 === 'YELLOW' ? 'yellow' : 'green' %>"><%= layer.data.dk_assessment.息价原则 || '—' %></span></span>
+            </div>
+            <div class="result-row">
+              <span class="label">取舍原则</span>
+              <span class="value"><span class="badge badge-<%= layer.data.dk_assessment.取舍原则 === 'RED' ? 'red' : layer.data.dk_assessment.取舍原则 === 'YELLOW' ? 'yellow' : 'green' %>"><%= layer.data.dk_assessment.取舍原则 || '—' %></span></span>
+            </div>
+            <% if (layer.data.dk_intervention) { %>
+            <div class="result-row">
+              <span class="label">DK 干预</span>
+              <span class="value"><%= layer.data.dk_intervention %></span>
+            </div>
+            <% } %>
+          </div>
+          <% } %>
+
+          <!-- Conflicts if any -->
+          <% if (layer.data.conflicts && layer.data.conflicts.length > 0) { %>
+          <h4 style="font-size:13px;color:#d32f2f;margin:14px 0 8px;">冲突记录</h4>
+          <% layer.data.conflicts.forEach(function(c) { %>
+            <div class="result-row">
+              <span class="label"><%= c.source || '' %></span>
+              <span class="value"><%= c.message || '' %></span>
+            </div>
+          <% }) %>
+          <% } %>
+        <% } else { %>
+          <!-- Generic JSON data -->
+          <pre style="font-size:12px;background:#f9fafb;padding:12px;border-radius:4px;overflow-x:auto;max-height:400px;"><%= JSON.stringify(layer.data, null, 2) %></pre>
+        <% } %>
+      <% } else if (layer.output_path) { %>
+        <p style="color:var(--text-muted);font-size:13px;">📄 输出文件: <%= path.basename(layer.output_path) %></p>
+      <% } %>
+    </div>
+  <% }) %>
+<% } else { %>
+<div class="empty-state">
+  <h3>暂无研究数据</h3>
+  <p>运行 CLI 分析工具后再查看</p>
+</div>
+<% } %>

@@ -1,0 +1,761 @@
+{
+  "US": {
+    "market": "US",
+    "market_label": "US_SP500",
+    "stock_count": 503,
+    "stocks_with_signals": 479,
+    "total_signals": 25191,
+    "total_wins": 18401,
+    "overall_win_rate": 0.7305,
+    "claim_threshold_pct": 60,
+    "claim_supported": true,
+    "per_stock": [
+      {
+        "ticker": "FRT",
+        "name": "FRT",
+        "signals": 207,
+        "wins": 167,
+        "win_rate": 0.8068,
+        "avg_fwd_return": 0.0356
+      },
+      {
+        "ticker": "CNP",
+        "name": "CNP",
+        "signals": 204,
+        "wins": 150,
+        "win_rate": 0.7353,
+        "avg_fwd_return": 0.0335
+      },
+      {
+        "ticker": "LNT",
+        "name": "LNT",
+        "signals": 200,
+        "wins": 140,
+        "win_rate": 0.7,
+        "avg_fwd_return": 0.0222
+      },
+      {
+        "ticker": "XEL",
+        "name": "XEL",
+        "signals": 172,
+        "wins": 116,
+        "win_rate": 0.6744,
+        "avg_fwd_return": 0.017
+      },
+      {
+        "ticker": "NI",
+        "name": "NI",
+        "signals": 169,
+        "wins": 124,
+        "win_rate": 0.7337,
+        "avg_fwd_return": 0.027
+      },
+      {
+        "ticker": "ED",
+        "name": "ED",
+        "signals": 163,
+        "wins": 113,
+        "win_rate": 0.6933,
+        "avg_fwd_return": 0.0229
+      },
+      {
+        "ticker": "EIX",
+        "name": "EIX",
+        "signals": 159,
+        "wins": 126,
+        "win_rate": 0.7925,
+        "avg_fwd_return": 0.035
+      },
+      {
+        "ticker": "EVRG",
+        "name": "EVRG",
+        "signals": 154,
+        "wins": 111,
+        "win_rate": 0.7208,
+        "avg_fwd_return": 0.029
+      },
+      {
+        "ticker": "PCG",
+        "name": "PCG",
+        "signals": 153,
+        "wins": 124,
+        "win_rate": 0.8105,
+        "avg_fwd_return": 0.0321
+      },
+      {
+        "ticker": "USB",
+        "name": "USB",
+        "signals": 151,
+        "wins": 103,
+        "win_rate": 0.6821,
+        "avg_fwd_return": 0.03
+      },
+      {
+        "ticker": "PPL",
+        "name": "PPL",
+        "signals": 146,
+        "wins": 126,
+        "win_rate": 0.863,
+        "avg_fwd_return": 0.0371
+      },
+      {
+        "ticker": "MKC",
+        "name": "MKC",
+        "signals": 139,
+        "wins": 102,
+        "win_rate": 0.7338,
+        "avg_fwd_return": 0.0339
+      },
+      {
+        "ticker": "AEP",
+        "name": "AEP",
+        "signals": 136,
+        "wins": 103,
+        "win_rate": 0.7574,
+        "avg_fwd_return": 0.0301
+      },
+      {
+        "ticker": "NTRS",
+        "name": "NTRS",
+        "signals": 135,
+        "wins": 87,
+        "win_rate": 0.6444,
+        "avg_fwd_return": 0.0268
+      },
+      {
+        "ticker": "MTB",
+        "name": "MTB",
+        "signals": 134,
+        "wins": 102,
+        "win_rate": 0.7612,
+        "avg_fwd_return": 0.0296
+      },
+      {
+        "ticker": "TFC",
+        "name": "TFC",
+        "signals": 132,
+        "wins": 107,
+        "win_rate": 0.8106,
+        "avg_fwd_return": 0.0541
+      },
+      {
+        "ticker": "PG",
+        "name": "PG",
+        "signals": 131,
+        "wins": 83,
+        "win_rate": 0.6336,
+        "avg_fwd_return": 0.0199
+      },
+      {
+        "ticker": "D",
+        "name": "D",
+        "signals": 130,
+        "wins": 105,
+        "win_rate": 0.8077,
+        "avg_fwd_return": 0.0326
+      },
+      {
+        "ticker": "PNW",
+        "name": "PNW",
+        "signals": 130,
+        "wins": 85,
+        "win_rate": 0.6538,
+        "avg_fwd_return": 0.0241
+      },
+      {
+        "ticker": "WEC",
+        "name": "WEC",
+        "signals": 130,
+        "wins": 98,
+        "win_rate": 0.7538,
+        "avg_fwd_return": 0.0302
+      },
+      {
+        "ticker": "TPL",
+        "name": "TPL",
+        "signals": 129,
+        "wins": 88,
+        "win_rate": 0.6822,
+        "avg_fwd_return": 0.0392
+      },
+      {
+        "ticker": "L",
+        "name": "L",
+        "signals": 128,
+        "wins": 97,
+        "win_rate": 0.7578,
+        "avg_fwd_return": 0.0238
+      },
+      {
+        "ticker": "WRB",
+        "name": "WRB",
+        "signals": 128,
+        "wins": 72,
+        "win_rate": 0.5625,
+        "avg_fwd_return": 0.0314
+      },
+      {
+        "ticker": "JNJ",
+        "name": "JNJ",
+        "signals": 126,
+        "wins": 105,
+        "win_rate": 0.8333,
+        "avg_fwd_return": 0.0446
+      },
+      {
+        "ticker": "WST",
+        "name": "WST",
+        "signals": 126,
+        "wins": 90,
+        "win_rate": 0.7143,
+        "avg_fwd_return": 0.0336
+      },
+      {
+        "ticker": "MRSH",
+        "name": "MRSH",
+        "signals": 125,
+        "wins": 99,
+        "win_rate": 0.792,
+        "avg_fwd_return": 0.0332
+      },
+      {
+        "ticker": "NEE",
+        "name": "NEE",
+        "signals": 125,
+        "wins": 83,
+        "win_rate": 0.664,
+        "avg_fwd_return": 0.0196
+      },
+      {
+        "ticker": "FITB",
+        "name": "FITB",
+        "signals": 124,
+        "wins": 94,
+        "win_rate": 0.7581,
+        "avg_fwd_return": 0.0341
+      },
+      {
+        "ticker": "NDSN",
+        "name": "NDSN",
+        "signals": 123,
+        "wins": 80,
+        "win_rate": 0.6504,
+        "avg_fwd_return": 0.0375
+      },
+      {
+        "ticker": "BRO",
+        "name": "BRO",
+        "signals": 122,
+        "wins": 87,
+        "win_rate": 0.7131,
+        "avg_fwd_return": 0.0298
+      }
+    ]
+  },
+  "CN": {
+    "market": "CN",
+    "market_label": "CN_CSI300",
+    "stock_count": 300,
+    "stocks_with_signals": 297,
+    "total_signals": 5743,
+    "total_wins": 3814,
+    "overall_win_rate": 0.6641,
+    "claim_threshold_pct": 60,
+    "claim_supported": true,
+    "per_stock": [
+      {
+        "ticker": "600016.SS",
+        "name": "600016.SS",
+        "signals": 68,
+        "wins": 44,
+        "win_rate": 0.6471,
+        "avg_fwd_return": 0.0486
+      },
+      {
+        "ticker": "601988.SS",
+        "name": "601988.SS",
+        "signals": 65,
+        "wins": 40,
+        "win_rate": 0.6154,
+        "avg_fwd_return": 0.0195
+      },
+      {
+        "ticker": "600085.SS",
+        "name": "600085.SS",
+        "signals": 59,
+        "wins": 42,
+        "win_rate": 0.7119,
+        "avg_fwd_return": 0.0338
+      },
+      {
+        "ticker": "600887.SS",
+        "name": "600887.SS",
+        "signals": 54,
+        "wins": 34,
+        "win_rate": 0.6296,
+        "avg_fwd_return": 0.0607
+      },
+      {
+        "ticker": "000002.SZ",
+        "name": "000002.SZ",
+        "signals": 53,
+        "wins": 33,
+        "win_rate": 0.6226,
+        "avg_fwd_return": 0.0297
+      },
+      {
+        "ticker": "600600.SS",
+        "name": "600600.SS",
+        "signals": 52,
+        "wins": 36,
+        "win_rate": 0.6923,
+        "avg_fwd_return": 0.0675
+      },
+      {
+        "ticker": "600674.SS",
+        "name": "600674.SS",
+        "signals": 52,
+        "wins": 40,
+        "win_rate": 0.7692,
+        "avg_fwd_return": 0.0503
+      },
+      {
+        "ticker": "600009.SS",
+        "name": "600009.SS",
+        "signals": 51,
+        "wins": 37,
+        "win_rate": 0.7255,
+        "avg_fwd_return": 0.0445
+      },
+      {
+        "ticker": "600803.SS",
+        "name": "600803.SS",
+        "signals": 49,
+        "wins": 28,
+        "win_rate": 0.5714,
+        "avg_fwd_return": 0.0518
+      },
+      {
+        "ticker": "600028.SS",
+        "name": "600028.SS",
+        "signals": 48,
+        "wins": 39,
+        "win_rate": 0.8125,
+        "avg_fwd_return": 0.0454
+      },
+      {
+        "ticker": "600660.SS",
+        "name": "600660.SS",
+        "signals": 48,
+        "wins": 35,
+        "win_rate": 0.7292,
+        "avg_fwd_return": 0.0316
+      },
+      {
+        "ticker": "601169.SS",
+        "name": "601169.SS",
+        "signals": 48,
+        "wins": 32,
+        "win_rate": 0.6667,
+        "avg_fwd_return": 0.0105
+      },
+      {
+        "ticker": "600886.SS",
+        "name": "600886.SS",
+        "signals": 47,
+        "wins": 33,
+        "win_rate": 0.7021,
+        "avg_fwd_return": 0.0533
+      },
+      {
+        "ticker": "000538.SZ",
+        "name": "000538.SZ",
+        "signals": 45,
+        "wins": 36,
+        "win_rate": 0.8,
+        "avg_fwd_return": 0.0515
+      },
+      {
+        "ticker": "000725.SZ",
+        "name": "000725.SZ",
+        "signals": 45,
+        "wins": 25,
+        "win_rate": 0.5556,
+        "avg_fwd_return": 0.0319
+      },
+      {
+        "ticker": "600104.SS",
+        "name": "600104.SS",
+        "signals": 45,
+        "wins": 34,
+        "win_rate": 0.7556,
+        "avg_fwd_return": 0.0474
+      },
+      {
+        "ticker": "601398.SS",
+        "name": "601398.SS",
+        "signals": 45,
+        "wins": 36,
+        "win_rate": 0.8,
+        "avg_fwd_return": 0.036
+      },
+      {
+        "ticker": "600066.SS",
+        "name": "600066.SS",
+        "signals": 44,
+        "wins": 34,
+        "win_rate": 0.7727,
+        "avg_fwd_return": 0.0393
+      },
+      {
+        "ticker": "600015.SS",
+        "name": "600015.SS",
+        "signals": 43,
+        "wins": 22,
+        "win_rate": 0.5116,
+        "avg_fwd_return": 0.0244
+      },
+      {
+        "ticker": "600436.SS",
+        "name": "600436.SS",
+        "signals": 41,
+        "wins": 31,
+        "win_rate": 0.7561,
+        "avg_fwd_return": 0.071
+      },
+      {
+        "ticker": "600795.SS",
+        "name": "600795.SS",
+        "signals": 41,
+        "wins": 26,
+        "win_rate": 0.6341,
+        "avg_fwd_return": 0.0364
+      },
+      {
+        "ticker": "000001.SZ",
+        "name": "000001.SZ",
+        "signals": 40,
+        "wins": 20,
+        "win_rate": 0.5,
+        "avg_fwd_return": 0.0105
+      },
+      {
+        "ticker": "601006.SS",
+        "name": "601006.SS",
+        "signals": 40,
+        "wins": 28,
+        "win_rate": 0.7,
+        "avg_fwd_return": 0.0188
+      },
+      {
+        "ticker": "000063.SZ",
+        "name": "000063.SZ",
+        "signals": 39,
+        "wins": 26,
+        "win_rate": 0.6667,
+        "avg_fwd_return": 0.0306
+      },
+      {
+        "ticker": "000651.SZ",
+        "name": "000651.SZ",
+        "signals": 39,
+        "wins": 29,
+        "win_rate": 0.7436,
+        "avg_fwd_return": 0.0701
+      },
+      {
+        "ticker": "000963.SZ",
+        "name": "000963.SZ",
+        "signals": 39,
+        "wins": 28,
+        "win_rate": 0.7179,
+        "avg_fwd_return": 0.0283
+      },
+      {
+        "ticker": "600845.SS",
+        "name": "600845.SS",
+        "signals": 39,
+        "wins": 19,
+        "win_rate": 0.4872,
+        "avg_fwd_return": 0.053
+      },
+      {
+        "ticker": "601009.SS",
+        "name": "601009.SS",
+        "signals": 39,
+        "wins": 26,
+        "win_rate": 0.6667,
+        "avg_fwd_return": 0.0105
+      },
+      {
+        "ticker": "600519.SS",
+        "name": "600519.SS",
+        "signals": 38,
+        "wins": 20,
+        "win_rate": 0.5263,
+        "avg_fwd_return": 0.0192
+      },
+      {
+        "ticker": "600741.SS",
+        "name": "600741.SS",
+        "signals": 37,
+        "wins": 29,
+        "win_rate": 0.7838,
+        "avg_fwd_return": 0.0564
+      }
+    ]
+  },
+  "HK": {
+    "market": "HK",
+    "market_label": "HK_HSI",
+    "stock_count": 85,
+    "stocks_with_signals": 85,
+    "total_signals": 2110,
+    "total_wins": 1502,
+    "overall_win_rate": 0.7118,
+    "claim_threshold_pct": 60,
+    "claim_supported": true,
+    "per_stock": [
+      {
+        "ticker": "0002.HK",
+        "name": "0002.HK",
+        "signals": 145,
+        "wins": 111,
+        "win_rate": 0.7655,
+        "avg_fwd_return": 0.015
+      },
+      {
+        "ticker": "0006.HK",
+        "name": "0006.HK",
+        "signals": 105,
+        "wins": 78,
+        "win_rate": 0.7429,
+        "avg_fwd_return": 0.0226
+      },
+      {
+        "ticker": "0005.HK",
+        "name": "0005.HK",
+        "signals": 78,
+        "wins": 53,
+        "win_rate": 0.6795,
+        "avg_fwd_return": 0.0133
+      },
+      {
+        "ticker": "0003.HK",
+        "name": "0003.HK",
+        "signals": 76,
+        "wins": 48,
+        "win_rate": 0.6316,
+        "avg_fwd_return": 0.0184
+      },
+      {
+        "ticker": "1038.HK",
+        "name": "1038.HK",
+        "signals": 73,
+        "wins": 53,
+        "win_rate": 0.726,
+        "avg_fwd_return": 0.0195
+      },
+      {
+        "ticker": "0066.HK",
+        "name": "0066.HK",
+        "signals": 56,
+        "wins": 37,
+        "win_rate": 0.6607,
+        "avg_fwd_return": 0.0244
+      },
+      {
+        "ticker": "0267.HK",
+        "name": "0267.HK",
+        "signals": 55,
+        "wins": 41,
+        "win_rate": 0.7455,
+        "avg_fwd_return": 0.0676
+      },
+      {
+        "ticker": "0016.HK",
+        "name": "0016.HK",
+        "signals": 46,
+        "wins": 29,
+        "win_rate": 0.6304,
+        "avg_fwd_return": 0.0228
+      },
+      {
+        "ticker": "0823.HK",
+        "name": "0823.HK",
+        "signals": 46,
+        "wins": 34,
+        "win_rate": 0.7391,
+        "avg_fwd_return": 0.0353
+      },
+      {
+        "ticker": "0012.HK",
+        "name": "0012.HK",
+        "signals": 45,
+        "wins": 31,
+        "win_rate": 0.6889,
+        "avg_fwd_return": 0.0332
+      },
+      {
+        "ticker": "0857.HK",
+        "name": "0857.HK",
+        "signals": 45,
+        "wins": 30,
+        "win_rate": 0.6667,
+        "avg_fwd_return": 0.0393
+      },
+      {
+        "ticker": "0992.HK",
+        "name": "0992.HK",
+        "signals": 40,
+        "wins": 24,
+        "win_rate": 0.6,
+        "avg_fwd_return": 0.0422
+      },
+      {
+        "ticker": "0001.HK",
+        "name": "0001.HK",
+        "signals": 38,
+        "wins": 29,
+        "win_rate": 0.7632,
+        "avg_fwd_return": 0.0516
+      },
+      {
+        "ticker": "0101.HK",
+        "name": "0101.HK",
+        "signals": 37,
+        "wins": 20,
+        "win_rate": 0.5405,
+        "avg_fwd_return": 0.027
+      },
+      {
+        "ticker": "0941.HK",
+        "name": "0941.HK",
+        "signals": 37,
+        "wins": 30,
+        "win_rate": 0.8108,
+        "avg_fwd_return": 0.043
+      },
+      {
+        "ticker": "0316.HK",
+        "name": "0316.HK",
+        "signals": 36,
+        "wins": 24,
+        "win_rate": 0.6667,
+        "avg_fwd_return": 0.0441
+      },
+      {
+        "ticker": "0386.HK",
+        "name": "0386.HK",
+        "signals": 36,
+        "wins": 28,
+        "win_rate": 0.7778,
+        "avg_fwd_return": 0.072
+      },
+      {
+        "ticker": "2388.HK",
+        "name": "2388.HK",
+        "signals": 36,
+        "wins": 29,
+        "win_rate": 0.8056,
+        "avg_fwd_return": 0.048
+      },
+      {
+        "ticker": "3988.HK",
+        "name": "3988.HK",
+        "signals": 36,
+        "wins": 24,
+        "win_rate": 0.6667,
+        "avg_fwd_return": 0.0311
+      },
+      {
+        "ticker": "2688.HK",
+        "name": "2688.HK",
+        "signals": 35,
+        "wins": 27,
+        "win_rate": 0.7714,
+        "avg_fwd_return": 0.1005
+      },
+      {
+        "ticker": "0027.HK",
+        "name": "0027.HK",
+        "signals": 34,
+        "wins": 22,
+        "win_rate": 0.6471,
+        "avg_fwd_return": 0.0451
+      },
+      {
+        "ticker": "0388.HK",
+        "name": "0388.HK",
+        "signals": 32,
+        "wins": 24,
+        "win_rate": 0.75,
+        "avg_fwd_return": 0.077
+      },
+      {
+        "ticker": "0981.HK",
+        "name": "0981.HK",
+        "signals": 32,
+        "wins": 26,
+        "win_rate": 0.8125,
+        "avg_fwd_return": 0.0854
+      },
+      {
+        "ticker": "2899.HK",
+        "name": "2899.HK",
+        "signals": 32,
+        "wins": 15,
+        "win_rate": 0.4688,
+        "avg_fwd_return": 0.0255
+      },
+      {
+        "ticker": "0291.HK",
+        "name": "0291.HK",
+        "signals": 31,
+        "wins": 22,
+        "win_rate": 0.7097,
+        "avg_fwd_return": 0.0465
+      },
+      {
+        "ticker": "0762.HK",
+        "name": "0762.HK",
+        "signals": 31,
+        "wins": 26,
+        "win_rate": 0.8387,
+        "avg_fwd_return": 0.0758
+      },
+      {
+        "ticker": "1044.HK",
+        "name": "1044.HK",
+        "signals": 31,
+        "wins": 24,
+        "win_rate": 0.7742,
+        "avg_fwd_return": 0.0633
+      },
+      {
+        "ticker": "1109.HK",
+        "name": "1109.HK",
+        "signals": 30,
+        "wins": 27,
+        "win_rate": 0.9,
+        "avg_fwd_return": 0.0917
+      },
+      {
+        "ticker": "1398.HK",
+        "name": "1398.HK",
+        "signals": 30,
+        "wins": 27,
+        "win_rate": 0.9,
+        "avg_fwd_return": 0.0525
+      },
+      {
+        "ticker": "1299.HK",
+        "name": "1299.HK",
+        "signals": 29,
+        "wins": 27,
+        "win_rate": 0.931,
+        "avg_fwd_return": 0.0609
+      }
+    ]
+  }
+}

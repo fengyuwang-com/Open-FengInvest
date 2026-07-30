@@ -1,0 +1,51 @@
+<div class="page-header">
+  <h2>🧠 投资家列传</h2>
+  <div class="breadcrumb">投资家 — <%= people.length %> 位大师的智慧</div>
+</div>
+
+<!-- School filter tabs -->
+<div class="filter-tabs" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;">
+  <button class="btn btn-sm active" data-filter="all" style="background:var(--primary);color:#fff;border:none;padding:4px 14px;border-radius:20px;cursor:pointer;font-size:13px;">全部</button>
+  <% var schools = {}; people.forEach(function(p) { schools[p.school] = (schools[p.school] || 0) + 1; }); %>
+  <% var schoolLabels = {value:'价值投资',deep_value:'深度价值',value_longterm:'长期价值',quality:'品质投资',growth:'成长投资',tech_growth:'科技成长',quant:'量化投资',macro:'宏观交易',allweather:'全天候',trend:'趋势交易',momentum:'动量投资',contrarian:'逆向投资',chokepoint:'地缘政治',semiconductor:'半导体',unknown:'其他流派'}; %>
+  <% Object.keys(schools).sort().forEach(function(s) { %>
+  <button class="btn btn-sm" data-filter="<%= s %>" style="background:#f3f4f6;border:none;padding:4px 14px;border-radius:20px;cursor:pointer;font-size:13px;"><%= schoolLabels[s] || s %> (<%= schools[s] %>)</button>
+  <% }) %>
+</div>
+
+<!-- Masters Grid -->
+<div class="masters-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px;">
+  <% people.forEach(function(p) { %>
+  <a href="/masters/<%= p.id %>" class="card master-card" data-school="<%= p.school %>" style="text-decoration:none;color:inherit;display:block;transition:transform 0.15s,box-shadow 0.15s;cursor:pointer;">
+    <div style="display:flex;align-items:flex-start;gap:12px;">
+      <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#45a049);display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;font-weight:600;flex-shrink:0;"><%= p.name.charAt(0) %></div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:16px;font-weight:600;margin-bottom:2px;"><%= p.name %></div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:6px;"><%= p.representative %></div>
+        <span class="badge badge-primary" style="background:#e8f5e9;color:#2e7d32;padding:2px 10px;border-radius:12px;font-size:11px;"><%= schoolLabels[p.school] || p.school %></span>
+        <% if (p.when_to_use) { %>
+        <p style="font-size:12px;color:var(--text-muted);margin:8px 0 0;line-height:1.5;"><%= p.when_to_use.slice(0, 80) %></p>
+        <% } %>
+      </div>
+    </div>
+    <% if (p.preview) { %>
+    <div style="margin-top:10px;padding:10px;background:#f9fafb;border-radius:6px;font-size:12px;color:#555;line-height:1.6;max-height:60px;overflow:hidden;">
+      <%= p.preview.slice(0,150) %>
+    </div>
+    <% } %>
+  </a>
+  <% }) %>
+</div>
+
+<script>
+document.querySelectorAll('.filter-tabs button').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.filter-tabs button').forEach(function(b) { b.style.background='#f3f4f6'; b.style.color='inherit'; });
+    this.style.background='var(--primary)'; this.style.color='#fff';
+    var filter = this.getAttribute('data-filter');
+    document.querySelectorAll('.master-card').forEach(function(card) {
+      card.style.display = (filter === 'all' || card.getAttribute('data-school') === filter) ? 'block' : 'none';
+    });
+  });
+});
+</script>

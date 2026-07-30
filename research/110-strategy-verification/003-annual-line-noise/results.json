@@ -1,0 +1,470 @@
+{
+  "US": {
+    "market": "US",
+    "stocks_total": 503,
+    "stocks_processed": 481,
+    "stocks_with_crossings": 480,
+    "w10": {
+      "up_crossings": 67187,
+      "up_noise": 43768,
+      "up_noise_rate": 0.6514,
+      "down_crossings": 67152,
+      "down_noise": 47329,
+      "down_noise_rate": 0.7048,
+      "total_crossings": 134339,
+      "total_noise": 91097,
+      "noise_rate": 0.6781
+    },
+    "w20": {
+      "up_crossings": 67083,
+      "up_noise": 49253,
+      "up_noise_rate": 0.7342,
+      "down_crossings": 67081,
+      "down_noise": 53350,
+      "down_noise_rate": 0.7953,
+      "total_crossings": 134164,
+      "total_noise": 102603,
+      "noise_rate": 0.7648
+    },
+    "w30": {
+      "up_crossings": 67000,
+      "up_noise": 51860,
+      "up_noise_rate": 0.774,
+      "down_crossings": 67005,
+      "down_noise": 56235,
+      "down_noise_rate": 0.8393,
+      "total_crossings": 134005,
+      "total_noise": 108095,
+      "noise_rate": 0.8066
+    }
+  },
+  "CN": {
+    "market": "CN",
+    "stocks_total": 300,
+    "stocks_processed": 298,
+    "stocks_with_crossings": 297,
+    "w10": {
+      "up_crossings": 19717,
+      "up_noise": 13362,
+      "up_noise_rate": 0.6777,
+      "down_crossings": 19753,
+      "down_noise": 13150,
+      "down_noise_rate": 0.6657,
+      "total_crossings": 39470,
+      "total_noise": 26512,
+      "noise_rate": 0.6717
+    },
+    "w20": {
+      "up_crossings": 19668,
+      "up_noise": 14979,
+      "up_noise_rate": 0.7616,
+      "down_crossings": 19693,
+      "down_noise": 14793,
+      "down_noise_rate": 0.7512,
+      "total_crossings": 39361,
+      "total_noise": 29772,
+      "noise_rate": 0.7564
+    },
+    "w30": {
+      "up_crossings": 19608,
+      "up_noise": 15751,
+      "up_noise_rate": 0.8033,
+      "down_crossings": 19632,
+      "down_noise": 15585,
+      "down_noise_rate": 0.7939,
+      "total_crossings": 39240,
+      "total_noise": 31336,
+      "noise_rate": 0.7986
+    }
+  },
+  "HK": {
+    "market": "HK",
+    "stocks_total": 85,
+    "stocks_processed": 85,
+    "stocks_with_crossings": 85,
+    "w10": {
+      "up_crossings": 6087,
+      "up_noise": 4096,
+      "up_noise_rate": 0.6729,
+      "down_crossings": 6109,
+      "down_noise": 4228,
+      "down_noise_rate": 0.6921,
+      "total_crossings": 12196,
+      "total_noise": 8324,
+      "noise_rate": 0.6825
+    },
+    "w20": {
+      "up_crossings": 6071,
+      "up_noise": 4594,
+      "up_noise_rate": 0.7567,
+      "down_crossings": 6090,
+      "down_noise": 4724,
+      "down_noise_rate": 0.7757,
+      "total_crossings": 12161,
+      "total_noise": 9318,
+      "noise_rate": 0.7662
+    },
+    "w30": {
+      "up_crossings": 6059,
+      "up_noise": 4842,
+      "up_noise_rate": 0.7991,
+      "down_crossings": 6071,
+      "down_noise": 4973,
+      "down_noise_rate": 0.8191,
+      "total_crossings": 12130,
+      "total_noise": 9815,
+      "noise_rate": 0.8092
+    }
+  },
+  "JP": {
+    "market": "JP",
+    "stocks_total": 225,
+    "stocks_processed": 204,
+    "stocks_with_crossings": 204,
+    "w10": {
+      "up_crossings": 21984,
+      "up_noise": 14559,
+      "up_noise_rate": 0.6623,
+      "down_crossings": 21932,
+      "down_noise": 15307,
+      "down_noise_rate": 0.6979,
+      "total_crossings": 43916,
+      "total_noise": 29866,
+      "noise_rate": 0.6801
+    },
+    "w20": {
+      "up_crossings": 21942,
+      "up_noise": 16464,
+      "up_noise_rate": 0.7503,
+      "down_crossings": 21910,
+      "down_noise": 17265,
+      "down_noise_rate": 0.788,
+      "total_crossings": 43852,
+      "total_noise": 33729,
+      "noise_rate": 0.7692
+    },
+    "w30": {
+      "up_crossings": 21903,
+      "up_noise": 17384,
+      "up_noise_rate": 0.7937,
+      "down_crossings": 21874,
+      "down_noise": 18151,
+      "down_noise_rate": 0.8298,
+      "total_crossings": 43777,
+      "total_noise": 35535,
+      "noise_rate": 0.8117
+    }
+  },
+  "KR": {
+    "market": "KR",
+    "stocks_total": 200,
+    "stocks_processed": 195,
+    "stocks_with_crossings": 195,
+    "w10": {
+      "up_crossings": 16446,
+      "up_noise": 11246,
+      "up_noise_rate": 0.6838,
+      "down_crossings": 16425,
+      "down_noise": 11366,
+      "down_noise_rate": 0.692,
+      "total_crossings": 32871,
+      "total_noise": 22612,
+      "noise_rate": 0.6879
+    },
+    "w20": {
+      "up_crossings": 16409,
+      "up_noise": 12634,
+      "up_noise_rate": 0.7699,
+      "down_crossings": 16367,
+      "down_noise": 12816,
+      "down_noise_rate": 0.783,
+      "total_crossings": 32776,
+      "total_noise": 25450,
+      "noise_rate": 0.7765
+    },
+    "w30": {
+      "up_crossings": 16364,
+      "up_noise": 13271,
+      "up_noise_rate": 0.811,
+      "down_crossings": 16312,
+      "down_noise": 13425,
+      "down_noise_rate": 0.823,
+      "total_crossings": 32676,
+      "total_noise": 26696,
+      "noise_rate": 0.817
+    }
+  },
+  "UK": {
+    "market": "UK",
+    "stocks_total": 96,
+    "stocks_processed": 95,
+    "stocks_with_crossings": 95,
+    "w10": {
+      "up_crossings": 12454,
+      "up_noise": 8177,
+      "up_noise_rate": 0.6566,
+      "down_crossings": 12456,
+      "down_noise": 8687,
+      "down_noise_rate": 0.6974,
+      "total_crossings": 24910,
+      "total_noise": 16864,
+      "noise_rate": 0.677
+    },
+    "w20": {
+      "up_crossings": 12435,
+      "up_noise": 9268,
+      "up_noise_rate": 0.7453,
+      "down_crossings": 12442,
+      "down_noise": 9820,
+      "down_noise_rate": 0.7893,
+      "total_crossings": 24877,
+      "total_noise": 19088,
+      "noise_rate": 0.7673
+    },
+    "w30": {
+      "up_crossings": 12423,
+      "up_noise": 9779,
+      "up_noise_rate": 0.7872,
+      "down_crossings": 12426,
+      "down_noise": 10381,
+      "down_noise_rate": 0.8354,
+      "total_crossings": 24849,
+      "total_noise": 20160,
+      "noise_rate": 0.8113
+    }
+  },
+  "AU": {
+    "market": "AU",
+    "stocks_total": 200,
+    "stocks_processed": 192,
+    "stocks_with_crossings": 192,
+    "w10": {
+      "up_crossings": 16562,
+      "up_noise": 11010,
+      "up_noise_rate": 0.6648,
+      "down_crossings": 16597,
+      "down_noise": 11519,
+      "down_noise_rate": 0.694,
+      "total_crossings": 33159,
+      "total_noise": 22529,
+      "noise_rate": 0.6794
+    },
+    "w20": {
+      "up_crossings": 16521,
+      "up_noise": 12344,
+      "up_noise_rate": 0.7472,
+      "down_crossings": 16550,
+      "down_noise": 12869,
+      "down_noise_rate": 0.7776,
+      "total_crossings": 33071,
+      "total_noise": 25213,
+      "noise_rate": 0.7624
+    },
+    "w30": {
+      "up_crossings": 16469,
+      "up_noise": 12997,
+      "up_noise_rate": 0.7892,
+      "down_crossings": 16517,
+      "down_noise": 13607,
+      "down_noise_rate": 0.8238,
+      "total_crossings": 32986,
+      "total_noise": 26604,
+      "noise_rate": 0.8065
+    }
+  },
+  "IN": {
+    "market": "IN",
+    "stocks_total": 50,
+    "stocks_processed": 50,
+    "stocks_with_crossings": 50,
+    "w10": {
+      "up_crossings": 4449,
+      "up_noise": 2898,
+      "up_noise_rate": 0.6514,
+      "down_crossings": 4445,
+      "down_noise": 3153,
+      "down_noise_rate": 0.7093,
+      "total_crossings": 8894,
+      "total_noise": 6051,
+      "noise_rate": 0.6803
+    },
+    "w20": {
+      "up_crossings": 4439,
+      "up_noise": 3232,
+      "up_noise_rate": 0.7281,
+      "down_crossings": 4438,
+      "down_noise": 3512,
+      "down_noise_rate": 0.7913,
+      "total_crossings": 8877,
+      "total_noise": 6744,
+      "noise_rate": 0.7597
+    },
+    "w30": {
+      "up_crossings": 4429,
+      "up_noise": 3424,
+      "up_noise_rate": 0.7731,
+      "down_crossings": 4430,
+      "down_noise": 3692,
+      "down_noise_rate": 0.8334,
+      "total_crossings": 8859,
+      "total_noise": 7116,
+      "noise_rate": 0.8033
+    }
+  },
+  "CA": {
+    "market": "CA",
+    "stocks_total": 59,
+    "stocks_processed": 53,
+    "stocks_with_crossings": 53,
+    "w10": {
+      "up_crossings": 5081,
+      "up_noise": 3317,
+      "up_noise_rate": 0.6528,
+      "down_crossings": 5085,
+      "down_noise": 3565,
+      "down_noise_rate": 0.7011,
+      "total_crossings": 10166,
+      "total_noise": 6882,
+      "noise_rate": 0.677
+    },
+    "w20": {
+      "up_crossings": 5071,
+      "up_noise": 3727,
+      "up_noise_rate": 0.735,
+      "down_crossings": 5074,
+      "down_noise": 4038,
+      "down_noise_rate": 0.7958,
+      "total_crossings": 10145,
+      "total_noise": 7765,
+      "noise_rate": 0.7654
+    },
+    "w30": {
+      "up_crossings": 5060,
+      "up_noise": 3939,
+      "up_noise_rate": 0.7785,
+      "down_crossings": 5063,
+      "down_noise": 4252,
+      "down_noise_rate": 0.8398,
+      "total_crossings": 10123,
+      "total_noise": 8191,
+      "noise_rate": 0.8091
+    }
+  },
+  "DE": {
+    "market": "DE",
+    "stocks_total": 40,
+    "stocks_processed": 40,
+    "stocks_with_crossings": 40,
+    "w10": {
+      "up_crossings": 3907,
+      "up_noise": 2535,
+      "up_noise_rate": 0.6488,
+      "down_crossings": 3905,
+      "down_noise": 2738,
+      "down_noise_rate": 0.7012,
+      "total_crossings": 7812,
+      "total_noise": 5273,
+      "noise_rate": 0.675
+    },
+    "w20": {
+      "up_crossings": 3903,
+      "up_noise": 2865,
+      "up_noise_rate": 0.7341,
+      "down_crossings": 3905,
+      "down_noise": 3090,
+      "down_noise_rate": 0.7913,
+      "total_crossings": 7808,
+      "total_noise": 5955,
+      "noise_rate": 0.7627
+    },
+    "w30": {
+      "up_crossings": 3896,
+      "up_noise": 3018,
+      "up_noise_rate": 0.7746,
+      "down_crossings": 3902,
+      "down_noise": 3251,
+      "down_noise_rate": 0.8332,
+      "total_crossings": 7798,
+      "total_noise": 6269,
+      "noise_rate": 0.8039
+    }
+  },
+  "FR": {
+    "market": "FR",
+    "stocks_total": 39,
+    "stocks_processed": 39,
+    "stocks_with_crossings": 39,
+    "w10": {
+      "up_crossings": 4169,
+      "up_noise": 2770,
+      "up_noise_rate": 0.6644,
+      "down_crossings": 4170,
+      "down_noise": 2917,
+      "down_noise_rate": 0.6995,
+      "total_crossings": 8339,
+      "total_noise": 5687,
+      "noise_rate": 0.682
+    },
+    "w20": {
+      "up_crossings": 4163,
+      "up_noise": 3083,
+      "up_noise_rate": 0.7406,
+      "down_crossings": 4166,
+      "down_noise": 3306,
+      "down_noise_rate": 0.7936,
+      "total_crossings": 8329,
+      "total_noise": 6389,
+      "noise_rate": 0.7671
+    },
+    "w30": {
+      "up_crossings": 4155,
+      "up_noise": 3242,
+      "up_noise_rate": 0.7803,
+      "down_crossings": 4158,
+      "down_noise": 3489,
+      "down_noise_rate": 0.8391,
+      "total_crossings": 8313,
+      "total_noise": 6731,
+      "noise_rate": 0.8097
+    }
+  },
+  "TW": {
+    "market": "TW",
+    "stocks_total": 50,
+    "stocks_processed": 50,
+    "stocks_with_crossings": 49,
+    "w10": {
+      "up_crossings": 4668,
+      "up_noise": 3090,
+      "up_noise_rate": 0.662,
+      "down_crossings": 4633,
+      "down_noise": 3310,
+      "down_noise_rate": 0.7144,
+      "total_crossings": 9301,
+      "total_noise": 6400,
+      "noise_rate": 0.6881
+    },
+    "w20": {
+      "up_crossings": 4665,
+      "up_noise": 3444,
+      "up_noise_rate": 0.7383,
+      "down_crossings": 4630,
+      "down_noise": 3695,
+      "down_noise_rate": 0.7981,
+      "total_crossings": 9295,
+      "total_noise": 7139,
+      "noise_rate": 0.768
+    },
+    "w30": {
+      "up_crossings": 4662,
+      "up_noise": 3651,
+      "up_noise_rate": 0.7831,
+      "down_crossings": 4629,
+      "down_noise": 3891,
+      "down_noise_rate": 0.8406,
+      "total_crossings": 9291,
+      "total_noise": 7542,
+      "noise_rate": 0.8118
+    }
+  }
+}

@@ -1,0 +1,47 @@
+<div class="page-header">
+  <h2>🧠 <%= person.name %></h2>
+  <div class="breadcrumb"><a href="/masters">投资家</a> / <%= person.name %></div>
+</div>
+
+<div class="detail-grid" style="display:grid;grid-template-columns:2fr 1fr;gap:20px;">
+  <!-- Main content -->
+  <div class="card">
+    <h3>投资哲学</h3>
+    <div style="line-height:1.8;font-size:14px;color:#333;overflow-x:auto;">
+      <%- person.content.replace(/^# .+\n/, '').replace(/```/g, '') %>
+    </div>
+  </div>
+
+  <!-- Sidebar info -->
+  <div>
+    <div class="card" style="margin-bottom:16px;">
+      <h3>基本信息</h3>
+      <table class="data-table">
+        <tr><td>流派</td><td><span class="badge badge-primary"><%= person.school %></span></td></tr>
+        <tr><td>代表</td><td><%= person.representative %></td></tr>
+        <% if (person.distilled_at) { %><tr><td>提炼日期</td><td><%= person.distilled_at %></td><% } %>
+      </table>
+    </div>
+
+    <% if (person.when_to_use) { %>
+    <div class="card" style="margin-bottom:16px;">
+      <h3>启用时机</h3>
+      <p style="font-size:13px;line-height:1.7;color:#555;"><%= person.when_to_use %></p>
+    </div>
+    <% } %>
+
+    <% if (person.sources) { %>
+    <div class="card" style="margin-bottom:16px;">
+      <h3>信息来源</h3>
+      <p style="font-size:13px;color:#888;"><%= person.sources %></p>
+    </div>
+    <% } %>
+
+    <% if (person.disclaimer) { %>
+    <div class="card" style="background:#fff8e1;border-color:#ffe082;">
+      <h3 style="color:#f57f17;">⚠️ 免责</h3>
+      <p style="font-size:12px;color:#888;"><%= person.disclaimer %></p>
+    </div>
+    <% } %>
+  </div>
+</div>

@@ -1,0 +1,83 @@
+{
+  "US": {
+    "market": "US",
+    "index": "^GSPC",
+    "name": "S&P 500",
+    "signal_count": 7872,
+    "lookahead_20": {
+      "signal_count": 7872,
+      "drawdown_A_avg": 0.017402,
+      "drawdown_B_avg": 0.057014,
+      "reduction_pct": 69.48,
+      "claim_supported": true
+    },
+    "lookahead_63": {
+      "signal_count": 7872,
+      "drawdown_A_avg": 0.033184,
+      "drawdown_B_avg": 0.106912,
+      "reduction_pct": 68.96,
+      "claim_supported": true
+    },
+    "lookahead_126": {
+      "signal_count": 7859,
+      "drawdown_A_avg": 0.047432,
+      "drawdown_B_avg": 0.150429,
+      "reduction_pct": 68.47,
+      "claim_supported": true
+    }
+  },
+  "CN": {
+    "market": "CN",
+    "index": "000001.SS",
+    "name": "上证指数",
+    "signal_count": 3217,
+    "lookahead_20": {
+      "signal_count": 3207,
+      "drawdown_A_avg": 0.017718,
+      "drawdown_B_avg": 0.058043,
+      "reduction_pct": 69.48,
+      "claim_supported": true
+    },
+    "lookahead_63": {
+      "signal_count": 3206,
+      "drawdown_A_avg": 0.035099,
+      "drawdown_B_avg": 0.112751,
+      "reduction_pct": 68.87,
+      "claim_supported": true
+    },
+    "lookahead_126": {
+      "signal_count": 3205,
+      "drawdown_A_avg": 0.04913,
+      "drawdown_B_avg": 0.154311,
+      "reduction_pct": 68.16,
+      "claim_supported": true
+    }
+  },
+  "HK": {
+    "market": "HK",
+    "index": "^HSI",
+    "name": "恒生指数",
+    "signal_count": 3659,
+    "lookahead_20": {
+      "signal_count": 3639,
+      "drawdown_A_avg": 0.021196,
+      "drawdown_B_avg": 0.069246,
+      "reduction_pct": 69.39,
+      "claim_supported": true
+    },
+    "lookahead_63": {
+      "signal_count": 3612,
+      "drawdown_A_avg": 0.040158,
+      "drawdown_B_avg": 0.128938,
+      "reduction_pct": 68.86,
+      "claim_supported": true
+    },
+    "lookahead_126": {
+      "signal_count": 3595,
+      "drawdown_A_avg": 0.05761,
+      "drawdown_B_avg": 0.181791,
+      "reduction_pct": 68.31,
+      "claim_supported": true
+    }
+  }
+}

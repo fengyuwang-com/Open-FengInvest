@@ -1,0 +1,14 @@
+{
+  "index": "^GSPC",
+  "name": "S&P 500",
+  "first_date": "1927-12-30",
+  "last_date": "2026-07-20",
+  "total_trading_days": 24554,
+  "above_ma200_days": 16682,
+  "below_ma200_days": 7872,
+  "above_pct": 67.94,
+  "below_pct": 32.06,
+  "ratio_above_below": 2.1192,
+  "claim_ratio": 2.8,
+  "claim_supported": false
+}

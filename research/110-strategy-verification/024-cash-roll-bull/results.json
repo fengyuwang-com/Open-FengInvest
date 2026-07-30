@@ -1,0 +1,1243 @@
+{
+  "claim": "#24 - 钱仓滚存牛市跑输持有",
+  "regime_definition": {
+    "bull": "SPY 6-month return > 10%",
+    "momentum_fraction": 0.2
+  },
+  "data_range": {
+    "spy": "1993-01 to 2026-07",
+    "stocks_used": 480
+  },
+  "regime_counts": {
+    "neutral": 234,
+    "bull": 137,
+    "bear": 25
+  },
+  "bull_month_count": 137,
+  "summary_metrics": {
+    "cash_roll": {
+      "avg_monthly_return": 0.010719,
+      "ann_return": 0.136483,
+      "monthly_std": 0.044816,
+      "max_drawdown": 0.310869,
+      "win_count": 78
+    },
+    "spy_buy_and_hold": {
+      "avg_monthly_return": 0.00707,
+      "ann_return": 0.088214,
+      "monthly_std": 0.035452,
+      "max_drawdown": 0.239157,
+      "win_count": 59
+    },
+    "cash_roll_underperformance": {
+      "avg_monthly_underperformance": -0.003649,
+      "ann_underperformance": -0.04827,
+      "spy_win_rate": 0.4307,
+      "total_periods": 137
+    }
+  },
+  "claim_supported": false,
+  "monthly_details": [
+    {
+      "month": "1995-04",
+      "next_month": "1995-05",
+      "cash_roll_return": 0.020522,
+      "spy_return": 0.039673,
+      "gspc_return": 0.036312,
+      "spy_6m_return": 0.101133,
+      "num_stocks_in_portfolio": 55,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "1995-05",
+      "next_month": "1995-06",
+      "cash_roll_return": 0.042867,
+      "spy_return": 0.020229,
+      "gspc_return": 0.021279,
+      "spy_6m_return": 0.19229,
+      "num_stocks_in_portfolio": 55,
+      "top_pct_selected": 19.8
+    },
+    {
+      "month": "1995-06",
+      "next_month": "1995-07",
+      "cash_roll_return": 0.095361,
+      "spy_return": 0.032166,
+      "gspc_return": 0.031776,
+      "spy_6m_return": 0.207615,
+      "num_stocks_in_portfolio": 55,
+      "top_pct_selected": 19.7
+    },
+    {
+      "month": "1995-07",
+      "next_month": "1995-08",
+      "cash_roll_return": 0.021035,
+      "spy_return": 0.004452,
+      "gspc_return": -0.00032,
+      "spy_6m_return": 0.205931,
+      "num_stocks_in_portfolio": 56,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "1995-08",
+      "next_month": "1995-09",
+      "cash_roll_return": 0.03378,
+      "spy_return": 0.042376,
+      "gspc_return": 0.040097,
+      "spy_6m_return": 0.163805,
+      "num_stocks_in_portfolio": 56,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "1995-09",
+      "next_month": "1995-10",
+      "cash_roll_return": -0.003475,
+      "spy_return": -0.002939,
+      "gspc_return": -0.004979,
+      "spy_6m_return": 0.180255,
+      "num_stocks_in_portfolio": 56,
+      "top_pct_selected": 19.8
+    },
+    {
+      "month": "1995-10",
+      "next_month": "1995-11",
+      "cash_roll_return": 0.042592,
+      "spy_return": 0.04448,
+      "gspc_return": 0.041049,
+      "spy_6m_return": 0.14293,
+      "num_stocks_in_portfolio": 56,
+      "top_pct_selected": 19.7
+    },
+    {
+      "month": "1995-11",
+      "next_month": "1995-12",
+      "cash_roll_return": 0.013712,
+      "spy_return": 0.015733,
+      "gspc_return": 0.017444,
+      "spy_6m_return": 0.148214,
+      "num_stocks_in_portfolio": 57,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "1995-12",
+      "next_month": "1996-01",
+      "cash_roll_return": 0.01071,
+      "spy_return": 0.035578,
+      "gspc_return": 0.032617,
+      "spy_6m_return": 0.143154,
+      "num_stocks_in_portfolio": 58,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "1996-01",
+      "next_month": "1996-02",
+      "cash_roll_return": 0.00836,
+      "spy_return": 0.00319,
+      "gspc_return": 0.006934,
+      "spy_6m_return": 0.146933,
+      "num_stocks_in_portfolio": 58,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "1996-02",
+      "next_month": "1996-03",
+      "cash_roll_return": 0.013239,
+      "spy_return": 0.017218,
+      "gspc_return": 0.007917,
+      "spy_6m_return": 0.145492,
+      "num_stocks_in_portfolio": 58,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "1996-03",
+      "next_month": "1996-04",
+      "cash_roll_return": 0.061612,
+      "spy_return": 0.01087,
+      "gspc_return": 0.013431,
+      "spy_6m_return": 0.117845,
+      "num_stocks_in_portfolio": 58,
+      "top_pct_selected": 19.8
+    },
+    {
+      "month": "1996-04",
+      "next_month": "1996-05",
+      "cash_roll_return": 0.033156,
+      "spy_return": 0.0227,
+      "gspc_return": 0.022853,
+      "spy_6m_return": 0.133326,
+      "num_stocks_in_portfolio": 58,
+      "top_pct_selected": 19.8
+    },
+    {
+      "month": "1996-05",
+      "next_month": "1996-06",
+      "cash_roll_return": -0.029923,
+      "spy_return": 0.008822,
+      "gspc_return": 0.002257,
+      "spy_6m_return": 0.109693,
+      "num_stocks_in_portfolio": 58,
+      "top_pct_selected": 19.8
+    },
+    {
+      "month": "1996-06",
+      "next_month": "1996-07",
+      "cash_roll_return": -0.068949,
+      "spy_return": -0.044936,
+      "gspc_return": -0.045748,
+      "spy_6m_return": 0.102143,
+      "num_stocks_in_portfolio": 58,
+      "top_pct_selected": 19.7
+    },
+    {
+      "month": "1996-11",
+      "next_month": "1996-12",
+      "cash_roll_return": -0.00177,
+      "spy_return": -0.023797,
+      "gspc_return": -0.021505,
+      "spy_6m_return": 0.148586,
+      "num_stocks_in_portfolio": 59,
+      "top_pct_selected": 20.0
+    },
+    {
+      "month": "1996-12",
+      "next_month": "1997-01",
+      "cash_roll_return": 0.016505,
+      "spy_return": 0.061786,
+      "gspc_return": 0.061317,
+      "spy_6m_return": 0.111447,
+      "num_stocks_in_portfolio": 59,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "1997-01",
+      "next_month": "1997-02",
+      "cash_roll_return": -0.029566,
+      "spy_return": 0.009565,
+      "gspc_return": 0.005928,
+      "spy_6m_return": 0.235644,
+      "num_stocks_in_portfolio": 59,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "1997-02",
+      "next_month": "1997-03",
+      "cash_roll_return": -0.049815,
+      "spy_return": -0.044122,
+      "gspc_return": -0.042614,
+      "spy_6m_return": 0.223892,
+      "num_stocks_in_portfolio": 59,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "1997-03",
+      "next_month": "1997-04",
+      "cash_roll_return": 0.014026,
+      "spy_return": 0.062604,
+      "gspc_return": 0.058406,
+      "spy_6m_return": 0.107986,
+      "num_stocks_in_portfolio": 59,
+      "top_pct_selected": 19.8
+    },
+    {
+      "month": "1997-04",
+      "next_month": "1997-05",
+      "cash_roll_return": 0.069649,
+      "spy_return": 0.063207,
+      "gspc_return": 0.058577,
+      "spy_6m_return": 0.140476,
+      "num_stocks_in_portfolio": 59,
+      "top_pct_selected": 19.8
+    },
+    {
+      "month": "1997-05",
+      "next_month": "1997-06",
+      "cash_roll_return": 0.037687,
+      "spy_return": 0.041103,
+      "gspc_return": 0.043453,
+      "spy_6m_return": 0.130063,
+      "num_stocks_in_portfolio": 59,
+      "top_pct_selected": 19.7
+    },
+    {
+      "month": "1997-06",
+      "next_month": "1997-07",
+      "cash_roll_return": 0.046949,
+      "spy_return": 0.079264,
+      "gspc_return": 0.078146,
+      "spy_6m_return": 0.205192,
+      "num_stocks_in_portfolio": 60,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "1997-07",
+      "next_month": "1997-08",
+      "cash_roll_return": 0.010384,
+      "spy_return": -0.051804,
+      "gspc_return": -0.057466,
+      "spy_6m_return": 0.225031,
+      "num_stocks_in_portfolio": 61,
+      "top_pct_selected": 20.0
+    },
+    {
+      "month": "1997-08",
+      "next_month": "1997-09",
+      "cash_roll_return": 0.072596,
+      "spy_return": 0.048091,
+      "gspc_return": 0.053154,
+      "spy_6m_return": 0.150564,
+      "num_stocks_in_portfolio": 61,
+      "top_pct_selected": 20.0
+    },
+    {
+      "month": "1997-09",
+      "next_month": "1997-10",
+      "cash_roll_return": -0.043563,
+      "spy_return": -0.024504,
+      "gspc_return": -0.034478,
+      "spy_6m_return": 0.261559,
+      "num_stocks_in_portfolio": 61,
+      "top_pct_selected": 20.0
+    },
+    {
+      "month": "1997-10",
+      "next_month": "1997-11",
+      "cash_roll_return": 0.035088,
+      "spy_return": 0.038697,
+      "gspc_return": 0.044587,
+      "spy_6m_return": 0.158143,
+      "num_stocks_in_portfolio": 61,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "1997-11",
+      "next_month": "1997-12",
+      "cash_roll_return": 0.018979,
+      "spy_return": 0.019071,
+      "gspc_return": 0.015732,
+      "spy_6m_return": 0.131444,
+      "num_stocks_in_portfolio": 61,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "1997-12",
+      "next_month": "1998-01",
+      "cash_roll_return": -0.01978,
+      "spy_return": 0.012878,
+      "gspc_return": 0.01015,
+      "spy_6m_return": 0.1075,
+      "num_stocks_in_portfolio": 62,
+      "top_pct_selected": 20.0
+    },
+    {
+      "month": "1998-02",
+      "next_month": "1998-03",
+      "cash_roll_return": 0.037904,
+      "spy_return": 0.048783,
+      "gspc_return": 0.049946,
+      "spy_6m_return": 0.172122,
+      "num_stocks_in_portfolio": 62,
+      "top_pct_selected": 19.8
+    },
+    {
+      "month": "1998-03",
+      "next_month": "1998-04",
+      "cash_roll_return": 0.002967,
+      "spy_return": 0.012791,
+      "gspc_return": 0.009076,
+      "spy_6m_return": 0.172896,
+      "num_stocks_in_portfolio": 63,
+      "top_pct_selected": 20.0
+    },
+    {
+      "month": "1998-04",
+      "next_month": "1998-05",
+      "cash_roll_return": -0.049817,
+      "spy_return": -0.020768,
+      "gspc_return": -0.018826,
+      "spy_6m_return": 0.217738,
+      "num_stocks_in_portfolio": 63,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "1998-05",
+      "next_month": "1998-06",
+      "cash_roll_return": 0.017367,
+      "spy_return": 0.042573,
+      "gspc_return": 0.039438,
+      "spy_6m_return": 0.148022,
+      "num_stocks_in_portfolio": 63,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "1998-06",
+      "next_month": "1998-07",
+      "cash_roll_return": -0.02365,
+      "spy_return": -0.013514,
+      "gspc_return": -0.011615,
+      "spy_6m_return": 0.174499,
+      "num_stocks_in_portfolio": 63,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "1998-07",
+      "next_month": "1998-08",
+      "cash_roll_return": -0.191939,
+      "spy_return": -0.141179,
+      "gspc_return": -0.145797,
+      "spy_6m_return": 0.143895,
+      "num_stocks_in_portfolio": 63,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "1999-01",
+      "next_month": "1999-02",
+      "cash_roll_return": -0.035294,
+      "spy_return": -0.032068,
+      "gspc_return": -0.032283,
+      "spy_6m_return": 0.149859,
+      "num_stocks_in_portfolio": 64,
+      "top_pct_selected": 20.0
+    },
+    {
+      "month": "1999-02",
+      "next_month": "1999-03",
+      "cash_roll_return": 0.040834,
+      "spy_return": 0.041467,
+      "gspc_return": 0.038794,
+      "spy_6m_return": 0.295947,
+      "num_stocks_in_portfolio": 64,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "1999-03",
+      "next_month": "1999-04",
+      "cash_roll_return": 0.04242,
+      "spy_return": 0.037975,
+      "gspc_return": 0.037944,
+      "spy_6m_return": 0.268933,
+      "num_stocks_in_portfolio": 64,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "1999-04",
+      "next_month": "1999-05",
+      "cash_roll_return": -0.035375,
+      "spy_return": -0.022866,
+      "gspc_return": -0.02497,
+      "spy_6m_return": 0.218336,
+      "num_stocks_in_portfolio": 64,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "1999-05",
+      "next_month": "1999-06",
+      "cash_roll_return": 0.028701,
+      "spy_return": 0.055378,
+      "gspc_return": 0.054438,
+      "spy_6m_return": 0.127686,
+      "num_stocks_in_portfolio": 64,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "1999-06",
+      "next_month": "1999-07",
+      "cash_roll_return": -0.018286,
+      "spy_return": -0.031021,
+      "gspc_return": -0.032046,
+      "spy_6m_return": 0.117055,
+      "num_stocks_in_portfolio": 64,
+      "top_pct_selected": 19.8
+    },
+    {
+      "month": "2000-03",
+      "next_month": "2000-04",
+      "cash_roll_return": -0.00279,
+      "spy_return": -0.03512,
+      "gspc_return": -0.030796,
+      "spy_6m_return": 0.173803,
+      "num_stocks_in_portfolio": 66,
+      "top_pct_selected": 19.8
+    },
+    {
+      "month": "2000-08",
+      "next_month": "2000-09",
+      "cash_roll_return": -0.044128,
+      "spy_return": -0.054862,
+      "gspc_return": -0.053483,
+      "spy_6m_return": 0.113892,
+      "num_stocks_in_portfolio": 67,
+      "top_pct_selected": 19.8
+    },
+    {
+      "month": "2002-03",
+      "next_month": "2002-04",
+      "cash_roll_return": -0.07033,
+      "spy_return": -0.058156,
+      "gspc_return": -0.061418,
+      "spy_6m_return": 0.103438,
+      "num_stocks_in_portfolio": 71,
+      "top_pct_selected": 20.0
+    },
+    {
+      "month": "2003-06",
+      "next_month": "2003-07",
+      "cash_roll_return": 0.04332,
+      "spy_return": 0.018028,
+      "gspc_return": 0.016224,
+      "spy_6m_return": 0.115014,
+      "num_stocks_in_portfolio": 72,
+      "top_pct_selected": 20.0
+    },
+    {
+      "month": "2003-07",
+      "next_month": "2003-08",
+      "cash_roll_return": 0.063848,
+      "spy_return": 0.020625,
+      "gspc_return": 0.017873,
+      "spy_6m_return": 0.163737,
+      "num_stocks_in_portfolio": 72,
+      "top_pct_selected": 20.0
+    },
+    {
+      "month": "2003-08",
+      "next_month": "2003-09",
+      "cash_roll_return": -0.036067,
+      "spy_return": -0.010906,
+      "gspc_return": -0.011944,
+      "spy_6m_return": 0.203968,
+      "num_stocks_in_portfolio": 72,
+      "top_pct_selected": 20.0
+    },
+    {
+      "month": "2003-09",
+      "next_month": "2003-10",
+      "cash_roll_return": 0.078312,
+      "spy_return": 0.053527,
+      "gspc_return": 0.054961,
+      "spy_6m_return": 0.188295,
+      "num_stocks_in_portfolio": 72,
+      "top_pct_selected": 20.0
+    },
+    {
+      "month": "2003-10",
+      "next_month": "2003-11",
+      "cash_roll_return": 0.041861,
+      "spy_return": 0.010921,
+      "gspc_return": 0.007129,
+      "spy_6m_return": 0.154239,
+      "num_stocks_in_portfolio": 72,
+      "top_pct_selected": 20.0
+    },
+    {
+      "month": "2003-11",
+      "next_month": "2003-12",
+      "cash_roll_return": 0.022695,
+      "spy_return": 0.050313,
+      "gspc_return": 0.050766,
+      "spy_6m_return": 0.106185,
+      "num_stocks_in_portfolio": 72,
+      "top_pct_selected": 20.0
+    },
+    {
+      "month": "2003-12",
+      "next_month": "2004-01",
+      "cash_roll_return": 0.029358,
+      "spy_return": 0.01977,
+      "gspc_return": 0.017276,
+      "spy_6m_return": 0.149595,
+      "num_stocks_in_portfolio": 72,
+      "top_pct_selected": 20.0
+    },
+    {
+      "month": "2004-01",
+      "next_month": "2004-02",
+      "cash_roll_return": 0.012618,
+      "spy_return": 0.013571,
+      "gspc_return": 0.012209,
+      "spy_6m_return": 0.151563,
+      "num_stocks_in_portfolio": 72,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "2004-02",
+      "next_month": "2004-03",
+      "cash_roll_return": 0.00997,
+      "spy_return": -0.013245,
+      "gspc_return": -0.016359,
+      "spy_6m_return": 0.143603,
+      "num_stocks_in_portfolio": 72,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "2004-03",
+      "next_month": "2004-04",
+      "cash_roll_return": -0.057692,
+      "spy_return": -0.018922,
+      "gspc_return": -0.016791,
+      "spy_6m_return": 0.140898,
+      "num_stocks_in_portfolio": 72,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "2006-04",
+      "next_month": "2006-05",
+      "cash_roll_return": -0.050145,
+      "spy_return": -0.03012,
+      "gspc_return": -0.030917,
+      "spy_6m_return": 0.104574,
+      "num_stocks_in_portfolio": 76,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "2006-11",
+      "next_month": "2006-12",
+      "cash_roll_return": 0.002786,
+      "spy_return": 0.013371,
+      "gspc_return": 0.012616,
+      "spy_6m_return": 0.111849,
+      "num_stocks_in_portfolio": 76,
+      "top_pct_selected": 19.8
+    },
+    {
+      "month": "2006-12",
+      "next_month": "2007-01",
+      "cash_roll_return": 0.042758,
+      "spy_return": 0.015041,
+      "gspc_return": 0.014059,
+      "spy_6m_return": 0.123785,
+      "num_stocks_in_portfolio": 77,
+      "top_pct_selected": 20.0
+    },
+    {
+      "month": "2007-01",
+      "next_month": "2007-02",
+      "cash_roll_return": -0.016656,
+      "spy_return": -0.019618,
+      "gspc_return": -0.021846,
+      "spy_6m_return": 0.135602,
+      "num_stocks_in_portfolio": 77,
+      "top_pct_selected": 20.0
+    },
+    {
+      "month": "2007-05",
+      "next_month": "2007-06",
+      "cash_roll_return": 0.006609,
+      "spy_return": -0.014621,
+      "gspc_return": -0.017816,
+      "spy_6m_return": 0.101443,
+      "num_stocks_in_portfolio": 77,
+      "top_pct_selected": 19.8
+    },
+    {
+      "month": "2009-07",
+      "next_month": "2009-08",
+      "cash_roll_return": 0.086475,
+      "spy_return": 0.036939,
+      "gspc_return": 0.03356,
+      "spy_6m_return": 0.20825,
+      "num_stocks_in_portfolio": 80,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "2009-08",
+      "next_month": "2009-09",
+      "cash_roll_return": 0.060111,
+      "spy_return": 0.035457,
+      "gspc_return": 0.035723,
+      "spy_6m_return": 0.403709,
+      "num_stocks_in_portfolio": 80,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "2009-09",
+      "next_month": "2009-10",
+      "cash_roll_return": -0.059664,
+      "spy_return": -0.019225,
+      "gspc_return": -0.019762,
+      "spy_6m_return": 0.341703,
+      "num_stocks_in_portfolio": 80,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "2009-10",
+      "next_month": "2009-11",
+      "cash_roll_return": 0.052823,
+      "spy_return": 0.061607,
+      "gspc_return": 0.057364,
+      "spy_6m_return": 0.196992,
+      "num_stocks_in_portfolio": 80,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "2009-11",
+      "next_month": "2009-12",
+      "cash_roll_return": 0.058748,
+      "spy_return": 0.019101,
+      "gspc_return": 0.017771,
+      "spy_6m_return": 0.200558,
+      "num_stocks_in_portfolio": 80,
+      "top_pct_selected": 19.8
+    },
+    {
+      "month": "2009-12",
+      "next_month": "2010-01",
+      "cash_roll_return": -0.063307,
+      "spy_return": -0.036343,
+      "gspc_return": -0.036974,
+      "spy_6m_return": 0.224293,
+      "num_stocks_in_portfolio": 81,
+      "top_pct_selected": 20.0
+    },
+    {
+      "month": "2010-03",
+      "next_month": "2010-04",
+      "cash_roll_return": 0.052492,
+      "spy_return": 0.01547,
+      "gspc_return": 0.014759,
+      "spy_6m_return": 0.118613,
+      "num_stocks_in_portfolio": 81,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "2010-04",
+      "next_month": "2010-05",
+      "cash_roll_return": -0.072635,
+      "spy_return": -0.079454,
+      "gspc_return": -0.081976,
+      "spy_6m_return": 0.158184,
+      "num_stocks_in_portfolio": 81,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "2010-12",
+      "next_month": "2011-01",
+      "cash_roll_return": 0.043715,
+      "spy_return": 0.023301,
+      "gspc_return": 0.022646,
+      "spy_6m_return": 0.231235,
+      "num_stocks_in_portfolio": 82,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "2011-01",
+      "next_month": "2011-02",
+      "cash_roll_return": 0.050764,
+      "spy_return": 0.034737,
+      "gspc_return": 0.031957,
+      "spy_6m_return": 0.179371,
+      "num_stocks_in_portfolio": 83,
+      "top_pct_selected": 20.0
+    },
+    {
+      "month": "2011-02",
+      "next_month": "2011-03",
+      "cash_roll_return": 0.015444,
+      "spy_return": 0.00012,
+      "gspc_return": -0.001047,
+      "spy_6m_return": 0.277816,
+      "num_stocks_in_portfolio": 83,
+      "top_pct_selected": 20.0
+    },
+    {
+      "month": "2011-03",
+      "next_month": "2011-04",
+      "cash_roll_return": 0.039872,
+      "spy_return": 0.028962,
+      "gspc_return": 0.028495,
+      "spy_6m_return": 0.172928,
+      "num_stocks_in_portfolio": 83,
+      "top_pct_selected": 20.0
+    },
+    {
+      "month": "2011-04",
+      "next_month": "2011-05",
+      "cash_roll_return": -0.004385,
+      "spy_return": -0.011215,
+      "gspc_return": -0.013501,
+      "spy_6m_return": 0.162489,
+      "num_stocks_in_portfolio": 83,
+      "top_pct_selected": 19.8
+    },
+    {
+      "month": "2011-05",
+      "next_month": "2011-06",
+      "cash_roll_return": -0.015662,
+      "spy_return": -0.016869,
+      "gspc_return": -0.018257,
+      "spy_6m_return": 0.149451,
+      "num_stocks_in_portfolio": 83,
+      "top_pct_selected": 19.8
+    },
+    {
+      "month": "2012-02",
+      "next_month": "2012-03",
+      "cash_roll_return": 0.038593,
+      "spy_return": 0.032164,
+      "gspc_return": 0.031332,
+      "spy_6m_return": 0.13404,
+      "num_stocks_in_portfolio": 84,
+      "top_pct_selected": 20.0
+    },
+    {
+      "month": "2012-03",
+      "next_month": "2012-04",
+      "cash_roll_return": 0.001635,
+      "spy_return": -0.006676,
+      "gspc_return": -0.007497,
+      "spy_6m_return": 0.257835,
+      "num_stocks_in_portfolio": 84,
+      "top_pct_selected": 20.0
+    },
+    {
+      "month": "2012-04",
+      "next_month": "2012-05",
+      "cash_roll_return": -0.03728,
+      "spy_return": -0.060055,
+      "gspc_return": -0.062651,
+      "spy_6m_return": 0.126485,
+      "num_stocks_in_portfolio": 84,
+      "top_pct_selected": 20.0
+    },
+    {
+      "month": "2013-01",
+      "next_month": "2013-02",
+      "cash_roll_return": 0.019486,
+      "spy_return": 0.012759,
+      "gspc_return": 0.011061,
+      "spy_6m_return": 0.100621,
+      "num_stocks_in_portfolio": 85,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "2013-03",
+      "next_month": "2013-04",
+      "cash_roll_return": 0.027667,
+      "spy_return": 0.019212,
+      "gspc_return": 0.018086,
+      "spy_6m_return": 0.100805,
+      "num_stocks_in_portfolio": 86,
+      "top_pct_selected": 20.0
+    },
+    {
+      "month": "2013-04",
+      "next_month": "2013-05",
+      "cash_roll_return": 0.007751,
+      "spy_return": 0.02361,
+      "gspc_return": 0.020763,
+      "spy_6m_return": 0.14275,
+      "num_stocks_in_portfolio": 86,
+      "top_pct_selected": 20.0
+    },
+    {
+      "month": "2013-05",
+      "next_month": "2013-06",
+      "cash_roll_return": -0.011791,
+      "spy_return": -0.013345,
+      "gspc_return": -0.014999,
+      "spy_6m_return": 0.163147,
+      "num_stocks_in_portfolio": 86,
+      "top_pct_selected": 20.0
+    },
+    {
+      "month": "2013-06",
+      "next_month": "2013-07",
+      "cash_roll_return": 0.050259,
+      "spy_return": 0.051677,
+      "gspc_return": 0.049462,
+      "spy_6m_return": 0.137463,
+      "num_stocks_in_portfolio": 86,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "2013-07",
+      "next_month": "2013-08",
+      "cash_roll_return": -0.012636,
+      "spy_return": -0.029992,
+      "gspc_return": -0.031298,
+      "spy_6m_return": 0.137989,
+      "num_stocks_in_portfolio": 87,
+      "top_pct_selected": 20.0
+    },
+    {
+      "month": "2013-10",
+      "next_month": "2013-11",
+      "cash_roll_return": 0.03315,
+      "spy_return": 0.029638,
+      "gspc_return": 0.028049,
+      "spy_6m_return": 0.112109,
+      "num_stocks_in_portfolio": 87,
+      "top_pct_selected": 20.0
+    },
+    {
+      "month": "2013-11",
+      "next_month": "2013-12",
+      "cash_roll_return": 0.030217,
+      "spy_return": 0.025926,
+      "gspc_return": 0.023563,
+      "spy_6m_return": 0.118658,
+      "num_stocks_in_portfolio": 87,
+      "top_pct_selected": 20.0
+    },
+    {
+      "month": "2013-12",
+      "next_month": "2014-01",
+      "cash_roll_return": 0.003481,
+      "spy_return": -0.035248,
+      "gspc_return": -0.035583,
+      "spy_6m_return": 0.163183,
+      "num_stocks_in_portfolio": 87,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "2014-02",
+      "next_month": "2014-03",
+      "cash_roll_return": -0.021381,
+      "spy_return": 0.008296,
+      "gspc_return": 0.006932,
+      "spy_6m_return": 0.150102,
+      "num_stocks_in_portfolio": 87,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "2014-03",
+      "next_month": "2014-04",
+      "cash_roll_return": -0.01702,
+      "spy_return": 0.006952,
+      "gspc_return": 0.006201,
+      "spy_6m_return": 0.124071,
+      "num_stocks_in_portfolio": 87,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "2016-07",
+      "next_month": "2016-08",
+      "cash_roll_return": 0.028035,
+      "spy_return": 0.001198,
+      "gspc_return": -0.001219,
+      "spy_6m_return": 0.132432,
+      "num_stocks_in_portfolio": 89,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "2016-08",
+      "next_month": "2016-09",
+      "cash_roll_return": 0.012581,
+      "spy_return": 5.8e-05,
+      "gspc_return": -0.001234,
+      "spy_6m_return": 0.134726,
+      "num_stocks_in_portfolio": 89,
+      "top_pct_selected": 19.8
+    },
+    {
+      "month": "2017-03",
+      "next_month": "2017-04",
+      "cash_roll_return": 0.021674,
+      "spy_return": 0.009926,
+      "gspc_return": 0.009091,
+      "spy_6m_return": 0.101069,
+      "num_stocks_in_portfolio": 90,
+      "top_pct_selected": 19.8
+    },
+    {
+      "month": "2017-04",
+      "next_month": "2017-05",
+      "cash_roll_return": 0.041917,
+      "spy_return": 0.014113,
+      "gspc_return": 0.011576,
+      "spy_6m_return": 0.131617,
+      "num_stocks_in_portfolio": 90,
+      "top_pct_selected": 19.8
+    },
+    {
+      "month": "2017-05",
+      "next_month": "2017-06",
+      "cash_roll_return": -0.014597,
+      "spy_return": 0.006375,
+      "gspc_return": 0.004814,
+      "spy_6m_return": 0.106814,
+      "num_stocks_in_portfolio": 91,
+      "top_pct_selected": 20.0
+    },
+    {
+      "month": "2017-11",
+      "next_month": "2017-12",
+      "cash_roll_return": 0.018528,
+      "spy_return": 0.012128,
+      "gspc_return": 0.009832,
+      "spy_6m_return": 0.108449,
+      "num_stocks_in_portfolio": 91,
+      "top_pct_selected": 20.0
+    },
+    {
+      "month": "2017-12",
+      "next_month": "2018-01",
+      "cash_roll_return": 0.050237,
+      "spy_return": 0.056359,
+      "gspc_return": 0.056179,
+      "spy_6m_return": 0.114785,
+      "num_stocks_in_portfolio": 91,
+      "top_pct_selected": 20.0
+    },
+    {
+      "month": "2018-01",
+      "next_month": "2018-02",
+      "cash_roll_return": -0.019974,
+      "spy_return": -0.03636,
+      "gspc_return": -0.038947,
+      "spy_6m_return": 0.153896,
+      "num_stocks_in_portfolio": 91,
+      "top_pct_selected": 20.0
+    },
+    {
+      "month": "2018-02",
+      "next_month": "2018-03",
+      "cash_roll_return": 0.007169,
+      "spy_return": -0.02741,
+      "gspc_return": -0.026884,
+      "spy_6m_return": 0.108705,
+      "num_stocks_in_portfolio": 91,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "2018-09",
+      "next_month": "2018-10",
+      "cash_roll_return": -0.101133,
+      "spy_return": -0.069104,
+      "gspc_return": -0.069403,
+      "spy_6m_return": 0.114753,
+      "num_stocks_in_portfolio": 91,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "2019-06",
+      "next_month": "2019-07",
+      "cash_roll_return": 0.016892,
+      "spy_return": 0.01512,
+      "gspc_return": 0.013128,
+      "spy_6m_return": 0.183266,
+      "num_stocks_in_portfolio": 92,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "2019-07",
+      "next_month": "2019-08",
+      "cash_roll_return": -0.027702,
+      "spy_return": -0.016743,
+      "gspc_return": -0.018092,
+      "spy_6m_return": 0.112115,
+      "num_stocks_in_portfolio": 92,
+      "top_pct_selected": 19.8
+    },
+    {
+      "month": "2019-11",
+      "next_month": "2019-12",
+      "cash_roll_return": 0.023772,
+      "spy_return": 0.029055,
+      "gspc_return": 0.02859,
+      "spy_6m_return": 0.152676,
+      "num_stocks_in_portfolio": 93,
+      "top_pct_selected": 20.0
+    },
+    {
+      "month": "2019-12",
+      "next_month": "2020-01",
+      "cash_roll_return": -0.023807,
+      "spy_return": -0.000404,
+      "gspc_return": -0.001628,
+      "spy_6m_return": 0.108997,
+      "num_stocks_in_portfolio": 93,
+      "top_pct_selected": 20.0
+    },
+    {
+      "month": "2020-08",
+      "next_month": "2020-09",
+      "cash_roll_return": -0.020032,
+      "spy_return": -0.037444,
+      "gspc_return": -0.039228,
+      "spy_6m_return": 0.191218,
+      "num_stocks_in_portfolio": 93,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "2020-09",
+      "next_month": "2020-10",
+      "cash_roll_return": 0.007301,
+      "spy_return": -0.024934,
+      "gspc_return": -0.027666,
+      "spy_6m_return": 0.310224,
+      "num_stocks_in_portfolio": 93,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "2020-10",
+      "next_month": "2020-11",
+      "cash_roll_return": 0.144551,
+      "spy_return": 0.108777,
+      "gspc_return": 0.107546,
+      "spy_6m_return": 0.133606,
+      "num_stocks_in_portfolio": 93,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "2020-11",
+      "next_month": "2020-12",
+      "cash_roll_return": 0.060574,
+      "spy_return": 0.037048,
+      "gspc_return": 0.037121,
+      "spy_6m_return": 0.199754,
+      "num_stocks_in_portfolio": 93,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "2020-12",
+      "next_month": "2021-01",
+      "cash_roll_return": -0.00295,
+      "spy_return": -0.010191,
+      "gspc_return": -0.011137,
+      "spy_6m_return": 0.222522,
+      "num_stocks_in_portfolio": 93,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "2021-01",
+      "next_month": "2021-02",
+      "cash_roll_return": 0.043074,
+      "spy_return": 0.027806,
+      "gspc_return": 0.026091,
+      "spy_6m_return": 0.142763,
+      "num_stocks_in_portfolio": 94,
+      "top_pct_selected": 20.0
+    },
+    {
+      "month": "2021-03",
+      "next_month": "2021-04",
+      "cash_roll_return": 0.043143,
+      "spy_return": 0.05291,
+      "gspc_return": 0.052425,
+      "spy_6m_return": 0.192401,
+      "num_stocks_in_portfolio": 94,
+      "top_pct_selected": 20.0
+    },
+    {
+      "month": "2021-04",
+      "next_month": "2021-05",
+      "cash_roll_return": 0.011011,
+      "spy_return": 0.006566,
+      "gspc_return": 0.005486,
+      "spy_6m_return": 0.287595,
+      "num_stocks_in_portfolio": 94,
+      "top_pct_selected": 20.0
+    },
+    {
+      "month": "2021-05",
+      "next_month": "2021-06",
+      "cash_roll_return": -0.004568,
+      "spy_return": 0.022428,
+      "gspc_return": 0.022214,
+      "spy_6m_return": 0.1689,
+      "num_stocks_in_portfolio": 94,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "2021-06",
+      "next_month": "2021-07",
+      "cash_roll_return": 0.044279,
+      "spy_return": 0.024413,
+      "gspc_return": 0.022748,
+      "spy_6m_return": 0.152421,
+      "num_stocks_in_portfolio": 94,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "2021-07",
+      "next_month": "2021-08",
+      "cash_roll_return": 0.03324,
+      "spy_return": 0.02976,
+      "gspc_return": 0.02899,
+      "spy_6m_return": 0.192709,
+      "num_stocks_in_portfolio": 94,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "2021-08",
+      "next_month": "2021-09",
+      "cash_roll_return": -0.040073,
+      "spy_return": -0.046605,
+      "gspc_return": -0.047569,
+      "spy_6m_return": 0.194976,
+      "num_stocks_in_portfolio": 94,
+      "top_pct_selected": 19.8
+    },
+    {
+      "month": "2021-10",
+      "next_month": "2021-11",
+      "cash_roll_return": -0.012257,
+      "spy_return": -0.008035,
+      "gspc_return": -0.008334,
+      "spy_6m_return": 0.107665,
+      "num_stocks_in_portfolio": 94,
+      "top_pct_selected": 19.8
+    },
+    {
+      "month": "2021-12",
+      "next_month": "2022-01",
+      "cash_roll_return": -0.046463,
+      "spy_return": -0.052741,
+      "gspc_return": -0.052585,
+      "spy_6m_return": 0.117029,
+      "num_stocks_in_portfolio": 94,
+      "top_pct_selected": 19.8
+    },
+    {
+      "month": "2023-03",
+      "next_month": "2023-04",
+      "cash_roll_return": 0.005326,
+      "spy_return": 0.015975,
+      "gspc_return": 0.014642,
+      "spy_6m_return": 0.155831,
+      "num_stocks_in_portfolio": 95,
+      "top_pct_selected": 20.0
+    },
+    {
+      "month": "2023-06",
+      "next_month": "2023-07",
+      "cash_roll_return": 0.045565,
+      "spy_return": 0.032733,
+      "gspc_return": 0.031139,
+      "spy_6m_return": 0.16786,
+      "num_stocks_in_portfolio": 95,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "2023-07",
+      "next_month": "2023-08",
+      "cash_roll_return": -0.032658,
+      "spy_return": -0.016252,
+      "gspc_return": -0.017716,
+      "spy_6m_return": 0.134728,
+      "num_stocks_in_portfolio": 95,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "2023-08",
+      "next_month": "2023-09",
+      "cash_roll_return": -0.037707,
+      "spy_return": -0.047434,
+      "gspc_return": -0.048719,
+      "spy_6m_return": 0.145076,
+      "num_stocks_in_portfolio": 95,
+      "top_pct_selected": 19.9
+    },
+    {
+      "month": "2023-11",
+      "next_month": "2023-12",
+      "cash_roll_return": 0.103446,
+      "spy_return": 0.045655,
+      "gspc_return": 0.044229,
+      "spy_6m_return": 0.100182,
+      "num_stocks_in_portfolio": 95,
+      "top_pct_selected": 19.9
+    }
+  ],
+  "summary": "如果 SPY 持有人在牛市的平均月收益 > 钱仓滚存, 则论断成立: 牛市中钱仓滚存跑输持有."
+}
