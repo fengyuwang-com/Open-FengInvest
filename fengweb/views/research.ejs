@@ -1,0 +1,40 @@
+<div class="page-header">
+  <h2>🔬 研究</h2>
+  <div class="breadcrumb"><a href="/">系统总览</a> / 研究</div>
+</div>
+
+<% if (meta.length > 0) { %>
+<div class="card">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>标的</th>
+        <th>名称</th>
+        <th>完成层</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% meta.forEach(function(item) { %>
+      <tr>
+        <td><a href="/research/<%= item.ticker %>"><%= item.ticker %></a></td>
+        <td><%= item.name !== item.ticker ? item.name.replace(item.ticker + '-', '') : '—' %></td>
+        <td>
+          <% ['l0','m','l1','l2b','l2a','l3','l4'].forEach(function(l) { %>
+            <% var found = item.layers.find(function(x) { return x.layer === l; }); %>
+            <span class="badge badge-<%= found ? 'green' : 'neutral' %>"><%= l.toUpperCase() %></span>
+          <% }) %>
+        </td>
+        <td><a href="/research/<%= item.ticker %>" class="btn btn-primary">查看</a></td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+  <p style="margin-top:12px;color:var(--text-muted);font-size:13px;">共 <%= meta.length %> 个标的</p>
+</div>
+<% } else { %>
+<div class="empty-state">
+  <h3>暂无研究数据</h3>
+  <p>运行 fenginvest CLI 工具进行分析</p>
+</div>
+<% } %>

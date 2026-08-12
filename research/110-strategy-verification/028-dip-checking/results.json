@@ -1,0 +1,119 @@
+{
+  "US": {
+    "market": "US",
+    "stocks_processed": 503,
+    "stocks_with_signals": 481,
+    "total_signal_entries": 58369,
+    "lookahead_20": {
+      "n": 58369,
+      "avg_dd_hold_A": 0.1322,
+      "avg_dd_cut_B": 0.15,
+      "reduction_cut_vs_hold_pct": -13.5,
+      "reduction_gt_20pct": false,
+      "avg_dd_check_C": 0.1358,
+      "reduction_check_vs_hold_pct": -2.72,
+      "check_better_than_hold": false,
+      "check_better_than_cut": true
+    },
+    "lookahead_63": {
+      "n": 57712,
+      "avg_dd_hold_A": 0.206,
+      "avg_dd_cut_B": 0.15,
+      "reduction_cut_vs_hold_pct": 27.17,
+      "reduction_gt_20pct": true,
+      "avg_dd_check_C": 0.1867,
+      "reduction_check_vs_hold_pct": 9.35,
+      "check_better_than_hold": true,
+      "check_better_than_cut": false
+    },
+    "lookahead_126": {
+      "n": 56408,
+      "avg_dd_hold_A": 0.266,
+      "avg_dd_cut_B": 0.15,
+      "reduction_cut_vs_hold_pct": 43.6,
+      "reduction_gt_20pct": true,
+      "avg_dd_check_C": 0.2284,
+      "reduction_check_vs_hold_pct": 14.11,
+      "check_better_than_hold": true,
+      "check_better_than_cut": false
+    }
+  },
+  "CN": {
+    "market": "CN",
+    "stocks_processed": 300,
+    "stocks_with_signals": 298,
+    "total_signal_entries": 46645,
+    "lookahead_20": {
+      "n": 46645,
+      "avg_dd_hold_A": 0.1023,
+      "avg_dd_cut_B": 0.15,
+      "reduction_cut_vs_hold_pct": -46.62,
+      "reduction_gt_20pct": false,
+      "avg_dd_check_C": 0.1095,
+      "reduction_check_vs_hold_pct": -6.99,
+      "check_better_than_hold": false,
+      "check_better_than_cut": true
+    },
+    "lookahead_63": {
+      "n": 44894,
+      "avg_dd_hold_A": 0.1896,
+      "avg_dd_cut_B": 0.15,
+      "reduction_cut_vs_hold_pct": 20.87,
+      "reduction_gt_20pct": true,
+      "avg_dd_check_C": 0.1771,
+      "reduction_check_vs_hold_pct": 6.57,
+      "check_better_than_hold": true,
+      "check_better_than_cut": false
+    },
+    "lookahead_126": {
+      "n": 43112,
+      "avg_dd_hold_A": 0.2641,
+      "avg_dd_cut_B": 0.15,
+      "reduction_cut_vs_hold_pct": 43.2,
+      "reduction_gt_20pct": true,
+      "avg_dd_check_C": 0.2359,
+      "reduction_check_vs_hold_pct": 10.66,
+      "check_better_than_hold": true,
+      "check_better_than_cut": false
+    }
+  },
+  "HK": {
+    "market": "HK",
+    "stocks_processed": 85,
+    "stocks_with_signals": 85,
+    "total_signal_entries": 12391,
+    "lookahead_20": {
+      "n": 12391,
+      "avg_dd_hold_A": 0.1218,
+      "avg_dd_cut_B": 0.15,
+      "reduction_cut_vs_hold_pct": -23.15,
+      "reduction_gt_20pct": false,
+      "avg_dd_check_C": 0.1261,
+      "reduction_check_vs_hold_pct": -3.56,
+      "check_better_than_hold": false,
+      "check_better_than_cut": true
+    },
+    "lookahead_63": {
+      "n": 12094,
+      "avg_dd_hold_A": 0.2077,
+      "avg_dd_cut_B": 0.15,
+      "reduction_cut_vs_hold_pct": 27.76,
+      "reduction_gt_20pct": true,
+      "avg_dd_check_C": 0.1916,
+      "reduction_check_vs_hold_pct": 7.74,
+      "check_better_than_hold": true,
+      "check_better_than_cut": false
+    },
+    "lookahead_126": {
+      "n": 11728,
+      "avg_dd_hold_A": 0.273,
+      "avg_dd_cut_B": 0.15,
+      "reduction_cut_vs_hold_pct": 45.05,
+      "reduction_gt_20pct": true,
+      "avg_dd_check_C": 0.2386,
+      "reduction_check_vs_hold_pct": 12.58,
+      "check_better_than_hold": true,
+      "check_better_than_cut": false
+    }
+  }
+}

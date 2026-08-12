@@ -1,0 +1,81 @@
+%%{init: {"themeVariables": {"fontSize": "20px"}, "flowchart": {"nodeSpacing": 50, "rankSpacing": 80, "padding": 16}}}%%
+%% 由 tools/system-map/build.py 生成, 勿手改。改 system-map.yaml 后重跑。
+%% 互动版: docs/system-map.html
+flowchart LR
+  subgraph G_data["数据层"]
+    n_csmar["CSMAR 原始数据"]:::data
+    n_market_data_db["data/market_data.db"]:::data
+  end
+  subgraph G_tools["工具层"]
+    n_importer["导入脚本 feng_import_csmar"]:::tools
+    n_dbops["建库/校验 fengdata 族"]:::tools
+    n_finops["财务处理 fengfundamentals 族"]:::tools
+    n_screener["选股 fengscreen"]:::tools
+    n_portfolio_tools["组合工具 fengportfolio"]:::tools
+    n_audit_tools["质量审计 fenghealth 族"]:::tools
+    n_watch["行情监控 fengmarket"]:::tools
+  end
+  subgraph G_research["研究层"]
+    n_verification["110-strategy-verification"]:::research
+    n_research_other["research 010-100"]:::research
+    n_research_state["research/state 研究状态"]:::research
+  end
+  subgraph G_knowledge["知识层"]
+    n_methodology["knowledge/methodology"]:::knowledge
+    n_knowledge_other["knowledge 其余"]:::knowledge
+    n_docs["docs/"]:::knowledge
+  end
+  subgraph G_board["决策与展示"]
+    n_rules_reviews["rules/ + reviews/"]:::board
+    n_portfolio_ledger["portfolio/ + holdings/"]:::board
+    n_fengweb["fengweb/"]:::board
+    n_logs["logs/"]:::board
+  end
+  subgraph G_external["外部生态"]
+    n_fengasni["机器档案系统"]:::external
+    n_searchking["Search-King"]:::external
+    n_opencli["opencli"]:::external
+    n_mail["agently-mail"]:::external
+    n_everything["Everything es.exe"]:::external
+  end
+  subgraph G_sync["同步层"]
+    n_github["GitHub fengyuwang-com/FengInvest"]:::sync
+    n_gitee["Gitee fengyuwang-com/FengInvest"]:::sync
+    n_machine_lt["本机"]:::sync
+    n_machine_air["远端机"]:::sync
+  end
+  classDef data fill:#2c7fb8,stroke:#333,color:#fff,font-weight:bold
+  classDef tools fill:#31a354,stroke:#333,color:#fff,font-weight:bold
+  classDef research fill:#e6550d,stroke:#333,color:#fff,font-weight:bold
+  classDef knowledge fill:#756bb1,stroke:#333,color:#fff,font-weight:bold
+  classDef board fill:#c44e52,stroke:#333,color:#fff,font-weight:bold
+  classDef external fill:#969696,stroke:#333,color:#fff,font-weight:bold
+  classDef sync fill:#a67c00,stroke:#333,color:#fff,font-weight:bold
+  n_csmar -->|"原始数据流入"| n_importer
+  n_importer -->|"导入写入"| n_market_data_db
+  n_dbops -->|"建库/校验"| n_market_data_db
+  n_finops -->|"财务写入"| n_market_data_db
+  n_market_data_db -->|"回测读取"| n_verification
+  n_market_data_db -->|"筛选读取"| n_screener
+  n_market_data_db -->|"组合读取"| n_portfolio_tools
+  n_market_data_db -->|"监控读取"| n_watch
+  n_market_data_db -->|"研究读取"| n_research_other
+  n_verification -->|"方法对照"| n_methodology
+  n_methodology -->|"准入/复核规则"| n_verification
+  n_audit_tools -->|"回测质量审计"| n_verification
+  n_audit_tools -->|"数据健康检查"| n_market_data_db
+  n_research_other -->|"状态记录"| n_research_state
+  n_verification -->|"结论沉淀"| n_docs
+  n_methodology -->|"方法沉淀"| n_docs
+  n_research_other -->|"研究产出沉淀"| n_knowledge_other
+  n_knowledge_other -->|"规则/评审依据"| n_rules_reviews
+  n_screener -->|"入选标的"| n_portfolio_tools
+  n_portfolio_tools -->|"账本更新"| n_portfolio_ledger
+  n_rules_reviews -->|"评审指导"| n_portfolio_ledger
+  n_docs -->|"内容来源"| n_fengweb
+  n_searchking -->|"文献查证"| n_methodology
+  n_everything -->|"本地检索"| n_methodology
+  n_machine_lt -->|"本机档案备份"| n_fengasni
+  n_machine_air -->|"档案"| n_fengasni
+  n_machine_lt -->|"fetch/push"| n_github
+  n_machine_lt -->|"push"| n_gitee

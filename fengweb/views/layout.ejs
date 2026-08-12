@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title || 'FengInvest' %></title>
+  <link rel="stylesheet" href="/css/style.css?v=5">
+  <script src="/vendor/mermaid.min.js"></script>
+  <script>mermaid.initialize({startOnLoad:true,theme:'base',themeVariables:{background:'#ffffff',primaryColor:'#e8f5e9',primaryBorderColor:'#2e7d32',secondaryColor:'#fff3e0',tertiaryColor:'#e3f2fd',primaryTextColor:'#1a1d23',secondaryTextColor:'#1a1d23',tertiaryTextColor:'#1a1d23',clusterBkg:'#f3f4f6',clusterBorder:'#9ca3af',lineColor:'#6b7280',textColor:'#1a1d23',nodeTextColor:'#1a1d23',fontSize:'16px',fontFamily:'system-ui,sans-serif'},flowchart:{htmlLabels:true,curve:'basis',padding:24}});</script>
+</head>
+<body>
+  <div class="layout">
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="/" class="sidebar-logo">FengInvest</a>
+        <button class="sidebar-toggle" type="button" id="sidebarToggle" aria-label="切换侧栏">✕</button>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="/" class="nav-item">🏗️ 系统总览</a></li>
+        <li><a href="/market" class="nav-item">📊 市场数据</a></li>
+        <li><a href="/watch" class="nav-item">📡 持仓监控</a></li>
+        <!-- 股票分析已并入聊天方式，隐藏入口（代码保留，恢复时取消注释）
+        <li><a href="/analyze" class="nav-item">🔍 股票分析</a></li> -->
+        <li><a href="/holdings" class="nav-item">💼 持仓</a></li>
+        <li><a href="/research" class="nav-item">🔬 研究</a></li>
+        <li><a href="/knowledge" class="nav-item">📚 知识库</a></li>
+        <li><a href="/system" class="nav-item">⚙️ 架构图</a></li>
+        <li><a href="/rollover" class="nav-item">🔄 钱仓滚存</a></li>
+        <li><a href="/journal" class="nav-item">📝 决策日志</a></li>
+      </ul>
+    </nav>
+    <main class="main-content" id="mainContent">
+      <div class="topbar">
+        <button class="menu-toggle" type="button" id="menuToggle" aria-label="展开菜单">☰</button>
+        <span class="topbar-title"><%= title || 'FengInvest' %></span>
+        <span style="flex:1;"></span>
+        <button class="settings-btn" type="button" id="settingsBtn" aria-label="系统设置" title="系统设置">⚙️</button>
+      </div>
+      <%- body %>
+    </main>
+  </div>
+
+  <!-- Settings Modal -->
+  <div id="settingsModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.4);z-index:20000;align-items:center;justify-content:center;">
+    <div style="background:var(--bg-card);border-radius:12px;padding:24px;max-width:360px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,0.2);">
+      <h3 style="font-size:16px;margin:0 0 16px;">⚙️ 系统设置</h3>
+      <div style="margin-bottom:16px;">
+        <div style="font-size:13px;font-weight:600;margin-bottom:6px;">涨跌颜色</div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn" data-scheme="red_up" style="flex:1;border:2px solid var(--border);padding:10px;border-radius:8px;background:var(--bg-card);cursor:pointer;font-size:13px;">
+            <span style="color:red;">🔴涨</span> <span style="color:green;">🟢跌</span><br><span style="font-size:11px;color:var(--text-muted);">A股风格</span>
+          </button>
+          <button class="btn" data-scheme="green_up" style="flex:1;border:2px solid var(--border);padding:10px;border-radius:8px;background:var(--bg-card);cursor:pointer;font-size:13px;">
+            <span style="color:green;">🟢涨</span> <span style="color:red;">🔴跌</span><br><span style="font-size:11px;color:var(--text-muted);">美股风格</span>
+          </button>
+        </div>
+      </div>
+      <button class="btn" id="settingsClose" style="width:100%;">关闭</button>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // --- Color scheme from localStorage ---
+      var scheme = localStorage.getItem('feng_color_scheme') || 'red_up';
+      function applyScheme(s) {
+        if (s === 'green_up') {
+          document.documentElement.style.setProperty('--color-up', '#22c55e');
+          document.documentElement.style.setProperty('--color-down', '#ef4444');
+        } else {
+          document.documentElement.style.setProperty('--color-up', '#ef4444');
+          document.documentElement.style.setProperty('--color-down', '#22c55e');
+        }
+        localStorage.setItem('feng_color_scheme', s);
+      }
+      applyScheme(scheme);
+
+      // --- Settings modal ---
+      var btn = document.getElementById('settingsBtn');
+      var modal = document.getElementById('settingsModal');
+      if (btn && modal) {
+        btn.addEventListener('click', function() { modal.style.display = 'flex'; });
+        modal.addEventListener('click', function(e) { if (e.target === modal) modal.style.display = 'none'; });
+        document.getElementById('settingsClose').addEventListener('click', function() { modal.style.display = 'none'; });
+        modal.querySelectorAll('[data-scheme]').forEach(function(b) {
+          b.addEventListener('click', function() {
+            applyScheme(this.dataset.scheme);
+            modal.style.display = 'none';
+          });
+        });
+      }
+
+      // --- Sidebar toggle ---
+      var sidebar = document.getElementById('sidebar');
+      var toggle = document.getElementById('menuToggle');
+      var closeBtn = document.getElementById('sidebarToggle');
+      var main = document.getElementById('mainContent');
+
+      function openSidebar() {
+        sidebar.classList.add('open');
+        if (toggle) toggle.style.display = 'none';
+        if (main) main.classList.add('sidebar-open');
+      }
+      function closeSidebar() {
+        sidebar.classList.remove('open');
+        if (toggle) toggle.style.display = '';
+        if (main) main.classList.remove('sidebar-open');
+      }
+      if (toggle) toggle.addEventListener('click', openSidebar);
+      if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
+      if (window.innerWidth > 768) openSidebar();
+    })();
+  </script>
+</body>
+</html>

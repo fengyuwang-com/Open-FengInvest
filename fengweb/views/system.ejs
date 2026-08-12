@@ -1,0 +1,278 @@
+<div class="page-header">
+  <h2>⚙️ 系统架构图</h2>
+  <div class="breadcrumb"><a href="/">系统总览</a> / 架构图 — 奇衡DK-CAPITAL 思想融入版</div>
+</div>
+
+<!-- Legend -->
+<div class="card legend-card">
+  <div class="legend-items">
+    <span class="legend-item"><span class="legend-color" style="background:#e8f5e9;"></span> 已有组件</span>
+    <span class="legend-item"><span class="legend-color" style="background:#fff3e0;"></span> DK 新增</span>
+    <span class="legend-item"><span class="legend-color" style="background:#e3f2fd;"></span> 新增模块</span>
+    <span class="legend-item"><span class="legend-color" style="background:#fce4ec;"></span> 交互检查</span>
+    <span class="legend-item"><span class="legend-color" style="background:#f3e5f5;"></span> 知识库</span>
+  </div>
+</div>
+
+<!-- Diagram 0: System Architecture -->
+<div class="card diagram-card">
+  <h3>图0: 系统架构 — 双界面，同一核心</h3>
+  <div class="mermaid">
+    flowchart TB
+      subgraph 数据层["共享数据层 (文件系统)"]
+        HOLDINGS["holdings/hold_*.json<br/>持仓数据"]
+        RESEARCH["research/temp_*.json/md<br/>分析报告"]
+        REVIEWS["reviews/review_*.md<br/>复盘存档"]
+        KNOWLEDGE["knowledge/<br/>知识库"]
+        LOGS["logs/journal.jsonl<br/>决策日志"]
+        ALERTS["alerts/today.json<br/>触发引擎输出"]
+      end
+
+      subgraph AI界面["🤖 AI 界面 — CLI 工具集 (给 Claude)"]
+        CLI_ANALYSIS["fengdata.py / fengrule.py<br/>fengquant.py / fengcollision.py"]
+        CLI_HOLDING["fengwatch.py / fengportfolio.py<br/>持仓监控+组合盘面"]
+        CLI_SKILLS["Claude Skills<br/>编排调度"]
+      end
+
+      subgraph 人类界面["👤 人类界面 — Web UI (给你用)"]
+        WEB_PORTFOLIO["持仓总览仪表盘"]
+        WEB_ALERTS["待办事项清单"]
+        WEB_HOLDING["持有期管理面板"]
+        WEB_SELL["卖出前检查清单"]
+        WEB_REVIEW["复盘编辑表单"]
+        WEB_KB["知识库浏览器"]
+        WEB_ROLLOVER["钱仓滚存计算器"]
+        WEB_LOG["决策日志阅览"]
+      end
+
+      CLI_ANALYSIS <--> 数据层
+      CLI_HOLDING <--> 数据层
+      人类界面 <--> 数据层
+
+      style 数据层 fill:#f9f9f9,stroke:#999,stroke-dasharray:5 5
+      style AI界面 fill:#e8f5e9,stroke:#4caf50
+      style 人类界面 fill:#e3f2fd,stroke:#2196f3
+  </div>
+</div>
+
+<!-- Diagram 1: 7-Layer Framework -->
+<div class="card diagram-card">
+  <h3>图1: 七层框架 × DK 原则注入</h3>
+  <div class="mermaid">
+    flowchart TB
+      subgraph 入口["入口"]
+        TICKER["用户输入 TICKER"] --> INIT["fengstate.py init"]
+      end
+
+      subgraph L0["L0 能力圈确认"]
+        L0_BOX["三问 + DK坐标原则<br/>怎么赚钱? → 坐标? 对标标的是谁?<br/>10年后在吗? → 不变性<br/>什么杀了它? → 具体条件?"]
+        L0_OUT["→ temp_l0.md"]
+        L0_BOX --> L0_OUT
+      end
+
+      subgraph M["M 市场数据"]
+        M_BOX["4灯判断 + 家国原则<br/>宏观→政策方向<br/>估值→周期定位"]
+        M_OUT["→ temp_m.json"]
+        M_BOX --> M_OUT
+      end
+
+      subgraph L1["L1 硬纪律检查"]
+        L1_BOX["4灯纪律 + DK纪律规则<br/>no_knife/no_fomo + 2638/年线<br/>后发制人/买分歧卖共识"]
+        L1_OUT["→ temp_l1.json"]
+        L1_BOX --> L1_OUT
+      end
+
+      subgraph L2["L2a 定性 + L2b 量化"]
+        L2a_BOX["L2a 四大师 + 息价原则<br/>段/巴/芒/李 + 安全边际>30%?"]
+        L2b_BOX["L2b 量化因子<br/>6-factor z-score (不变)"]
+        L2a_BOX --> L2a_OUT["→ temp_l2a.md"]
+        L2b_BOX --> L2b_OUT["→ temp_l2b.json"]
+      end
+
+      subgraph L3["L3 碰撞引擎"]
+        L3_BOX["规则树碰撞 + 取舍原则<br/>9条优先级 + DK补充<br/>DK🔴→PASS / 家国🔴→PASS"]
+        L3_OUT["→ temp_l3.md"]
+        L3_BOX --> L3_OUT
+      end
+
+      subgraph L4["L4 最终报告"]
+        L4_BOX["10节报告 + 原则审计<br/>+ 四大原则审计表<br/>+ DK纪律规则检查"]
+        L4_FINAL["→ 正式报告.md"]
+        L4_BOX --> L4_FINAL
+      end
+
+      INIT --> L0
+      L0 -->|"懂? 继续"| M
+      M --> L1
+      L1 --> L2
+      L2 --> L3
+      L3 --> L4
+
+      style TICKER fill:#e8f5e9,stroke:#4caf50
+      style L0_BOX fill:#fff3e0,stroke:#ff9800
+      style M_BOX fill:#fff3e0,stroke:#ff9800
+      style L1_BOX fill:#fff3e0,stroke:#ff9800
+      style L2a_BOX fill:#fff3e0,stroke:#ff9800
+      style L2b_BOX fill:#e8f5e9,stroke:#4caf50
+      style L3_BOX fill:#fff3e0,stroke:#ff9800
+      style L4_BOX fill:#fff3e0,stroke:#ff9800
+  </div>
+</div>
+
+<!-- Diagram 2: Lifecycle -->
+<div class="card diagram-card">
+  <h3>图2: 完整投资生命周期</h3>
+  <div class="mermaid">
+    flowchart TB
+      subgraph 研究阶段["① 研究阶段 — 七层"]
+        R1["L0 能力圈"] --> R2["M 市场数据"] --> R3["L1+L2 纪律+分析"] --> R4["L3 碰撞"] --> R5["L4 报告"]
+      end
+
+      研究阶段 -->|"决定买入"| 买入
+
+      subgraph 买入["② 买入"]
+        B1["记录 thesis<br/>hold_&lt;TICKER&gt;.json"]
+        B2["设置触发条件<br/>价格阈值 / 回顾日期"]
+        B1 --> B2
+      end
+
+      买入 --> 持有
+
+      subgraph 持有["③ 持有期管理"]
+        H_TRIGGER["触发引擎<br/>每日检查所有持仓"]
+        H_ROLLOVER["钱仓滚存计算"]
+        H_TRIGGER --> H_ROLLOVER
+      end
+
+      持有 -->|"触发卖出"| 卖出
+
+      subgraph 卖出["④ 卖出前检查"]
+        S_REASON["卖出理由"] --> S_PRINCIPLE["原则检查"] --> S_CAPITAL["滚存决策"] --> S_EMOTION["情绪检查"] --> S_LOG["→ 决策日志"]
+      end
+
+      卖出 --> 复盘
+
+      subgraph 复盘["⑤ 复盘存档"]
+        REV_DONE["做对了什么"] --> REV_DK["DK 会怎么评价?"] --> REV_IMPROVE["改进点"] --> REV_KB["→ 知识沉淀"]
+      end
+
+      复盘 --> 知识库
+
+      subgraph 知识库["⑥ 知识反馈回路"]
+        KB_4P["四大原则"] & KB_D["纪律规则"] & KB_M["方法论"]
+      end
+
+      知识库 -.->|"指导下次研究"| 研究阶段
+
+      style 研究阶段 fill:#e8f5e9,stroke:#4caf50
+      style 买入 fill:#e3f2fd,stroke:#2196f3
+      style 持有 fill:#e3f2fd,stroke:#2196f3
+      style 卖出 fill:#fce4ec,stroke:#f44336
+      style 复盘 fill:#e3f2fd,stroke:#2196f3
+      style 知识库 fill:#f3e5f5,stroke:#9c27b0
+  </div>
+</div>
+
+<!-- Diagram 3: Trigger Engine -->
+<div class="card diagram-card">
+  <h3>图3: 触发引擎逻辑</h3>
+  <div class="mermaid">
+    flowchart TD
+      START["🔄 每日触发"] --> CHECK["检查所有 holdings/ 下的 hold_*.json"]
+      CHECK --> PRICE_CHK{"浮盈% > 阈值?"}
+      PRICE_CHK -->|"⬆ 浮盈>15%"| ROLLOVER["待办: 💰 钱仓滚存建议"]
+      PRICE_CHK -->|"⬇ 浮亏>10%"| THESIS["待办: ⚠️ thesis 检查"]
+      THESIS --> THESIS_VALID{"Thesis 仍然成立?"}
+      THESIS_VALID -->|"否"| EXIT["待办: 🔴 建议退出"]
+      CHECK --> TIME_CHK{"今天 > 回顾日期?"}
+      TIME_CHK -->|"到期"| REVIEW["待办: 📅 定期回顾"]
+      CHECK --> EVENT_CHK{"Thesis_invalidation<br/>被标记?"}
+      EVENT_CHK -->|"是"| URGENT["待办: 🔴 立即检查"]
+      CHECK --> MARKET_CHK{"大盘<年线?"}
+      MARKET_CHK -->|"是"| CAUTION["待办: 🟡 降仓位提醒"]
+
+      style START fill:#e3f2fd,stroke:#2196f3
+      style CHECK fill:#e8f5e9,stroke:#4caf50
+      style ROLLOVER fill:#fff3e0,stroke:#ff9800
+      style EXIT fill:#fce4ec,stroke:#f44336
+      style REVIEW fill:#e8f5e9,stroke:#4caf50
+      style URGENT fill:#fce4ec,stroke:#f44336
+      style CAUTION fill:#fff3e0,stroke:#ff9800
+  </div>
+</div>
+
+<!-- Diagram 4: Knowledge Base -->
+<div class="card diagram-card">
+  <h3>图4: 知识库结构</h3>
+  <div class="mermaid">
+    flowchart TB
+      subgraph 知识库["knowledge/"]
+        P["principles/<br/>四大原则"]
+        D["discipline/<br/>纪律规则"]
+        M["methodology/<br/>方法论"]
+        MV["market_view/<br/>市场观"]
+        PER["personal/<br/>个人沉淀"]
+      end
+
+      P --> P1["坐标原则"] & P2["家国原则"] & P3["息价原则"] & P4["取舍原则"]
+      D --> D1["2638法则"] & D2["年线法则"] & D3["后发制人"] & D4["买分歧卖共识"] & D5["钱仓滚存"] & D6["双账户制"]
+
+      style P fill:#f3e5f5,stroke:#9c27b0
+      style D fill:#f3e5f5,stroke:#9c27b0
+      style M fill:#f3e5f5,stroke:#9c27b0
+      style MV fill:#f3e5f5,stroke:#9c27b0
+      style PER fill:#f3e5f5,stroke:#9c27b0
+  </div>
+</div>
+
+<!-- Diagram 5: Sell Checklist -->
+<div class="card diagram-card">
+  <h3>图5: 卖出前检查流程</h3>
+  <div class="mermaid">
+    stateDiagram-v2
+      [*] --> 卖出触发
+
+      state 卖出触发 {
+        [*] --> 选择理由
+        选择理由 --> 价值回归
+        选择理由 --> 逻辑变了
+        选择理由 --> 纪律执行
+        选择理由 --> 钱仓滚存
+        选择理由 --> 情绪冲动
+      }
+
+      卖出触发 --> 原则检查
+
+      state 原则检查 {
+        [*] --> 坐标原则
+        [*] --> 家国原则
+        [*] --> 息价原则
+        [*] --> 取舍原则
+      }
+
+      原则检查 --> 钱仓决策
+
+      state 钱仓决策 {
+        [*] --> 全部卖出
+        [*] --> 留零成本
+        [*] --> 回收本金
+      }
+
+      钱仓决策 --> 记录日志
+      记录日志 --> [*]
+  </div>
+</div>
+
+<!-- Diagram 6: 全系统组件关系 (自动生成) -->
+<div class="card diagram-card">
+  <h3>图6: 全系统组件关系（数据流视角 · 自动生成）</h3>
+  <% if (systemMapMermaid) { %>
+  <div class="mermaid system-map-diagram"><%- systemMapMermaid %></div>
+  <% } else { %>
+  <p style="color:var(--text-muted);">未生成：先运行 <code>python tools/system-map/build.py</code></p>
+  <% } %>
+</div>
+
+<div class="card" style="text-align:center;color:var(--text-muted);font-size:14px;padding:16px;">
+  FengInvest 操作系统 — 架构文档 | 基于 奇衡DK-CAPITAL 思想体系 | 版本 v3
+</div>

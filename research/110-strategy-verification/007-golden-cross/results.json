@@ -1,0 +1,290 @@
+{
+  "US": {
+    "market": "US",
+    "stocks_processed": 481,
+    "stocks_with_golden_cross": 479,
+    "golden_cross_episodes": 11638,
+    "random_samples": 24050,
+    "golden_cross": {
+      "mean_return": 0.084881,
+      "win_rate": 0.6416,
+      "sample_size": 11638
+    },
+    "random_entry": {
+      "mean_return": 0.106055,
+      "win_rate": 0.6351,
+      "sample_size": 24050
+    },
+    "comparison": {
+      "mean_return_diff": -0.021174,
+      "win_rate_diff": 0.0066,
+      "bootstrap_p_value": 1.0,
+      "bootstrap_percentile": 100.0,
+      "claim_supported": false
+    }
+  },
+  "CN": {
+    "market": "CN",
+    "stocks_processed": 298,
+    "stocks_with_golden_cross": 296,
+    "golden_cross_episodes": 3635,
+    "random_samples": 14900,
+    "golden_cross": {
+      "mean_return": 0.091102,
+      "win_rate": 0.4922,
+      "sample_size": 3635
+    },
+    "random_entry": {
+      "mean_return": 0.059755,
+      "win_rate": 0.4762,
+      "sample_size": 14900
+    },
+    "comparison": {
+      "mean_return_diff": 0.031347,
+      "win_rate_diff": 0.0159,
+      "bootstrap_p_value": 0.0,
+      "bootstrap_percentile": 0.0,
+      "claim_supported": true
+    }
+  },
+  "HK": {
+    "market": "HK",
+    "stocks_processed": 85,
+    "stocks_with_golden_cross": 84,
+    "golden_cross_episodes": 1046,
+    "random_samples": 4250,
+    "golden_cross": {
+      "mean_return": 0.117035,
+      "win_rate": 0.586,
+      "sample_size": 1046
+    },
+    "random_entry": {
+      "mean_return": 0.087511,
+      "win_rate": 0.5588,
+      "sample_size": 4250
+    },
+    "comparison": {
+      "mean_return_diff": 0.029525,
+      "win_rate_diff": 0.0272,
+      "bootstrap_p_value": 0.06,
+      "bootstrap_percentile": 6.0,
+      "claim_supported": false
+    }
+  },
+  "JP": {
+    "market": "JP",
+    "stocks_processed": 204,
+    "stocks_with_golden_cross": 204,
+    "golden_cross_episodes": 3745,
+    "random_samples": 10200,
+    "golden_cross": {
+      "mean_return": 0.059818,
+      "win_rate": 0.5538,
+      "sample_size": 3745
+    },
+    "random_entry": {
+      "mean_return": 0.280385,
+      "win_rate": 0.5867,
+      "sample_size": 10200
+    },
+    "comparison": {
+      "mean_return_diff": -0.220567,
+      "win_rate_diff": -0.0329,
+      "bootstrap_p_value": 1.0,
+      "bootstrap_percentile": 100.0,
+      "claim_supported": false
+    }
+  },
+  "KR": {
+    "market": "KR",
+    "stocks_processed": 195,
+    "stocks_with_golden_cross": 194,
+    "golden_cross_episodes": 2804,
+    "random_samples": 9750,
+    "golden_cross": {
+      "mean_return": 0.107066,
+      "win_rate": 0.5378,
+      "sample_size": 2804
+    },
+    "random_entry": {
+      "mean_return": 0.123254,
+      "win_rate": 0.5674,
+      "sample_size": 9750
+    },
+    "comparison": {
+      "mean_return_diff": -0.016188,
+      "win_rate_diff": -0.0296,
+      "bootstrap_p_value": 0.986,
+      "bootstrap_percentile": 98.6,
+      "claim_supported": false
+    }
+  },
+  "UK": {
+    "market": "UK",
+    "stocks_processed": 95,
+    "stocks_with_golden_cross": 95,
+    "golden_cross_episodes": 2200,
+    "random_samples": 4750,
+    "golden_cross": {
+      "mean_return": 0.042926,
+      "win_rate": 0.5868,
+      "sample_size": 2200
+    },
+    "random_entry": {
+      "mean_return": 0.068491,
+      "win_rate": 0.6042,
+      "sample_size": 4750
+    },
+    "comparison": {
+      "mean_return_diff": -0.025565,
+      "win_rate_diff": -0.0174,
+      "bootstrap_p_value": 1.0,
+      "bootstrap_percentile": 100.0,
+      "claim_supported": false
+    }
+  },
+  "AU": {
+    "market": "AU",
+    "stocks_processed": 192,
+    "stocks_with_golden_cross": 191,
+    "golden_cross_episodes": 2908,
+    "random_samples": 9600,
+    "golden_cross": {
+      "mean_return": 0.122221,
+      "win_rate": 0.6276,
+      "sample_size": 2908
+    },
+    "random_entry": {
+      "mean_return": 0.126205,
+      "win_rate": 0.6102,
+      "sample_size": 9600
+    },
+    "comparison": {
+      "mean_return_diff": -0.003985,
+      "win_rate_diff": 0.0174,
+      "bootstrap_p_value": 0.685,
+      "bootstrap_percentile": 68.5,
+      "claim_supported": false
+    }
+  },
+  "IN": {
+    "market": "IN",
+    "stocks_processed": 50,
+    "stocks_with_golden_cross": 50,
+    "golden_cross_episodes": 789,
+    "random_samples": 2500,
+    "golden_cross": {
+      "mean_return": 0.118038,
+      "win_rate": 0.6451,
+      "sample_size": 789
+    },
+    "random_entry": {
+      "mean_return": 0.205653,
+      "win_rate": 0.6884,
+      "sample_size": 2500
+    },
+    "comparison": {
+      "mean_return_diff": -0.087615,
+      "win_rate_diff": -0.0433,
+      "bootstrap_p_value": 1.0,
+      "bootstrap_percentile": 100.0,
+      "claim_supported": false
+    }
+  },
+  "CA": {
+    "market": "CA",
+    "stocks_processed": 53,
+    "stocks_with_golden_cross": 53,
+    "golden_cross_episodes": 861,
+    "random_samples": 2650,
+    "golden_cross": {
+      "mean_return": 0.060836,
+      "win_rate": 0.6423,
+      "sample_size": 861
+    },
+    "random_entry": {
+      "mean_return": 0.082398,
+      "win_rate": 0.6555,
+      "sample_size": 2650
+    },
+    "comparison": {
+      "mean_return_diff": -0.021562,
+      "win_rate_diff": -0.0132,
+      "bootstrap_p_value": 0.998,
+      "bootstrap_percentile": 99.8,
+      "claim_supported": false
+    }
+  },
+  "DE": {
+    "market": "DE",
+    "stocks_processed": 40,
+    "stocks_with_golden_cross": 40,
+    "golden_cross_episodes": 683,
+    "random_samples": 2000,
+    "golden_cross": {
+      "mean_return": 0.043774,
+      "win_rate": 0.6047,
+      "sample_size": 683
+    },
+    "random_entry": {
+      "mean_return": 0.08811,
+      "win_rate": 0.6415,
+      "sample_size": 2000
+    },
+    "comparison": {
+      "mean_return_diff": -0.044335,
+      "win_rate_diff": -0.0368,
+      "bootstrap_p_value": 1.0,
+      "bootstrap_percentile": 100.0,
+      "claim_supported": false
+    }
+  },
+  "FR": {
+    "market": "FR",
+    "stocks_processed": 39,
+    "stocks_with_golden_cross": 39,
+    "golden_cross_episodes": 684,
+    "random_samples": 1950,
+    "golden_cross": {
+      "mean_return": 0.067529,
+      "win_rate": 0.6316,
+      "sample_size": 684
+    },
+    "random_entry": {
+      "mean_return": 0.07388,
+      "win_rate": 0.6564,
+      "sample_size": 1950
+    },
+    "comparison": {
+      "mean_return_diff": -0.006351,
+      "win_rate_diff": -0.0248,
+      "bootstrap_p_value": 0.758,
+      "bootstrap_percentile": 75.8,
+      "claim_supported": false
+    }
+  },
+  "TW": {
+    "market": "TW",
+    "stocks_processed": 50,
+    "stocks_with_golden_cross": 49,
+    "golden_cross_episodes": 798,
+    "random_samples": 2500,
+    "golden_cross": {
+      "mean_return": 0.135628,
+      "win_rate": 0.6441,
+      "sample_size": 798
+    },
+    "random_entry": {
+      "mean_return": 0.141921,
+      "win_rate": 0.638,
+      "sample_size": 2500
+    },
+    "comparison": {
+      "mean_return_diff": -0.006294,
+      "win_rate_diff": 0.0061,
+      "bootstrap_p_value": 0.674,
+      "bootstrap_percentile": 67.4,
+      "claim_supported": false
+    }
+  }
+}

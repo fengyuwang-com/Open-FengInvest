@@ -1,0 +1,214 @@
+<div class="page-header">
+  <h2>🏗️ FengInvest 操作系统</h2>
+  <div class="breadcrumb">系统总览 — 奇衡DK-CAPITAL 体系 | v3</div>
+</div>
+
+<!-- Stats bar -->
+<div class="dashboard-grid">
+  <div class="stat-card">
+    <div class="stat-value"><%= sys.holdings_count %></div>
+    <div class="stat-label">持仓标的</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value"><%= sys.research_count %></div>
+    <div class="stat-label">研究标的</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value"><%= sys.kbCount %></div>
+    <div class="stat-label">知识条目</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value"><%= sys.alertsCount %></div>
+    <div class="stat-label">今日提醒</div>
+  </div>
+  <% if (sys.total_pnl_pct !== null) { %>
+  <div class="stat-card">
+    <div class="stat-value <%= sys.total_pnl_pct >= 0 ? 'positive' : 'negative' %>">
+      <%= sys.total_pnl_pct %>%</div>
+    <div class="stat-label">总盈亏</div>
+  </div>
+  <% } %>
+</div>
+
+<!-- Market Index Dashboard (Futu Live) -->
+<div class="card">
+  <div style="display:flex;justify-content:space-between;align-items:center;">
+    <h3 class="section-title">📈 大盘速览 <span id="market-updated" style="font-size:11px;color:var(--text-muted);font-weight:normal;"></span></h3>
+    <button class="btn" onclick="refreshMarket()" style="font-size:12px;padding:4px 12px;">🔄 刷新</button>
+  </div>
+  <div class="dashboard-grid" id="index-cards" style="margin-top:8px;">
+    <div class="stat-card"><div class="stat-label">加载中...</div></div>
+  </div>
+</div>
+
+<script>
+async function refreshMarket() {
+  document.getElementById('index-cards').innerHTML = '<div class="stat-card"><div class="stat-label">刷新中...</div></div>';
+  try {
+    const res = await fetch('/api/market/futu-overview');
+    const data = await res.json();
+    const indices = data.indices || {};
+    const container = document.getElementById('index-cards');
+    container.innerHTML = '';
+    for (const [code, idx] of Object.entries(indices)) {
+      const chg = idx.change_pct;
+      const cls = chg > 0 ? 'positive' : (chg < 0 ? 'negative' : '');
+      const arrow = chg > 0 ? '▲' : (chg < 0 ? '▼' : '—');
+      container.innerHTML += `<div class="stat-card">
+        <div class="stat-label">${idx.name}</div>
+        <div class="stat-value ${cls}" style="font-size:22px;">${idx.price != null ? idx.price.toLocaleString() : '—'}</div>
+        <div style="font-size:12px;${cls ? 'color:var(--' + cls + ');' : 'color:var(--text-muted);'}">${arrow} ${chg != null ? chg.toFixed(2) + '%' : '—'}</div>
+      </div>`;
+    }
+    document.getElementById('market-updated').textContent = '更新 ' + (data.fetched_at || '').slice(0, 16);
+  } catch (e) {
+    document.getElementById('index-cards').innerHTML = '<div class="stat-card"><div class="stat-label">获取失败</div></div>';
+  }
+}
+refreshMarket();
+</script>
+
+<!-- Holdings Section -->
+<div class="card">
+  <h3 class="section-title">💼 持仓摘要</h3>
+  <% if (sys.holdings && sys.holdings.length > 0) { %>
+  <table class="holdings-table">
+    <thead>
+      <tr>
+        <th>标的</th>
+        <th>价格</th>
+        <th>成本</th>
+        <th>盈亏</th>
+        <th>滚存阶段</th>
+        <th>回顾</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% sys.holdings.forEach(function(h) { %>
+      <% var isCash = h.asset_type === 'cash'; %>
+      <% var px = h.position.current_price || h.position.nav || h.position.amount; %>
+      <% var cost = isCash ? null : (h.position.avg_cost || h.position.nav); %>
+      <% var pnl = px && cost ? ((px - cost) / cost * 100) : null; %>
+      <% var ticker = h.ticker || h.id; %>
+      <% var zoneLabel = h.capital_zone === 'CN_IN' ? '境内' : h.capital_zone === 'OVERSEAS' ? '境外' : ''; %>
+      <% var marketLabel = h.market === 'CN_A' ? 'A股' : h.market === 'CN_HK' ? '港股通' : h.market === 'CN_OVS' ? '中概' : h.market === 'US' ? '美股' : h.market === 'GLOBAL' ? '全球' : (h.market || ''); %>
+      <% var segLabel = h.segment || ''; %>
+      <tr>
+        <td>
+          <% if (marketLabel) { %><span style="font-size:11px;color:var(--text-muted);">[<%= marketLabel %><%= segLabel ? '·' + segLabel : '' %>]</span> <% } %>
+          <a href="/holdings/<%= ticker %>"><%= h.name || ticker %></a>
+        </td>
+        <td><%= px != null ? px.toLocaleString(undefined, {maximumFractionDigits: 2}) : '—' %><% if (h.currency) { %> <span style="font-size:11px;color:var(--text-muted);"><%= h.currency %></span><% } %></td>
+        <td><%= cost != null ? cost.toFixed(2) : '—' %></td>
+        <td>
+          <% if (isCash) { %>
+          <span style="color:var(--text-muted);">现金</span>
+          <% } else if (pnl !== null) { %>
+          <span class="<%= pnl >= 0 ? 'pnl-positive' : 'pnl-negative' %>">
+            <%= pnl >= 0 ? '+' : '' %><%= pnl.toFixed(1) %>%
+          </span>
+          <% } else { %>
+          <span class="badge badge-neutral">等待数据</span>
+          <% } %>
+        </td>
+        <td><%= h.capital_rollover.phase === 'capital_at_risk' ? '风险资本' : h.capital_rollover.phase === 'recovered' ? '已回收' : h.capital_rollover.phase %></td>
+        <td><%= h.triggers.next_review_date || '—' %></td>
+      </tr>
+      <% }); %>
+    </tbody>
+  </table>
+  <% } else { %>
+  <div class="empty-holdings">
+    <div style="font-size:32px;margin-bottom:8px;">📭</div>
+    <p>暂无持仓数据</p>
+  </div>
+  <% } %>
+</div>
+
+<!-- Alerts Section -->
+<div class="card">
+  <h3 class="section-title">⚠️ 今日提醒</h3>
+  <% if (sys.alerts && sys.alerts.length > 0) { %>
+  <div class="alert-list">
+    <% sys.alerts.forEach(function(a) { %>
+    <div class="alert-item <%= a.severity %>">
+      <span class="alert-tag <%= a.severity %>"><%= a.type %></span>
+      <span><%= a.ticker ? '[' + a.ticker + '] ' : '' %><%= a.message %></span>
+    </div>
+    <% }); %>
+  </div>
+  <% } else { %>
+  <div class="empty-state"><p>今日暂无提醒</p></div>
+  <% } %>
+</div>
+
+<!-- Research / Journal Section -->
+<div class="card">
+  <h3 class="section-title">🔬 研究动态</h3>
+  <% if (sys.recentResearch && sys.recentResearch.length > 0) { %>
+  <div class="activity-list">
+    <% sys.recentResearch.forEach(function(r) { %>
+    <div class="activity-item">
+      <span class="activity-ticker"><%= r.ticker %></span>
+      <span class="activity-layer">
+        <% r.layers.forEach(function(l, i) { %>
+        <span class="badge badge-green"><%= l.layer.toUpperCase() %></span>
+        <% }); %>
+      </span>
+    </div>
+    <% }); %>
+  </div>
+  <% } else { %>
+  <div class="empty-state"><p>暂无研究数据</p></div>
+  <% } %>
+</div>
+
+<!-- Recent journal -->
+<div class="card">
+  <h3 class="section-title">📝 最近决策</h3>
+  <% if (sys.journal && sys.journal.length > 0) { %>
+    <% sys.journal.forEach(function(e) { %>
+    <div class="journal-entry">
+      <div class="journal-date"><%= e.timestamp ? e.timestamp.slice(0,10) : '' %></div>
+      <div class="journal-ticker"><%= e.ticker || '' %></div>
+      <div class="journal-body"><%= e.message %></div>
+    </div>
+    <% }); %>
+  <% } else { %>
+  <div class="empty-state"><p>暂无决策记录</p></div>
+  <% } %>
+</div>
+
+<!-- DK 知识体系 -->
+<div class="card">
+  <h3 class="section-title">📚 DK 知识体系</h3>
+  <% if (sys.kbCategories && sys.kbCategories.length > 0) { %>
+  <div class="kb-mini-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;">
+    <% sys.kbCategories.forEach(function(cat) { %>
+    <a href="/knowledge" class="kb-mini-card" style="display:block;padding:10px 14px;border:1px solid var(--border);border-radius:8px;text-decoration:none;color:inherit;transition:background 0.12s;">
+      <div style="font-size:22px;font-weight:700;"><%= cat.count %></div>
+      <div style="font-size:12px;color:var(--text-muted);"><%= cat.label %></div>
+    </a>
+    <% }); %>
+  </div>
+  <% } else { %>
+  <div class="empty-state"><p>知识库为空</p></div>
+  <% } %>
+  <div style="margin-top:8px;text-align:right;">
+    <a href="/knowledge" class="link" style="font-size:13px;">浏览全部 →</a>
+  </div>
+</div>
+
+<!-- System Directory Status -->
+<div class="card">
+  <h3 class="section-title">🔧 系统状态</h3>
+  <div class="dir-grid">
+    <% var dirs = {holdings:'持仓数据', knowledge:'知识库', research:'研究报告', logs:'决策日志', reviews:'复盘存档', alerts:'触发引擎'}; %>
+    <% Object.keys(dirs).forEach(function(d) { %>
+    <div class="dir-item">
+      <span class="badge badge-<%= sys.dirStatus[d] ? 'green' : 'red' %>"><%= sys.dirStatus[d] ? '✓' : '✗' %></span>
+      <span><%= dirs[d] %></span>
+    </div>
+    <% }); %>
+  </div>
+</div>

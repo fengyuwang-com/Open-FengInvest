@@ -1,0 +1,209 @@
+# ============================================================
+# FengInvest 系统关系图 — 唯一源数据
+# ------------------------------------------------------------
+# 改法: 增删组件只改这个文件（节点加一行、关系加一行），然后跑:
+#   python tools/system-map/build.py
+# 会重新生成 docs/system-map.mmd（静态图）和
+# docs/system-map.html（可拖拽互动图），不用手画。
+#
+# 字段说明:
+#   nodes:  id(英文短名) label(显示名) group(分组) desc(说明, 互动图点击显示)
+#           path(可选, 脚本会检查该路径存在性, 防止手误)
+#   edges:  from/to 引用节点 id, label 为关系词
+# 更新日期: 2026-08-05
+# ============================================================
+
+meta:
+  title: FengInvest 系统关系图
+  updated: "2026-08-05"
+
+groups:
+  data:      { label: "数据层",   color: "#2c7fb8" }
+  tools:     { label: "工具层",   color: "#31a354" }
+  research:  { label: "研究层",   color: "#e6550d" }
+  knowledge: { label: "知识层",   color: "#756bb1" }
+  board:     { label: "决策与展示", color: "#c44e52" }
+  external:  { label: "外部生态", color: "#969696" }
+  sync:      { label: "同步层",   color: "#a67c00" }
+
+nodes:
+  # ---- 数据层 ----
+  - id: csmar
+    label: "CSMAR 原始数据"
+    group: data
+    desc: "外部数据供应商：行情、财务、股权等原始数据源，经导入脚本进库"
+  - id: market_data_db
+    label: "data/market_data.db"
+    group: data
+    desc: "中央行情库：indices 2126、daily_data 1300万行、cn_financials 35.7万行、stkcd_map 5828"
+    path: "data/market_data.db"
+
+  # ---- 工具层 ----
+  - id: importer
+    label: "导入脚本 feng_import_csmar"
+    group: tools
+    desc: "把 CSMAR 原始数据导入 SQLite"
+    path: "tools/feng_import_csmar.py"
+  - id: dbops
+    label: "建库/校验 fengdata 族"
+    group: tools
+    desc: "fengdata / fengdbrefine / fengstockdb / fengindexdb：建库、补数据、校验一致性"
+    path: "tools/fengdbrefine.py"
+  - id: finops
+    label: "财务处理 fengfundamentals 族"
+    group: tools
+    desc: "fengfundamentals / feng10k / feng_add_capex：财务指标加工"
+    path: "tools/fengfundamentals.py"
+  - id: screener
+    label: "选股 fengscreen"
+    group: tools
+    desc: "fengscreen / stock_screener：按因子条件从库中筛选标的"
+    path: "tools/fengscreen.py"
+  - id: portfolio_tools
+    label: "组合工具 fengportfolio"
+    group: tools
+    desc: "fengportfolio / fengview：组合构建、收益视图"
+    path: "tools/fengportfolio.py"
+  - id: audit_tools
+    label: "质量审计 fenghealth 族"
+    group: tools
+    desc: "fenghealth / report_audit / financial_rigor：数据健康检查与报告审计"
+    path: "tools/fenghealth.py"
+  - id: watch
+    label: "行情监控 fengmarket"
+    group: tools
+    desc: "fengmarket / fengwatch：行情获取与盯盘"
+    path: "tools/fengmarket.py"
+
+  # ---- 研究层 ----
+  - id: verification
+    label: "110-strategy-verification"
+    group: research
+    desc: "52 条可证伪论断，36 条已测、3 条已复核（#1/#4/#33）；每条含 verify 脚本 + README + results.json + audit.md"
+    path: "research/110-strategy-verification"
+  - id: research_other
+    label: "research 010-100"
+    group: research
+    desc: "宏观/资产类别/策略/公司/报告/组合管理 各研究块"
+    path: "research"
+  - id: research_state
+    label: "research/state 研究状态"
+    group: research
+    desc: "研究过程状态与临时产出"
+    path: "research/state"
+
+  # ---- 知识层 ----
+  - id: methodology
+    label: "knowledge/methodology"
+    group: knowledge
+    desc: "回测方法总纲（判据=指标、显著性、复权/生存偏差/成本）+ 文献地图（Crossref 验证过的论文表）"
+    path: "knowledge/methodology"
+  - id: knowledge_other
+    label: "knowledge 其余"
+    group: knowledge
+    desc: "principles / discipline / market_view / personal 投资原则与纪律"
+    path: "knowledge"
+  - id: docs
+    label: "docs/"
+    group: knowledge
+    desc: "FRAMEWORK / ROADMAP / DEPENDENCIES / architecture.html / 框架对比等"
+    path: "docs"
+
+  # ---- 决策与展示 ----
+  - id: rules_reviews
+    label: "rules/ + reviews/"
+    group: board
+    desc: "交易规则与复盘评审"
+    path: "reviews"
+  - id: portfolio_ledger
+    label: "portfolio/ + holdings/"
+    group: board
+    desc: "组合账本与持仓记录"
+    path: "portfolio"
+  - id: fengweb
+    label: "fengweb/"
+    group: board
+    desc: "前端展示"
+    path: "fengweb"
+  - id: logs
+    label: "logs/"
+    group: board
+    desc: "运行日志与审计线索"
+    path: "logs"
+
+  # ---- 外部生态 ----
+  - id: fengasni
+    label: "机器档案系统"
+    group: external
+    desc: "多机档案/Profile 管理（另一台机/本机双 Profile）"
+  - id: searchking
+    label: "Search-King"
+    group: external
+    desc: "网页搜索/正文读取/搜图，文献查证用"
+  - id: opencli
+    label: "opencli"
+    group: external
+    desc: "浏览器自动化（填表/点击/抓取）"
+  - id: mail
+    label: "agently-mail"
+    group: external
+    desc: "邮件收发自动化"
+  - id: everything
+    label: "Everything es.exe"
+    group: external
+    desc: "本地全文/文件名检索（需 1.5 + content 索引）"
+
+  # ---- 同步层 ----
+  - id: github
+    label: "GitHub fengyuwang-com/FengInvest"
+    group: sync
+    desc: "origin fetch + push"
+  - id: gitee
+    label: "Gitee fengyuwang-com/FengInvest"
+    group: sync
+    desc: "origin 第二 push URL，双远端同步"
+  - id: machine_lt
+    label: "本机"
+    group: sync
+    desc: "当前这台机器，Windows 11"
+  - id: machine_air
+    label: "远端机"
+    group: sync
+    desc: "另一台机器，独立 Profile"
+
+edges:
+  # 数据流
+  - { from: csmar,            to: importer,        label: "原始数据流入" }
+  - { from: importer,         to: market_data_db,  label: "导入写入" }
+  - { from: dbops,            to: market_data_db,  label: "建库/校验" }
+  - { from: finops,           to: market_data_db,  label: "财务写入" }
+  # 库 → 消费者
+  - { from: market_data_db,   to: verification,    label: "回测读取" }
+  - { from: market_data_db,   to: screener,        label: "筛选读取" }
+  - { from: market_data_db,   to: portfolio_tools, label: "组合读取" }
+  - { from: market_data_db,   to: watch,           label: "监控读取" }
+  - { from: market_data_db,   to: research_other,  label: "研究读取" }
+  # 研究 ↔ 方法
+  - { from: verification,     to: methodology,     label: "方法对照" }
+  - { from: methodology,      to: verification,    label: "准入/复核规则" }
+  - { from: audit_tools,      to: verification,    label: "回测质量审计" }
+  - { from: audit_tools,      to: market_data_db,  label: "数据健康检查" }
+  - { from: research_other,   to: research_state,  label: "状态记录" }
+  # 知识沉淀
+  - { from: verification,     to: docs,            label: "结论沉淀" }
+  - { from: methodology,      to: docs,            label: "方法沉淀" }
+  - { from: research_other,   to: knowledge_other, label: "研究产出沉淀" }
+  - { from: knowledge_other,  to: rules_reviews,   label: "规则/评审依据" }
+  # 组合与展示
+  - { from: screener,         to: portfolio_tools, label: "入选标的" }
+  - { from: portfolio_tools,  to: portfolio_ledger, label: "账本更新" }
+  - { from: rules_reviews,    to: portfolio_ledger, label: "评审指导" }
+  - { from: docs,             to: fengweb,         label: "内容来源" }
+  # 文献查证
+  - { from: searchking,       to: methodology,     label: "文献查证" }
+  - { from: everything,       to: methodology,     label: "本地检索" }
+  # 机器与同步
+  - { from: machine_lt,       to: fengasni,        label: "本机档案备份" }
+  - { from: machine_air,      to: fengasni,        label: "档案" }
+  - { from: machine_lt,       to: github,          label: "fetch/push" }
+  - { from: machine_lt,       to: gitee,           label: "push" }

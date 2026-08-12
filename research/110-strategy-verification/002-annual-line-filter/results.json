@@ -1,0 +1,326 @@
+{
+  "US": {
+    "market": "US",
+    "stocks_total": 503,
+    "stocks_processed": 481,
+    "stocks_with_signal": 481,
+    "d63": {
+      "signal_count": 194326,
+      "avg_drawdown_filtered": 0.084675,
+      "avg_drawdown_always": 0.1379,
+      "drawdown_reduction_pct": 38.6,
+      "claim_supported": false
+    },
+    "d126": {
+      "signal_count": 192883,
+      "avg_drawdown_filtered": 0.118901,
+      "avg_drawdown_always": 0.190667,
+      "drawdown_reduction_pct": 37.64,
+      "claim_supported": false
+    },
+    "d252": {
+      "signal_count": 190001,
+      "avg_drawdown_filtered": 0.161761,
+      "avg_drawdown_always": 0.255536,
+      "drawdown_reduction_pct": 36.7,
+      "claim_supported": false
+    }
+  },
+  "CN": {
+    "market": "CN",
+    "stocks_total": 300,
+    "stocks_processed": 299,
+    "stocks_with_signal": 298,
+    "d63": {
+      "signal_count": 55998,
+      "avg_drawdown_filtered": 0.09594,
+      "avg_drawdown_always": 0.188314,
+      "drawdown_reduction_pct": 49.05,
+      "claim_supported": false
+    },
+    "d126": {
+      "signal_count": 55104,
+      "avg_drawdown_filtered": 0.133645,
+      "avg_drawdown_always": 0.265177,
+      "drawdown_reduction_pct": 49.6,
+      "claim_supported": false
+    },
+    "d252": {
+      "signal_count": 53319,
+      "avg_drawdown_filtered": 0.179353,
+      "avg_drawdown_always": 0.360382,
+      "drawdown_reduction_pct": 50.23,
+      "claim_supported": true
+    }
+  },
+  "HK": {
+    "market": "HK",
+    "stocks_total": 85,
+    "stocks_processed": 85,
+    "stocks_with_signal": 85,
+    "d63": {
+      "signal_count": 16972,
+      "avg_drawdown_filtered": 0.089952,
+      "avg_drawdown_always": 0.16533,
+      "drawdown_reduction_pct": 45.59,
+      "claim_supported": false
+    },
+    "d126": {
+      "signal_count": 16717,
+      "avg_drawdown_filtered": 0.125851,
+      "avg_drawdown_always": 0.230588,
+      "drawdown_reduction_pct": 45.42,
+      "claim_supported": false
+    },
+    "d252": {
+      "signal_count": 16207,
+      "avg_drawdown_filtered": 0.171625,
+      "avg_drawdown_always": 0.309829,
+      "drawdown_reduction_pct": 44.61,
+      "claim_supported": false
+    }
+  },
+  "JP": {
+    "market": "JP",
+    "stocks_total": 225,
+    "stocks_processed": 204,
+    "stocks_with_signal": 204,
+    "d63": {
+      "signal_count": 58278,
+      "avg_drawdown_filtered": 0.083926,
+      "avg_drawdown_always": 0.153189,
+      "drawdown_reduction_pct": 45.21,
+      "claim_supported": false
+    },
+    "d126": {
+      "signal_count": 57666,
+      "avg_drawdown_filtered": 0.11675,
+      "avg_drawdown_always": 0.213481,
+      "drawdown_reduction_pct": 45.31,
+      "claim_supported": false
+    },
+    "d252": {
+      "signal_count": 56442,
+      "avg_drawdown_filtered": 0.155049,
+      "avg_drawdown_always": 0.287908,
+      "drawdown_reduction_pct": 46.15,
+      "claim_supported": false
+    }
+  },
+  "KR": {
+    "market": "KR",
+    "stocks_total": 200,
+    "stocks_processed": 196,
+    "stocks_with_signal": 196,
+    "d63": {
+      "signal_count": 43363,
+      "avg_drawdown_filtered": 0.097973,
+      "avg_drawdown_always": 0.180065,
+      "drawdown_reduction_pct": 45.59,
+      "claim_supported": false
+    },
+    "d126": {
+      "signal_count": 42777,
+      "avg_drawdown_filtered": 0.133276,
+      "avg_drawdown_always": 0.247484,
+      "drawdown_reduction_pct": 46.15,
+      "claim_supported": false
+    },
+    "d252": {
+      "signal_count": 41611,
+      "avg_drawdown_filtered": 0.175584,
+      "avg_drawdown_always": 0.330814,
+      "drawdown_reduction_pct": 46.92,
+      "claim_supported": false
+    }
+  },
+  "UK": {
+    "market": "UK",
+    "stocks_total": 96,
+    "stocks_processed": 96,
+    "stocks_with_signal": 95,
+    "d63": {
+      "signal_count": 34542,
+      "avg_drawdown_filtered": 0.072307,
+      "avg_drawdown_always": 0.131022,
+      "drawdown_reduction_pct": 44.81,
+      "claim_supported": false
+    },
+    "d126": {
+      "signal_count": 34257,
+      "avg_drawdown_filtered": 0.102224,
+      "avg_drawdown_always": 0.183086,
+      "drawdown_reduction_pct": 44.17,
+      "claim_supported": false
+    },
+    "d252": {
+      "signal_count": 33687,
+      "avg_drawdown_filtered": 0.141849,
+      "avg_drawdown_always": 0.248993,
+      "drawdown_reduction_pct": 43.03,
+      "claim_supported": false
+    }
+  },
+  "AU": {
+    "market": "AU",
+    "stocks_total": 200,
+    "stocks_processed": 196,
+    "stocks_with_signal": 194,
+    "d63": {
+      "signal_count": 51463,
+      "avg_drawdown_filtered": 0.080863,
+      "avg_drawdown_always": 0.145991,
+      "drawdown_reduction_pct": 44.61,
+      "claim_supported": false
+    },
+    "d126": {
+      "signal_count": 50885,
+      "avg_drawdown_filtered": 0.114673,
+      "avg_drawdown_always": 0.204337,
+      "drawdown_reduction_pct": 43.88,
+      "claim_supported": false
+    },
+    "d252": {
+      "signal_count": 49733,
+      "avg_drawdown_filtered": 0.156172,
+      "avg_drawdown_always": 0.276417,
+      "drawdown_reduction_pct": 43.5,
+      "claim_supported": false
+    }
+  },
+  "IN": {
+    "market": "IN",
+    "stocks_total": 50,
+    "stocks_processed": 50,
+    "stocks_with_signal": 50,
+    "d63": {
+      "signal_count": 13637,
+      "avg_drawdown_filtered": 0.097647,
+      "avg_drawdown_always": 0.1543,
+      "drawdown_reduction_pct": 36.72,
+      "claim_supported": false
+    },
+    "d126": {
+      "signal_count": 13487,
+      "avg_drawdown_filtered": 0.137811,
+      "avg_drawdown_always": 0.21479,
+      "drawdown_reduction_pct": 35.84,
+      "claim_supported": false
+    },
+    "d252": {
+      "signal_count": 13187,
+      "avg_drawdown_filtered": 0.188155,
+      "avg_drawdown_always": 0.288684,
+      "drawdown_reduction_pct": 34.82,
+      "claim_supported": false
+    }
+  },
+  "CA": {
+    "market": "CA",
+    "stocks_total": 59,
+    "stocks_processed": 53,
+    "stocks_with_signal": 53,
+    "d63": {
+      "signal_count": 15411,
+      "avg_drawdown_filtered": 0.07522,
+      "avg_drawdown_always": 0.120541,
+      "drawdown_reduction_pct": 37.6,
+      "claim_supported": false
+    },
+    "d126": {
+      "signal_count": 15252,
+      "avg_drawdown_filtered": 0.104842,
+      "avg_drawdown_always": 0.166175,
+      "drawdown_reduction_pct": 36.91,
+      "claim_supported": false
+    },
+    "d252": {
+      "signal_count": 14934,
+      "avg_drawdown_filtered": 0.142523,
+      "avg_drawdown_always": 0.223847,
+      "drawdown_reduction_pct": 36.33,
+      "claim_supported": false
+    }
+  },
+  "DE": {
+    "market": "DE",
+    "stocks_total": 40,
+    "stocks_processed": 40,
+    "stocks_with_signal": 40,
+    "d63": {
+      "signal_count": 11355,
+      "avg_drawdown_filtered": 0.077711,
+      "avg_drawdown_always": 0.141022,
+      "drawdown_reduction_pct": 44.89,
+      "claim_supported": false
+    },
+    "d126": {
+      "signal_count": 11235,
+      "avg_drawdown_filtered": 0.110649,
+      "avg_drawdown_always": 0.196978,
+      "drawdown_reduction_pct": 43.83,
+      "claim_supported": false
+    },
+    "d252": {
+      "signal_count": 10995,
+      "avg_drawdown_filtered": 0.152712,
+      "avg_drawdown_always": 0.267724,
+      "drawdown_reduction_pct": 42.96,
+      "claim_supported": false
+    }
+  },
+  "FR": {
+    "market": "FR",
+    "stocks_total": 39,
+    "stocks_processed": 39,
+    "stocks_with_signal": 39,
+    "d63": {
+      "signal_count": 11977,
+      "avg_drawdown_filtered": 0.07459,
+      "avg_drawdown_always": 0.13377,
+      "drawdown_reduction_pct": 44.24,
+      "claim_supported": false
+    },
+    "d126": {
+      "signal_count": 11860,
+      "avg_drawdown_filtered": 0.105494,
+      "avg_drawdown_always": 0.185191,
+      "drawdown_reduction_pct": 43.04,
+      "claim_supported": false
+    },
+    "d252": {
+      "signal_count": 11626,
+      "avg_drawdown_filtered": 0.14527,
+      "avg_drawdown_always": 0.249281,
+      "drawdown_reduction_pct": 41.72,
+      "claim_supported": false
+    }
+  },
+  "TW": {
+    "market": "TW",
+    "stocks_total": 50,
+    "stocks_processed": 50,
+    "stocks_with_signal": 50,
+    "d63": {
+      "signal_count": 13383,
+      "avg_drawdown_filtered": 0.087447,
+      "avg_drawdown_always": 0.148733,
+      "drawdown_reduction_pct": 41.21,
+      "claim_supported": false
+    },
+    "d126": {
+      "signal_count": 13233,
+      "avg_drawdown_filtered": 0.122015,
+      "avg_drawdown_always": 0.205921,
+      "drawdown_reduction_pct": 40.75,
+      "claim_supported": false
+    },
+    "d252": {
+      "signal_count": 12934,
+      "avg_drawdown_filtered": 0.165782,
+      "avg_drawdown_always": 0.276577,
+      "drawdown_reduction_pct": 40.06,
+      "claim_supported": false
+    }
+  }
+}

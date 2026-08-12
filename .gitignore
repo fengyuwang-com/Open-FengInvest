@@ -1,0 +1,84 @@
+# ============================================================
+# FengInvest — .gitignore
+# 防止个人/敏感数据泄露。修改前请确认是否影响开源fork
+# ============================================================
+
+# ── Python ──
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+
+# ── Node ──
+node_modules/
+fengweb/node_modules/
+
+# ── 构建产物 ──
+fengweb/dist/
+
+# ── 个人数据（不开源）──────────────────────────────────────
+alerts/
+holdings/
+logs/
+reviews/
+research/060-companies/
+portfolio/
+knowledge/personal/
+research/070-reports/current-gitee-repos.md
+fengmem.md
+FENGMEM.md
+
+# ── 个人配置 ──
+.claude/
+.agents/
+.zcode/
+.vscode/
+.idea/
+*.code-workspace
+
+# ── 凭据与密钥 ──
+.env
+.env.*
+*.key
+*.pem
+*.pfx
+*.p12
+id_rsa*
+settings.local.json
+credentials.json
+token*
+secret*
+
+# ── 数据库（过大，不入git） ──
+data/*.db
+data/*.db-shm
+data/*.db-wal
+*.db
+*.sqlite
+*.sqlite3
+*.duckdb
+
+# ── 系统文件 ──
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# ── 日志与检查点 ──
+*.log
+data/.refine_checkpoint.json
+data/.fundamentals_checkpoint.json
+data/.ai-berkshire-sync.json
+logs/backfill_*.log
+logs/checkpoint_*.txt
+
+# ── skill / 临时生成文件 ──
+skills-lock.json
+research/temp_*
+research/state/
+
+# ── 已知废弃/旧目录 ──
+tools/alpha-skills/
+research/080-state/

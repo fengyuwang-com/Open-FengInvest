@@ -1,0 +1,104 @@
+{
+  "claim": "#42 组合DNA不变但市场在变，3年后落后基准>20%",
+  "claim_en": "Portfolio DNA unchanged for 3 years, underperforms benchmark by >20%",
+  "method": "固定组合 vs 每年动量调仓的滚动 3 年超额收益对比",
+  "n_windows_total": 389,
+  "n_windows_below_20pct": 370,
+  "p_below_20pct_pct": 95.1,
+  "p_below_10pct_pct": 99.7,
+  "p_outperform_benchmark_pct": 0.0,
+  "period_stats": [
+    {
+      "year": "2014",
+      "n_windows": 30,
+      "avg_excess_pct": -52.86,
+      "below_20pct_count": 30,
+      "below_20pct_probability": 100.0
+    },
+    {
+      "year": "2015",
+      "n_windows": 35,
+      "avg_excess_pct": -49.01,
+      "below_20pct_count": 35,
+      "below_20pct_probability": 100.0
+    },
+    {
+      "year": "2016",
+      "n_windows": 24,
+      "avg_excess_pct": -28.64,
+      "below_20pct_count": 22,
+      "below_20pct_probability": 91.7
+    },
+    {
+      "year": "2017",
+      "n_windows": 34,
+      "avg_excess_pct": -25.39,
+      "below_20pct_count": 34,
+      "below_20pct_probability": 100.0
+    },
+    {
+      "year": "2018",
+      "n_windows": 36,
+      "avg_excess_pct": -36.08,
+      "below_20pct_count": 36,
+      "below_20pct_probability": 100.0
+    },
+    {
+      "year": "2019",
+      "n_windows": 24,
+      "avg_excess_pct": -35.6,
+      "below_20pct_count": 24,
+      "below_20pct_probability": 100.0
+    },
+    {
+      "year": "2020",
+      "n_windows": 36,
+      "avg_excess_pct": -33.01,
+      "below_20pct_count": 33,
+      "below_20pct_probability": 91.7
+    },
+    {
+      "year": "2021",
+      "n_windows": 36,
+      "avg_excess_pct": -50.22,
+      "below_20pct_count": 36,
+      "below_20pct_probability": 100.0
+    },
+    {
+      "year": "2022",
+      "n_windows": 24,
+      "avg_excess_pct": -46.49,
+      "below_20pct_count": 22,
+      "below_20pct_probability": 91.7
+    },
+    {
+      "year": "2023",
+      "n_windows": 36,
+      "avg_excess_pct": -32.49,
+      "below_20pct_count": 31,
+      "below_20pct_probability": 86.1
+    },
+    {
+      "year": "2024",
+      "n_windows": 36,
+      "avg_excess_pct": -27.09,
+      "below_20pct_count": 30,
+      "below_20pct_probability": 83.3
+    },
+    {
+      "year": "2025",
+      "n_windows": 24,
+      "avg_excess_pct": -50.06,
+      "below_20pct_count": 23,
+      "below_20pct_probability": 95.8
+    },
+    {
+      "year": "2026",
+      "n_windows": 14,
+      "avg_excess_pct": -74.1,
+      "below_20pct_count": 14,
+      "below_20pct_probability": 100.0
+    }
+  ],
+  "conclusion": "✅ 支持 — 固定组合 3 年落后基准 >20% 的概率为 95.1%，超过 50%"
+}

@@ -1,0 +1,213 @@
+{
+  "claim": "#11 - VIX>30 恐慌期买入跑赢平静期",
+  "data_range": {
+    "from": "1990-01-02",
+    "to": "2026-07-20"
+  },
+  "total_trading_days": 9203,
+  "vix_percentiles": {
+    "min": 9.14,
+    "p25": 13.98,
+    "p50": 17.61,
+    "p75": 22.72,
+    "p90": 28.56,
+    "p95": 32.95,
+    "max": 82.69,
+    "mean": 19.45
+  },
+  "signal_counts": {
+    "panic_vix_over_30": 734,
+    "calm_vix_under_20": 5755,
+    "high_panic_vix_over_35": 353,
+    "extreme_panic_vix_over_40": 207
+  },
+  "horizon_results": {
+    "1M": {
+      "lookahead_days": 21,
+      "panic": {
+        "label": "panic",
+        "count": 734,
+        "avg_return": 0.025844,
+        "median_return": 0.035579,
+        "win_rate": 0.7125,
+        "std_return": 0.077079,
+        "min_return": -0.300304,
+        "max_return": 0.251144
+      },
+      "calm": {
+        "label": "calm",
+        "count": 5755,
+        "avg_return": 0.006304,
+        "median_return": 0.010854,
+        "win_rate": 0.6422,
+        "std_return": 0.033829,
+        "min_return": -0.329668,
+        "max_return": 0.135579
+      },
+      "high_panic_vix35": {
+        "label": "high_panic",
+        "count": 353,
+        "avg_return": 0.025198,
+        "median_return": 0.03883,
+        "win_rate": 0.6714,
+        "std_return": 0.09109,
+        "min_return": -0.245274,
+        "max_return": 0.251144
+      },
+      "extreme_panic_vix40": {
+        "label": "extreme_panic",
+        "count": 207,
+        "avg_return": 0.028577,
+        "median_return": 0.038209,
+        "win_rate": 0.6377,
+        "std_return": 0.098485,
+        "min_return": -0.200177,
+        "max_return": 0.251144
+      },
+      "panic_outperforms_calm_by": 0.01954,
+      "panic_beat_calm_avg_pct": 0.6771,
+      "claim_supported": true
+    },
+    "3M": {
+      "lookahead_days": 63,
+      "panic": {
+        "label": "panic",
+        "count": 734,
+        "avg_return": 0.068152,
+        "median_return": 0.078561,
+        "win_rate": 0.7684,
+        "std_return": 0.109502,
+        "min_return": -0.294643,
+        "max_return": 0.393519
+      },
+      "calm": {
+        "label": "calm",
+        "count": 5715,
+        "avg_return": 0.019574,
+        "median_return": 0.027744,
+        "win_rate": 0.7106,
+        "std_return": 0.058716,
+        "min_return": -0.417706,
+        "max_return": 0.242703
+      },
+      "high_panic_vix35": {
+        "label": "high_panic",
+        "count": 353,
+        "avg_return": 0.069661,
+        "median_return": 0.081173,
+        "win_rate": 0.7309,
+        "std_return": 0.128852,
+        "min_return": -0.272129,
+        "max_return": 0.393519
+      },
+      "extreme_panic_vix40": {
+        "label": "extreme_panic",
+        "count": 207,
+        "avg_return": 0.072555,
+        "median_return": 0.085209,
+        "win_rate": 0.6715,
+        "std_return": 0.150051,
+        "min_return": -0.223054,
+        "max_return": 0.393519
+      },
+      "panic_outperforms_calm_by": 0.048578,
+      "panic_beat_calm_avg_pct": 0.7371,
+      "claim_supported": true
+    },
+    "6M": {
+      "lookahead_days": 126,
+      "panic": {
+        "label": "panic",
+        "count": 732,
+        "avg_return": 0.129197,
+        "median_return": 0.151518,
+        "win_rate": 0.8279,
+        "std_return": 0.140751,
+        "min_return": -0.363006,
+        "max_return": 0.502372
+      },
+      "calm": {
+        "label": "calm",
+        "count": 5687,
+        "avg_return": 0.044766,
+        "median_return": 0.053222,
+        "win_rate": 0.7797,
+        "std_return": 0.081769,
+        "min_return": -0.46119,
+        "max_return": 0.315827
+      },
+      "high_panic_vix35": {
+        "label": "high_panic",
+        "count": 353,
+        "avg_return": 0.15058,
+        "median_return": 0.1758,
+        "win_rate": 0.83,
+        "std_return": 0.156437,
+        "min_return": -0.321993,
+        "max_return": 0.502372
+      },
+      "extreme_panic_vix40": {
+        "label": "extreme_panic",
+        "count": 207,
+        "avg_return": 0.172528,
+        "median_return": 0.19933,
+        "win_rate": 0.8406,
+        "std_return": 0.164689,
+        "min_return": -0.278872,
+        "max_return": 0.502372
+      },
+      "panic_outperforms_calm_by": 0.084431,
+      "panic_beat_calm_avg_pct": 0.7322,
+      "claim_supported": true
+    },
+    "12M": {
+      "lookahead_days": 252,
+      "panic": {
+        "label": "panic",
+        "count": 732,
+        "avg_return": 0.222808,
+        "median_return": 0.225443,
+        "win_rate": 0.8743,
+        "std_return": 0.182394,
+        "min_return": -0.414745,
+        "max_return": 0.747797
+      },
+      "calm": {
+        "label": "calm",
+        "count": 5574,
+        "avg_return": 0.106068,
+        "median_return": 0.110472,
+        "win_rate": 0.8574,
+        "std_return": 0.123746,
+        "min_return": -0.447059,
+        "max_return": 0.504358
+      },
+      "high_panic_vix35": {
+        "label": "high_panic",
+        "count": 353,
+        "avg_return": 0.283904,
+        "median_return": 0.277071,
+        "win_rate": 0.9348,
+        "std_return": 0.172761,
+        "min_return": -0.248381,
+        "max_return": 0.747797
+      },
+      "extreme_panic_vix40": {
+        "label": "extreme_panic",
+        "count": 207,
+        "avg_return": 0.329963,
+        "median_return": 0.308511,
+        "win_rate": 0.9614,
+        "std_return": 0.168267,
+        "min_return": -0.170042,
+        "max_return": 0.747797
+      },
+      "panic_outperforms_calm_by": 0.11674,
+      "panic_beat_calm_avg_pct": 0.8197,
+      "claim_supported": true
+    }
+  },
+  "summary": "如果恐慌期(VIX>30)买入的平均收益高于平静期(VIX<20), 则论断成立: VIX>30恐慌时买入确实跑赢平静期买入.",
+  "overall_claim_supported_count": 4,
+  "overall_claim_supported": true
+}

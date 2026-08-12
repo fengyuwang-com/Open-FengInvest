@@ -1,0 +1,155 @@
+<div class="page-header">
+  <h2>📜 持仓历史</h2>
+  <div class="breadcrumb"><a href="/">系统总览</a> / <a href="/watch">持仓监控</a> / 历史</div>
+</div>
+
+<!-- Action Bar -->
+<div class="card" style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+  <button class="btn btn-primary" onclick="loadHistory()">刷新数据</button>
+  <span id="status-spinner" style="display:none;font-size:13px;color:var(--primary);">⏳ 加载中...</span>
+</div>
+
+<!-- Summary Dashboard -->
+<div class="dashboard-grid" id="summary-grid">
+  <div class="stat-card">
+    <div class="stat-value" id="total-trades" style="color:var(--text);">—</div>
+    <div class="stat-label">总交易</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value positive" id="wins">—</div>
+    <div class="stat-label">盈利 🟢</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value negative" id="losses">—</div>
+    <div class="stat-label">亏损 🔴</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value" id="win-rate" style="color:var(--primary);">—</div>
+    <div class="stat-label">胜率</div>
+  </div>
+</div>
+
+<!-- Active Holdings -->
+<div class="section-title">当前持仓</div>
+<div id="active-list">
+  <div class="empty-state"><p>加载中...</p></div>
+</div>
+
+<!-- Closed Holdings -->
+<div class="section-title" style="margin-top:24px">已平仓</div>
+<div id="closed-list">
+  <div class="empty-state"><p>加载中...</p></div>
+</div>
+
+<!-- Loss Analysis -->
+<div class="section-title" style="margin-top:24px;color:var(--red);">亏损交易分析</div>
+<div id="loss-list">
+  <div class="empty-state"><p>加载中...</p></div>
+</div>
+
+<script>
+async function loadHistory() {
+  document.getElementById('status-spinner').style.display = 'inline';
+  try {
+    const res = await fetch('/api/watch/history');
+    const data = await res.json();
+
+    const active = data.active || [];
+    const closed = data.closed || [];
+    const wins = closed.filter(h => (h.sell_info?.return_pct || 0) >= 0).length;
+    const losses = closed.filter(h => (h.sell_info?.return_pct || 0) < 0).length;
+    const total = closed.length;
+
+    document.getElementById('total-trades').textContent = total;
+    document.getElementById('wins').textContent = wins;
+    document.getElementById('losses').textContent = losses;
+    document.getElementById('win-rate').textContent = total > 0 ? (wins / total * 100).toFixed(1) + '%' : '—';
+
+    renderActive(active);
+    renderClosed(closed);
+    renderLosses(closed);
+  } catch (e) {
+    document.getElementById('active-list').innerHTML = '<div class="empty-state"><p>加载失败: ' + e.message + '</p></div>';
+  } finally {
+    document.getElementById('status-spinner').style.display = 'none';
+  }
+}
+
+function renderActive(active) {
+  const container = document.getElementById('active-list');
+  if (active.length === 0) {
+    container.innerHTML = '<div class="empty-state"><p>暂无当前持仓</p></div>';
+    return;
+  }
+  let html = '<div class="entry-list">';
+  active.forEach(h => {
+    const pos = h.position || {};
+    const ret = pos.return_pct;
+    const retCls = ret >= 0 ? 'positive' : 'negative';
+    const retStr = ret != null ? (ret >= 0 ? '+' : '') + ret.toFixed(1) + '%' : '—';
+    html += '<a href="/holdings/' + h.ticker + '" class="entry-item">';
+    html += '<div class="entry-title">🟢 ' + h.ticker + '</div>';
+    html += '<div class="entry-preview">成本 ' + pos.avg_cost + ' → 现价 ' + pos.current_price + '  <span class="' + retCls + '">' + retStr + '</span></div>';
+    html += '</a>';
+  });
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function renderClosed(closed) {
+  const container = document.getElementById('closed-list');
+  if (closed.length === 0) {
+    container.innerHTML = '<div class="empty-state"><p>暂无平仓记录</p></div>';
+    return;
+  }
+  let totalPnl = 0;
+  let html = '<div class="entry-list">';
+  closed.forEach(h => {
+    const s = h.sell_info || {};
+    const pct = s.return_pct || 0;
+    const pnl = (s.total_returned || 0) - (s.total_invested || 0);
+    totalPnl += pnl;
+    const icon = pct >= 0 ? '🟢' : '🔴';
+    const retCls = pct >= 0 ? 'positive' : 'negative';
+    html += '<div class="entry-item">';
+    html += '<div class="entry-title">' + icon + ' ' + h.ticker + '</div>';
+    html += '<div class="entry-preview">' + (s.sell_date || '?') + '  盈亏 <span class="' + retCls + '">' + pct.toFixed(1) + '%</span>  (' + (pnl >= 0 ? '+' : '') + pnl.toFixed(0) + ')  持有' + (s.hold_period_days || '?') + '天</div>';
+    if (s.sell_reason) {
+      html += '<div class="entry-preview" style="font-style:italic;">理由: ' + s.sell_reason + '</div>';
+    }
+    html += '</div>';
+  });
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function renderLosses(closed) {
+  const container = document.getElementById('loss-list');
+  const losses = closed.filter(h => (h.sell_info?.return_pct || 0) < 0);
+  if (losses.length === 0) {
+    container.innerHTML = '<div class="empty-state"><p>🎉 暂无亏损记录！</p></div>';
+    return;
+  }
+  losses.sort((a, b) => (a.sell_info?.return_pct || 0) - (b.sell_info?.return_pct || 0));
+  let totalLost = 0;
+  let html = '<div class="entry-list">';
+  losses.forEach((h, i) => {
+    const s = h.sell_info || {};
+    const pct = s.return_pct || 0;
+    const pnl = (s.total_returned || 0) - (s.total_invested || 0);
+    totalLost += pnl;
+    html += '<div class="entry-item" style="border-color:var(--red);">';
+    html += '<div class="entry-title">#' + (i + 1) + ' 🔴 ' + h.ticker + '</div>';
+    html += '<div class="entry-preview"><span class="negative">' + pct.toFixed(1) + '%</span> (' + pnl.toFixed(0) + ')  持有' + (s.hold_period_days || '?') + '天</div>';
+    if (s.sell_reason) {
+      html += '<div class="entry-preview" style="font-style:italic;">理由: ' + s.sell_reason + '</div>';
+    }
+    html += '</div>';
+  });
+  html += '<div class="card" style="margin-top:8px;"><strong>总亏损: </strong><span class="negative">' + totalLost.toFixed(0) + '</span></div>';
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+window.addEventListener('DOMContentLoaded', loadHistory);
+</script>

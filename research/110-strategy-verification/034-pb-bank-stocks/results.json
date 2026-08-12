@@ -1,0 +1,33 @@
+{
+  "test_date": "2026-07-23",
+  "claim_id": 34,
+  "claim": "PB<1且股息率>3%的银行股有超额收益",
+  "parameter": {
+    "universe": "CN银行股 (industry_csrc='J66')",
+    "filter": "PB < 1 AND TTM_dividend_yield > 3%",
+    "weighting": "equal-weight quarterly rebalance",
+    "benchmark": "equal-weight all bank stocks",
+    "data_range": "2005-03-31 ~ 2026-06-30",
+    "dividend_source": "dividends表(ex_date, dividend), TTM=过去12个月"
+  },
+  "results": {
+    "银行股总数": 44,
+    "有数据银行股数": 24,
+    "回测期间": "2005-03-31 ~ 2026-06-30",
+    "季度数": 85,
+    "回测年数": 21.2,
+    "策略_累积收益": 2.9028,
+    "基准_累积收益": 2.1956,
+    "策略_CAGR": 0.0514,
+    "基准_CAGR": 0.0377,
+    "超额年化收益": 0.0137,
+    "策略_最大回撤": 0.2259,
+    "基准_最大回撤": 0.6579,
+    "策略_夏普比": 0.2447,
+    "基准_夏普比": 0.191,
+    "策略_胜率": 0.3765,
+    "基准_胜率": 0.5294,
+    "平均每期选中数": 8.4,
+    "支持论断(超额>0)": true
+  }
+}

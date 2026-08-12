@@ -1,0 +1,23 @@
+<div class="page-header">
+  <h2>📝 决策日志</h2>
+</div>
+
+<% if (entries.length > 0) { %>
+<div class="card">
+  <% entries.forEach(function(e) { %>
+  <div class="journal-entry">
+    <div class="journal-date"><%= e.timestamp %></div>
+    <div class="journal-ticker"><%= e.ticker || '' %></div>
+    <div class="journal-body">
+      <% if (e.action) { %><span class="badge badge-neutral"><%= e.action %></span> <% } %>
+      <%= e.message %>
+    </div>
+  </div>
+  <% }) %>
+</div>
+<% } else { %>
+<div class="empty-state">
+  <h3>暂无决策日志</h3>
+  <p>执行卖出操作后，日志会记录在 logs/journal.jsonl</p>
+</div>
+<% } %>

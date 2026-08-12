@@ -1,0 +1,370 @@
+<div class="page-header">
+  <h2>🔍 股票分析</h2>
+  <div class="breadcrumb"><a href="/">系统总览</a> / 股票分析</div>
+</div>
+
+<!-- Ticker Search -->
+<div class="card">
+  <div style="display:flex;gap:10px;align-items:center;">
+    <input type="text" id="ticker-input" placeholder="输入 TICKER，如 0700.HK、MSFT、AAPL" style="flex:1;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius);font-size:15px;">
+    <button class="btn btn-primary" onclick="searchTicker()" style="padding:10px 24px;font-size:15px;">分析</button>
+  </div>
+</div>
+
+<div id="analysis-content" style="display:none;">
+  <!-- Quick Data Cards -->
+  <div class="dashboard-grid" id="quick-cards"></div>
+
+  <!-- Futu Data Modes -->
+  <div id="futu-data-modes" style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:12px;"></div>
+
+  <!-- Layer Status -->
+  <div class="card" id="analysis-status" style="display:none;">
+    <h3 class="section-title">🔬 分析层状态</h3>
+    <div id="layer-status"></div>
+  </div>
+
+  <!-- Raw Data -->
+  <div class="card" id="raw-data-card" style="display:none;">
+    <h3 class="section-title">📋 原始数据</h3>
+    <pre id="raw-data" style="font-size:12px;background:#f9fafb;padding:12px;border-radius:4px;overflow-x:auto;max-height:300px;"></pre>
+  </div>
+</div>
+
+<div id="analysis-empty" class="empty-state" style="display:none;">
+  <h3>暂无数据</h3>
+  <p>输入 TICKER 开始分析</p>
+</div>
+
+<div id="analysis-loading" class="empty-state" style="display:none;">
+  <h3>分析中...</h3>
+  <p id="loading-msg">正在获取数据</p>
+</div>
+
+<script>
+const LAYER_MAP = {
+  l0: { name: 'L0 能力圈', type: 'judgment', desc: 'AI 判断 — 这个生意你懂吗？', btn: '🤖 AI 分析' },
+  m:  { name: 'M 市场数据', type: 'mechanical', desc: '系统 — 价格/财务/宏观数据采集', btn: '▶ 运行' },
+  l1: { name: 'L1 硬纪律', type: 'mechanical', desc: '系统 — 纪律规则检查', btn: '▶ 运行' },
+  l2b:{ name: 'L2b 量化', type: 'mechanical', desc: '系统 — 6因子 Z-Score 分析', btn: '▶ 运行' },
+  l2a:{ name: 'L2a 定性', type: 'judgment', desc: 'AI 判断 — 四大师定性分析', btn: '🤖 AI 分析' },
+  l3: { name: 'L3 碰撞', type: 'mechanical', desc: '系统 — 规则树碰撞引擎', btn: '▶ 运行' },
+  l4: { name: 'L4 报告', type: 'judgment', desc: 'AI 判断 — 结论先行', btn: '🤖 AI 分析' },
+};
+
+let currentTicker = '<%= typeof ticker !== "undefined" ? ticker : "" %>';
+
+async function searchTicker() {
+  const input = document.getElementById('ticker-input');
+  const ticker = input.value.trim().toUpperCase() || currentTicker;
+  if (!ticker) return;
+
+  currentTicker = ticker;
+  document.getElementById('analysis-empty').style.display = 'none';
+  document.getElementById('analysis-content').style.display = 'none';
+  document.getElementById('analysis-loading').style.display = 'block';
+  document.getElementById('loading-msg').textContent = `正在获取 ${ticker} 数据...`;
+
+  try {
+    const res = await fetch(`/api/stock-quick/${encodeURIComponent(ticker)}`);
+    const data = await res.json();
+
+    document.getElementById('analysis-loading').style.display = 'none';
+    document.getElementById('analysis-content').style.display = 'block';
+
+    // Render Quick Cards (unchanged)
+  renderQuickCards(ticker, data);
+
+    // Fetch additional data modes
+    loadDataMode(ticker, 'valuation', '📊 估值分析');
+    loadDataMode(ticker, 'analysts', '🎯 分析师评级');
+    loadDataMode(ticker, 'profile', '🏢 公司概况');
+
+    // Layer Status (always show even if empty)
+    renderLayerStatus(ticker, data);
+
+    // Raw data
+    if (data.source === 'live' || data.financials) {
+      document.getElementById('raw-data-card').style.display = 'block';
+      document.getElementById('raw-data').textContent = JSON.stringify(data, null, 2);
+    }
+
+  } catch (e) {
+    document.getElementById('analysis-loading').style.display = 'none';
+    document.getElementById('analysis-empty').style.display = 'block';
+    document.getElementById('analysis-empty').innerHTML = `<h3>获取失败</h3><p>${e.message}</p></div>`;
+  }
+}
+
+function renderQuickCards(ticker, data) {
+  const container = document.getElementById('quick-cards');
+  const cards = [];
+
+  // Price
+  const price = data.price || data.price_data?.price || data.m_layer?.current_price;
+  if (price || data.price_data) {
+    const p = price || data.price_data.price;
+    cards.push({ label: '当前价', value: p != null ? p.toLocaleString() : '—' });
+  }
+
+  // PE
+  const pe = data.trailing_pe || data.financials?.pe;
+  if (pe) cards.push({ label: 'PE(TTM)', value: pe.toFixed(2) });
+
+  // Forward PE
+  const fpe = data.forward_pe || data.financials?.fwd_pe;
+  if (fpe) cards.push({ label: 'Fwd PE', value: fpe.toFixed(2) });
+
+  // PB
+  const pb = data.pb || data.financials?.pb;
+  if (pb) cards.push({ label: 'PB', value: pb.toFixed(2) });
+
+  // ROE
+  const roe = data.roe || data.roe_pct || data.financials?.roe_pct;
+  if (roe) cards.push({ label: 'ROE', value: (typeof roe === 'number' ? roe.toFixed(1) : roe) + '%' });
+
+  // Market cap
+  const mc = data.market_cap || data.financials?.market_cap;
+  if (mc) {
+    const mcStr = mc >= 1e12 ? (mc/1e12).toFixed(2) + 'T' : mc >= 1e8 ? (mc/1e8).toFixed(2) + '亿' : mc.toLocaleString();
+    cards.push({ label: '市值', value: mcStr });
+  }
+
+  // MA50/MA200
+  const ma50 = data.ma50 || data.price_data?.ma50;
+  const ma200 = data.ma200 || data.price_data?.ma200;
+  if (ma50) cards.push({ label: 'MA50', value: ma50.toFixed(2) });
+  if (ma200) cards.push({ label: 'MA200', value: ma200.toFixed(2) });
+
+  // M layer summary
+  if (data.m_layer) {
+    Object.entries(data.m_layer).forEach(([k, v]) => {
+      const val = typeof v === 'object' ? (v.light || '') + ' ' + (v.summary || '') : v;
+      cards.push({ label: k, value: val });
+    });
+  }
+
+  if (cards.length === 0) {
+    container.innerHTML = '<div class="stat-card"><div class="stat-label">暂无数据</div><div class="stat-value" style="font-size:16px;">运行 M 层采集</div></div>';
+    return;
+  }
+
+  container.innerHTML = cards.map(c => `
+    <div class="stat-card">
+      <div class="stat-label">${c.label}</div>
+      <div class="stat-value" style="font-size:${c.value.length > 12 ? '18px' : '26px'};">${c.value}</div>
+    </div>
+  `).join('');
+}
+
+// ─── Futu 数据模式渲染 ────────────────────────────────────────
+
+async function loadDataMode(ticker, mode, title) {
+  const container = document.getElementById('futu-data-modes');
+  const placeholder = document.createElement('div');
+  placeholder.className = 'card';
+  placeholder.id = `mode-${mode}`;
+  placeholder.innerHTML = `<h4>${title}</h4><div style="padding:12px;text-align:center;color:var(--text-muted);">加载中...</div>`;
+  container.appendChild(placeholder);
+
+  try {
+    const res = await fetch(`/api/stock/${mode}/${encodeURIComponent(ticker)}`);
+    const d = await res.json();
+    const data = d[mode] || d;
+    if (d.error || !data || data.ticker === undefined) {
+      placeholder.innerHTML = `<h4>${title}</h4><p style="color:var(--text-muted);font-size:13px;padding:8px 0;">暂无数据</p>`;
+      return;
+    }
+
+    let html = `<h4>${title}</h4>`;
+    const w = data._warnings || d._warnings || [];
+
+    if (mode === 'valuation') html += renderValuation(data);
+    else if (mode === 'analysts') html += renderAnalysts(data);
+    else if (mode === 'profile') html += renderProfile(data);
+    else html += renderGeneric(data);
+
+    if (w.length > 0) {
+      html += `<div style="margin-top:8px;padding:6px 10px;background:#fef3c7;border-radius:var(--radius);font-size:11px;color:#92400e;">${w.join('<br>')}</div>`;
+    }
+    placeholder.innerHTML = html;
+  } catch (e) {
+    placeholder.innerHTML = `<h4>${title}</h4><p style="color:var(--text-muted);font-size:13px;padding:8px 0;">加载失败</p>`;
+  }
+}
+
+function renderValuation(d) {
+  const peCur = d.pe_current, peAvg = d.pe_avg, pePct = d.pe_percentile;
+  const pbCur = d.pb_current, pbAvg = d.pb_avg, pbPct = d.pb_percentile;
+  const psCur = d.ps_current, psAvg = d.ps_avg, psPct = d.ps_percentile;
+
+  const bar = (cur, avg, pct) => {
+    if (cur == null || avg == null) return '<span style="color:var(--text-muted);">—</span>';
+    const p = pct != null ? pct : (cur / avg * 50);
+    const color = pct < 30 ? '#22c55e' : pct < 70 ? '#eab308' : '#ef4444';
+    return `<div style="display:flex;align-items:center;gap:8px;margin:2px 0;">
+      <span style="width:50px;font-size:13px;">${cur.toFixed(1)}</span>
+      <div style="flex:1;height:8px;background:#e5e7eb;border-radius:4px;">
+        <div style="width:${Math.min(p, 100)}%;height:8px;background:${color};border-radius:4px;"></div>
+      </div>
+      <span style="font-size:11px;color:var(--text-muted);">${pct != null ? pct.toFixed(1) + '%分位' : 'avg=' + avg.toFixed(1)}</span>
+    </div>`;
+  };
+
+  return `<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px;">
+    <div><strong>PE</strong>${bar(peCur, peAvg, pePct)}</div>
+    <div><strong>PB</strong>${bar(pbCur, pbAvg, pbPct)}</div>
+    <div><strong>PS</strong>${bar(psCur, psAvg, psPct)}</div>
+    <div><strong>Fwd PE</strong><div style="margin:2px 0;font-size:13px;">${d.pe_forward != null ? d.pe_forward.toFixed(1) : '—'}</div></div>
+  </div>`;
+}
+
+function renderAnalysts(d) {
+  const buy = d.buy_ratio || 0;
+  const hold = d.hold_ratio || 0;
+  const sell = d.sell_ratio || 0;
+  const strongBuy = d.strong_buy || 0;
+  const underperform = d.underperform || 0;
+  const totalBuy = strongBuy + buy;
+  const totalSell = sell + underperform;
+
+  const barW = (v) => Math.max(v * 3, 4);
+
+  return `<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+    <div>
+      <div style="font-size:13px;margin-bottom:4px;"><strong>评级分布</strong> (${d.analyst_count || '?'}人)</div>
+      <div style="font-size:12px;">
+        <div>强买 ${strongBuy.toFixed(1)}% <div style="width:${barW(strongBuy)}px;height:6px;background:#22c55e;border-radius:3px;display:inline-block;vertical-align:middle;"></div></div>
+        <div>买入 ${buy.toFixed(1)}% <div style="width:${barW(buy)}px;height:6px;background:#86efac;border-radius:3px;display:inline-block;vertical-align:middle;"></div></div>
+        <div>持有 ${hold.toFixed(1)}% <div style="width:${barW(hold)}px;height:6px;background:#eab308;border-radius:3px;display:inline-block;vertical-align:middle;"></div></div>
+        <div>卖出 ${totalSell.toFixed(1)}% <div style="width:${barW(totalSell)}px;height:6px;background:#ef4444;border-radius:3px;display:inline-block;vertical-align:middle;"></div></div>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:13px;margin-bottom:4px;"><strong>目标价</strong></div>
+      <div style="font-size:20px;font-weight:600;">${d.target_mean != null ? d.target_mean.toLocaleString() : '—'}</div>
+      <div style="font-size:11px;color:var(--text-muted);">
+        高 ${d.target_high != null ? d.target_high.toLocaleString() : '—'} ·
+        低 ${d.target_low != null ? d.target_low.toLocaleString() : '—'}
+      </div>
+      ${d.morningstar_rating ? `<div style="margin-top:6px;font-size:12px;">晨星 ⭐${d.morningstar_rating} · 公允价值 ${d.fair_value || '—'}</div>` : ''}
+      ${d.moat && d.moat !== '?' ? `<div style="font-size:12px;">护城河: ${d.moat}</div>` : ''}
+    </div>
+  </div>`;
+}
+
+function renderProfile(d) {
+  const p = d.profile || {};
+  const execs = d.executives || [];
+  const name = d.name || p['公司名称'] || '?';
+  const listing = d.listing_date || p['上市日期'] || '?';
+  const biz = p['公司业务'] || '';
+  const desc = p['公司简介'] || '';
+
+  let html = `<div style="font-size:13px;">
+    <div><strong>${name}</strong> ${listing ? '上市 ' + listing : ''}</div>
+    ${d.market_cap ? `<div>市值 ${(d.market_cap/1e8).toFixed(0)}亿 · 发行 ${(d.issued_shares/1e8).toFixed(1)}亿股</div>` : ''}
+    ${biz ? `<div style="margin-top:4px;color:var(--text-muted);">${biz.slice(0, 200)}${biz.length > 200 ? '...' : ''}</div>` : ''}
+  </div>`;
+
+  if (execs.length > 0) {
+    html += `<div style="margin-top:8px;"><strong>高管</strong> <span style="font-size:11px;color:var(--text-muted);">${execs.map(e => e.name || e.leader_name).filter(Boolean).slice(0, 6).join(' · ')}${execs.length > 6 ? ' 等' + execs.length + '人' : ''}</span></div>`;
+  }
+
+  return html;
+}
+
+function renderGeneric(d) {
+  let html = '<div style="font-size:13px;display:grid;grid-template-columns:1fr 1fr;gap:4px;">';
+  for (const [k, v] of Object.entries(d)) {
+    if (['ticker', '_warnings', '_fallback', 'profile', 'executives'].includes(k)) continue;
+    if (v == null || v === '?' || v === 'N/A' || (Array.isArray(v) && v.length === 0)) continue;
+    if (typeof v === 'object') continue;
+    const val = typeof v === 'number' ? (v % 1 === 0 ? v : v.toFixed(2)) : v;
+    html += `<div><strong>${k}:</strong></div><div>${val}</div>`;
+  }
+  html += '</div>';
+  return html;
+}
+
+function renderLayerStatus(ticker, data) {
+  // We have layer data from the page context OR from the API
+  const layers = <%= typeof layers !== "undefined" ? JSON.stringify(layers || []) : '[]' %>;
+
+  const sec = document.getElementById('analysis-status');
+  let html = '<table class="data-table"><thead><tr><th>层</th><th>状态</th><th>说明</th><th>操作</th></tr></thead><tbody>';
+
+  Object.entries(LAYER_MAP).forEach(([layerId, meta]) => {
+    const existing = layers.find(l => l.layer === layerId);
+    const status = existing ? existing.status : 'pending';
+    const statusBadge = status === 'completed' ? 'badge-green' : (status === 'running' ? 'badge-yellow' : 'badge-neutral');
+
+    let actionHtml = '';
+    if (meta.type === 'mechanical') {
+      if (status === 'completed') {
+        actionHtml = '<span class="badge badge-green" style="font-size:11px;">✅ 已完成</span>';
+      } else {
+        actionHtml = `<button class="btn btn-primary" style="font-size:12px;padding:4px 12px;" onclick="runLayer('${ticker}','${layerId}')">${meta.btn}</button>`;
+      }
+    } else {
+      if (status === 'completed') {
+        actionHtml = '<span class="badge badge-green" style="font-size:11px;">✅ 已完成</span>';
+      } else {
+        actionHtml = `<a href="#ai-guide" class="btn btn-primary" style="font-size:12px;padding:4px 12px;background:#8b5cf6;">${meta.btn}</a>`;
+      }
+    }
+
+    html += `<tr>
+      <td><strong>${meta.name}</strong></td>
+      <td><span class="badge ${statusBadge}">${status}</span></td>
+      <td style="font-size:13px;color:var(--text-muted);">${meta.desc}</td>
+      <td>${actionHtml}</td>
+    </tr>`;
+  });
+
+  html += '</tbody></table>';
+
+  // AI guide note
+  html += `<div id="ai-guide" style="margin-top:12px;padding:12px;background:#f5f3ff;border:1px solid #ddd6fe;border-radius:var(--radius);font-size:13px;">
+    <strong>🤖 AI 判断层：</strong>L0（能力圈）、L2a（定性分析）、L4（最终结论）需要 AI 来做判断。
+    不在浏览器里运行，而是由用户在聊天中告诉小克执行。点 "AI 分析" 按钮会显示操作指引。
+  </div>`;
+
+  sec.style.display = 'block';
+  document.getElementById('layer-status').innerHTML = html;
+}
+
+function runLayer(ticker, layer) {
+  if (!ticker) return;
+  document.getElementById('loading-msg').textContent = `正在运行 ${LAYER_MAP[layer].name} 分析...`;
+  document.getElementById('analysis-loading').style.display = 'block';
+
+  fetch(`/api/analysis/${encodeURIComponent(ticker)}/run`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ layer }),
+  })
+  .then(r => r.json())
+  .then(data => {
+    document.getElementById('analysis-loading').style.display = 'none';
+    if (data.error) {
+      alert('运行失败: ' + data.error);
+    } else {
+      alert(`${LAYER_MAP[layer].name} 分析完成！刷新页面查看结果。`);
+      location.reload();
+    }
+  })
+  .catch(e => {
+    document.getElementById('analysis-loading').style.display = 'none';
+    alert('请求失败: ' + e.message);
+  });
+}
+
+// Auto-search if ticker is pre-filled
+<% if (typeof ticker !== "undefined" && ticker) { %>
+  document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('ticker-input').value = '<%= ticker %>';
+    searchTicker();
+  });
+<% } %>
+</script>

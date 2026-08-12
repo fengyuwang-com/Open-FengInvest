@@ -1,0 +1,292 @@
+{
+  "date": "2026-07-17",
+  "collected_at": "2026-07-17T04:41:28.634151",
+  "raw": {
+    "spy": {
+      "ticker": "SPY",
+      "name": "State Street SPDR S&P 500 ETF T",
+      "price": 750.719970703125,
+      "pe": 27.003521,
+      "pct_10y": 99.5,
+      "ma50": 742.8058032226562,
+      "ma200": 693.0147140502929,
+      "data_points": 8422
+    },
+    "spy_hist": {
+      "ticker": "SPY",
+      "price": 750.719970703125,
+      "ma50": 742.8058032226562,
+      "ma200": 693.0147143554688,
+      "high_all": 758.4461093852723,
+      "low_all": 23.495840604052947,
+      "pct_10y": 99.5,
+      "ma50_above_ma200": true,
+      "vol_5d": 41212999.2,
+      "vol_20d": 53329124.8,
+      "vol_ratio_5_20": 0.77,
+      "data_points": 8422
+    },
+    "hsi": {
+      "ticker": "^HSI",
+      "price": 24681.099609375,
+      "ma50": 24814.9026953125,
+      "ma200": 25817.042001953127,
+      "high_all": 33484.078125,
+      "low_all": 1894.9000244140625,
+      "pct_10y": 50.9,
+      "ma50_above_ma200": false,
+      "vol_5d": 3363320000.0,
+      "vol_20d": 3727045000.0,
+      "vol_ratio_5_20": 0.9,
+      "data_points": 9755
+    },
+    "csi300": {
+      "ticker": "000300.SS",
+      "price": 4780.7900390625,
+      "ma50": 4875.4677535076535,
+      "ma200": 4690.164469809987,
+      "high_all": 5378.47998046875,
+      "low_all": 3108.35009765625,
+      "pct_10y": 80.4,
+      "ma50_above_ma200": true,
+      "vol_5d": 736467424.0,
+      "vol_20d": 184359511.0,
+      "vol_ratio_5_20": 3.99,
+      "data_points": 1294
+    },
+    "vix": {
+      "vix": 16.729999542236328,
+      "pct_10y": 48.9,
+      "zone": "neutral",
+      "ma50": 17.29519998550415
+    },
+    "buffett": {
+      "available": true,
+      "ratio_pct": 214.1,
+      "estimated_market_cap_t": null,
+      "gdp_t": null,
+      "zone": "extreme_overvalued",
+      "source": "thebuffettindicator.com",
+      "note": "Scraped from thebuffettindicator.com"
+    },
+    "shiller": {
+      "available": false,
+      "note": "Scrape failed: ('Connection aborted.', ConnectionResetError(10054, '远程主机强迫关闭了一个现有的连接。', None, 10054, None))"
+    },
+    "fear_greed": {
+      "available": true,
+      "score": 57,
+      "label": "greed",
+      "source": "cfgi.io",
+      "note": "CFGI Fear & Greed Index: 57/100 (greed)"
+    },
+    "momentum": {
+      "return_1m_pct": -0.28827704688862976
+    },
+    "index_pe": {
+      "hsi": {
+        "available": false,
+        "trailing_pe": null,
+        "forward_pe": null,
+        "name": "HANG SENG INDEX"
+      },
+      "csi300": {
+        "available": false,
+        "trailing_pe": null,
+        "forward_pe": null,
+        "name": "CSI 300 Index"
+      }
+    }
+  },
+  "external_benchmarks": {
+    "fear_greed_index": {
+      "available": true,
+      "score": 57,
+      "label": "greed",
+      "source": "cfgi.io",
+      "note": "CFGI Fear & Greed Index: 57/100 (greed)"
+    },
+    "buffett_indicator": {
+      "available": true,
+      "ratio_pct": 214.1,
+      "estimated_market_cap_t": null,
+      "gdp_t": null,
+      "zone": "extreme_overvalued",
+      "source": "thebuffettindicator.com",
+      "note": "Scraped from thebuffettindicator.com"
+    },
+    "shiller_pe": {
+      "available": false,
+      "note": "Scrape failed: ('Connection aborted.', ConnectionResetError(10054, '远程主机强迫关闭了一个现有的连接。', None, 10054, None))"
+    }
+  },
+  "temperature": {
+    "composite": 68.7,
+    "label": "greed",
+    "components": {
+      "vix_reverse": {
+        "score": 77.6,
+        "weight_pct": 25,
+        "value": 16.729999542236328,
+        "note": "VIX=16.729999542236328: low=greed"
+      },
+      "spy_vs_ma200": {
+        "score": 70.8,
+        "weight_pct": 15,
+        "value": 8.3,
+        "note": "SPY vs MA200: 8.3%"
+      },
+      "buffett_indicator": {
+        "score": 81.1,
+        "weight_pct": 10,
+        "value": 214.1,
+        "note": "TOTALSA/GDP=214.1% (src: thebuffettindicator.com)"
+      },
+      "cross_market_divergence": {
+        "score": 74.3,
+        "weight_pct": 15,
+        "value": 48.6,
+        "note": "SPY(99.5%) - HSI(50.9%) divergence"
+      },
+      "volume_anomaly": {
+        "score": 73.0,
+        "weight_pct": 10,
+        "value": 0.77,
+        "note": "Volume ratio (5d/20d)=0.77: near 1=neutral"
+      },
+      "short_term_momentum": {
+        "score": 48.6,
+        "weight_pct": 25,
+        "value": -0.28827704688862976,
+        "note": "SPY 1m return=-0.28827704688862976%"
+      }
+    }
+  },
+  "temperatures": {
+    "global": {
+      "composite": 65.6,
+      "label": "greed"
+    },
+    "us": {
+      "composite": 70.9,
+      "label": "greed",
+      "components": {
+        "vix_reverse": {
+          "score": 77.6,
+          "weight_pct": 20,
+          "value": 16.729999542236328,
+          "note": "VIX=16.729999542236328"
+        },
+        "spy_vs_ma200": {
+          "score": 70.8,
+          "weight_pct": 15,
+          "value": 8.3,
+          "note": "SPY vs MA200=8.3%"
+        },
+        "buffett_indicator": {
+          "score": 81.1,
+          "weight_pct": 20,
+          "value": 214.1,
+          "note": "Buffett=214.1%"
+        },
+        "short_term_momentum": {
+          "score": 48.6,
+          "weight_pct": 15,
+          "value": -0.28827704688862976,
+          "note": "SPY 1m=-0.28827704688862976%"
+        },
+        "shiller_cape": {
+          "score": null,
+          "weight_pct": 15,
+          "value": null,
+          "note": "Shiller CAPE=None"
+        }
+      }
+    },
+    "hk": {
+      "composite": 56.9,
+      "label": "neutral",
+      "components": {
+        "hsi_percentile": {
+          "score": 50.9,
+          "weight_pct": 30,
+          "value": 50.9,
+          "note": "HSI 10yr=50.9%"
+        },
+        "hsi_vs_ma200": {
+          "score": 39.0,
+          "weight_pct": 20,
+          "value": -4.4,
+          "note": "HSI vs MA200=-4.4%"
+        },
+        "cross_market_divergence": {
+          "score": 74.3,
+          "weight_pct": 20,
+          "value": 48.6,
+          "note": "SPY(99.5%) - HSI(50.9%)"
+        },
+        "vix_spillover": {
+          "score": 77.6,
+          "weight_pct": 15,
+          "value": 16.729999542236328,
+          "note": "VIX=16.729999542236328 spillover"
+        },
+        "short_term_momentum": {
+          "score": 48.6,
+          "weight_pct": 15,
+          "value": -0.28827704688862976,
+          "note": "SPY 1m=-0.28827704688862976% (proxy)"
+        }
+      }
+    },
+    "cn": {
+      "composite": 68.9,
+      "label": "greed",
+      "components": {
+        "csi300_percentile": {
+          "score": 80.4,
+          "weight_pct": 30,
+          "value": 80.4,
+          "note": "CSI300 10yr=80.4%"
+        },
+        "csi300_vs_ma200": {
+          "score": 54.8,
+          "weight_pct": 20,
+          "value": 1.9,
+          "note": "CSI300 vs MA200=1.9%"
+        },
+        "cross_market_divergence": {
+          "score": 74.3,
+          "weight_pct": 20,
+          "value": 48.6,
+          "note": "SPY(99.5%) - CSI300(80.4%)"
+        },
+        "vix_spillover": {
+          "score": 77.6,
+          "weight_pct": 15,
+          "value": 16.729999542236328,
+          "note": "VIX=16.729999542236328 spillover"
+        },
+        "short_term_momentum": {
+          "score": 48.6,
+          "weight_pct": 15,
+          "value": -0.28827704688862976,
+          "note": "SPY 1m=-0.28827704688862976% (proxy)"
+        }
+      }
+    }
+  },
+  "behavior": {
+    "baseline": {
+      "reading": "greed",
+      "score": 68.7,
+      "summary": "市场偏贪婪。新仓位需更严格的安全边际。"
+    },
+    "alerts": [
+      {
+        "category": "valuation",
+        "message": "SPY PE=27.003521x — 估值偏高, 未来预期回报率降低"
+      }
+    ]
+  }
+}

@@ -1,0 +1,70 @@
+<div class="page-header">
+  <h2>💼 持仓总览</h2>
+</div>
+
+<% if (holdings.length > 0) { %>
+<div class="card">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>标的</th>
+        <th>名称</th>
+        <th>市场/板块</th>
+        <th>类型</th>
+        <th>成本</th>
+        <th>现价</th>
+        <th>数量</th>
+        <th>币种</th>
+        <th>市值</th>
+        <th>盈亏</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% holdings.forEach(function(h) { %>
+      <% var isCash = h.asset_type === 'cash'; %>
+      <% var isFund = h.asset_type === 'fund'; %>
+      <% var px = h.position.current_price || h.position.nav || h.position.amount; %>
+      <% var cost = isCash ? null : (h.position.avg_cost || h.position.nav); %>
+      <% var qty = h.position.shares || h.position.units; %>
+      <% var ticker = h.ticker || h.id; %>
+      <% var marketLabel = h.market === 'CN_A' ? 'A股' : h.market === 'CN_HK' ? '港股通' : h.market === 'CN_OVS' ? '中概' : h.market === 'US' ? '美股' : h.market === 'GLOBAL' ? '全球' : (h.market || ''); %>
+      <% var zoneLabel = h.capital_zone === 'CN_IN' ? '境内' : h.capital_zone === 'OVERSEAS' ? '境外' : ''; %>
+      <% var pnl = isCash ? null : (px && cost ? ((px / cost) - 1) * 100 : null); %>
+      <tr>
+        <td><a href="/holdings/<%= ticker %>"><%= ticker %></a></td>
+        <td><%= h.name || '—' %></td>
+        <td>
+          <% if (marketLabel) { %><span class="badge badge-primary"><%= marketLabel %></span><% } %>
+          <% if (h.segment) { %><span class="badge badge-neutral"><%= h.segment %></span><% } %>
+          <% if (h.qualifier === 'quasi_cash') { %><span class="badge badge-warning">准现金</span><% } %>
+          <% if (zoneLabel) { %><span style="font-size:10px;color:var(--text-muted);">(<%= zoneLabel %>)</span><% } %>
+        </td>
+        <td><span class="badge badge-neutral"><%= isCash ? '现金' : isFund ? '基金' : '股票' %></span></td>
+        <td><%= cost != null ? cost.toFixed(3) : '—' %></td>
+        <td><%= px != null ? px.toFixed(3) : '—' %></td>
+        <td><%= qty != null ? qty.toLocaleString() : (isCash ? '—' : '—') %></td>
+        <td><%= h.currency || '—' %></td>
+        <td><%= h.currency == 'CNY' ? '¥' : '¥' %><%= (h.capital && h.capital.market_value_equiv_cny ? h.capital.market_value_equiv_cny : (h.position.market_value || 0)).toLocaleString(undefined, {maximumFractionDigits: 0}) %></td>
+        <td>
+          <% if (isCash) { %>
+          <span style="color: var(--text-muted);">现金</span>
+          <% } else if (pnl != null) { %>
+          <span style="color: <%= pnl >= 0 ? 'var(--green)' : 'var(--red)' %>"><%= pnl >= 0 ? '+' : '' %><%= pnl.toFixed(1) %>%</span>
+          <% } else { %>
+          <span style="color: var(--text-muted);">—</span>
+          <% } %>
+        </td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+<div style="margin-top:8px;font-size:12px;color:var(--text-muted);">
+  市值列 = 人民币等值（`capital.market_value_equiv_cny`，实时汇率取 Yahoo `fengdata fx --mode fx`，失败回退快照 2026-08-12：HKD 0.8586 / USD 6.7414）；成本列 = 本币；市场/板块 = 正交维度（见 持仓 SCHEMA），(境内/境外) 仅作买入预算。
+</div>
+<% } else { %>
+<div class="empty-state">
+  <h3>暂无持仓</h3>
+  <p>在 holdings/ 目录下创建 hold_*.json 文件添加持仓</p>
+</div>
+<% } %>

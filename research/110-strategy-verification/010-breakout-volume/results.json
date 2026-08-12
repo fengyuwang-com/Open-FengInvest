@@ -1,0 +1,1082 @@
+{
+  "US": {
+    "market": "US",
+    "market_label": "US_SP500",
+    "stock_count": 503,
+    "stocks_with_signals": 482,
+    "total_signals": 64723,
+    "windows": {
+      "10d": {
+        "total_signals": 64723,
+        "wins": 33525,
+        "win_rate": 0.518,
+        "claim_supported": true
+      },
+      "20d": {
+        "total_signals": 64723,
+        "wins": 35460,
+        "win_rate": 0.5479,
+        "claim_supported": true
+      },
+      "60d": {
+        "total_signals": 64723,
+        "wins": 39018,
+        "win_rate": 0.6028,
+        "claim_supported": true
+      }
+    },
+    "claim_supported": true,
+    "per_stock": [
+      {
+        "ticker": "BA",
+        "name": "BA",
+        "signals": 384,
+        "wins_10d": 221,
+        "wr_10d": 0.5755,
+        "wins_20d": 229,
+        "wr_20d": 0.5964,
+        "wins_60d": 233,
+        "wr_60d": 0.6068
+      },
+      {
+        "ticker": "GD",
+        "name": "GD",
+        "signals": 357,
+        "wins_10d": 213,
+        "wr_10d": 0.5966,
+        "wins_20d": 217,
+        "wr_20d": 0.6078,
+        "wins_60d": 223,
+        "wr_60d": 0.6246
+      },
+      {
+        "ticker": "DIS",
+        "name": "DIS",
+        "signals": 340,
+        "wins_10d": 194,
+        "wr_10d": 0.5706,
+        "wins_20d": 196,
+        "wr_20d": 0.5765,
+        "wins_60d": 205,
+        "wr_60d": 0.6029
+      },
+      {
+        "ticker": "LMT",
+        "name": "LMT",
+        "signals": 337,
+        "wins_10d": 168,
+        "wr_10d": 0.4985,
+        "wins_20d": 189,
+        "wr_20d": 0.5608,
+        "wins_60d": 186,
+        "wr_60d": 0.5519
+      },
+      {
+        "ticker": "MSI",
+        "name": "MSI",
+        "signals": 312,
+        "wins_10d": 180,
+        "wr_10d": 0.5769,
+        "wins_20d": 199,
+        "wr_20d": 0.6378,
+        "wins_60d": 181,
+        "wr_60d": 0.5801
+      },
+      {
+        "ticker": "KR",
+        "name": "KR",
+        "signals": 306,
+        "wins_10d": 167,
+        "wr_10d": 0.5458,
+        "wins_20d": 172,
+        "wr_20d": 0.5621,
+        "wins_60d": 196,
+        "wr_60d": 0.6405
+      },
+      {
+        "ticker": "RTX",
+        "name": "RTX",
+        "signals": 297,
+        "wins_10d": 161,
+        "wr_10d": 0.5421,
+        "wins_20d": 183,
+        "wr_20d": 0.6162,
+        "wins_60d": 194,
+        "wr_60d": 0.6532
+      },
+      {
+        "ticker": "CAT",
+        "name": "CAT",
+        "signals": 290,
+        "wins_10d": 161,
+        "wr_10d": 0.5552,
+        "wins_20d": 169,
+        "wr_20d": 0.5828,
+        "wins_60d": 190,
+        "wr_60d": 0.6552
+      },
+      {
+        "ticker": "AMD",
+        "name": "AMD",
+        "signals": 287,
+        "wins_10d": 157,
+        "wr_10d": 0.547,
+        "wins_20d": 168,
+        "wr_20d": 0.5854,
+        "wins_60d": 170,
+        "wr_60d": 0.5923
+      },
+      {
+        "ticker": "HPQ",
+        "name": "HPQ",
+        "signals": 283,
+        "wins_10d": 126,
+        "wr_10d": 0.4452,
+        "wins_20d": 139,
+        "wr_20d": 0.4912,
+        "wins_60d": 159,
+        "wr_60d": 0.5618
+      },
+      {
+        "ticker": "TPL",
+        "name": "TPL",
+        "signals": 283,
+        "wins_10d": 177,
+        "wr_10d": 0.6254,
+        "wins_20d": 165,
+        "wr_20d": 0.583,
+        "wins_60d": 175,
+        "wr_60d": 0.6184
+      },
+      {
+        "ticker": "MO",
+        "name": "MO",
+        "signals": 280,
+        "wins_10d": 164,
+        "wr_10d": 0.5857,
+        "wins_20d": 172,
+        "wr_20d": 0.6143,
+        "wins_60d": 196,
+        "wr_60d": 0.7
+      },
+      {
+        "ticker": "F",
+        "name": "F",
+        "signals": 279,
+        "wins_10d": 146,
+        "wr_10d": 0.5233,
+        "wins_20d": 149,
+        "wr_20d": 0.5341,
+        "wins_60d": 162,
+        "wr_60d": 0.5806
+      },
+      {
+        "ticker": "GE",
+        "name": "GE",
+        "signals": 276,
+        "wins_10d": 171,
+        "wr_10d": 0.6196,
+        "wins_20d": 153,
+        "wr_20d": 0.5543,
+        "wins_60d": 165,
+        "wr_60d": 0.5978
+      },
+      {
+        "ticker": "HON",
+        "name": "HON",
+        "signals": 273,
+        "wins_10d": 147,
+        "wr_10d": 0.5385,
+        "wins_20d": 142,
+        "wr_20d": 0.5201,
+        "wins_60d": 149,
+        "wr_60d": 0.5458
+      },
+      {
+        "ticker": "RVTY",
+        "name": "RVTY",
+        "signals": 268,
+        "wins_10d": 135,
+        "wr_10d": 0.5037,
+        "wins_20d": 153,
+        "wr_20d": 0.5709,
+        "wins_60d": 154,
+        "wr_60d": 0.5746
+      },
+      {
+        "ticker": "IP",
+        "name": "IP",
+        "signals": 266,
+        "wins_10d": 134,
+        "wr_10d": 0.5038,
+        "wins_20d": 122,
+        "wr_20d": 0.4586,
+        "wins_60d": 104,
+        "wr_60d": 0.391
+      },
+      {
+        "ticker": "MCD",
+        "name": "MCD",
+        "signals": 260,
+        "wins_10d": 158,
+        "wr_10d": 0.6077,
+        "wins_20d": 160,
+        "wr_20d": 0.6154,
+        "wins_60d": 173,
+        "wr_60d": 0.6654
+      },
+      {
+        "ticker": "AAPL",
+        "name": "AAPL",
+        "signals": 259,
+        "wins_10d": 151,
+        "wr_10d": 0.583,
+        "wins_20d": 160,
+        "wr_20d": 0.6178,
+        "wins_60d": 155,
+        "wr_60d": 0.5985
+      },
+      {
+        "ticker": "IBM",
+        "name": "IBM",
+        "signals": 259,
+        "wins_10d": 158,
+        "wr_10d": 0.61,
+        "wins_20d": 150,
+        "wr_20d": 0.5792,
+        "wins_60d": 156,
+        "wr_60d": 0.6023
+      },
+      {
+        "ticker": "TER",
+        "name": "TER",
+        "signals": 256,
+        "wins_10d": 134,
+        "wr_10d": 0.5234,
+        "wins_20d": 131,
+        "wr_20d": 0.5117,
+        "wins_60d": 153,
+        "wr_60d": 0.5977
+      },
+      {
+        "ticker": "TMO",
+        "name": "TMO",
+        "signals": 252,
+        "wins_10d": 115,
+        "wr_10d": 0.4563,
+        "wins_20d": 118,
+        "wr_20d": 0.4683,
+        "wins_60d": 153,
+        "wr_60d": 0.6071
+      },
+      {
+        "ticker": "LLY",
+        "name": "LLY",
+        "signals": 251,
+        "wins_10d": 128,
+        "wr_10d": 0.51,
+        "wins_20d": 130,
+        "wr_20d": 0.5179,
+        "wins_60d": 164,
+        "wr_60d": 0.6534
+      },
+      {
+        "ticker": "VMC",
+        "name": "VMC",
+        "signals": 250,
+        "wins_10d": 119,
+        "wr_10d": 0.476,
+        "wins_20d": 116,
+        "wr_20d": 0.464,
+        "wins_60d": 129,
+        "wr_60d": 0.516
+      },
+      {
+        "ticker": "DE",
+        "name": "DE",
+        "signals": 249,
+        "wins_10d": 133,
+        "wr_10d": 0.5341,
+        "wins_20d": 133,
+        "wr_20d": 0.5341,
+        "wins_60d": 154,
+        "wr_60d": 0.6185
+      },
+      {
+        "ticker": "MU",
+        "name": "MU",
+        "signals": 249,
+        "wins_10d": 145,
+        "wr_10d": 0.5823,
+        "wins_20d": 143,
+        "wr_20d": 0.5743,
+        "wins_60d": 144,
+        "wr_60d": 0.5783
+      },
+      {
+        "ticker": "GLW",
+        "name": "GLW",
+        "signals": 242,
+        "wins_10d": 132,
+        "wr_10d": 0.5455,
+        "wins_20d": 139,
+        "wr_20d": 0.5744,
+        "wins_60d": 156,
+        "wr_60d": 0.6446
+      },
+      {
+        "ticker": "CMI",
+        "name": "CMI",
+        "signals": 241,
+        "wins_10d": 131,
+        "wr_10d": 0.5436,
+        "wins_20d": 130,
+        "wr_20d": 0.5394,
+        "wins_60d": 153,
+        "wr_60d": 0.6349
+      },
+      {
+        "ticker": "LEN",
+        "name": "LEN",
+        "signals": 240,
+        "wins_10d": 131,
+        "wr_10d": 0.5458,
+        "wins_20d": 146,
+        "wr_20d": 0.6083,
+        "wins_60d": 148,
+        "wr_60d": 0.6167
+      },
+      {
+        "ticker": "MMM",
+        "name": "MMM",
+        "signals": 240,
+        "wins_10d": 119,
+        "wr_10d": 0.4958,
+        "wins_20d": 111,
+        "wr_20d": 0.4625,
+        "wins_60d": 133,
+        "wr_60d": 0.5542
+      }
+    ]
+  },
+  "CN": {
+    "market": "CN",
+    "market_label": "CN_CSI300",
+    "stock_count": 300,
+    "stocks_with_signals": 298,
+    "total_signals": 24059,
+    "windows": {
+      "10d": {
+        "total_signals": 24059,
+        "wins": 11923,
+        "win_rate": 0.4956,
+        "claim_supported": false
+      },
+      "20d": {
+        "total_signals": 24059,
+        "wins": 12043,
+        "win_rate": 0.5006,
+        "claim_supported": true
+      },
+      "60d": {
+        "total_signals": 24059,
+        "wins": 11488,
+        "win_rate": 0.4775,
+        "claim_supported": false
+      }
+    },
+    "claim_supported": false,
+    "per_stock": [
+      {
+        "ticker": "600660.SS",
+        "name": "600660.SS",
+        "signals": 189,
+        "wins_10d": 103,
+        "wr_10d": 0.545,
+        "wins_20d": 106,
+        "wr_20d": 0.5608,
+        "wins_60d": 101,
+        "wr_60d": 0.5344
+      },
+      {
+        "ticker": "000002.SZ",
+        "name": "000002.SZ",
+        "signals": 175,
+        "wins_10d": 98,
+        "wr_10d": 0.56,
+        "wins_20d": 88,
+        "wr_20d": 0.5029,
+        "wins_60d": 90,
+        "wr_60d": 0.5143
+      },
+      {
+        "ticker": "000807.SZ",
+        "name": "000807.SZ",
+        "signals": 175,
+        "wins_10d": 91,
+        "wr_10d": 0.52,
+        "wins_20d": 91,
+        "wr_20d": 0.52,
+        "wins_60d": 87,
+        "wr_60d": 0.4971
+      },
+      {
+        "ticker": "000001.SZ",
+        "name": "000001.SZ",
+        "signals": 173,
+        "wins_10d": 83,
+        "wr_10d": 0.4798,
+        "wins_20d": 94,
+        "wr_20d": 0.5434,
+        "wins_60d": 80,
+        "wr_60d": 0.4624
+      },
+      {
+        "ticker": "000988.SZ",
+        "name": "000988.SZ",
+        "signals": 170,
+        "wins_10d": 87,
+        "wr_10d": 0.5118,
+        "wins_20d": 88,
+        "wr_20d": 0.5176,
+        "wins_60d": 77,
+        "wr_60d": 0.4529
+      },
+      {
+        "ticker": "600803.SS",
+        "name": "600803.SS",
+        "signals": 170,
+        "wins_10d": 66,
+        "wr_10d": 0.3882,
+        "wins_20d": 66,
+        "wr_20d": 0.3882,
+        "wins_60d": 53,
+        "wr_60d": 0.3118
+      },
+      {
+        "ticker": "600875.SS",
+        "name": "600875.SS",
+        "signals": 170,
+        "wins_10d": 58,
+        "wr_10d": 0.3412,
+        "wins_20d": 77,
+        "wr_20d": 0.4529,
+        "wins_60d": 83,
+        "wr_60d": 0.4882
+      },
+      {
+        "ticker": "600809.SS",
+        "name": "600809.SS",
+        "signals": 166,
+        "wins_10d": 86,
+        "wr_10d": 0.5181,
+        "wins_20d": 82,
+        "wr_20d": 0.494,
+        "wins_60d": 88,
+        "wr_60d": 0.5301
+      },
+      {
+        "ticker": "601607.SS",
+        "name": "601607.SS",
+        "signals": 166,
+        "wins_10d": 81,
+        "wr_10d": 0.488,
+        "wins_20d": 80,
+        "wr_20d": 0.4819,
+        "wins_60d": 90,
+        "wr_60d": 0.5422
+      },
+      {
+        "ticker": "000568.SZ",
+        "name": "000568.SZ",
+        "signals": 165,
+        "wins_10d": 81,
+        "wr_10d": 0.4909,
+        "wins_20d": 84,
+        "wr_20d": 0.5091,
+        "wins_60d": 81,
+        "wr_60d": 0.4909
+      },
+      {
+        "ticker": "000630.SZ",
+        "name": "000630.SZ",
+        "signals": 165,
+        "wins_10d": 86,
+        "wr_10d": 0.5212,
+        "wins_20d": 82,
+        "wr_20d": 0.497,
+        "wins_60d": 85,
+        "wr_60d": 0.5152
+      },
+      {
+        "ticker": "600089.SS",
+        "name": "600089.SS",
+        "signals": 163,
+        "wins_10d": 87,
+        "wr_10d": 0.5337,
+        "wins_20d": 85,
+        "wr_20d": 0.5215,
+        "wins_60d": 78,
+        "wr_60d": 0.4785
+      },
+      {
+        "ticker": "600160.SS",
+        "name": "600160.SS",
+        "signals": 161,
+        "wins_10d": 82,
+        "wr_10d": 0.5093,
+        "wins_20d": 77,
+        "wr_20d": 0.4783,
+        "wins_60d": 71,
+        "wr_60d": 0.441
+      },
+      {
+        "ticker": "600760.SS",
+        "name": "600760.SS",
+        "signals": 161,
+        "wins_10d": 79,
+        "wr_10d": 0.4907,
+        "wins_20d": 78,
+        "wr_20d": 0.4845,
+        "wins_60d": 73,
+        "wr_60d": 0.4534
+      },
+      {
+        "ticker": "000768.SZ",
+        "name": "000768.SZ",
+        "signals": 160,
+        "wins_10d": 82,
+        "wr_10d": 0.5125,
+        "wins_20d": 90,
+        "wr_20d": 0.5625,
+        "wins_60d": 65,
+        "wr_60d": 0.4062
+      },
+      {
+        "ticker": "000425.SZ",
+        "name": "000425.SZ",
+        "signals": 159,
+        "wins_10d": 82,
+        "wr_10d": 0.5157,
+        "wins_20d": 78,
+        "wr_20d": 0.4906,
+        "wins_60d": 77,
+        "wr_60d": 0.4843
+      },
+      {
+        "ticker": "600061.SS",
+        "name": "600061.SS",
+        "signals": 159,
+        "wins_10d": 72,
+        "wr_10d": 0.4528,
+        "wins_20d": 69,
+        "wr_20d": 0.434,
+        "wins_60d": 67,
+        "wr_60d": 0.4214
+      },
+      {
+        "ticker": "600674.SS",
+        "name": "600674.SS",
+        "signals": 159,
+        "wins_10d": 80,
+        "wr_10d": 0.5031,
+        "wins_20d": 83,
+        "wr_20d": 0.522,
+        "wins_60d": 88,
+        "wr_60d": 0.5535
+      },
+      {
+        "ticker": "600188.SS",
+        "name": "600188.SS",
+        "signals": 157,
+        "wins_10d": 77,
+        "wr_10d": 0.4904,
+        "wins_20d": 81,
+        "wr_20d": 0.5159,
+        "wins_60d": 85,
+        "wr_60d": 0.5414
+      },
+      {
+        "ticker": "600362.SS",
+        "name": "600362.SS",
+        "signals": 157,
+        "wins_10d": 90,
+        "wr_10d": 0.5732,
+        "wins_20d": 96,
+        "wr_20d": 0.6115,
+        "wins_60d": 85,
+        "wr_60d": 0.5414
+      },
+      {
+        "ticker": "600690.SS",
+        "name": "600690.SS",
+        "signals": 157,
+        "wins_10d": 74,
+        "wr_10d": 0.4713,
+        "wins_20d": 79,
+        "wr_20d": 0.5032,
+        "wins_60d": 87,
+        "wr_60d": 0.5541
+      },
+      {
+        "ticker": "000617.SZ",
+        "name": "000617.SZ",
+        "signals": 156,
+        "wins_10d": 74,
+        "wr_10d": 0.4744,
+        "wins_20d": 62,
+        "wr_20d": 0.3974,
+        "wins_60d": 72,
+        "wr_60d": 0.4615
+      },
+      {
+        "ticker": "600845.SS",
+        "name": "600845.SS",
+        "signals": 155,
+        "wins_10d": 54,
+        "wr_10d": 0.3484,
+        "wins_20d": 63,
+        "wr_20d": 0.4065,
+        "wins_60d": 66,
+        "wr_60d": 0.4258
+      },
+      {
+        "ticker": "600183.SS",
+        "name": "600183.SS",
+        "signals": 152,
+        "wins_10d": 86,
+        "wr_10d": 0.5658,
+        "wins_20d": 89,
+        "wr_20d": 0.5855,
+        "wins_60d": 86,
+        "wr_60d": 0.5658
+      },
+      {
+        "ticker": "600893.SS",
+        "name": "600893.SS",
+        "signals": 152,
+        "wins_10d": 76,
+        "wr_10d": 0.5,
+        "wins_20d": 77,
+        "wr_20d": 0.5066,
+        "wins_60d": 66,
+        "wr_60d": 0.4342
+      },
+      {
+        "ticker": "000792.SZ",
+        "name": "000792.SZ",
+        "signals": 151,
+        "wins_10d": 77,
+        "wr_10d": 0.5099,
+        "wins_20d": 82,
+        "wr_20d": 0.543,
+        "wins_60d": 65,
+        "wr_60d": 0.4305
+      },
+      {
+        "ticker": "600085.SS",
+        "name": "600085.SS",
+        "signals": 151,
+        "wins_10d": 70,
+        "wr_10d": 0.4636,
+        "wins_20d": 71,
+        "wr_20d": 0.4702,
+        "wins_60d": 57,
+        "wr_60d": 0.3775
+      },
+      {
+        "ticker": "600118.SS",
+        "name": "600118.SS",
+        "signals": 151,
+        "wins_10d": 86,
+        "wr_10d": 0.5695,
+        "wins_20d": 78,
+        "wr_20d": 0.5166,
+        "wins_60d": 77,
+        "wr_60d": 0.5099
+      },
+      {
+        "ticker": "000063.SZ",
+        "name": "000063.SZ",
+        "signals": 150,
+        "wins_10d": 74,
+        "wr_10d": 0.4933,
+        "wins_20d": 74,
+        "wr_20d": 0.4933,
+        "wins_60d": 75,
+        "wr_60d": 0.5
+      },
+      {
+        "ticker": "600233.SS",
+        "name": "600233.SS",
+        "signals": 150,
+        "wins_10d": 82,
+        "wr_10d": 0.5467,
+        "wins_20d": 77,
+        "wr_20d": 0.5133,
+        "wins_60d": 69,
+        "wr_60d": 0.46
+      }
+    ]
+  },
+  "HK": {
+    "market": "HK",
+    "market_label": "HK_HSI",
+    "stock_count": 85,
+    "stocks_with_signals": 85,
+    "total_signals": 7464,
+    "windows": {
+      "10d": {
+        "total_signals": 7464,
+        "wins": 3892,
+        "win_rate": 0.5214,
+        "claim_supported": true
+      },
+      "20d": {
+        "total_signals": 7464,
+        "wins": 4045,
+        "win_rate": 0.5419,
+        "claim_supported": true
+      },
+      "60d": {
+        "total_signals": 7464,
+        "wins": 4155,
+        "win_rate": 0.5567,
+        "claim_supported": true
+      }
+    },
+    "claim_supported": true,
+    "per_stock": [
+      {
+        "ticker": "0388.HK",
+        "name": "0388.HK",
+        "signals": 181,
+        "wins_10d": 96,
+        "wr_10d": 0.5304,
+        "wins_20d": 107,
+        "wr_20d": 0.5912,
+        "wins_60d": 105,
+        "wr_60d": 0.5801
+      },
+      {
+        "ticker": "0005.HK",
+        "name": "0005.HK",
+        "signals": 165,
+        "wins_10d": 93,
+        "wr_10d": 0.5636,
+        "wins_20d": 99,
+        "wr_20d": 0.6,
+        "wins_60d": 114,
+        "wr_60d": 0.6909
+      },
+      {
+        "ticker": "0175.HK",
+        "name": "0175.HK",
+        "signals": 161,
+        "wins_10d": 101,
+        "wr_10d": 0.6273,
+        "wins_20d": 102,
+        "wr_20d": 0.6335,
+        "wins_60d": 99,
+        "wr_60d": 0.6149
+      },
+      {
+        "ticker": "0857.HK",
+        "name": "0857.HK",
+        "signals": 160,
+        "wins_10d": 84,
+        "wr_10d": 0.525,
+        "wins_20d": 93,
+        "wr_20d": 0.5813,
+        "wins_60d": 101,
+        "wr_60d": 0.6312
+      },
+      {
+        "ticker": "0868.HK",
+        "name": "0868.HK",
+        "signals": 151,
+        "wins_10d": 69,
+        "wr_10d": 0.457,
+        "wins_20d": 82,
+        "wr_20d": 0.543,
+        "wins_60d": 85,
+        "wr_60d": 0.5629
+      },
+      {
+        "ticker": "0012.HK",
+        "name": "0012.HK",
+        "signals": 147,
+        "wins_10d": 81,
+        "wr_10d": 0.551,
+        "wins_20d": 67,
+        "wr_20d": 0.4558,
+        "wins_60d": 69,
+        "wr_60d": 0.4694
+      },
+      {
+        "ticker": "0027.HK",
+        "name": "0027.HK",
+        "signals": 147,
+        "wins_10d": 76,
+        "wr_10d": 0.517,
+        "wins_20d": 78,
+        "wr_20d": 0.5306,
+        "wins_60d": 97,
+        "wr_60d": 0.6599
+      },
+      {
+        "ticker": "1211.HK",
+        "name": "1211.HK",
+        "signals": 146,
+        "wins_10d": 72,
+        "wr_10d": 0.4932,
+        "wins_20d": 80,
+        "wr_20d": 0.5479,
+        "wins_60d": 77,
+        "wr_60d": 0.5274
+      },
+      {
+        "ticker": "2899.HK",
+        "name": "2899.HK",
+        "signals": 146,
+        "wins_10d": 80,
+        "wr_10d": 0.5479,
+        "wins_20d": 82,
+        "wr_20d": 0.5616,
+        "wins_60d": 84,
+        "wr_60d": 0.5753
+      },
+      {
+        "ticker": "1044.HK",
+        "name": "1044.HK",
+        "signals": 144,
+        "wins_10d": 73,
+        "wr_10d": 0.5069,
+        "wins_20d": 91,
+        "wr_20d": 0.6319,
+        "wins_60d": 89,
+        "wr_60d": 0.6181
+      },
+      {
+        "ticker": "0066.HK",
+        "name": "0066.HK",
+        "signals": 142,
+        "wins_10d": 83,
+        "wr_10d": 0.5845,
+        "wins_20d": 88,
+        "wr_20d": 0.6197,
+        "wins_60d": 85,
+        "wr_60d": 0.5986
+      },
+      {
+        "ticker": "0316.HK",
+        "name": "0316.HK",
+        "signals": 142,
+        "wins_10d": 76,
+        "wr_10d": 0.5352,
+        "wins_20d": 74,
+        "wr_20d": 0.5211,
+        "wins_60d": 81,
+        "wr_60d": 0.5704
+      },
+      {
+        "ticker": "0001.HK",
+        "name": "0001.HK",
+        "signals": 141,
+        "wins_10d": 80,
+        "wr_10d": 0.5674,
+        "wins_20d": 68,
+        "wr_20d": 0.4823,
+        "wins_60d": 73,
+        "wr_60d": 0.5177
+      },
+      {
+        "ticker": "0322.HK",
+        "name": "0322.HK",
+        "signals": 141,
+        "wins_10d": 72,
+        "wr_10d": 0.5106,
+        "wins_20d": 74,
+        "wr_20d": 0.5248,
+        "wins_60d": 80,
+        "wr_60d": 0.5674
+      },
+      {
+        "ticker": "0386.HK",
+        "name": "0386.HK",
+        "signals": 137,
+        "wins_10d": 62,
+        "wr_10d": 0.4526,
+        "wins_20d": 73,
+        "wr_20d": 0.5328,
+        "wins_60d": 84,
+        "wr_60d": 0.6131
+      },
+      {
+        "ticker": "0992.HK",
+        "name": "0992.HK",
+        "signals": 136,
+        "wins_10d": 65,
+        "wr_10d": 0.4779,
+        "wins_20d": 69,
+        "wr_20d": 0.5074,
+        "wins_60d": 63,
+        "wr_60d": 0.4632
+      },
+      {
+        "ticker": "1109.HK",
+        "name": "1109.HK",
+        "signals": 136,
+        "wins_10d": 61,
+        "wr_10d": 0.4485,
+        "wins_20d": 64,
+        "wr_20d": 0.4706,
+        "wins_60d": 63,
+        "wr_60d": 0.4632
+      },
+      {
+        "ticker": "0016.HK",
+        "name": "0016.HK",
+        "signals": 135,
+        "wins_10d": 84,
+        "wr_10d": 0.6222,
+        "wins_20d": 71,
+        "wr_20d": 0.5259,
+        "wins_60d": 79,
+        "wr_60d": 0.5852
+      },
+      {
+        "ticker": "1093.HK",
+        "name": "1093.HK",
+        "signals": 132,
+        "wins_10d": 64,
+        "wr_10d": 0.4848,
+        "wins_20d": 66,
+        "wr_20d": 0.5,
+        "wins_60d": 66,
+        "wr_60d": 0.5
+      },
+      {
+        "ticker": "2628.HK",
+        "name": "2628.HK",
+        "signals": 132,
+        "wins_10d": 74,
+        "wr_10d": 0.5606,
+        "wins_20d": 78,
+        "wr_20d": 0.5909,
+        "wins_60d": 68,
+        "wr_60d": 0.5152
+      },
+      {
+        "ticker": "1177.HK",
+        "name": "1177.HK",
+        "signals": 131,
+        "wins_10d": 66,
+        "wr_10d": 0.5038,
+        "wins_20d": 68,
+        "wr_20d": 0.5191,
+        "wins_60d": 85,
+        "wr_60d": 0.6489
+      },
+      {
+        "ticker": "2388.HK",
+        "name": "2388.HK",
+        "signals": 131,
+        "wins_10d": 88,
+        "wr_10d": 0.6718,
+        "wins_20d": 79,
+        "wr_20d": 0.6031,
+        "wins_60d": 90,
+        "wr_60d": 0.687
+      },
+      {
+        "ticker": "0267.HK",
+        "name": "0267.HK",
+        "signals": 129,
+        "wins_10d": 68,
+        "wr_10d": 0.5271,
+        "wins_20d": 62,
+        "wr_20d": 0.4806,
+        "wins_60d": 67,
+        "wr_60d": 0.5194
+      },
+      {
+        "ticker": "2318.HK",
+        "name": "2318.HK",
+        "signals": 125,
+        "wins_10d": 61,
+        "wr_10d": 0.488,
+        "wins_20d": 74,
+        "wr_20d": 0.592,
+        "wins_60d": 67,
+        "wr_60d": 0.536
+      },
+      {
+        "ticker": "0688.HK",
+        "name": "0688.HK",
+        "signals": 123,
+        "wins_10d": 58,
+        "wr_10d": 0.4715,
+        "wins_20d": 67,
+        "wr_20d": 0.5447,
+        "wins_60d": 63,
+        "wr_60d": 0.5122
+      },
+      {
+        "ticker": "3988.HK",
+        "name": "3988.HK",
+        "signals": 123,
+        "wins_10d": 70,
+        "wr_10d": 0.5691,
+        "wins_20d": 74,
+        "wr_20d": 0.6016,
+        "wins_60d": 65,
+        "wr_60d": 0.5285
+      },
+      {
+        "ticker": "0981.HK",
+        "name": "0981.HK",
+        "signals": 121,
+        "wins_10d": 65,
+        "wr_10d": 0.5372,
+        "wins_20d": 51,
+        "wr_20d": 0.4215,
+        "wins_60d": 53,
+        "wr_60d": 0.438
+      },
+      {
+        "ticker": "2382.HK",
+        "name": "2382.HK",
+        "signals": 119,
+        "wins_10d": 72,
+        "wr_10d": 0.605,
+        "wins_20d": 80,
+        "wr_20d": 0.6723,
+        "wins_60d": 76,
+        "wr_60d": 0.6387
+      },
+      {
+        "ticker": "0941.HK",
+        "name": "0941.HK",
+        "signals": 118,
+        "wins_10d": 60,
+        "wr_10d": 0.5085,
+        "wins_20d": 67,
+        "wr_20d": 0.5678,
+        "wins_60d": 64,
+        "wr_60d": 0.5424
+      },
+      {
+        "ticker": "0762.HK",
+        "name": "0762.HK",
+        "signals": 117,
+        "wins_10d": 50,
+        "wr_10d": 0.4274,
+        "wins_20d": 50,
+        "wr_20d": 0.4274,
+        "wins_60d": 54,
+        "wr_60d": 0.4615
+      }
+    ]
+  }
+}

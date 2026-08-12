@@ -1,0 +1,85 @@
+# P层 — 组合管理（正交维度风险盘面）
+
+> 本层由 `python tools/fengportfolio.py check` 运行期计算，**不预设命名桶**。
+> 数据模型见 `holdings/SCHEMA.md`（本地）；盘面见 `portfolio/current.md`（本地）。
+
+## 一、正交维度（每笔持仓三根轴）
+
+| 轴 | 含义 | 参考词汇（可自由扩展） |
+|:---|:-----|:----------------------|
+| **market** 家国市场 | 经济暴露在哪 | CN_A / CN_HK / CN_OVS(中概境外上市) / US / GLOBAL |
+| **segment** 细分板块 | 行业细分，**细到能区分同行业内不同风险驱动** | 互联网 / 半导体.AI算力 / 半导体.存储 / 代工 / 保险 / 银行 / 医药 / 家电 / 低波高息 … |
+| **qualifier** 表现质 | 现金属性 | cash(真现金) / quasi_cash(准现金，当现金用) |
+
+要点：
+- segment 用行业细分粒度（如 逻辑/AI算力 fabless vs 存储 IDM 强周期 vs 代工），GICS 大类分不开 NVDA 与 Micron 这类不同风险驱动的标的。
+- 词汇表可扩展——买新东西就加新词，轴照样算，不设"XX专属桶"。
+
+## 二、合并口径
+
+- **人民币一盘棋**：CNY/HKD/USD 统一折算人民币后合并计算。实时汇率：`python tools/fengdata.py fx`（USDCNY/HKDCNY/USDHKD），失败回退持仓 `meta.fx_rates` 快照（标记 live=false）。
+- **资金池**：`qualifier ∈ {cash, quasi_cash}` 或 asset_type=cash → 进资金池（真现金 + 准现金），**不参与权益集中度**。低波高息 ETF（如 LVHI）当现金用，是"等机会栖身"，不算境外权益超配。
+
+## 三、集中度阈值（占总资产 %）
+
+| 维度 | 🟡 黄（关注） | 🔴 红（超配） |
+|:-----|:---:|:---:|
+| market 轴 | >28% | >35% |
+| segment 轴 | >20% | >25% |
+| market×segment 组合 | >15% | >20% |
+| 单只标的 | >15% | >20% |
+
+- 百分比分母 = **总资产**（含资金池），同时输出该维度占权益的百分比（pct_equity）供参考。
+- 任何轴/组合超阈即告警——哪块集中度高自然冒出来（当前头号集中 = CN_OVS×互联网），是算出来的，不是写死的。
+
+## 四、资金墙 = 买入预算（不是风险维度）
+
+- `capital_zone`（CN_IN / OVERSEAS）只描述**现金本体能否跨账户划转**，约束的是"买什么账户出钱"，不是"风险暴露在哪"。
+- 人民币可以买纳斯达克 QDII/中概/港股基金，港币可以买 A 股 ETF，美元可以买中概——资金墙不限制获得市场敞口。
+- `fengportfolio.py check` 输出买入预算：💰 CN_IN 池 / OVERSEAS 池各有多少可动用余额，**不产生风险告警**。
+- 港股通持仓 = CN_IN + `market_access: "hksi"`（钱在境内账户，市场暴露在港）。
+
+## 五、组合检查流程
+
+```bash
+python tools/fengdata.py fx            # 刷新实时汇率
+python tools/fengportfolio.py check    # 三轴分布 + 资金池 + 集中度告警 + 买入预算
+python tools/fengportfolio.py status   # 人类可读盘面
+python tools/fengportfolio.py sector   # 板块视图
+python tools/fengportfolio.py correlate # 持仓相关性
+python tools/fengportfolio.py stress   # 宏观情景压力测试
+```
+
+每次调仓（买入/卖出/现金变动）后必跑 `check`。
+
+## 六、硬约束（不变）
+
+| 约束 | 上限 |
+|:-----|:----:|
+| 杠杆 | **0%** |
+| 做空 | **0%** |
+| 单只最大浮亏 | -20% |
+| 组合最大回撤 | -25% |
+
+## 七、相关性检查（新买入前必做）
+
+- 与现有持仓相关系数>0.8 → 降仓位
+- 相关系数>0.9 → 除非极强分散需求，否则不增
+- 组合平均相关系数应<0.6
+
+## 八、DK 取舍原则
+
+每次新买入决策回答：
+- **机会成本** — 这笔钱放在现有持仓里 vs 新标的风险调整后回报哪个高？
+- **组合贡献** — 新标的降低了集中度还是增加了？
+- **仓位取舍** — 加仓现有持仓还是开新仓？依据是什么？
+
+参考 `knowledge/principles/取舍原则.md`。
+
+## 九、宏观情景压力测试
+
+每次组合重大变动后回答：
+- 通胀反弹利率升2% → 组合回撤估计？
+- 经济衰退 → 可选消费跌？防御品对冲？
+- 地缘危机VIX>40 → 现金池够不够？
+- 行业监管打击 → 单一 segment 损失？

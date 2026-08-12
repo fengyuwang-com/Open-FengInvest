@@ -1,0 +1,22 @@
+# FengInvest 次要工具依赖
+# —— 核心(持仓监控/行情/组合检查)使用 Python 标准库 urllib, 无需这些。
+# —— 这些用于增强/次要工具。换电脑后: pip install -r requirements.txt
+# 版本固定以保证可复现; 如需升级请更新此处并回归验证。
+
+# ── 行情/财务增强 ──
+yfinance==1.5.2
+akshare>=1.16.0
+
+# ── 富途 OpenD (实时行情; 需另开 OpenD 客户端, 未开则自动回退 urllib/Yahoo) ──
+futu-api>=9.0.0
+
+# ── 数据处理/数值/统计 ──
+pandas>=2.2.0
+numpy>=2.0.0
+scipy>=1.12.0
+
+# ── 配置/解析 ──
+PyYAML>=6.0.1
+
+# ── 网络请求增强 (可选, 部分工具用 requests 已有 urllib 兜底) ──
+requests>=2.31.0

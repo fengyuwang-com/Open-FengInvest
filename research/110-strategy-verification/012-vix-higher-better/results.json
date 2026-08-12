@@ -1,0 +1,304 @@
+{
+  "claim": "#12 - VIX越高恐慌买入收益越强",
+  "data_range": {
+    "from": "1990-01-02",
+    "to": "2026-07-20"
+  },
+  "total_trading_days": 9203,
+  "vix_bucket_definitions": [
+    {
+      "bucket": "<15",
+      "range": "0.0-15.0"
+    },
+    {
+      "bucket": "15-20",
+      "range": "15.0-20.0"
+    },
+    {
+      "bucket": "20-25",
+      "range": "20.0-25.0"
+    },
+    {
+      "bucket": "25-30",
+      "range": "25.0-30.0"
+    },
+    {
+      "bucket": "30-35",
+      "range": "30.0-35.0"
+    },
+    {
+      "bucket": ">35",
+      "range": "35.0-inf"
+    }
+  ],
+  "horizon_results": {
+    "1M": {
+      "lookahead_days": 21,
+      "buckets": [
+        {
+          "bucket": "<15",
+          "count": 2947,
+          "avg_return": 0.006538,
+          "median_return": 0.010196,
+          "win_rate": 0.6542,
+          "std_return": 0.027645
+        },
+        {
+          "bucket": "15-20",
+          "count": 2808,
+          "avg_return": 0.006058,
+          "median_return": 0.011923,
+          "win_rate": 0.6296,
+          "std_return": 0.039285
+        },
+        {
+          "bucket": "20-25",
+          "count": 1826,
+          "avg_return": 0.004394,
+          "median_return": 0.011274,
+          "win_rate": 0.5969,
+          "std_return": 0.049655
+        },
+        {
+          "bucket": "25-30",
+          "count": 865,
+          "avg_return": 0.013029,
+          "median_return": 0.019658,
+          "win_rate": 0.6428,
+          "std_return": 0.054952
+        },
+        {
+          "bucket": "30-35",
+          "count": 383,
+          "avg_return": 0.026246,
+          "median_return": 0.034737,
+          "win_rate": 0.7493,
+          "std_return": 0.061308
+        },
+        {
+          "bucket": ">35",
+          "count": 353,
+          "avg_return": 0.025198,
+          "median_return": 0.03883,
+          "win_rate": 0.6714,
+          "std_return": 0.09109
+        }
+      ],
+      "strictly_monotonic": false,
+      "non_decreasing": false,
+      "vix_return_correlation": 0.0828,
+      "threshold_analysis": {
+        "high_vix_ge25_avg": 0.018874,
+        "low_vix_lt25_avg": 0.005844,
+        "high_outperforms_low": true,
+        "extreme_vix_ge30_avg": 0.025743,
+        "calm_vix_lt20_avg": 0.006304,
+        "extreme_outperforms_calm": true
+      }
+    },
+    "3M": {
+      "lookahead_days": 63,
+      "buckets": [
+        {
+          "bucket": "<15",
+          "count": 2947,
+          "avg_return": 0.021477,
+          "median_return": 0.027302,
+          "win_rate": 0.735,
+          "std_return": 0.048903
+        },
+        {
+          "bucket": "15-20",
+          "count": 2768,
+          "avg_return": 0.017548,
+          "median_return": 0.028523,
+          "win_rate": 0.6846,
+          "std_return": 0.067558
+        },
+        {
+          "bucket": "20-25",
+          "count": 1824,
+          "avg_return": 0.015558,
+          "median_return": 0.032752,
+          "win_rate": 0.6431,
+          "std_return": 0.086058
+        },
+        {
+          "bucket": "25-30",
+          "count": 865,
+          "avg_return": 0.036889,
+          "median_return": 0.045212,
+          "win_rate": 0.7006,
+          "std_return": 0.081021
+        },
+        {
+          "bucket": "30-35",
+          "count": 383,
+          "avg_return": 0.066417,
+          "median_return": 0.075857,
+          "win_rate": 0.8016,
+          "std_return": 0.087783
+        },
+        {
+          "bucket": ">35",
+          "count": 353,
+          "avg_return": 0.069661,
+          "median_return": 0.081173,
+          "win_rate": 0.7309,
+          "std_return": 0.128852
+        }
+      ],
+      "strictly_monotonic": false,
+      "non_decreasing": false,
+      "vix_return_correlation": 0.1221,
+      "threshold_analysis": {
+        "high_vix_ge25_avg": 0.051179,
+        "low_vix_lt25_avg": 0.018602,
+        "high_outperforms_low": true,
+        "extreme_vix_ge30_avg": 0.067973,
+        "calm_vix_lt20_avg": 0.019574,
+        "extreme_outperforms_calm": true
+      }
+    },
+    "6M": {
+      "lookahead_days": 126,
+      "buckets": [
+        {
+          "bucket": "<15",
+          "count": 2947,
+          "avg_return": 0.051668,
+          "median_return": 0.053374,
+          "win_rate": 0.8208,
+          "std_return": 0.059427
+        },
+        {
+          "bucket": "15-20",
+          "count": 2740,
+          "avg_return": 0.037343,
+          "median_return": 0.053009,
+          "win_rate": 0.7354,
+          "std_return": 0.099863
+        },
+        {
+          "bucket": "20-25",
+          "count": 1803,
+          "avg_return": 0.022149,
+          "median_return": 0.048875,
+          "win_rate": 0.6273,
+          "std_return": 0.131252
+        },
+        {
+          "bucket": "25-30",
+          "count": 853,
+          "avg_return": 0.061961,
+          "median_return": 0.079512,
+          "win_rate": 0.6764,
+          "std_return": 0.11614
+        },
+        {
+          "bucket": "30-35",
+          "count": 381,
+          "avg_return": 0.1092,
+          "median_return": 0.137838,
+          "win_rate": 0.8268,
+          "std_return": 0.12082
+        },
+        {
+          "bucket": ">35",
+          "count": 353,
+          "avg_return": 0.15058,
+          "median_return": 0.1758,
+          "win_rate": 0.83,
+          "std_return": 0.156437
+        }
+      ],
+      "strictly_monotonic": false,
+      "non_decreasing": false,
+      "vix_return_correlation": 0.1126,
+      "threshold_analysis": {
+        "high_vix_ge25_avg": 0.093014,
+        "low_vix_lt25_avg": 0.039322,
+        "high_outperforms_low": true,
+        "extreme_vix_ge30_avg": 0.129101,
+        "calm_vix_lt20_avg": 0.044766,
+        "extreme_outperforms_calm": true
+      }
+    },
+    "12M": {
+      "lookahead_days": 252,
+      "buckets": [
+        {
+          "bucket": "<15",
+          "count": 2922,
+          "avg_return": 0.110344,
+          "median_return": 0.113011,
+          "win_rate": 0.8761,
+          "std_return": 0.095862
+        },
+        {
+          "bucket": "15-20",
+          "count": 2652,
+          "avg_return": 0.101357,
+          "median_return": 0.108107,
+          "win_rate": 0.8367,
+          "std_return": 0.148384
+        },
+        {
+          "bucket": "20-25",
+          "count": 1792,
+          "avg_return": 0.050099,
+          "median_return": 0.102214,
+          "win_rate": 0.6674,
+          "std_return": 0.193619
+        },
+        {
+          "bucket": "25-30",
+          "count": 851,
+          "avg_return": 0.076264,
+          "median_return": 0.124781,
+          "win_rate": 0.7062,
+          "std_return": 0.197401
+        },
+        {
+          "bucket": "30-35",
+          "count": 381,
+          "avg_return": 0.166012,
+          "median_return": 0.194807,
+          "win_rate": 0.8189,
+          "std_return": 0.172025
+        },
+        {
+          "bucket": ">35",
+          "count": 353,
+          "avg_return": 0.283904,
+          "median_return": 0.277071,
+          "win_rate": 0.9348,
+          "std_return": 0.172761
+        }
+      ],
+      "strictly_monotonic": false,
+      "non_decreasing": false,
+      "vix_return_correlation": 0.0709,
+      "threshold_analysis": {
+        "high_vix_ge25_avg": 0.144082,
+        "low_vix_lt25_avg": 0.092452,
+        "high_outperforms_low": true,
+        "extreme_vix_ge30_avg": 0.222709,
+        "calm_vix_lt20_avg": 0.106068,
+        "extreme_outperforms_calm": true
+      }
+    }
+  },
+  "overall_assessment": {
+    "horizons_with_strict_monotonic": 0,
+    "horizons_with_non_decreasing": 0,
+    "horizons_high_vix_ge25_beats_low": 4,
+    "horizons_extreme_vix_ge30_beats_calm": 4,
+    "total_horizons": 4,
+    "claim_supported_strict": false,
+    "claim_supported_weak": false,
+    "claim_supported_threshold": true,
+    "claim_supported_extreme": true
+  },
+  "summary": "如果 VIX 越高的分桶对应的 SPX 后续平均收益率越高, 则论断成立: VIX 越高恐慌时买入的收益越强."
+}

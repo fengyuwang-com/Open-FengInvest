@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>FengInvest 系统关系图</title>
+<script src="https://unpkg.com/vis-network@9.1.9/standalone/umd/vis-network.min.js"></script>
+<style>
+  html,body { margin:0; padding:0; height:100%; font-family:"Microsoft YaHei",sans-serif; }
+  #toolbar { position:fixed; top:0; left:0; right:0; height:48px; background:#1f2937; color:#fff;
+              display:flex; align-items:center; gap:16px; padding:0 16px; z-index:10; }
+  #toolbar h1 { font-size:15px; margin:0; }
+  #toolbar .hint { font-size:12px; color:#9ca3af; }
+  #search { padding:5px 10px; border-radius:4px; border:none; width:220px; }
+  #legend { display:flex; gap:10px; margin-left:auto; }
+  .chip { font-size:11px; padding:3px 8px; border-radius:10px; color:#fff; }
+  #mynetwork { position:fixed; top:48px; left:0; right:280px; bottom:0; }
+  #info { position:fixed; top:48px; right:0; bottom:0; width:280px; background:#f3f4f6;
+           border-left:1px solid #d1d5db; padding:16px; overflow-y:auto; font-size:13px; }
+  #info h2 { font-size:15px; margin:0 0 8px; }
+  #info .kv { margin:6px 0; }
+  #info .kv b { color:#374151; }
+  #info .path { font-family:Consolas,monospace; font-size:12px; word-break:break-all; }
+</style>
+</head>
+<body>
+<div id="toolbar">
+  <h1>FengInvest 系统关系图</h1>
+  <span class="hint">源: tools/system-map/system-map.yaml · 更新 2026-08-05 · 双击拖动/滚轮缩放/点节点看详情</span>
+  <input id="search" type="text" placeholder="搜索节点…">
+  <div id="legend"></div>
+</div>
+<div id="mynetwork"></div>
+<div id="info"><h2>节点详情</h2><p style="color:#6b7280">点击图中节点查看说明</p></div>
+
+<script>
+const GROUP_COLORS = {"data": "#2c7fb8", "tools": "#31a354", "research": "#e6550d", "knowledge": "#756bb1", "board": "#c44e52", "external": "#969696", "sync": "#a67c00"};
+const GROUP_LABELS = {"data": "数据层", "tools": "工具层", "research": "研究层", "knowledge": "知识层", "board": "决策与展示", "external": "外部生态", "sync": "同步层"};
+const nodes = new vis.DataSet([
+  {
+    "id": "csmar",
+    "label": "CSMAR 原始数据",
+    "group": "data",
+    "title": "外部数据供应商：行情、财务、股权等原始数据源，经导入脚本进库",
+    "desc": "外部数据供应商：行情、财务、股权等原始数据源，经导入脚本进库",
+    "path": ""
+  },
+  {
+    "id": "market_data_db",
+    "label": "data/market_data.db",
+    "group": "data",
+    "title": "中央行情库：indices 2126、daily_data 1300万行、cn_financials 35.7万行、stkcd_map 5828",
+    "desc": "中央行情库：indices 2126、daily_data 1300万行、cn_financials 35.7万行、stkcd_map 5828",
+    "path": "data/market_data.db"
+  },
+  {
+    "id": "importer",
+    "label": "导入脚本 feng_import_csmar",
+    "group": "tools",
+    "title": "把 CSMAR 原始数据导入 SQLite",
+    "desc": "把 CSMAR 原始数据导入 SQLite",
+    "path": "tools/feng_import_csmar.py"
+  },
+  {
+    "id": "dbops",
+    "label": "建库/校验 fengdata 族",
+    "group": "tools",
+    "title": "fengdata / fengdbrefine / fengstockdb / fengindexdb：建库、补数据、校验一致性",
+    "desc": "fengdata / fengdbrefine / fengstockdb / fengindexdb：建库、补数据、校验一致性",
+    "path": "tools/fengdbrefine.py"
+  },
+  {
+    "id": "finops",
+    "label": "财务处理 fengfundamentals 族",
+    "group": "tools",
+    "title": "fengfundamentals / feng10k / feng_add_capex：财务指标加工",
+    "desc": "fengfundamentals / feng10k / feng_add_capex：财务指标加工",
+    "path": "tools/fengfundamentals.py"
+  },
+  {
+    "id": "screener",
+    "label": "选股 fengscreen",
+    "group": "tools",
+    "title": "fengscreen / stock_screener：按因子条件从库中筛选标的",
+    "desc": "fengscreen / stock_screener：按因子条件从库中筛选标的",
+    "path": "tools/fengscreen.py"
+  },
+  {
+    "id": "portfolio_tools",
+    "label": "组合工具 fengportfolio",
+    "group": "tools",
+    "title": "fengportfolio / fengview：组合构建、收益视图",
+    "desc": "fengportfolio / fengview：组合构建、收益视图",
+    "path": "tools/fengportfolio.py"
+  },
+  {
+    "id": "audit_tools",
+    "label": "质量审计 fenghealth 族",
+    "group": "tools",
+    "title": "fenghealth / report_audit / financial_rigor：数据健康检查与报告审计",
+    "desc": "fenghealth / report_audit / financial_rigor：数据健康检查与报告审计",
+    "path": "tools/fenghealth.py"
+  },
+  {
+    "id": "watch",
+    "label": "行情监控 fengmarket",
+    "group": "tools",
+    "title": "fengmarket / fengwatch：行情获取与盯盘",
+    "desc": "fengmarket / fengwatch：行情获取与盯盘",
+    "path": "tools/fengmarket.py"
+  },
+  {
+    "id": "verification",
+    "label": "110-strategy-verification",
+    "group": "research",
+    "title": "52 条可证伪论断，36 条已测、3 条已复核（#1/#4/#33）；每条含 verify 脚本 + README + results.json + audit.md",
+    "desc": "52 条可证伪论断，36 条已测、3 条已复核（#1/#4/#33）；每条含 verify 脚本 + README + results.json + audit.md",
+    "path": "research/110-strategy-verification"
+  },
+  {
+    "id": "research_other",
+    "label": "research 010-100",
+    "group": "research",
+    "title": "宏观/资产类别/策略/公司/报告/组合管理 各研究块",
+    "desc": "宏观/资产类别/策略/公司/报告/组合管理 各研究块",
+    "path": "research"
+  },
+  {
+    "id": "research_state",
+    "label": "research/state 研究状态",
+    "group": "research",
+    "title": "研究过程状态与临时产出",
+    "desc": "研究过程状态与临时产出",
+    "path": "research/state"
+  },
+  {
+    "id": "methodology",
+    "label": "knowledge/methodology",
+    "group": "knowledge",
+    "title": "回测方法总纲（判据=指标、显著性、复权/生存偏差/成本）+ 文献地图（Crossref 验证过的论文表）",
+    "desc": "回测方法总纲（判据=指标、显著性、复权/生存偏差/成本）+ 文献地图（Crossref 验证过的论文表）",
+    "path": "knowledge/methodology"
+  },
+  {
+    "id": "knowledge_other",
+    "label": "knowledge 其余",
+    "group": "knowledge",
+    "title": "principles / discipline / market_view / personal 投资原则与纪律",
+    "desc": "principles / discipline / market_view / personal 投资原则与纪律",
+    "path": "knowledge"
+  },
+  {
+    "id": "docs",
+    "label": "docs/",
+    "group": "knowledge",
+    "title": "FRAMEWORK / ROADMAP / DEPENDENCIES / architecture.html / 框架对比等",
+    "desc": "FRAMEWORK / ROADMAP / DEPENDENCIES / architecture.html / 框架对比等",
+    "path": "docs"
+  },
+  {
+    "id": "rules_reviews",
+    "label": "rules/ + reviews/",
+    "group": "board",
+    "title": "交易规则与复盘评审",
+    "desc": "交易规则与复盘评审",
+    "path": "reviews"
+  },
+  {
+    "id": "portfolio_ledger",
+    "label": "portfolio/ + holdings/",
+    "group": "board",
+    "title": "组合账本与持仓记录",
+    "desc": "组合账本与持仓记录",
+    "path": "portfolio"
+  },
+  {
+    "id": "fengweb",
+    "label": "fengweb/",
+    "group": "board",
+    "title": "前端展示",
+    "desc": "前端展示",
+    "path": "fengweb"
+  },
+  {
+    "id": "logs",
+    "label": "logs/",
+    "group": "board",
+    "title": "运行日志与审计线索",
+    "desc": "运行日志与审计线索",
+    "path": "logs"
+  },
+  {
+    "id": "fengasni",
+    "label": "机器档案系统",
+    "group": "external",
+    "title": "多机档案/Profile 管理（另一台机/本机双 Profile）",
+    "desc": "多机档案/Profile 管理（另一台机/本机双 Profile）",
+    "path": ""
+  },
+  {
+    "id": "searchking",
+    "label": "Search-King",
+    "group": "external",
+    "title": "网页搜索/正文读取/搜图，文献查证用",
+    "desc": "网页搜索/正文读取/搜图，文献查证用",
+    "path": ""
+  },
+  {
+    "id": "opencli",
+    "label": "opencli",
+    "group": "external",
+    "title": "浏览器自动化（填表/点击/抓取）",
+    "desc": "浏览器自动化（填表/点击/抓取）",
+    "path": ""
+  },
+  {
+    "id": "mail",
+    "label": "agently-mail",
+    "group": "external",
+    "title": "邮件收发自动化",
+    "desc": "邮件收发自动化",
+    "path": ""
+  },
+  {
+    "id": "everything",
+    "label": "Everything es.exe",
+    "group": "external",
+    "title": "本地全文/文件名检索（需 1.5 + content 索引）",
+    "desc": "本地全文/文件名检索（需 1.5 + content 索引）",
+    "path": ""
+  },
+  {
+    "id": "github",
+    "label": "GitHub fengyuwang-com/FengInvest",
+    "group": "sync",
+    "title": "origin fetch + push",
+    "desc": "origin fetch + push",
+    "path": ""
+  },
+  {
+    "id": "gitee",
+    "label": "Gitee fengyuwang-com/FengInvest",
+    "group": "sync",
+    "title": "origin 第二 push URL，双远端同步",
+    "desc": "origin 第二 push URL，双远端同步",
+    "path": ""
+  },
+  {
+    "id": "machine_lt",
+    "label": "本机",
+    "group": "sync",
+    "title": "当前这台机器，Windows 11",
+    "desc": "当前这台机器，Windows 11",
+    "path": ""
+  },
+  {
+    "id": "machine_air",
+    "label": "远端机",
+    "group": "sync",
+    "title": "另一台机器，独立 Profile",
+    "desc": "另一台机器，独立 Profile",
+    "path": ""
+  }
+]);
+const edges = new vis.DataSet([
+  {
+    "from": "csmar",
+    "to": "importer",
+    "label": "原始数据流入",
+    "arrows": "to",
+    "color": "#9aa0a6"
+  },
+  {
+    "from": "importer",
+    "to": "market_data_db",
+    "label": "导入写入",
+    "arrows": "to",
+    "color": "#9aa0a6"
+  },
+  {
+    "from": "dbops",
+    "to": "market_data_db",
+    "label": "建库/校验",
+    "arrows": "to",
+    "color": "#9aa0a6"
+  },
+  {
+    "from": "finops",
+    "to": "market_data_db",
+    "label": "财务写入",
+    "arrows": "to",
+    "color": "#9aa0a6"
+  },
+  {
+    "from": "market_data_db",
+    "to": "verification",
+    "label": "回测读取",
+    "arrows": "to",
+    "color": "#9aa0a6"
+  },
+  {
+    "from": "market_data_db",
+    "to": "screener",
+    "label": "筛选读取",
+    "arrows": "to",
+    "color": "#9aa0a6"
+  },
+  {
+    "from": "market_data_db",
+    "to": "portfolio_tools",
+    "label": "组合读取",
+    "arrows": "to",
+    "color": "#9aa0a6"
+  },
+  {
+    "from": "market_data_db",
+    "to": "watch",
+    "label": "监控读取",
+    "arrows": "to",
+    "color": "#9aa0a6"
+  },
+  {
+    "from": "market_data_db",
+    "to": "research_other",
+    "label": "研究读取",
+    "arrows": "to",
+    "color": "#9aa0a6"
+  },
+  {
+    "from": "verification",
+    "to": "methodology",
+    "label": "方法对照",
+    "arrows": "to",
+    "color": "#9aa0a6"
+  },
+  {
+    "from": "methodology",
+    "to": "verification",
+    "label": "准入/复核规则",
+    "arrows": "to",
+    "color": "#9aa0a6"
+  },
+  {
+    "from": "audit_tools",
+    "to": "verification",
+    "label": "回测质量审计",
+    "arrows": "to",
+    "color": "#9aa0a6"
+  },
+  {
+    "from": "audit_tools",
+    "to": "market_data_db",
+    "label": "数据健康检查",
+    "arrows": "to",
+    "color": "#9aa0a6"
+  },
+  {
+    "from": "research_other",
+    "to": "research_state",
+    "label": "状态记录",
+    "arrows": "to",
+    "color": "#9aa0a6"
+  },
+  {
+    "from": "verification",
+    "to": "docs",
+    "label": "结论沉淀",
+    "arrows": "to",
+    "color": "#9aa0a6"
+  },
+  {
+    "from": "methodology",
+    "to": "docs",
+    "label": "方法沉淀",
+    "arrows": "to",
+    "color": "#9aa0a6"
+  },
+  {
+    "from": "research_other",
+    "to": "knowledge_other",
+    "label": "研究产出沉淀",
+    "arrows": "to",
+    "color": "#9aa0a6"
+  },
+  {
+    "from": "knowledge_other",
+    "to": "rules_reviews",
+    "label": "规则/评审依据",
+    "arrows": "to",
+    "color": "#9aa0a6"
+  },
+  {
+    "from": "screener",
+    "to": "portfolio_tools",
+    "label": "入选标的",
+    "arrows": "to",
+    "color": "#9aa0a6"
+  },
+  {
+    "from": "portfolio_tools",
+    "to": "portfolio_ledger",
+    "label": "账本更新",
+    "arrows": "to",
+    "color": "#9aa0a6"
+  },
+  {
+    "from": "rules_reviews",
+    "to": "portfolio_ledger",
+    "label": "评审指导",
+    "arrows": "to",
+    "color": "#9aa0a6"
+  },
+  {
+    "from": "docs",
+    "to": "fengweb",
+    "label": "内容来源",
+    "arrows": "to",
+    "color": "#9aa0a6"
+  },
+  {
+    "from": "searchking",
+    "to": "methodology",
+    "label": "文献查证",
+    "arrows": "to",
+    "color": "#9aa0a6"
+  },
+  {
+    "from": "everything",
+    "to": "methodology",
+    "label": "本地检索",
+    "arrows": "to",
+    "color": "#9aa0a6"
+  },
+  {
+    "from": "machine_lt",
+    "to": "fengasni",
+    "label": "本机档案备份",
+    "arrows": "to",
+    "color": "#9aa0a6"
+  },
+  {
+    "from": "machine_air",
+    "to": "fengasni",
+    "label": "档案",
+    "arrows": "to",
+    "color": "#9aa0a6"
+  },
+  {
+    "from": "machine_lt",
+    "to": "github",
+    "label": "fetch/push",
+    "arrows": "to",
+    "color": "#9aa0a6"
+  },
+  {
+    "from": "machine_lt",
+    "to": "gitee",
+    "label": "push",
+    "arrows": "to",
+    "color": "#9aa0a6"
+  }
+]);
+
+// 图例
+const legendEl = document.getElementById('legend');
+for (const [g, label] of Object.entries(GROUP_LABELS)) {
+  const c = document.createElement('span');
+  c.className = 'chip';
+  c.style.background = GROUP_COLORS[g];
+  c.textContent = label;
+  legendEl.appendChild(c);
+}
+
+const container = document.getElementById('mynetwork');
+const options = {
+  nodes: {
+    shape: 'box',
+    margin: 10,
+    font: { size: 14, color: '#111827' },
+    borderWidth: 1,
+    shadow: true,
+  },
+  edges: {
+    font: { size: 11, color: '#4b5563', align: 'middle' },
+    width: 1.5,
+    smooth: { type: 'continuous' },
+  },
+  groups: Object.fromEntries(
+    Object.entries(GROUP_COLORS).map(([g, c]) => [g, {
+      color: { background: c, border: '#333' },
+      font: { color: '#fff' },
+      shape: 'box',
+    }])
+  ),
+  physics: { barnesHut: { gravitationalConstant: -8000, springLength: 160 } },
+  interaction: { hover: true, tooltipDelay: 100 },
+};
+const network = new vis.Network(container, { nodes, edges }, options);
+
+// 点击节点 -> 右侧详情
+network.on('click', function (params) {
+  if (params.nodes.length === 0) {
+    document.getElementById('info').innerHTML = '<h2>节点详情</h2><p style="color:#6b7280">点击图中节点查看说明</p>';
+    return;
+  }
+  const n = nodes.get(params.nodes[0]);
+  const gname = GROUP_LABELS[n.group] || n.group;
+  const gcolor = GROUP_COLORS[n.group] || '#888';
+  document.getElementById('info').innerHTML =
+    '<h2>' + n.label + '</h2>' +
+    '<div class="kv"><b>分组</b> <span class="chip" style="background:' + gcolor + '">' + gname + '</span></div>' +
+    (n.desc ? '<div class="kv"><b>说明</b><br>' + n.desc + '</div>' : '') +
+    (n.path ? '<div class="kv"><b>路径</b><br><span class="path">' + n.path + '</span></div>' : '');
+});
+
+// 搜索过滤
+document.getElementById('search').addEventListener('input', function (e) {
+  const q = e.target.value.trim().toLowerCase();
+  const updates = nodes.getIds().map(id => {
+    const n = nodes.get(id);
+    const hit = !q || (n.label + ' ' + (n.desc || '')).toLowerCase().includes(q);
+    return { id, hidden: !hit };
+  });
+  nodes.update(updates);
+  network.setOptions({ physics: { enabled: true } });
+});
+</script>
+</body>
+</html>

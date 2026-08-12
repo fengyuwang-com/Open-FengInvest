@@ -1,0 +1,48 @@
+<div class="page-header">
+  <h2>📚 知识库</h2>
+  <div class="breadcrumb">知识库 — <%= tree.reduce(function(s, c) { return s + c.entries.length; }, 0) %> 条目</div>
+</div>
+
+<div class="kb-stats" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:24px;">
+  <% tree.forEach(function(cat) { %>
+  <div class="stat-card" style="padding:12px;text-align:center;">
+    <div class="stat-value" style="font-size:20px;"><%= cat.entries.length %></div>
+    <div class="stat-label" style="font-size:12px;"><%= cat.label %></div>
+  </div>
+  <% }) %>
+</div>
+
+<% tree.forEach(function(cat) { %>
+<div class="card" style="margin-bottom:20px;">
+  <h3 style="margin-bottom:12px;"><%= cat.label %> <span style="font-size:13px;color:var(--text-muted);font-weight:400;">(<%= cat.entries.length %>)</span></h3>
+  <div class="entry-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px;">
+    <% cat.entries.forEach(function(entry) { %>
+    <% var docPath = entry.path.replace(/\.md$/, ''); %>
+    <% var href = docPath.indexOf('knowledge/') === 0 ? ('/' + docPath) : ('/knowledge/' + docPath); %>
+    <a href="<%= href %>" class="entry-item" style="display:block;padding:10px 12px;border:1px solid var(--border);border-radius:8px;text-decoration:none;color:inherit;transition:background 0.12s,box-shadow 0.12s;">
+      <div class="entry-title" style="font-size:14px;font-weight:600;margin-bottom:4px;">
+        <% if (cat.name === 'people') { %>
+          <%= entry.name %>
+        <% } else { %>
+          <%= entry.name.replace(/-/g, ' ') %>
+        <% } %>
+      </div>
+      <% if (entry.frontmatter && entry.frontmatter.representative) { %>
+      <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px;"><%= entry.frontmatter.representative %></div>
+      <% } %>
+      <% if (entry.frontmatter && entry.frontmatter.school) { %>
+      <span style="display:inline-block;padding:1px 8px;background:#e8f5e9;color:#2e7d32;border-radius:10px;font-size:11px;margin-bottom:6px;"><%= entry.frontmatter.school %></span>
+      <% } %>
+      <div class="entry-preview" style="font-size:12px;color:#888;line-height:1.5;overflow:hidden;max-height:36px;"><%= entry.preview.slice(0, 100) %></div>
+    </a>
+    <% }) %>
+  </div>
+</div>
+<% }) %>
+
+<% if (tree.length === 0) { %>
+<div class="empty-state">
+  <h3>知识库为空</h3>
+  <p>在 knowledge/ 目录下添加 Markdown 文档</p>
+</div>
+<% } %>

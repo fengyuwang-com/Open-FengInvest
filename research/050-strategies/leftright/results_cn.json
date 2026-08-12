@@ -1,0 +1,357 @@
+{
+  "meta": {
+    "date": "2026-07-23 02:09:28",
+    "stocks_total": 300,
+    "stocks_with_signals": 298,
+    "parameters": {
+      "left_drawdowns": [
+        0.15,
+        0.2,
+        0.3,
+        0.4,
+        0.5
+      ],
+      "right_mas": [
+        50,
+        100,
+        200
+      ],
+      "hold_days": [
+        20,
+        63,
+        126,
+        252
+      ],
+      "quick": false
+    },
+    "elapsed_s": 133.6
+  },
+  "parameter_sweep": [
+    {
+      "param": "L_0.15",
+      "avg_count": 2601.2987,
+      "avg_win_rate": 0.494,
+      "avg_avg_return": 0.0349,
+      "avg_median_return": 0.0009,
+      "avg_max_return": 1.2955,
+      "avg_max_loss": -0.4963,
+      "avg_std": 0.2332,
+      "avg_sharpe": 1.8069,
+      "avg_avg_win": 0.2013,
+      "avg_avg_loss": -0.1307,
+      "avg_profit_factor": 1.5495,
+      "avg_total_return": 78.9332
+    },
+    {
+      "param": "L_0.20",
+      "avg_count": 2154.6577,
+      "avg_win_rate": 0.5021,
+      "avg_avg_return": 0.036,
+      "avg_median_return": 0.0033,
+      "avg_max_return": 1.2267,
+      "avg_max_loss": -0.4827,
+      "avg_std": 0.2313,
+      "avg_sharpe": 1.9649,
+      "avg_avg_win": 0.2,
+      "avg_avg_loss": -0.1312,
+      "avg_profit_factor": 1.5417,
+      "avg_total_return": 65.2464
+    },
+    {
+      "param": "L_0.30",
+      "avg_count": 1368.1395,
+      "avg_win_rate": 0.525,
+      "avg_avg_return": 0.0437,
+      "avg_median_return": 0.0123,
+      "avg_max_return": 1.0883,
+      "avg_max_loss": -0.4489,
+      "avg_std": 0.2301,
+      "avg_sharpe": 3.486,
+      "avg_avg_win": 0.2058,
+      "avg_avg_loss": -0.1321,
+      "avg_profit_factor": 1.6293,
+      "avg_total_return": 45.8832
+    },
+    {
+      "param": "L_0.40",
+      "avg_count": 818.507,
+      "avg_win_rate": 0.5384,
+      "avg_avg_return": 0.0542,
+      "avg_median_return": 0.0291,
+      "avg_max_return": 0.9639,
+      "avg_max_loss": -0.406,
+      "avg_std": 0.2263,
+      "avg_sharpe": 5.3288,
+      "avg_avg_win": 0.2122,
+      "avg_avg_loss": -0.1331,
+      "avg_profit_factor": 1.7136,
+      "avg_total_return": 31.3723
+    },
+    {
+      "param": "L_0.50",
+      "avg_count": 458.7293,
+      "avg_win_rate": 0.5649,
+      "avg_avg_return": 0.0715,
+      "avg_median_return": 0.0482,
+      "avg_max_return": 0.819,
+      "avg_max_loss": -0.3662,
+      "avg_std": 0.224,
+      "avg_sharpe": 6.6527,
+      "avg_avg_win": 0.2262,
+      "avg_avg_loss": -0.1359,
+      "avg_profit_factor": 2.1425,
+      "avg_total_return": 22.7576
+    },
+    {
+      "param": "R_100",
+      "avg_count": 95.3725,
+      "avg_win_rate": 0.4683,
+      "avg_avg_return": 0.0307,
+      "avg_median_return": -0.0062,
+      "avg_max_return": 0.9309,
+      "avg_max_loss": -0.4208,
+      "avg_std": 0.2401,
+      "avg_sharpe": 0.9062,
+      "avg_avg_win": 0.2173,
+      "avg_avg_loss": -0.1354,
+      "avg_profit_factor": 1.631,
+      "avg_total_return": 2.7308
+    },
+    {
+      "param": "R_200",
+      "avg_count": 65.5859,
+      "avg_win_rate": 0.4834,
+      "avg_avg_return": 0.038,
+      "avg_median_return": 0.0027,
+      "avg_max_return": 0.8301,
+      "avg_max_loss": -0.3754,
+      "avg_std": 0.2336,
+      "avg_sharpe": 1.7381,
+      "avg_avg_win": 0.2118,
+      "avg_avg_loss": -0.1331,
+      "avg_profit_factor": 1.611,
+      "avg_total_return": 2.0559
+    },
+    {
+      "param": "R_50",
+      "avg_count": 135.4933,
+      "avg_win_rate": 0.4763,
+      "avg_avg_return": 0.0344,
+      "avg_median_return": -0.006,
+      "avg_max_return": 1.0368,
+      "avg_max_loss": -0.463,
+      "avg_std": 0.2454,
+      "avg_sharpe": 1.6098,
+      "avg_avg_win": 0.2186,
+      "avg_avg_loss": -0.1361,
+      "avg_profit_factor": 1.6124,
+      "avg_total_return": 4.5065
+    }
+  ],
+  "by_market": {
+    "CN": {
+      "stock_count": 298,
+      "L_0.15": {
+        "1M": {
+          "count": 298,
+          "win_rate": 0.7886,
+          "avg": 0.009911
+        },
+        "3M": {
+          "count": 298,
+          "win_rate": 0.8289,
+          "avg": 0.034881
+        },
+        "6M": {
+          "count": 297,
+          "win_rate": 0.8653,
+          "avg": 0.072995
+        },
+        "12M": {
+          "count": 297,
+          "win_rate": 0.9024,
+          "avg": 0.180397
+        }
+      },
+      "L_0.20": {
+        "1M": {
+          "count": 298,
+          "win_rate": 0.7919,
+          "avg": 0.011123
+        },
+        "3M": {
+          "count": 298,
+          "win_rate": 0.8087,
+          "avg": 0.036014
+        },
+        "6M": {
+          "count": 296,
+          "win_rate": 0.8412,
+          "avg": 0.073428
+        },
+        "12M": {
+          "count": 296,
+          "win_rate": 0.8919,
+          "avg": 0.181958
+        }
+      },
+      "L_0.30": {
+        "1M": {
+          "count": 295,
+          "win_rate": 0.7864,
+          "avg": 0.015118
+        },
+        "3M": {
+          "count": 294,
+          "win_rate": 0.7789,
+          "avg": 0.043669
+        },
+        "6M": {
+          "count": 293,
+          "win_rate": 0.8089,
+          "avg": 0.085767
+        },
+        "12M": {
+          "count": 293,
+          "win_rate": 0.8464,
+          "avg": 0.193304
+        }
+      },
+      "L_0.40": {
+        "1M": {
+          "count": 287,
+          "win_rate": 0.7805,
+          "avg": 0.021603
+        },
+        "3M": {
+          "count": 286,
+          "win_rate": 0.7552,
+          "avg": 0.054204
+        },
+        "6M": {
+          "count": 286,
+          "win_rate": 0.8147,
+          "avg": 0.100721
+        },
+        "12M": {
+          "count": 286,
+          "win_rate": 0.8566,
+          "avg": 0.209095
+        }
+      },
+      "L_0.50": {
+        "1M": {
+          "count": 266,
+          "win_rate": 0.7857,
+          "avg": 0.028657
+        },
+        "3M": {
+          "count": 266,
+          "win_rate": 0.7707,
+          "avg": 0.0715
+        },
+        "6M": {
+          "count": 266,
+          "win_rate": 0.8158,
+          "avg": 0.142642
+        },
+        "12M": {
+          "count": 266,
+          "win_rate": 0.8459,
+          "avg": 0.289845
+        }
+      },
+      "R_100": {
+        "1M": {
+          "count": 298,
+          "win_rate": 0.7013,
+          "avg": 0.011786
+        },
+        "3M": {
+          "count": 298,
+          "win_rate": 0.7114,
+          "avg": 0.03073
+        },
+        "6M": {
+          "count": 298,
+          "win_rate": 0.7886,
+          "avg": 0.063604
+        },
+        "12M": {
+          "count": 298,
+          "win_rate": 0.8658,
+          "avg": 0.158568
+        }
+      },
+      "R_200": {
+        "1M": {
+          "count": 297,
+          "win_rate": 0.6465,
+          "avg": 0.013743
+        },
+        "3M": {
+          "count": 297,
+          "win_rate": 0.697,
+          "avg": 0.037952
+        },
+        "6M": {
+          "count": 297,
+          "win_rate": 0.7845,
+          "avg": 0.079926
+        },
+        "12M": {
+          "count": 296,
+          "win_rate": 0.8446,
+          "avg": 0.194385
+        }
+      },
+      "R_50": {
+        "1M": {
+          "count": 298,
+          "win_rate": 0.7315,
+          "avg": 0.011211
+        },
+        "3M": {
+          "count": 298,
+          "win_rate": 0.8054,
+          "avg": 0.034359
+        },
+        "6M": {
+          "count": 298,
+          "win_rate": 0.8389,
+          "avg": 0.066615
+        },
+        "12M": {
+          "count": 298,
+          "win_rate": 0.8758,
+          "avg": 0.163094
+        }
+      },
+      "n_1M": 2286683,
+      "avg_1M": 0.0101,
+      "n_3M": 2263900,
+      "avg_3M": 0.0328,
+      "n_6M": 2240421,
+      "avg_6M": 0.0684,
+      "n_12M": 2206719,
+      "avg_12M": 0.1754
+    }
+  },
+  "pairwise": {
+    "count": 298,
+    "left_better": 156,
+    "right_better": 137,
+    "left_pct": 0.5235,
+    "right_pct": 0.4597
+  },
+  "best_params": {
+    "left_best_drawdown": {
+      "drawdown": 0.5,
+      "sharpe": 6.6527
+    },
+    "right_best_ma": {
+      "ma": 200,
+      "sharpe": 1.7381
+    }
+  }
+}

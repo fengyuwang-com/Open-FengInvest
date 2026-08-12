@@ -1,0 +1,13 @@
+{
+  "index": "000001.SS",
+  "name": "上证综合指数",
+  "first_date": "1997-07-02",
+  "last_date": "2026-07-21",
+  "total_trading_days_analyzed": 6838,
+  "above_ma200_days": 3621,
+  "below_ma200_days": 3217,
+  "above_pct": 52.95,
+  "below_pct": 47.05,
+  "ratio_above_below": 1.1256,
+  "claim_supported": true
+}

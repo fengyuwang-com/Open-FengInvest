@@ -1,0 +1,42 @@
+{
+  "root": "./",
+  "renames": [
+    {"old": "research/010-macro/010-macro-analysis-reference.md", "new": "research/010-macro/001-macro-analysis-reference.md"},
+    {"old": "research/010-macro/020-business-cycle.md", "new": "research/010-macro/002-business-cycle.md"},
+    {"old": "research/010-macro/030-yield-curve.md", "new": "research/010-macro/003-yield-curve.md"},
+    {"old": "research/010-macro/040-inflation.md", "new": "research/010-macro/004-inflation.md"},
+    {"old": "research/010-macro/050-monetary-policy.md", "new": "research/010-macro/005-monetary-policy.md"},
+    {"old": "research/010-macro/060-credit-cycle.md", "new": "research/010-macro/006-credit-cycle.md"},
+    {"old": "research/010-macro/070-employment-indicators.md", "new": "research/010-macro/007-employment-indicators.md"},
+    {"old": "research/010-macro/080-fiscal-policy.md", "new": "research/010-macro/008-fiscal-policy.md"},
+
+    {"old": "research/020-market/010-market-sentiment-reference.md", "new": "research/020-market/001-market-sentiment-reference.md"},
+    {"old": "research/020-market/020-vix.md", "new": "research/020-market/002-vix.md"},
+    {"old": "research/020-market/030-put-call-ratio.md", "new": "research/020-market/003-put-call-ratio.md"},
+    {"old": "research/020-market/040-fear-greed-index.md", "new": "research/020-market/004-fear-greed-index.md"},
+    {"old": "research/020-market/050-market-breadth.md", "new": "research/020-market/005-market-breadth.md"},
+    {"old": "research/020-market/060-sector-rotation.md", "new": "research/020-market/006-sector-rotation.md"},
+    {"old": "research/020-market/070-cot-report.md", "new": "research/020-market/007-cot-report.md"},
+    {"old": "research/020-market/080-market-phases.md", "new": "research/020-market/008-market-phases.md"},
+
+    {"old": "research/030-asset-classes/010-asset-class-reference.md", "new": "research/030-asset-classes/001-asset-class-reference.md"},
+    {"old": "research/030-asset-classes/020-gold.md", "new": "research/030-asset-classes/002-gold.md"},
+    {"old": "research/030-asset-classes/030-equities.md", "new": "research/030-asset-classes/003-equities.md"},
+    {"old": "research/030-asset-classes/040-treasury-bonds.md", "new": "research/030-asset-classes/004-treasury-bonds.md"},
+    {"old": "research/030-asset-classes/050-corporate-bonds.md", "new": "research/030-asset-classes/005-corporate-bonds.md"},
+    {"old": "research/030-asset-classes/060-commodities.md", "new": "research/030-asset-classes/006-commodities.md"},
+    {"old": "research/030-asset-classes/070-real-estate.md", "new": "research/030-asset-classes/007-real-estate.md"},
+    {"old": "research/030-asset-classes/080-cash-equivalents.md", "new": "research/030-asset-classes/008-cash-equivalents.md"},
+
+    {"old": "research/050-strategies/010-quality-growth.md", "new": "research/050-strategies/001-quality-growth.md"},
+    {"old": "research/050-strategies/020-contrarian.md", "new": "research/050-strategies/002-contrarian.md"},
+    {"old": "research/050-strategies/030-dividend.md", "new": "research/050-strategies/003-dividend.md"},
+    {"old": "research/050-strategies/040-quantitative-factor.md", "new": "research/050-strategies/004-quantitative-factor.md"},
+    {"old": "research/050-strategies/050-low-vol-dividend.md", "new": "research/050-strategies/005-low-vol-dividend.md"},
+    {"old": "research/050-strategies/060-macro-cycle.md", "new": "research/050-strategies/006-macro-cycle.md"},
+    {"old": "research/050-strategies/070-sector-rotation.md", "new": "research/050-strategies/007-sector-rotation.md"},
+    {"old": "research/050-strategies/080-growth-track.md", "new": "research/050-strategies/008-growth-track.md"},
+    {"old": "research/050-strategies/090-momentum-trading.md", "new": "research/050-strategies/009-momentum-trading.md"}
+  ],
+  "scan_dirs": ["research", "."]
+}

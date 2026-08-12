@@ -1,0 +1,290 @@
+{
+  "test_date": "2026-07-23",
+  "claim_id": 41,
+  "claim": "当组合行业集中度超过 40% 时，发生 -30% 回撤的概率超过 50%",
+  "method": "Sector-level Monte Carlo simulation. For each month from 2010-01 to 2024-12, generate random portfolios across 2-8 sectors with random weights (uniform Dirichlet). Track each portfolio for 6, 12, and 24 months forward. Record sector concentration (max sector weight) and max drawdown. Bin by concentration level and compute crash probabilities.",
+  "period": "2010-01 ~ 2024-12",
+  "simulation_params": {
+    "n_simulations_per_month": 200,
+    "start_months": 180,
+    "sectors_used": 11,
+    "stocks_in_pool": 482,
+    "crash_threshold": 0.3,
+    "concentration_threshold": 0.4,
+    "lookback_months": 12,
+    "robustness_horizons": [
+      6,
+      24
+    ]
+  },
+  "results_by_horizon": {
+    "horizon_6m": {
+      "horizon_months": 6,
+      "n_portfolios": 33600,
+      "concentration_distribution": {
+        "min": 0.1301,
+        "p25": 0.2589,
+        "p50": 0.3423,
+        "p75": 0.4949,
+        "max": 0.9998,
+        "mean": 0.3948,
+        "n_above_40pct": 12737,
+        "n_below_20pct": 1649
+      },
+      "concentration_buckets": [
+        {
+          "concentration_bucket": "<20%",
+          "n_portfolios": 1649,
+          "n_crashes": 1,
+          "crash_probability": 0.0006,
+          "avg_max_drawdown": 0.0548
+        },
+        {
+          "concentration_bucket": "20-30%",
+          "n_portfolios": 11316,
+          "n_crashes": 66,
+          "crash_probability": 0.0058,
+          "avg_max_drawdown": 0.0555
+        },
+        {
+          "concentration_bucket": "30-40%",
+          "n_portfolios": 7898,
+          "n_crashes": 59,
+          "crash_probability": 0.0075,
+          "avg_max_drawdown": 0.0575
+        },
+        {
+          "concentration_bucket": "40-50%",
+          "n_portfolios": 4528,
+          "n_crashes": 26,
+          "crash_probability": 0.0057,
+          "avg_max_drawdown": 0.0587
+        },
+        {
+          "concentration_bucket": "50-60%",
+          "n_portfolios": 3666,
+          "n_crashes": 24,
+          "crash_probability": 0.0065,
+          "avg_max_drawdown": 0.0602
+        },
+        {
+          "concentration_bucket": "60-70%",
+          "n_portfolios": 1986,
+          "n_crashes": 16,
+          "crash_probability": 0.0081,
+          "avg_max_drawdown": 0.0621
+        },
+        {
+          "concentration_bucket": "70-80%",
+          "n_portfolios": 1195,
+          "n_crashes": 8,
+          "crash_probability": 0.0067,
+          "avg_max_drawdown": 0.0632
+        },
+        {
+          "concentration_bucket": ">80%",
+          "n_portfolios": 1362,
+          "n_crashes": 9,
+          "crash_probability": 0.0066,
+          "avg_max_drawdown": 0.0671
+        }
+      ],
+      "conditional_probabilities": {
+        "p_crash_given_concentration_gt_40pct": 0.0065,
+        "p_crash_given_concentration_20_39pct": 0.0065,
+        "p_crash_given_concentration_lt_20pct": 0.0006,
+        "n_high_concentration": 12737,
+        "n_mid_concentration": 19214,
+        "n_low_concentration": 1649,
+        "high_vs_low_ratio": 10.75
+      },
+      "verdict": null,
+      "verdict_detail": null
+    },
+    "horizon_12m": {
+      "horizon_months": 12,
+      "n_portfolios": 33600,
+      "concentration_distribution": {
+        "min": 0.1301,
+        "p25": 0.2589,
+        "p50": 0.3423,
+        "p75": 0.4949,
+        "max": 0.9998,
+        "mean": 0.3948,
+        "n_above_40pct": 12737,
+        "n_below_20pct": 1649
+      },
+      "concentration_buckets": [
+        {
+          "concentration_bucket": "<20%",
+          "n_portfolios": 1649,
+          "n_crashes": 6,
+          "crash_probability": 0.0036,
+          "avg_max_drawdown": 0.0854
+        },
+        {
+          "concentration_bucket": "20-30%",
+          "n_portfolios": 11316,
+          "n_crashes": 145,
+          "crash_probability": 0.0128,
+          "avg_max_drawdown": 0.0879
+        },
+        {
+          "concentration_bucket": "30-40%",
+          "n_portfolios": 7898,
+          "n_crashes": 129,
+          "crash_probability": 0.0163,
+          "avg_max_drawdown": 0.0903
+        },
+        {
+          "concentration_bucket": "40-50%",
+          "n_portfolios": 4528,
+          "n_crashes": 59,
+          "crash_probability": 0.013,
+          "avg_max_drawdown": 0.0911
+        },
+        {
+          "concentration_bucket": "50-60%",
+          "n_portfolios": 3666,
+          "n_crashes": 53,
+          "crash_probability": 0.0145,
+          "avg_max_drawdown": 0.0935
+        },
+        {
+          "concentration_bucket": "60-70%",
+          "n_portfolios": 1986,
+          "n_crashes": 36,
+          "crash_probability": 0.0181,
+          "avg_max_drawdown": 0.0959
+        },
+        {
+          "concentration_bucket": "70-80%",
+          "n_portfolios": 1195,
+          "n_crashes": 18,
+          "crash_probability": 0.0151,
+          "avg_max_drawdown": 0.1001
+        },
+        {
+          "concentration_bucket": ">80%",
+          "n_portfolios": 1362,
+          "n_crashes": 30,
+          "crash_probability": 0.022,
+          "avg_max_drawdown": 0.1033
+        }
+      ],
+      "conditional_probabilities": {
+        "p_crash_given_concentration_gt_40pct": 0.0154,
+        "p_crash_given_concentration_20_39pct": 0.0143,
+        "p_crash_given_concentration_lt_20pct": 0.0036,
+        "n_high_concentration": 12737,
+        "n_mid_concentration": 19214,
+        "n_low_concentration": 1649,
+        "high_vs_low_ratio": 4.23
+      },
+      "verdict": "拒绝",
+      "verdict_detail": "集中度>40% 时 崩溃概率 1.5% <= 50% 阈值 -- 论断不成立"
+    },
+    "horizon_24m": {
+      "horizon_months": 24,
+      "n_portfolios": 33600,
+      "concentration_distribution": {
+        "min": 0.1301,
+        "p25": 0.2589,
+        "p50": 0.3423,
+        "p75": 0.4949,
+        "max": 0.9998,
+        "mean": 0.3948,
+        "n_above_40pct": 12737,
+        "n_below_20pct": 1649
+      },
+      "concentration_buckets": [
+        {
+          "concentration_bucket": "<20%",
+          "n_portfolios": 1649,
+          "n_crashes": 17,
+          "crash_probability": 0.0103,
+          "avg_max_drawdown": 0.1246
+        },
+        {
+          "concentration_bucket": "20-30%",
+          "n_portfolios": 11316,
+          "n_crashes": 334,
+          "crash_probability": 0.0295,
+          "avg_max_drawdown": 0.1286
+        },
+        {
+          "concentration_bucket": "30-40%",
+          "n_portfolios": 7898,
+          "n_crashes": 260,
+          "crash_probability": 0.0329,
+          "avg_max_drawdown": 0.1311
+        },
+        {
+          "concentration_bucket": "40-50%",
+          "n_portfolios": 4528,
+          "n_crashes": 140,
+          "crash_probability": 0.0309,
+          "avg_max_drawdown": 0.1326
+        },
+        {
+          "concentration_bucket": "50-60%",
+          "n_portfolios": 3666,
+          "n_crashes": 107,
+          "crash_probability": 0.0292,
+          "avg_max_drawdown": 0.1336
+        },
+        {
+          "concentration_bucket": "60-70%",
+          "n_portfolios": 1986,
+          "n_crashes": 81,
+          "crash_probability": 0.0408,
+          "avg_max_drawdown": 0.1382
+        },
+        {
+          "concentration_bucket": "70-80%",
+          "n_portfolios": 1195,
+          "n_crashes": 50,
+          "crash_probability": 0.0418,
+          "avg_max_drawdown": 0.145
+        },
+        {
+          "concentration_bucket": ">80%",
+          "n_portfolios": 1362,
+          "n_crashes": 76,
+          "crash_probability": 0.0558,
+          "avg_max_drawdown": 0.1493
+        }
+      ],
+      "conditional_probabilities": {
+        "p_crash_given_concentration_gt_40pct": 0.0356,
+        "p_crash_given_concentration_20_39pct": 0.0309,
+        "p_crash_given_concentration_lt_20pct": 0.0103,
+        "n_high_concentration": 12737,
+        "n_mid_concentration": 19214,
+        "n_low_concentration": 1649,
+        "high_vs_low_ratio": 3.46
+      },
+      "verdict": null,
+      "verdict_detail": null
+    }
+  },
+  "robustness_by_crash_threshold": {
+    "crash_20pct": {
+      "threshold": 0.2,
+      "p_crash_high_conc": 0.1021,
+      "p_crash_low_conc": 0.071
+    },
+    "crash_30pct": {
+      "threshold": 0.3,
+      "p_crash_high_conc": 0.0154,
+      "p_crash_low_conc": 0.0036
+    },
+    "crash_40pct": {
+      "threshold": 0.4,
+      "p_crash_high_conc": 0.0058,
+      "p_crash_low_conc": 0.0
+    }
+  },
+  "conclusion": "拒绝",
+  "conclusion_detail": "集中度>40% 时 崩溃概率 1.5% <= 50% 阈值 -- 论断不成立"
+}
