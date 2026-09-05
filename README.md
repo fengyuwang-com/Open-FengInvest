@@ -216,4 +216,4 @@ python tools/fenginvest.py status <TK> # 状态
 
 ---
 
-MIT License — 仅限研究参考，不构成投资建议。
+GNU AGPL-3.0v3 — 仅限研究参考，不构成投资建议。
