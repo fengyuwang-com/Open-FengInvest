@@ -1,18 +1,63 @@
 <div class="page-header">
-  <h2>⚙️ 系统架构图</h2>
-  <div class="breadcrumb"><a href="/">系统总览</a> / 架构图 — 奇衡DK-CAPITAL 思想融入版</div>
+  <h2 data-i18n="page.system">⚙️ 系统架构图</h2>
+  <div class="breadcrumb"><a href="/" data-i18n="common.sysOverview">系统总览</a> / <span data-i18n="crumb.system">架构图 — 奇衡DK-CAPITAL 思想融入版</span></div>
 </div>
 
 <!-- Legend -->
 <div class="card legend-card">
   <div class="legend-items">
-    <span class="legend-item"><span class="legend-color" style="background:#e8f5e9;"></span> 已有组件</span>
-    <span class="legend-item"><span class="legend-color" style="background:#fff3e0;"></span> DK 新增</span>
-    <span class="legend-item"><span class="legend-color" style="background:#e3f2fd;"></span> 新增模块</span>
-    <span class="legend-item"><span class="legend-color" style="background:#fce4ec;"></span> 交互检查</span>
-    <span class="legend-item"><span class="legend-color" style="background:#f3e5f5;"></span> 知识库</span>
+    <span class="legend-item"><span class="legend-color" style="background:var(--ok-bg);"></span> 已有组件</span>
+    <span class="legend-item"><span class="legend-color" style="background:var(--warn-bg);"></span> DK 新增</span>
+    <span class="legend-item"><span class="legend-color" style="background:var(--accent-soft);"></span> 新增模块</span>
+    <span class="legend-item"><span class="legend-color" style="background:var(--danger-bg);"></span> 交互检查</span>
+    <span class="legend-item"><span class="legend-color" style="background:var(--primary-soft);"></span> 知识库</span>
   </div>
 </div>
+
+<div class="card">
+  <h3 class="section-title">🔄 状态机总览（fengstate 进度）</h3>
+  <div id="sm-body" style="color:var(--text-muted);font-size:13px;">加载中…</div>
+</div>
+
+<div class="card">
+  <h3 class="section-title">🗄️ 数据库更新进度</h3>
+  <div id="db-body" style="color:var(--text-muted);font-size:13px;">加载中…</div>
+</div>
+
+<div class="card">
+  <h3 class="section-title">🩺 环境检查</h3>
+  <div id="env-body" style="color:var(--text-muted);font-size:13px;">加载中…</div>
+</div>
+
+<script>
+(function() {
+  fetch('/api/system/status').then(function(r){ return r.json(); }).then(function(d) {
+    var sm = document.getElementById('sm-body');
+    if (!d.states || !d.states.length) { sm.textContent = '无状态文件。'; }
+    else {
+      sm.innerHTML = d.states.map(function(s) {
+        var pct = Math.round(s.layers_done / s.total * 100);
+        var badge = s.status === 'active' ? '<span class="badge badge-yellow">进行中</span>' : '<span class="badge badge-green">已完成</span>';
+        return '<div style="display:flex;align-items:center;gap:10px;padding:4px 0;">' +
+          '<a href="/research/' + s.ticker + '" class="num" style="min-width:90px;">' + s.ticker + '</a>' + badge +
+          '<div style="flex:1;height:8px;background:var(--bg-inset);border-radius:4px;overflow:hidden;"><div style="width:' + pct + '%;height:100%;background:var(--accent);"></div></div>' +
+          '<span class="num" style="min-width:36px;text-align:right;">' + s.layers_done + '/8</span></div>';
+      }).join('');
+    }
+    var db = document.getElementById('db-body');
+    if (!d.db) { db.textContent = 'market_data.db 不存在。'; }
+    else {
+      db.innerHTML = '容量 <span class="num">' + d.db.size_gb.toFixed(2) + ' GB</span> · 最后写入 ' + (d.db.mtime || '').slice(0, 16).replace('T', ' ') +
+        (d.db.stale ? ' <span class="badge badge-yellow">⚠ 超 7 天未更新（陈旧）</span>' : ' <span class="badge badge-green">7 天内有更新</span>') +
+        (d.db.fuyao_done != null ? '<br>财报回填进度：<span class="num">' + d.db.fuyao_done + '</span> 家（fengfuyao）' : '');
+    }
+    var env = document.getElementById('env-body');
+    env.innerHTML = 'Python：<span class="num">' + (d.env.python || '—') + '</span> · 服务器已运行 <span class="num">' + Math.round(d.env.server_uptime_s / 60) + '</span> 分钟';
+  }).catch(function(e) {
+    ['sm-body','db-body','env-body'].forEach(function(id) { var el = document.getElementById(id); if (el) el.textContent = '加载失败：' + e; });
+  });
+})();
+</script>
 
 <!-- Diagram 0: System Architecture -->
 <div class="card diagram-card">
@@ -29,7 +74,7 @@
       end
 
       subgraph AI界面["🤖 AI 界面 — CLI 工具集 (给 Claude)"]
-        CLI_ANALYSIS["fengdata.py / fengrule.py<br/>fengquant.py / fengcollision.py"]
+        CLI_ANALYSIS["fengdata.py / fengrule.py<br/>fengquant.py / fengcollision.py<br/>fengpit.py / fengvaluation.py / fengfactor.py"]
         CLI_HOLDING["fengwatch.py / fengportfolio.py<br/>持仓监控+组合盘面"]
         CLI_SKILLS["Claude Skills<br/>编排调度"]
       end
@@ -49,9 +94,9 @@
       CLI_HOLDING <--> 数据层
       人类界面 <--> 数据层
 
-      style 数据层 fill:#f9f9f9,stroke:#999,stroke-dasharray:5 5
-      style AI界面 fill:#e8f5e9,stroke:#4caf50
-      style 人类界面 fill:#e3f2fd,stroke:#2196f3
+      style 数据层 fill:#8892a61f,stroke:#8892a6,stroke-dasharray:5 5
+      style AI界面 fill:#22a06b1f,stroke:#22a06b
+      style 人类界面 fill:#3b82f61f,stroke:#3b82f6
   </div>
 </div>
 
@@ -108,14 +153,14 @@
       L2 --> L3
       L3 --> L4
 
-      style TICKER fill:#e8f5e9,stroke:#4caf50
-      style L0_BOX fill:#fff3e0,stroke:#ff9800
-      style M_BOX fill:#fff3e0,stroke:#ff9800
-      style L1_BOX fill:#fff3e0,stroke:#ff9800
-      style L2a_BOX fill:#fff3e0,stroke:#ff9800
-      style L2b_BOX fill:#e8f5e9,stroke:#4caf50
-      style L3_BOX fill:#fff3e0,stroke:#ff9800
-      style L4_BOX fill:#fff3e0,stroke:#ff9800
+      style TICKER fill:#22a06b1f,stroke:#22a06b
+      style L0_BOX fill:#d977061f,stroke:#d97706
+      style M_BOX fill:#d977061f,stroke:#d97706
+      style L1_BOX fill:#d977061f,stroke:#d97706
+      style L2a_BOX fill:#d977061f,stroke:#d97706
+      style L2b_BOX fill:#22a06b1f,stroke:#22a06b
+      style L3_BOX fill:#d977061f,stroke:#d97706
+      style L4_BOX fill:#d977061f,stroke:#d97706
   </div>
 </div>
 
@@ -154,7 +199,10 @@
 
       subgraph 复盘["⑤ 复盘存档"]
         REV_DONE["做对了什么"] --> REV_DK["DK 会怎么评价?"] --> REV_IMPROVE["改进点"] --> REV_KB["→ 知识沉淀"]
+        REV_IMPROVE --> REV_OUTCOME["记录 outcome<br/>预测-结果闭环 (fengwatch outcome)"]
       end
+
+      复盘 -.->|"outcome 回写持仓"| 买入
 
       复盘 --> 知识库
 
@@ -164,12 +212,12 @@
 
       知识库 -.->|"指导下次研究"| 研究阶段
 
-      style 研究阶段 fill:#e8f5e9,stroke:#4caf50
-      style 买入 fill:#e3f2fd,stroke:#2196f3
-      style 持有 fill:#e3f2fd,stroke:#2196f3
-      style 卖出 fill:#fce4ec,stroke:#f44336
-      style 复盘 fill:#e3f2fd,stroke:#2196f3
-      style 知识库 fill:#f3e5f5,stroke:#9c27b0
+      style 研究阶段 fill:#22a06b1f,stroke:#22a06b
+      style 买入 fill:#3b82f61f,stroke:#3b82f6
+      style 持有 fill:#3b82f61f,stroke:#3b82f6
+      style 卖出 fill:#dc26261f,stroke:#dc2626
+      style 复盘 fill:#3b82f61f,stroke:#3b82f6
+      style 知识库 fill:#8892a61f,stroke:#8892a6
   </div>
 </div>
 
@@ -191,13 +239,13 @@
       CHECK --> MARKET_CHK{"大盘<年线?"}
       MARKET_CHK -->|"是"| CAUTION["待办: 🟡 降仓位提醒"]
 
-      style START fill:#e3f2fd,stroke:#2196f3
-      style CHECK fill:#e8f5e9,stroke:#4caf50
-      style ROLLOVER fill:#fff3e0,stroke:#ff9800
-      style EXIT fill:#fce4ec,stroke:#f44336
-      style REVIEW fill:#e8f5e9,stroke:#4caf50
-      style URGENT fill:#fce4ec,stroke:#f44336
-      style CAUTION fill:#fff3e0,stroke:#ff9800
+      style START fill:#3b82f61f,stroke:#3b82f6
+      style CHECK fill:#22a06b1f,stroke:#22a06b
+      style ROLLOVER fill:#d977061f,stroke:#d97706
+      style EXIT fill:#dc26261f,stroke:#dc2626
+      style REVIEW fill:#22a06b1f,stroke:#22a06b
+      style URGENT fill:#dc26261f,stroke:#dc2626
+      style CAUTION fill:#d977061f,stroke:#d97706
   </div>
 </div>
 
@@ -217,11 +265,11 @@
       P --> P1["坐标原则"] & P2["家国原则"] & P3["息价原则"] & P4["取舍原则"]
       D --> D1["2638法则"] & D2["年线法则"] & D3["后发制人"] & D4["买分歧卖共识"] & D5["钱仓滚存"] & D6["双账户制"]
 
-      style P fill:#f3e5f5,stroke:#9c27b0
-      style D fill:#f3e5f5,stroke:#9c27b0
-      style M fill:#f3e5f5,stroke:#9c27b0
-      style MV fill:#f3e5f5,stroke:#9c27b0
-      style PER fill:#f3e5f5,stroke:#9c27b0
+      style P fill:#8892a61f,stroke:#8892a6
+      style D fill:#8892a61f,stroke:#8892a6
+      style M fill:#8892a61f,stroke:#8892a6
+      style MV fill:#8892a61f,stroke:#8892a6
+      style PER fill:#8892a61f,stroke:#8892a6
   </div>
 </div>
 

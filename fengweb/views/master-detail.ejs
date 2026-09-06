@@ -7,7 +7,7 @@
   <!-- Main content -->
   <div class="card">
     <h3>投资哲学</h3>
-    <div style="line-height:1.8;font-size:14px;color:#333;overflow-x:auto;">
+    <div style="line-height:1.8;font-size:14px;color:var(--text);overflow-x:auto;">
       <%- person.content.replace(/^# .+\n/, '').replace(/```/g, '') %>
     </div>
   </div>
@@ -26,21 +26,21 @@
     <% if (person.when_to_use) { %>
     <div class="card" style="margin-bottom:16px;">
       <h3>启用时机</h3>
-      <p style="font-size:13px;line-height:1.7;color:#555;"><%= person.when_to_use %></p>
+      <p style="font-size:13px;line-height:1.7;color:var(--text-secondary);"><%= person.when_to_use %></p>
     </div>
     <% } %>
 
     <% if (person.sources) { %>
     <div class="card" style="margin-bottom:16px;">
       <h3>信息来源</h3>
-      <p style="font-size:13px;color:#888;"><%= person.sources %></p>
+      <p style="font-size:13px;color:var(--text-muted);"><%= person.sources %></p>
     </div>
     <% } %>
 
     <% if (person.disclaimer) { %>
-    <div class="card" style="background:#fff8e1;border-color:#ffe082;">
-      <h3 style="color:#f57f17;">⚠️ 免责</h3>
-      <p style="font-size:12px;color:#888;"><%= person.disclaimer %></p>
+    <div class="card" style="background:var(--warn-bg);border-color:var(--warn);">
+      <h3 style="color:var(--warn);">⚠️ 免责</h3>
+      <p style="font-size:12px;color:var(--text-muted);"><%= person.disclaimer %></p>
     </div>
     <% } %>
   </div>

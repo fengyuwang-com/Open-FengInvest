@@ -1,0 +1,523 @@
+<div class="page-header">
+  <h2>🧭 板块轮动</h2>
+  <div class="breadcrumb"><a href="/">系统总览</a> / 板块轮动</div>
+</div>
+
+<script src="/vendor/echarts.min.js"></script>
+<style>
+  .sec-tab { border: 1px solid var(--border); background: var(--bg-card); padding: 6px 16px;
+             border-radius: 8px; cursor: pointer; font-size: 13px; }
+  .sec-tab.active { background: var(--primary); color: var(--bg-card); border-color: var(--primary); }
+  .quad-chip { display: inline-block; border-radius: 4px; padding: 1px 8px; margin: 2px 4px 2px 0;
+               font-size: 12px; border: 1px solid var(--border); background: var(--bg-card); }
+  .badge-deep { background: var(--danger-bg); color: var(--danger); border: 1px solid var(--danger); }
+  .badge-mid  { background: var(--warn-bg); color: var(--warn); border: 1px solid var(--warn); }
+  .badge-none { background: var(--ok-bg); color: var(--ok); border: 1px solid var(--ok); }
+  .dd-wrap { position: relative; display: inline-block; }
+  .dd-panel { display: none; position: absolute; top: 110%; left: 0; z-index: 500;
+              background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px;
+              box-shadow: var(--shadow); max-height: 320px; overflow-y: auto; min-width: 200px; padding: 6px 0; }
+  .dd-panel.open { display: block; }
+  .dd-panel label { display: flex; align-items: center; gap: 6px; padding: 3px 12px;
+                    font-size: 13px; cursor: pointer; white-space: nowrap; }
+  .dd-panel label:hover { background: var(--bg); }
+</style>
+
+<!-- Loading / Error -->
+<div id="sec-loading" class="card" style="text-align:center;padding:40px;">
+  <div style="font-size:20px;margin-bottom:8px;">⏳</div>
+  <p>正在计算板块轮动与长周期数据（本地库，约数秒）...</p>
+</div>
+<div id="sec-error" class="card" style="display:none;margin-top:12px;background:var(--danger-bg);border-color:var(--danger);">
+  <h3 style="font-size:14px;margin:0 0 6px;">⚠️ 加载失败</h3>
+  <div id="sec-error-msg" style="font-size:13px;color:var(--danger);"></div>
+  <button class="btn btn-primary" onclick="location.reload()" style="margin-top:10px;">重试</button>
+</div>
+
+<div id="sec-content" style="display:none;">
+  <div id="sec-warn" class="card" style="display:none;margin-bottom:12px;background:var(--warn-bg);border-color:var(--warn);">
+    <div id="sec-warn-msg" style="font-size:12px;color:var(--warn);"></div>
+  </div>
+
+  <!-- ═══ RRG 散点图（三标签） ═══ -->
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+      <h3 class="section-title">RRG 相对轮动图（周线，尾迹 26 周）</h3>
+      <div style="display:flex;gap:8px;">
+        <button class="sec-tab active" data-layer="L-CN" onclick="switchLayer('L-CN')">🇨🇳 L-CN 申万一级</button>
+        <button class="sec-tab" data-layer="L-US" onclick="switchLayer('L-US')">🇺🇸 L-US SPDR 行业</button>
+        <button class="sec-tab" data-layer="L-GLOBAL" onclick="switchLayer('L-GLOBAL')">🌍 L-GLOBAL 全球行业</button>
+      </div>
+    </div>
+    <p style="font-size:12px;color:var(--text-muted);margin:0 0 8px;">
+      x = RS-Ratio（板块/基准价格比 · 52 周滚动 z-score×100），y = RS-Momentum（12 周动量 · 同归一）。右上=领涨 Leading｜右下=改善 Improving｜左上=走弱 Weakening｜左下=滞后 Lagging。
+      <span id="rrg-meta" style="margin-left:8px;"></span>
+    </p>
+    <div id="rrg-chart" style="width:100%;height:560px;"></div>
+    <div id="rrg-signals" style="margin-top:8px;"></div>
+  </div>
+
+  <!-- ═══ L-CN 长周期区块 ═══ -->
+  <div class="card" style="margin-top:12px;">
+    <h3 class="section-title">🇨🇳 L-CN 年度收益热力图（申万一级 × 年份，%）</h3>
+    <p style="font-size:12px;color:var(--text-muted);margin:0 0 4px;">按自然年最后收盘环比；今年度为年初至今未完年收益。行序 = 沉寂榜序（距前高年数降序）。</p>
+    <div id="heat-chart" style="width:100%;height:760px;"></div>
+  </div>
+
+  <div class="card" style="margin-top:12px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+      <h3 class="section-title">📉 回撤水下图（月度采样，自历史最高点）</h3>
+      <div class="dd-wrap">
+        <button class="btn" id="dd-toggle" onclick="toggleDdPanel(event)" style="min-width:220px;">选择行业（<span id="dd-count">0</span>）▾</button>
+        <div class="dd-panel" id="dd-panel">
+          <div style="padding:2px 12px 6px;border-bottom:1px solid var(--border);">
+            <button class="btn btn-sm" onclick="ddSelectAll()" type="button">全选</button>
+            <button class="btn btn-sm" onclick="ddSelectNone()" type="button">清空</button>
+          </div>
+          <div id="dd-options"></div>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:12px;color:var(--text-muted);margin:4px 0 0;">每行业每月一个采样点；0 线 = 历史最高点。</p>
+    <div id="dd-chart" style="width:100%;height:460px;"></div>
+  </div>
+
+  <div class="card" style="margin-top:12px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+      <h3 class="section-title">🏝️ 沉寂榜（距前高年数降序）</h3>
+      <span id="stag-rules" style="font-size:11px;color:var(--text-muted);"></span>
+    </div>
+    <div style="overflow-x:auto;">
+      <table style="width:100%;font-size:13px;border-collapse:collapse;" id="stag-table"></table>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:12px;">
+    <h3 class="section-title">🏆 CAGR 排名（近 5 年 / 近 10 年，%）</h3>
+    <p style="font-size:12px;color:var(--text-muted);margin:0 0 4px;">悬停可看相对沪深300 超额 CAGR；环保/美容护理/石油石化为 2021 版申万新序列，不足窗长则无值。</p>
+    <div id="cagr-chart" style="width:100%;height:760px;"></div>
+  </div>
+
+  <div class="card" style="margin-top:12px;background:var(--bg-card);">
+    <p style="font-size:12px;color:var(--text-muted);line-height:1.8;" id="sec-footer"></p>
+  </div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+  var QUAD_CN = { Leading: '领涨', Improving: '改善', Weakening: '走弱', Lagging: '滞后' };
+  function cssVar(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim();}
+  var QUAD_COLOR = { Leading: cssVar('--ok'), Improving: cssVar('--accent'), Weakening: cssVar('--warn'), Lagging: cssVar('--text-muted') };
+  var LAYER_TITLE = {
+    'L-CN': '中国申万一级行业', 'L-US': '美国 SPDR 行业 ETF', 'L-GLOBAL': '全球 iShares 行业 ETF'
+  };
+  var charts = {};           // echarts 实例
+  var rotationData = null;   // analyze --json
+  var longtermData = null;   // longterm --json
+  var curLayer = 'L-CN';
+  var ddSelected = {};       // ticker -> bool
+
+  function scheme() { return localStorage.getItem('feng_color_scheme') || 'red_up'; }
+  function upColor() { return cssVar(scheme() === 'green_up' ? '--color-down' : '--color-up'); }
+  function downColor() { return cssVar(scheme() === 'green_up' ? '--color-up' : '--color-down'); }
+  function fmtPct(v, digits) {
+    if (v === null || v === undefined) return '—';
+    return (v > 0 ? '+' : '') + Number(v).toFixed(digits === undefined ? 2 : digits) + '%';
+  }
+
+  function getChart(id) {
+    if (!charts[id]) charts[id] = echarts.init(document.getElementById(id));
+    return charts[id];
+  }
+
+  // ---------- 数据加载 ----------
+  function fetchJson(url) {
+    return fetch(url).then(function(r) {
+      if (!r.ok) throw new Error(url + ' → HTTP ' + r.status);
+      return r.json();
+    }).then(function(d) {
+      if (d && d.error) throw new Error(url + ' → ' + d.error);
+      return d;
+    });
+  }
+
+  Promise.all([fetchJson('/api/sector/rotation'), fetchJson('/api/sector/longterm')])
+    .then(function(rs) {
+      rotationData = rs[0];
+      longtermData = rs[1];
+      document.getElementById('sec-loading').style.display = 'none';
+      document.getElementById('sec-content').style.display = 'block';
+      initAll();
+    })
+    .catch(function(e) {
+      document.getElementById('sec-loading').style.display = 'none';
+      document.getElementById('sec-error').style.display = 'block';
+      document.getElementById('sec-error-msg').textContent = e.message || String(e);
+    });
+
+  function initAll() {
+    renderRRG();
+    renderSignalChips();
+    renderHeatmap();
+    buildDdOptions();
+    renderDdChart();
+    renderStagnationTable();
+    renderCagrChart();
+    renderFooter();
+    window.addEventListener('resize', function() {
+      Object.keys(charts).forEach(function(k) { charts[k].resize(); });
+    });
+  }
+
+  // ---------- RRG ----------
+  window.switchLayer = function(layer) {
+    curLayer = layer;
+    document.querySelectorAll('.sec-tab').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.layer === layer);
+    });
+    renderRRG();
+    renderSignalChips();
+  };
+
+  function renderRRG() {
+    var L = rotationData.layers[curLayer];
+    if (!L) return;
+    var chart = getChart('rrg-chart');
+    var sectors = L.sectors || [];
+    var xs = [], ys = [];
+    sectors.forEach(function(s) {
+      (s.trail || []).forEach(function(p) { xs.push(p.x); ys.push(p.y); });
+    });
+    var xmin = Math.min(95, Math.min.apply(null, xs.length ? xs : [95]));
+    var xmax = Math.max(105, Math.max.apply(null, xs.length ? xs : [105]));
+    var ymin = Math.min(95, Math.min.apply(null, ys.length ? ys : [95]));
+    var ymax = Math.max(105, Math.max.apply(null, ys.length ? ys : [105]));
+    var padX = (xmax - xmin) * 0.06, padY = (ymax - ymin) * 0.06;
+    xmin -= padX; xmax += padX; ymin -= padY; ymax += padY;
+
+    var series = [];
+    var pointSectors = {};     // seriesIndex -> 板块对象（tooltip 用）
+    // 图表分类色板（数据编码，14 类行业区分用，非 UI 主题色）
+  var palette = ['#2563eb','#dc2626','#16a34a','#9333ea','#ea580c','#0891b2','#be185d',
+                   '#65a30d','#7c3aed','#0d9488','#b45309','#4f46e5','#dc036e','#166534'];
+    sectors.forEach(function(s, i) {
+      var trail = s.trail || [];
+      var col = palette[i % palette.length];
+      var tipName = s.name + ' (' + s.ticker + ')';
+      series.push({
+        name: tipName + '|trail', type: 'line', silent: true,
+        data: trail.map(function(p) { return { value: [p.x, p.y], date: p.date }; }),
+        lineStyle: { width: 1.2, color: col, opacity: 0.55 },
+        itemStyle: { color: col, opacity: 0.35 }, symbolSize: 3,
+        animation: false, z: 3,
+      });
+      var lastPt = trail.length ? trail[trail.length - 1] : null;
+      series.push({
+        name: tipName + '|point', type: 'scatter', z: 5,
+        data: lastPt ? [[lastPt.x, lastPt.y]] : [],
+        symbolSize: 11, symbol: 'diamond',
+        itemStyle: { color: QUAD_COLOR[s.quadrant] || cssVar('--text'), borderColor: cssVar('--bg-card'), borderWidth: 1 },
+        label: { show: true, formatter: s.name, position: 'top', fontSize: 10,
+                 color: cssVar('--text-secondary') },
+        labelLayout: { hideOverlap: true },
+      });
+      pointSectors[series.length - 1] = s;
+    });
+    // 参考线 + 四象限底色挂在第一个 series
+    series[0].markLine = {
+      silent: true, symbol: 'none', animation: false,
+      lineStyle: { type: 'dashed', color: cssVar('--border-strong'), width: 1 },
+      label: { show: false },
+      data: [{ xAxis: 100 }, { yAxis: 100 }]
+    };
+    series[0].markArea = {
+      silent: true, animation: false,
+      label: { position: 'insideTopRight', fontSize: 12, fontWeight: 'bold' },
+      data: [
+        [{ xAxis: 100, yAxis: 100, itemStyle: { color: 'rgba(22,163,74,0.06)' },
+           label: { show: true, formatter: '领涨 Leading', color: QUAD_COLOR.Leading, offset: [0, 6] } },
+         { xAxis: xmax, yAxis: ymax }],
+        [{ xAxis: 100, yAxis: ymin, itemStyle: { color: 'rgba(37,99,235,0.05)' },
+           label: { show: true, formatter: '改善 Improving（获得动能）', color: QUAD_COLOR.Improving,
+                    offset: [0, 24] } },
+         { xAxis: xmax, yAxis: 100 }],
+        [{ xAxis: xmin, yAxis: 100, itemStyle: { color: 'rgba(234,88,12,0.05)' },
+           label: { show: true, formatter: '走弱 Weakening', color: QUAD_COLOR.Weakening, offset: [0, 6] } },
+         { xAxis: 100, yAxis: ymax }],
+        [{ xAxis: xmin, yAxis: ymin, itemStyle: { color: 'rgba(107,114,128,0.05)' },
+           label: { show: true, formatter: '滞后 Lagging', color: QUAD_COLOR.Lagging, offset: [0, 24] } },
+         { xAxis: 100, yAxis: 100 }]
+      ]
+    };
+
+    chart.setOption({
+      animation: false,
+      grid: { left: 56, right: 28, top: 20, bottom: 46 },
+      tooltip: {
+        trigger: 'item',
+        formatter: function(p) {
+          if (!p.seriesName || !p.data) return '';
+          var parts = p.seriesName.split('|');
+          var nm = parts[0], kind = parts[1];
+          if (kind !== 'point') {
+            return '<b>' + nm + '</b><br>' + (p.data.date || '')
+              + '<br>X=' + Number(p.value[0]).toFixed(2)
+              + '　Y=' + Number(p.value[1]).toFixed(2);
+          }
+          var sec = pointSectors[p.seriesIndex] || null;
+          var lines = '<b>' + nm + '</b>';
+          lines += '<br>X=' + Number(p.value[0]).toFixed(2) + '　Y=' + Number(p.value[1]).toFixed(2);
+          if (sec) {
+            lines += '<br>' + QUAD_CN[sec.quadrant] + (sec.signal && sec.signal !== '持续'
+              ? '（上周 ' + QUAD_CN[sec.prev_quadrant] + '，' + sec.signal.replace(/Leading|Improving|Weakening|Lagging/g,
+                  function(m) { return QUAD_CN[m]; }) + '）' : '');
+            if (sec.excess_mom) lines += '<br>3M 超额动量 ' + fmtPct(sec.excess_mom['3M'], 1);
+          }
+          return lines;
+        }
+      },
+      xAxis: {
+        type: 'value', min: xmin, max: xmax, scale: false,
+        splitLine: { show: true, lineStyle: { color: cssVar('--border') } },
+        name: 'RS-Ratio', nameLocation: 'middle', nameGap: 26, nameTextStyle: { fontSize: 11 }
+      },
+      yAxis: {
+        type: 'value', min: ymin, max: ymax, scale: false,
+        splitLine: { show: true, lineStyle: { color: cssVar('--border') } },
+        name: 'RS-Momentum', nameLocation: 'middle', nameGap: 32, nameTextStyle: { fontSize: 11 }
+      },
+      series: series
+    }, { notMerge: true });
+
+    document.getElementById('rrg-meta').textContent =
+      LAYER_TITLE[curLayer] + '｜基准 ' + (L.benchmark_label || L.benchmark)
+      + '｜最后周 ' + L.last_week + '｜覆盖 ' + L.weeks_used + ' 周'
+      + (L.excluded && L.excluded.length ? '｜排除 ' + L.excluded.length + ' 只' : '');
+  }
+
+  function renderSignalChips() {
+    var el = document.getElementById('rrg-signals');
+    var sigs = (rotationData.rotation_signals || {})[curLayer] || [];
+    if (!sigs.length) {
+      el.innerHTML = '<span style="font-size:12px;color:var(--text-muted);">本周无象限迁移信号（全部持续）。</span>';
+      return;
+    }
+    el.innerHTML = '<span style="font-size:12px;color:var(--text-muted);margin-right:6px;">轮动信号：</span>'
+      + sigs.map(function(s) {
+          return '<span class="quad-chip"><b>' + s.name + '</b> ' + s.signal.replace(/Leading|Improving|Weakening|Lagging/g,
+            function(m) { return QUAD_CN[m]; }) + '</span>';
+        }).join('');
+  }
+
+  // ---------- 年度收益热力图 ----------
+  function renderHeatmap() {
+    var m = longtermData.annual_returns;
+    var years = m.years, rows = longtermData.sectors;
+    var yCats = rows.map(function(r) { return r.name; });
+    var data = [];
+    rows.forEach(function(r, ri) {
+      (m.sectors[r.ticker] || []).forEach(function(v, yi) {
+        if (v !== null && v !== undefined) data.push([yi, ri, v]);
+      });
+    });
+    getChart('heat-chart').setOption({
+      tooltip: {
+        position: 'top',
+        formatter: function(p) {
+          return '<b>' + yCats[p.value[1]] + '</b> ' + years[p.value[0]] + ' 年<br>年度收益 '
+            + fmtPct(p.value[2]) + '（今年为未完年）';
+        }
+      },
+      grid: { left: 76, right: 18, top: 12, bottom: 60 },
+      xAxis: { type: 'category', data: years.map(String), splitArea: { show: true } },
+      yAxis: { type: 'category', data: yCats, splitArea: { show: true },
+               axisLabel: { fontSize: 11 } },
+      visualMap: {
+        min: -50, max: 50, calculable: true, orient: 'horizontal',
+        left: 'center', bottom: 4,
+        inRange: { color: [downColor(), cssVar('--bg'), upColor()] },
+        textStyle: { fontSize: 11 },
+        formatter: function(v) { return v + '%'; }
+      },
+      series: [{
+        type: 'heatmap', data: data,
+        emphasis: { itemStyle: { shadowBlur: 3, shadowColor: 'rgba(0,0,0,0.3)' } }
+      }]
+    }, { notMerge: true });
+  }
+
+  // ---------- 水下图 ----------
+  function buildDdOptions() {
+    var rows = longtermData.sectors;
+    var box = document.getElementById('dd-options');
+    box.innerHTML = rows.map(function(r, i) {
+      ddSelected[r.ticker] = i < 6;   // 默认选前 6 个（沉寂最久）
+      return '<label><input type="checkbox" data-tk="' + r.ticker + '"'
+        + (ddSelected[r.ticker] ? ' checked' : '') + ' onchange="ddChanged(this)"> '
+        + r.name + '（' + r.ticker + '）</label>';
+    }).join('');
+    updateDdCount();
+  }
+  window.ddChanged = function(cb) {
+    ddSelected[cb.dataset.tk] = cb.checked;
+    updateDdCount();
+    renderDdChart();
+  };
+  window.ddSelectAll = function() {
+    longtermData.sectors.forEach(function(r) { ddSelected[r.ticker] = true; });
+    refreshDdChecks(); updateDdCount(); renderDdChart();
+  };
+  window.ddSelectNone = function() {
+    longtermData.sectors.forEach(function(r) { ddSelected[r.ticker] = false; });
+    refreshDdChecks(); updateDdCount(); renderDdChart();
+  };
+  function refreshDdChecks() {
+    document.querySelectorAll('#dd-options input[type=checkbox]').forEach(function(cb) {
+      cb.checked = !!ddSelected[cb.dataset.tk];
+    });
+  }
+  function updateDdCount() {
+    var n = longtermData.sectors.filter(function(r) { return ddSelected[r.ticker]; }).length;
+    document.getElementById('dd-count').textContent = n;
+  }
+  window.toggleDdPanel = function(ev) {
+    ev.stopPropagation();
+    document.getElementById('dd-panel').classList.toggle('open');
+  };
+  document.addEventListener('click', function(ev) {
+    var panel = document.getElementById('dd-panel');
+    if (panel && panel.classList.contains('open') && !ev.target.closest('.dd-wrap')) {
+      panel.classList.remove('open');
+    }
+  });
+
+  function renderDdChart() {
+    var sel = longtermData.sectors.filter(function(r) { return ddSelected[r.ticker]; });
+    var series = sel.map(function(r, i) {
+      var pts = longtermData.drawdown_curves[r.ticker] || [];
+      return {
+        name: r.name, type: 'line', showSymbol: false, connectNulls: true,
+        data: pts.map(function(p) { return [p[0], p[1]]; }),
+        lineStyle: { width: 1.4 },
+        emphasis: { focus: 'series' },
+      };
+    });
+    getChart('dd-chart').setOption({
+      animation: false,
+      tooltip: {
+        trigger: 'axis',
+        valueFormatter: function(v) { return v == null ? '—' : Number(v).toFixed(1) + '%'; }
+      },
+      legend: { type: 'scroll', top: 0, textStyle: { fontSize: 11 } },
+      grid: { left: 52, right: 20, top: 34, bottom: 40 },
+      xAxis: { type: 'time', axisLabel: { fontSize: 11 } },
+      yAxis: {
+        type: 'value', max: 0,
+        axisLabel: { formatter: '{value}%', fontSize: 11 },
+        splitLine: { lineStyle: { color: cssVar('--border') } }
+      },
+      series: series
+    }, { notMerge: true });
+  }
+
+  // ---------- 沉寂榜表 ----------
+  function badge(level) {
+    var txt = { deep: '深度沉寂', mid: '沉寂', none: '正常' }[level] || level;
+    return '<span class="quad-chip badge-' + level + '">' + txt + '</span>';
+  }
+  function renderStagnationTable() {
+    var rules = longtermData.stagnation_rules || {};
+    document.getElementById('stag-rules').textContent =
+      '分级：' + rules.deep + '｜' + rules.mid + '｜其余正常 · 200 周均线 ≈ ' + longtermData.ma200w_weeks + ' 周';
+    var rows = longtermData.sectors;
+    var h = '<thead><tr style="border-bottom:2px solid var(--border);">'
+      + ['排名','行业','代码','ATH 日期','回撤','距前高年数','vs 200周MA','连续低于月数','CAGR 5Y','CAGR 10Y','分级']
+        .map(function(t) { return '<th style="padding:6px 8px;text-align:left;white-space:nowrap;">' + t + '</th>'; }).join('')
+      + '</tr></thead><tbody>';
+    rows.forEach(function(r, i) {
+      var vm = r.vs_ma200w_pct;
+      h += '<tr style="border-bottom:1px solid var(--border);">'
+        + '<td style="padding:5px 8px;color:var(--text-muted);">' + (i + 1) + '</td>'
+        + '<td style="padding:5px 8px;font-weight:600;">' + r.name + '</td>'
+        + '<td style="padding:5px 8px;color:var(--text-muted);">' + r.ticker + '</td>'
+        + '<td style="padding:5px 8px;">' + r.ath_date + '</td>'
+        + '<td style="padding:5px 8px;color:' + downColor() + ';">' + fmtPct(r.drawdown_pct, 1) + '</td>'
+        + '<td style="padding:5px 8px;">' + (r.years_since_ath !== null ? r.years_since_ath.toFixed(1) : '—') + '</td>'
+        + '<td style="padding:5px 8px;' + (vm != null && vm < 0 ? 'color:' + downColor() + ';' : 'color:' + upColor() + ';') + '">'
+        + (vm !== null ? fmtPct(vm, 1) : '—') + '</td>'
+        + '<td style="padding:5px 8px;">' + r.months_below_ma200w + '</td>'
+        + '<td style="padding:5px 8px;">' + fmtPct(r.cagr_pct['5Y'], 1) + '</td>'
+        + '<td style="padding:5px 8px;">' + fmtPct(r.cagr_pct['10Y'], 1) + '</td>'
+        + '<td style="padding:5px 8px;">' + badge(r.stagnation) + '</td></tr>';
+    });
+    h += '</tbody>';
+    document.getElementById('stag-table').innerHTML = h;
+  }
+
+  // ---------- CAGR 条形图 ----------
+  function renderCagrChart() {
+    var ranking = longtermData.cagr_ranking['5Y'] || [];
+    var byTicker10 = {};
+    (longtermData.cagr_ranking['10Y'] || []).forEach(function(x) { byTicker10[x.ticker] = x.cagr_pct; });
+    var excMap = {};
+    longtermData.sectors.forEach(function(r) {
+      excMap[r.ticker] = r.excess_cagr_vs_hs300_pct || {};
+    });
+    var names = ranking.map(function(x) { return x.name; });
+    var c5 = ranking.map(function(x) { return x.cagr_pct; });
+    var c10 = ranking.map(function(x) {
+      var v = byTicker10[x.ticker];
+      return v === undefined ? null : v;
+    });
+    var revRanking = ranking.slice().reverse();   // 与 y 轴/数据同序（tooltip 查找用）
+    getChart('cagr-chart').setOption({
+      tooltip: {
+        trigger: 'axis', axisPointer: { type: 'shadow' },
+        formatter: function(ps) {
+          var tk = ps.length ? (revRanking[ps[0].dataIndex] || {}) : {};
+          var h = '<b>' + tk.name + '</b>（' + (tk.ticker || '') + '）';
+          ps.forEach(function(p) {
+            h += '<br>' + p.marker + ' ' + p.seriesName + '：' + fmtPct(p.value);
+          });
+          var e5 = excMap[tk.ticker] || {};
+          h += '<br>超额 vs 沪深300：5Y ' + fmtPct(e5['5Y']) + '｜10Y ' + fmtPct(e5['10Y']);
+          return h;
+        }
+      },
+      legend: { top: 0, textStyle: { fontSize: 12 } },
+      grid: { left: 76, right: 40, top: 30, bottom: 24 },
+      xAxis: { type: 'value', axisLabel: { formatter: '{value}%', fontSize: 11 },
+               splitLine: { lineStyle: { color: cssVar('--border') } } },
+      yAxis: { type: 'category', data: names.slice().reverse(), axisLabel: { fontSize: 11 } },
+      series: [
+        { name: '5Y CAGR', type: 'bar', barMaxWidth: 14,
+          data: c5.slice().reverse(),
+          itemStyle: { color: cssVar('--accent'), borderRadius: [0, 3, 3, 0] },
+          label: { show: true, position: 'right', fontSize: 10,
+                   formatter: function(p) { return p.value == null ? '' : Number(p.value).toFixed(1); } } },
+        { name: '10Y CAGR', type: 'bar', barMaxWidth: 14,
+          data: c10.slice().reverse(),
+          itemStyle: { color: cssVar('--border-strong'), borderRadius: [0, 3, 3, 0] },
+          label: { show: true, position: 'right', fontSize: 10,
+                   formatter: function(p) { return p.value == null ? '' : Number(p.value).toFixed(1); } } }
+      ]
+    }, { notMerge: true });
+  }
+
+  // ---------- 页脚 ----------
+  function renderFooter() {
+    var lt = longtermData;
+    var rot = rotationData;
+    var cnLast = lt.last_trading_date || '—';
+    var usLast = (rot.layers['L-US'] || {}).last_date || '—';
+    var glLast = (rot.layers['L-GLOBAL'] || {}).last_date || '—';
+    document.getElementById('sec-footer').innerHTML =
+      '<b>数据源</b>：A 股申万一级行业指数 = 新浪财经·申万（akshare index_hist_sw）；美股/全球行业 ETF = yfinance。'
+      + '<br><b>最后交易日</b>：L-CN ' + cnLast + '｜L-US ' + usLast + '｜L-GLOBAL ' + glLast
+      + '。RRG 基准：沪深300 / S&P500(^GSPC) / ACWI。'
+      + '<br><b>算法</b>：RRG 相对轮动（52 周 z-score 归一）；长周期体检基于周线(W-FRI)，只读本地 market_data.db。'
+      + '<br><b>生成时间</b>：' + (lt.generated_at || '') + ' · FengInvest fengsector.py · 仅供内部研究。';
+  }
+})();
+</script>

@@ -1,40 +1,111 @@
 <div class="page-header">
-  <h2>🏗️ FengInvest 操作系统</h2>
-  <div class="breadcrumb">系统总览 — 奇衡DK-CAPITAL 体系 | v3</div>
+  <h2 data-i18n="page.index">🏠 首页</h2>
+  <div class="breadcrumb"><span data-i18n="crumb.index">该研究谁、到哪一步、谁该复盘 —— 今天需要你判断的事，排最前</span></div>
 </div>
 
-<!-- Stats bar -->
-<div class="dashboard-grid">
-  <div class="stat-card">
-    <div class="stat-value"><%= sys.holdings_count %></div>
-    <div class="stat-label">持仓标的</div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-value"><%= sys.research_count %></div>
-    <div class="stat-label">研究标的</div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-value"><%= sys.kbCount %></div>
-    <div class="stat-label">知识条目</div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-value"><%= sys.alertsCount %></div>
-    <div class="stat-label">今日提醒</div>
-  </div>
-  <% if (sys.total_pnl_pct !== null) { %>
-  <div class="stat-card">
-    <div class="stat-value <%= sys.total_pnl_pct >= 0 ? 'positive' : 'negative' %>">
-      <%= sys.total_pnl_pct %>%</div>
-    <div class="stat-label">总盈亏</div>
+<!-- 今日待办（宪法 6.1：按紧急排序，每条带动作链接） -->
+<div class="card">
+  <h3 class="section-title" data-i18n="home.todo">☑️ 今日研究待办</h3>
+  <% var todos = []; %>
+  <% (sys.holdings || []).forEach(function(h) { %>
+    <% var nd = h.triggers && h.triggers.next_review_date; if (!nd) return;
+       var days = Math.round((new Date(nd) - new Date()) / 86400000); %>
+    <% if (days < 0) { var eesc = function(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); };
+       todos.push({lv:'danger', t:'<b>' + eesc(h.name || h.ticker) + '</b> 回顾日已过期 ' + (-days) + ' 天', href:'/holdings/' + h.ticker, act:'去复盘'}); } %>
+  <% }) %>
+  <% (sys.alerts || []).slice(0, 6).forEach(function(a) { %>
+    <% var nm = (names[a.ticker] || {}); var aName = nm.zh || nm.en || a.ticker || '';
+       var esc = function(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); };
+       todos.push({lv:a.severity === 'danger' ? 'danger' : a.severity === 'warning' ? 'warning' : 'info', t:(a.ticker ? '<b>' + esc(aName) + '</b> ' : '') + esc(a.message), href:'/watch', act:'查看'}); %>
+  <% }) %>
+  <% if (todos.length === 0) { %>
+    <div class="empty-state"><p>今日没有过期回顾、层缺口或监控告警。研究候选池去吧 → <a href="/research">研究列表</a></p></div>
+  <% } else { %>
+    <div class="alert-list">
+      <% todos.slice(0, 8).forEach(function(td) { %>
+        <div class="alert-item <%= td.lv %>"><span class="alert-text"><%- td.t %></span><a class="btn btn-sm" href="<%= td.href %>"><%= td.act %> →</a></div>
+      <% }) %>
+    </div>
+  <% } %>
+</div>
+
+<!-- 已研究公司（研究透了才入此列，创始人定调：只有研究了/没研究） -->
+<div class="card">
+  <h3 class="section-title" data-i18n="home.studied">📚 已研究公司 <a href="/research" style="font-size:12px;font-weight:normal;margin-left:auto;">全部 →</a></h3>
+  <% var active = meta.filter(function(m){ return m.layers && m.layers.length >= 7; }).slice(0, 6); %>
+  <% if (active.length === 0) { %>
+    <div class="empty-state"><p>没有已研究标的。候选池在 <a href="/research">研究列表</a> 等你挑。</p></div>
+  <% } else { %>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;">
+    <% active.forEach(function(c) { %>
+      <a href="/research/<%= c.ticker %>" class="entry-item" style="margin:0;">
+        <div class="entry-title"><%= c.name %></div>
+        <div style="font-size:11px;color:var(--text-muted);"><%= c.ticker %> · 七层已完成 ✓</div>
+      </a>
+    <% }) %>
   </div>
   <% } %>
 </div>
 
-<!-- Market Index Dashboard (Futu Live) -->
+<!-- 持仓公司（只显原则/论文/回顾日，无当日涨跌，宪法 6.1） -->
+<div class="card">
+  <h3 class="section-title" data-i18n="home.holdings">💼 持仓公司 <a href="/holdings" style="font-size:12px;font-weight:normal;margin-left:auto;">全部 →</a></h3>
+  <% var hstocks = (sys.holdings || []).filter(function(h){ return h.asset_type !== 'cash'; }); %>
+  <% if (hstocks.length === 0) { %>
+    <div class="empty-state"><p>暂无持仓。<a href="/holdings/new">登记新持仓 →</a></p></div>
+  <% } else { %>
+  <table class="holdings-table">
+    <thead><tr><th>公司</th><th>钱包</th><th>滚存阶段</th><th>下次回顾</th></tr></thead>
+    <tbody>
+      <% hstocks.forEach(function(h) { %>
+      <% var nd = h.triggers && h.triggers.next_review_date;
+         var overdue = nd && new Date(nd) < new Date(); %>
+      <tr>
+        <td><a href="/holdings/<%= h.ticker %>"><%= h.name || h.ticker %></a> <span style="font-size:11px;color:var(--text-muted);"><%= h.ticker %></span></td>
+        <td><span class="badge badge-<%= h.account_type === 'TRADING' ? 'yellow' : 'neutral' %>"><%= h.account_type === 'TRADING' ? '投机' : '投资' %></span></td>
+        <td style="font-size:12px;color:var(--text-muted);"><%= h.capital_rollover && h.capital_rollover.phase === 'recovered' ? '本金已回收 ✓' : '风险资本' %></td>
+        <td <% if (overdue) { %>style="color:var(--danger);font-weight:600;"<% } %>><%= nd || '—' %><%= overdue ? ' 已过期' : '' %></td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+  <% } %>
+</div>
+
+<!-- 本周知识位（宪法 6.1） -->
+<div class="card">
+  <h3 class="section-title" data-i18n="home.knowledge">📚 本周知识 <a href="/knowledge" style="font-size:12px;font-weight:normal;margin-left:auto;">知识库 →</a></h3>
+  <% if (sys.kbCategories && sys.kbCategories.length > 0) { %>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;">
+    <% sys.kbCategories.slice(0, 5).forEach(function(cat) { %>
+    <a href="/knowledge" class="kb-mini-card" style="display:block;padding:10px 14px;border:1px solid var(--border);border-radius:8px;text-decoration:none;color:inherit;">
+      <div style="font-size:20px;font-weight:700;"><%= cat.count %></div>
+      <div style="font-size:12px;color:var(--text-muted);"><%= cat.label %></div>
+    </a>
+    <% }) %>
+  </div>
+  <% } else { %><div class="empty-state"><p>知识库为空</p></div><% } %>
+</div>
+
+<!-- 最近决策 -->
+<div class="card">
+  <h3 class="section-title">📝 最近决策 <a href="/journal" style="font-size:12px;font-weight:normal;margin-left:auto;">决策日志 →</a></h3>
+  <% if (sys.journal && sys.journal.length > 0) { %>
+    <% sys.journal.slice(0, 6).forEach(function(e) { %>
+    <div class="journal-entry">
+      <div class="journal-date"><%= e.timestamp ? e.timestamp.slice(0,10) : '' %></div>
+      <div class="journal-ticker"><%= e.ticker || '' %></div>
+      <div class="journal-body"><%= e.message %></div>
+    </div>
+    <% }) %>
+  <% } else { %><div class="empty-state"><p>暂无决策记录</p></div><% } %>
+</div>
+
+<!-- 大盘速览（参考信息，垫底） -->
 <div class="card">
   <div style="display:flex;justify-content:space-between;align-items:center;">
-    <h3 class="section-title">📈 大盘速览 <span id="market-updated" style="font-size:11px;color:var(--text-muted);font-weight:normal;"></span></h3>
-    <button class="btn" onclick="refreshMarket()" style="font-size:12px;padding:4px 12px;">🔄 刷新</button>
+    <h3 class="section-title" style="font-size:14px;color:var(--text-muted);border:none;">📈 大盘速览（参考信息，不指导决策） <span id="market-updated" style="font-size:11px;color:var(--text-muted);font-weight:normal;"></span></h3>
+    <button class="btn btn-sm btn-outline" onclick="refreshMarket()" type="button">刷新</button>
   </div>
   <div class="dashboard-grid" id="index-cards" style="margin-top:8px;">
     <div class="stat-card"><div class="stat-label">加载中...</div></div>
@@ -54,10 +125,11 @@ async function refreshMarket() {
       const chg = idx.change_pct;
       const cls = chg > 0 ? 'positive' : (chg < 0 ? 'negative' : '');
       const arrow = chg > 0 ? '▲' : (chg < 0 ? '▼' : '—');
+      const sign = chg > 0 ? '+' : '';
       container.innerHTML += `<div class="stat-card">
         <div class="stat-label">${idx.name}</div>
-        <div class="stat-value ${cls}" style="font-size:22px;">${idx.price != null ? idx.price.toLocaleString() : '—'}</div>
-        <div style="font-size:12px;${cls ? 'color:var(--' + cls + ');' : 'color:var(--text-muted);'}">${arrow} ${chg != null ? chg.toFixed(2) + '%' : '—'}</div>
+        <div class="stat-value num" style="font-size:22px;">${idx.price != null ? idx.price.toLocaleString() : '—'}</div>
+        <div style="font-size:12px;${cls ? 'color:var(--' + cls + ');' : 'color:var(--text-muted);'}">${arrow} ${chg != null ? sign + chg.toFixed(2) + '%' : '—'}</div>
       </div>`;
     }
     document.getElementById('market-updated').textContent = '更新 ' + (data.fetched_at || '').slice(0, 16);
@@ -67,148 +139,3 @@ async function refreshMarket() {
 }
 refreshMarket();
 </script>
-
-<!-- Holdings Section -->
-<div class="card">
-  <h3 class="section-title">💼 持仓摘要</h3>
-  <% if (sys.holdings && sys.holdings.length > 0) { %>
-  <table class="holdings-table">
-    <thead>
-      <tr>
-        <th>标的</th>
-        <th>价格</th>
-        <th>成本</th>
-        <th>盈亏</th>
-        <th>滚存阶段</th>
-        <th>回顾</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% sys.holdings.forEach(function(h) { %>
-      <% var isCash = h.asset_type === 'cash'; %>
-      <% var px = h.position.current_price || h.position.nav || h.position.amount; %>
-      <% var cost = isCash ? null : (h.position.avg_cost || h.position.nav); %>
-      <% var pnl = px && cost ? ((px - cost) / cost * 100) : null; %>
-      <% var ticker = h.ticker || h.id; %>
-      <% var zoneLabel = h.capital_zone === 'CN_IN' ? '境内' : h.capital_zone === 'OVERSEAS' ? '境外' : ''; %>
-      <% var marketLabel = h.market === 'CN_A' ? 'A股' : h.market === 'CN_HK' ? '港股通' : h.market === 'CN_OVS' ? '中概' : h.market === 'US' ? '美股' : h.market === 'GLOBAL' ? '全球' : (h.market || ''); %>
-      <% var segLabel = h.segment || ''; %>
-      <tr>
-        <td>
-          <% if (marketLabel) { %><span style="font-size:11px;color:var(--text-muted);">[<%= marketLabel %><%= segLabel ? '·' + segLabel : '' %>]</span> <% } %>
-          <a href="/holdings/<%= ticker %>"><%= h.name || ticker %></a>
-        </td>
-        <td><%= px != null ? px.toLocaleString(undefined, {maximumFractionDigits: 2}) : '—' %><% if (h.currency) { %> <span style="font-size:11px;color:var(--text-muted);"><%= h.currency %></span><% } %></td>
-        <td><%= cost != null ? cost.toFixed(2) : '—' %></td>
-        <td>
-          <% if (isCash) { %>
-          <span style="color:var(--text-muted);">现金</span>
-          <% } else if (pnl !== null) { %>
-          <span class="<%= pnl >= 0 ? 'pnl-positive' : 'pnl-negative' %>">
-            <%= pnl >= 0 ? '+' : '' %><%= pnl.toFixed(1) %>%
-          </span>
-          <% } else { %>
-          <span class="badge badge-neutral">等待数据</span>
-          <% } %>
-        </td>
-        <td><%= h.capital_rollover.phase === 'capital_at_risk' ? '风险资本' : h.capital_rollover.phase === 'recovered' ? '已回收' : h.capital_rollover.phase %></td>
-        <td><%= h.triggers.next_review_date || '—' %></td>
-      </tr>
-      <% }); %>
-    </tbody>
-  </table>
-  <% } else { %>
-  <div class="empty-holdings">
-    <div style="font-size:32px;margin-bottom:8px;">📭</div>
-    <p>暂无持仓数据</p>
-  </div>
-  <% } %>
-</div>
-
-<!-- Alerts Section -->
-<div class="card">
-  <h3 class="section-title">⚠️ 今日提醒</h3>
-  <% if (sys.alerts && sys.alerts.length > 0) { %>
-  <div class="alert-list">
-    <% sys.alerts.forEach(function(a) { %>
-    <div class="alert-item <%= a.severity %>">
-      <span class="alert-tag <%= a.severity %>"><%= a.type %></span>
-      <span><%= a.ticker ? '[' + a.ticker + '] ' : '' %><%= a.message %></span>
-    </div>
-    <% }); %>
-  </div>
-  <% } else { %>
-  <div class="empty-state"><p>今日暂无提醒</p></div>
-  <% } %>
-</div>
-
-<!-- Research / Journal Section -->
-<div class="card">
-  <h3 class="section-title">🔬 研究动态</h3>
-  <% if (sys.recentResearch && sys.recentResearch.length > 0) { %>
-  <div class="activity-list">
-    <% sys.recentResearch.forEach(function(r) { %>
-    <div class="activity-item">
-      <span class="activity-ticker"><%= r.ticker %></span>
-      <span class="activity-layer">
-        <% r.layers.forEach(function(l, i) { %>
-        <span class="badge badge-green"><%= l.layer.toUpperCase() %></span>
-        <% }); %>
-      </span>
-    </div>
-    <% }); %>
-  </div>
-  <% } else { %>
-  <div class="empty-state"><p>暂无研究数据</p></div>
-  <% } %>
-</div>
-
-<!-- Recent journal -->
-<div class="card">
-  <h3 class="section-title">📝 最近决策</h3>
-  <% if (sys.journal && sys.journal.length > 0) { %>
-    <% sys.journal.forEach(function(e) { %>
-    <div class="journal-entry">
-      <div class="journal-date"><%= e.timestamp ? e.timestamp.slice(0,10) : '' %></div>
-      <div class="journal-ticker"><%= e.ticker || '' %></div>
-      <div class="journal-body"><%= e.message %></div>
-    </div>
-    <% }); %>
-  <% } else { %>
-  <div class="empty-state"><p>暂无决策记录</p></div>
-  <% } %>
-</div>
-
-<!-- DK 知识体系 -->
-<div class="card">
-  <h3 class="section-title">📚 DK 知识体系</h3>
-  <% if (sys.kbCategories && sys.kbCategories.length > 0) { %>
-  <div class="kb-mini-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;">
-    <% sys.kbCategories.forEach(function(cat) { %>
-    <a href="/knowledge" class="kb-mini-card" style="display:block;padding:10px 14px;border:1px solid var(--border);border-radius:8px;text-decoration:none;color:inherit;transition:background 0.12s;">
-      <div style="font-size:22px;font-weight:700;"><%= cat.count %></div>
-      <div style="font-size:12px;color:var(--text-muted);"><%= cat.label %></div>
-    </a>
-    <% }); %>
-  </div>
-  <% } else { %>
-  <div class="empty-state"><p>知识库为空</p></div>
-  <% } %>
-  <div style="margin-top:8px;text-align:right;">
-    <a href="/knowledge" class="link" style="font-size:13px;">浏览全部 →</a>
-  </div>
-</div>
-
-<!-- System Directory Status -->
-<div class="card">
-  <h3 class="section-title">🔧 系统状态</h3>
-  <div class="dir-grid">
-    <% var dirs = {holdings:'持仓数据', knowledge:'知识库', research:'研究报告', logs:'决策日志', reviews:'复盘存档', alerts:'触发引擎'}; %>
-    <% Object.keys(dirs).forEach(function(d) { %>
-    <div class="dir-item">
-      <span class="badge badge-<%= sys.dirStatus[d] ? 'green' : 'red' %>"><%= sys.dirStatus[d] ? '✓' : '✗' %></span>
-      <span><%= dirs[d] %></span>
-    </div>
-    <% }); %>
-  </div>
-</div>

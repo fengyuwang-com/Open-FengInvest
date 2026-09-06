@@ -1,0 +1,4520 @@
+{
+  "generated_at": "2026-08-29T17:35:50.239052",
+  "batch": "cn_dividend-20260829",
+  "source": "list:cn_dividend (akshare 中证指数接口)",
+  "pool_size": 100,
+  "ranked": 99,
+  "top_n": 50,
+  "survivors": [
+    {
+      "ticker": "601000.SS",
+      "name": "TANGSHAN PORT GROUP CO LTD",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.0932,
+          "status": "PASS",
+          "detail": "值=9.3% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 6785477691.43,
+          "status": "PASS",
+          "detail": "值=6,785,477,691.43 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 16025.6349,
+          "status": "PASS",
+          "detail": "值=16,025.63 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.4491,
+          "status": "PASS",
+          "detail": "值=44.9% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 1.1985,
+          "status": "PASS",
+          "detail": "值=1.20 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.3318,
+          "status": "PASS",
+          "detail": "值=33.2% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": NaN,
+          "status": "PASS",
+          "detail": "值=N/A 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 1,
+      "score": 60.2
+    },
+    {
+      "ticker": "000672.SZ",
+      "name": "SFCL",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.0844,
+          "status": "PASS",
+          "detail": "值=8.4% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 1720374533.03,
+          "status": "PASS",
+          "detail": "值=1,720,374,533.03 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 6.7807,
+          "status": "PASS",
+          "detail": "值=6.78 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.2911,
+          "status": "PASS",
+          "detail": "值=29.1% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 1.4518,
+          "status": "PASS",
+          "detail": "值=1.45 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.1251,
+          "status": "PASS",
+          "detail": "值=12.5% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": -0.0159,
+          "status": "PASS",
+          "detail": "值=-1.6% 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 2,
+      "score": 58.9
+    },
+    {
+      "ticker": "600012.SS",
+      "name": "ANHUI EXPRESSWAY COMPANY LTD",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.1289,
+          "status": "PASS",
+          "detail": "值=12.9% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 3167316061.63,
+          "status": "PASS",
+          "detail": "值=3,167,316,061.63 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 11.0945,
+          "status": "PASS",
+          "detail": "值=11.09 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.4084,
+          "status": "PASS",
+          "detail": "值=40.8% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 1.6046,
+          "status": "PASS",
+          "detail": "值=1.60 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.2637,
+          "status": "PASS",
+          "detail": "值=26.4% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": NaN,
+          "status": "PASS",
+          "detail": "值=N/A 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 4,
+      "score": 56.7
+    },
+    {
+      "ticker": "002756.SZ",
+      "name": "YONGXING MATERIALS",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.2284,
+          "status": "PASS",
+          "detail": "值=22.8% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 10552284469.07,
+          "status": "PASS",
+          "detail": "值=10,552,284,469.07 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 1306.8809,
+          "status": "PASS",
+          "detail": "值=1,306.88 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.3082,
+          "status": "PASS",
+          "detail": "值=30.8% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 0.9203,
+          "status": "PASS",
+          "detail": "值=0.92 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.2259,
+          "status": "PASS",
+          "detail": "值=22.6% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": -0.0011,
+          "status": "PASS",
+          "detail": "值=-0.1% 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 8,
+      "score": 55.4
+    },
+    {
+      "ticker": "601101.SS",
+      "name": "BEIJING HAOHUA ENERGY RESOURCE ",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.0878,
+          "status": "PASS",
+          "detail": "值=8.8% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 6926862634.13,
+          "status": "PASS",
+          "detail": "值=6,926,862,634.13 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 12.0152,
+          "status": "PASS",
+          "detail": "值=12.02 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.4681,
+          "status": "PASS",
+          "detail": "值=46.8% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 3.4412,
+          "status": "PASS",
+          "detail": "值=3.44 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.1113,
+          "status": "PASS",
+          "detail": "值=11.1% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": -0.0148,
+          "status": "PASS",
+          "detail": "值=-1.5% 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 9,
+      "score": 55.2
+    },
+    {
+      "ticker": "601225.SS",
+      "name": "SHAANXI COAL INDUSTRY",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.2436,
+          "status": "PASS",
+          "detail": "值=24.4% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 121642464286.62,
+          "status": "PASS",
+          "detail": "值=121,642,464,286.62 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 97.3782,
+          "status": "PASS",
+          "detail": "值=97.38 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.3602,
+          "status": "PASS",
+          "detail": "值=36.0% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 1.8524,
+          "status": "PASS",
+          "detail": "值=1.85 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.1414,
+          "status": "PASS",
+          "detail": "值=14.1% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": -0.0007,
+          "status": "PASS",
+          "detail": "值=-0.1% 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 11,
+      "score": 55.1
+    },
+    {
+      "ticker": "600938.SS",
+      "name": "CNOOC LIMITED",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.1899,
+          "status": "PASS",
+          "detail": "值=19.0% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 394707000000.0,
+          "status": "PASS",
+          "detail": "值=394,707,000,000.00 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 30.7345,
+          "status": "PASS",
+          "detail": "值=30.73 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.657,
+          "status": "PASS",
+          "detail": "值=65.7% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 1.6145,
+          "status": "PASS",
+          "detail": "值=1.61 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.3141,
+          "status": "PASS",
+          "detail": "值=31.4% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": NaN,
+          "status": "PASS",
+          "detail": "值=N/A 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 12,
+      "score": 54.8
+    },
+    {
+      "ticker": "000408.SZ",
+      "name": "ZANGGE MINING",
+      "verdict": "EXEMPT",
+      "reason": "命中规则: ['r5']；触发豁免: ['A']",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.2879,
+          "status": "PASS",
+          "detail": "值=28.8% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 10746608770.88,
+          "status": "PASS",
+          "detail": "值=10,746,608,770.88 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 3723.542,
+          "status": "PASS",
+          "detail": "值=3,723.54 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.6285,
+          "status": "PASS",
+          "detail": "值=62.8% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 0.6836,
+          "status": "FAIL",
+          "detail": "值=0.68 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.8038,
+          "status": "PASS",
+          "detail": "值=80.4% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": NaN,
+          "status": "PASS",
+          "detail": "值=N/A 阈值=0.2"
+        }
+      },
+      "exemptions": {
+        "A": {
+          "name": "战略投入期",
+          "triggered": true,
+          "reason": "毛利率=62.8%, 上市年限=未知, 近2年OCF为正=True"
+        },
+        "B": {
+          "name": "主动低利润率",
+          "triggered": false,
+          "reason": "毛利率=62.8%, 净利率回升=False"
+        },
+        "C": {
+          "name": "高周转薄利",
+          "triggered": false,
+          "reason": "ROE=28.8%, OCF/NI=0.68（会员/平台模式需 AI 在 L2a 复核）"
+        }
+      },
+      "rank": 13,
+      "score": 54.4
+    },
+    {
+      "ticker": "000651.SZ",
+      "name": "GREE",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.2337,
+          "status": "PASS",
+          "detail": "值=23.4% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 144340258572.13,
+          "status": "PASS",
+          "detail": "值=144,340,258,572.13 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 12.5929,
+          "status": "PASS",
+          "detail": "值=12.59 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.2903,
+          "status": "PASS",
+          "detail": "值=29.0% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 1.4063,
+          "status": "PASS",
+          "detail": "值=1.41 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.1523,
+          "status": "PASS",
+          "detail": "值=15.2% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": 0.0082,
+          "status": "PASS",
+          "detail": "值=0.8% 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 14,
+      "score": 54.2
+    },
+    {
+      "ticker": "002563.SZ",
+      "name": "SEMIR",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.0826,
+          "status": "PASS",
+          "detail": "值=8.3% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 4712004209.92,
+          "status": "PASS",
+          "detail": "值=4,712,004,209.92 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 82.3992,
+          "status": "PASS",
+          "detail": "值=82.40 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.4356,
+          "status": "PASS",
+          "detail": "值=43.6% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 1.6564,
+          "status": "PASS",
+          "detail": "值=1.66 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.0667,
+          "status": "PASS",
+          "detail": "值=6.7% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": 0.0189,
+          "status": "PASS",
+          "detail": "值=1.9% 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 16,
+      "score": 54.0
+    },
+    {
+      "ticker": "002154.SZ",
+      "name": "BAOXINIAO",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.1161,
+          "status": "PASS",
+          "detail": "值=11.6% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 1503245533.29,
+          "status": "PASS",
+          "detail": "值=1,503,245,533.29 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 58.2538,
+          "status": "PASS",
+          "detail": "值=58.25 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.6424,
+          "status": "PASS",
+          "detail": "值=64.2% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 1.5144,
+          "status": "PASS",
+          "detail": "值=1.51 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.1003,
+          "status": "PASS",
+          "detail": "值=10.0% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": 0.004,
+          "status": "PASS",
+          "detail": "值=0.4% 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 24,
+      "score": 53.5
+    },
+    {
+      "ticker": "600546.SS",
+      "name": "SHANXI COAL INTERNATIONAL ENERG",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.2355,
+          "status": "PASS",
+          "detail": "值=23.5% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 20640227471.54,
+          "status": "PASS",
+          "detail": "值=20,640,227,471.54 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 20.8538,
+          "status": "PASS",
+          "detail": "值=20.85 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.3796,
+          "status": "PASS",
+          "detail": "值=38.0% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 1.9977,
+          "status": "PASS",
+          "detail": "值=2.00 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.0993,
+          "status": "PASS",
+          "detail": "值=9.9% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": -0.0014,
+          "status": "PASS",
+          "detail": "值=-0.1% 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 25,
+      "score": 53.4
+    },
+    {
+      "ticker": "600398.SS",
+      "name": "HLA GROUP CORP LTD",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.1442,
+          "status": "PASS",
+          "detail": "值=14.4% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 13228873765.79,
+          "status": "PASS",
+          "detail": "值=13,228,873,765.79 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 32.9649,
+          "status": "PASS",
+          "detail": "值=32.96 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.4419,
+          "status": "PASS",
+          "detail": "值=44.2% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 1.5926,
+          "status": "PASS",
+          "detail": "值=1.59 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.1141,
+          "status": "PASS",
+          "detail": "值=11.4% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": NaN,
+          "status": "PASS",
+          "detail": "值=N/A 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 26,
+      "score": 52.9
+    },
+    {
+      "ticker": "000933.SZ",
+      "name": "SHENHUO CO.LTD",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=4（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.2828,
+          "status": "PASS",
+          "detail": "值=28.3% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 38233866996.44,
+          "status": "PASS",
+          "detail": "值=38,233,866,996.44 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 16.2783,
+          "status": "PASS",
+          "detail": "值=16.28 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.2556,
+          "status": "PASS",
+          "detail": "值=25.6% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 1.9314,
+          "status": "PASS",
+          "detail": "值=1.93 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.1359,
+          "status": "PASS",
+          "detail": "值=13.6% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": -0.0129,
+          "status": "PASS",
+          "detail": "值=-1.3% 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 30,
+      "score": 52.6
+    },
+    {
+      "ticker": "601168.SS",
+      "name": "WESTERN MINING CO. LTD.",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.1906,
+          "status": "PASS",
+          "detail": "值=19.1% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 23877252028.0,
+          "status": "PASS",
+          "detail": "值=23,877,252,028.00 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 9.9629,
+          "status": "PASS",
+          "detail": "值=9.96 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.1916,
+          "status": "PASS",
+          "detail": "值=19.2% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 2.7165,
+          "status": "PASS",
+          "detail": "值=2.72 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.067,
+          "status": "PASS",
+          "detail": "值=6.7% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": NaN,
+          "status": "PASS",
+          "detail": "值=N/A 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 34,
+      "score": 52.4
+    },
+    {
+      "ticker": "600256.SS",
+      "name": "GUANGHUI ENERGY CO LTD",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.1841,
+          "status": "PASS",
+          "detail": "值=18.4% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 20704295633.44,
+          "status": "PASS",
+          "detail": "值=20,704,295,633.44 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 9.1836,
+          "status": "PASS",
+          "detail": "值=9.18 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.2134,
+          "status": "PASS",
+          "detail": "值=21.3% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 1.9405,
+          "status": "PASS",
+          "detail": "值=1.94 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.1,
+          "status": "PASS",
+          "detail": "值=10.0% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": NaN,
+          "status": "PASS",
+          "detail": "值=N/A 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 36,
+      "score": 51.8
+    },
+    {
+      "ticker": "301109.SZ",
+      "name": "JUNXIN",
+      "verdict": "EXEMPT",
+      "reason": "命中规则: ['r7']；触发豁免: ['A']",
+      "coverage": "财务年数=4（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.091,
+          "status": "PASS",
+          "detail": "值=9.1% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 1842788628.46,
+          "status": "PASS",
+          "detail": "值=1,842,788,628.46 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 7.0814,
+          "status": "PASS",
+          "detail": "值=7.08 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.514,
+          "status": "PASS",
+          "detail": "值=51.4% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 1.8919,
+          "status": "PASS",
+          "detail": "值=1.89 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.2637,
+          "status": "PASS",
+          "detail": "值=26.4% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": 0.4867,
+          "status": "FAIL",
+          "detail": "值=48.7% 阈值=0.2"
+        }
+      },
+      "exemptions": {
+        "A": {
+          "name": "战略投入期",
+          "triggered": true,
+          "reason": "毛利率=51.4%, 上市年限=未知, 近2年OCF为正=True"
+        },
+        "B": {
+          "name": "主动低利润率",
+          "triggered": false,
+          "reason": "毛利率=51.4%, 净利率回升=False"
+        },
+        "C": {
+          "name": "高周转薄利",
+          "triggered": false,
+          "reason": "ROE=9.1%, OCF/NI=1.89（会员/平台模式需 AI 在 L2a 复核）"
+        }
+      },
+      "rank": 38,
+      "score": 51.4
+    },
+    {
+      "ticker": "601098.SS",
+      "name": "CHINA SOUTH PUBLISHING & MEDIA ",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.1006,
+          "status": "PASS",
+          "detail": "值=10.1% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 2668994226.04,
+          "status": "PASS",
+          "detail": "值=2,668,994,226.04 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 311.275,
+          "status": "PASS",
+          "detail": "值=311.27 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.43,
+          "status": "PASS",
+          "detail": "值=43.0% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 0.7824,
+          "status": "PASS",
+          "detail": "值=0.78 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.1193,
+          "status": "PASS",
+          "detail": "值=11.9% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": NaN,
+          "status": "PASS",
+          "detail": "值=N/A 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 39,
+      "score": 51.4
+    },
+    {
+      "ticker": "601216.SS",
+      "name": "INNER MONGOLIA JUNZHENG ENERGY ",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.1198,
+          "status": "PASS",
+          "detail": "值=12.0% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 5687448535.47,
+          "status": "PASS",
+          "detail": "值=5,687,448,535.47 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 16.234,
+          "status": "PASS",
+          "detail": "值=16.23 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.2218,
+          "status": "PASS",
+          "detail": "值=22.2% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 0.946,
+          "status": "PASS",
+          "detail": "值=0.95 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.1447,
+          "status": "PASS",
+          "detail": "值=14.5% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": -0.0001,
+          "status": "PASS",
+          "detail": "值=-0.0% 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 40,
+      "score": 51.3
+    },
+    {
+      "ticker": "603565.SS",
+      "name": "SHANGHAI ZHONGGU LOGISTICS CO L",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=4（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.2031,
+          "status": "PASS",
+          "detail": "值=20.3% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 5151751947.99,
+          "status": "PASS",
+          "detail": "值=5,151,751,947.99 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 10.7897,
+          "status": "PASS",
+          "detail": "值=10.79 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.1887,
+          "status": "PASS",
+          "detail": "值=18.9% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 1.3974,
+          "status": "PASS",
+          "detail": "值=1.40 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.1706,
+          "status": "PASS",
+          "detail": "值=17.1% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": 0.0066,
+          "status": "PASS",
+          "detail": "值=0.7% 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 46,
+      "score": 50.7
+    },
+    {
+      "ticker": "603706.SS",
+      "name": "XINJIANG EAST UNIVERSE (GROUP) ",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.1119,
+          "status": "PASS",
+          "detail": "值=11.2% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 1032228255.98,
+          "status": "PASS",
+          "detail": "值=1,032,228,255.98 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 104.5591,
+          "status": "PASS",
+          "detail": "值=104.56 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.2698,
+          "status": "PASS",
+          "detail": "值=27.0% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 1.8402,
+          "status": "PASS",
+          "detail": "值=1.84 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.1482,
+          "status": "PASS",
+          "detail": "值=14.8% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": -0.0045,
+          "status": "PASS",
+          "detail": "值=-0.4% 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 47,
+      "score": 50.7
+    },
+    {
+      "ticker": "600177.SS",
+      "name": "YOUNGOR FASHION CO LTD",
+      "verdict": "EXEMPT",
+      "reason": "命中规则: ['r5']；触发豁免: ['A']",
+      "coverage": "财务年数=4（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.0866,
+          "status": "PASS",
+          "detail": "值=8.7% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 3161952624.32,
+          "status": "PASS",
+          "detail": "值=3,161,952,624.32 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 2.3334,
+          "status": "PASS",
+          "detail": "值=2.33 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.4624,
+          "status": "PASS",
+          "detail": "值=46.2% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 0.6465,
+          "status": "FAIL",
+          "detail": "值=0.65 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.2496,
+          "status": "PASS",
+          "detail": "值=25.0% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": 0.0013,
+          "status": "PASS",
+          "detail": "值=0.1% 阈值=0.2"
+        }
+      },
+      "exemptions": {
+        "A": {
+          "name": "战略投入期",
+          "triggered": true,
+          "reason": "毛利率=46.2%, 上市年限=未知, 近2年OCF为正=True"
+        },
+        "B": {
+          "name": "主动低利润率",
+          "triggered": false,
+          "reason": "毛利率=46.2%, 净利率回升=False"
+        },
+        "C": {
+          "name": "高周转薄利",
+          "triggered": false,
+          "reason": "ROE=8.7%, OCF/NI=0.65（会员/平台模式需 AI 在 L2a 复核）"
+        }
+      },
+      "rank": 48,
+      "score": 50.6
+    },
+    {
+      "ticker": "600757.SS",
+      "name": "CHANGJIANG PUBLISHING AND MEDIA",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.0997,
+          "status": "PASS",
+          "detail": "值=10.0% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 3027756693.87,
+          "status": "PASS",
+          "detail": "值=3,027,756,693.87 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 284.1349,
+          "status": "PASS",
+          "detail": "值=284.13 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.3461,
+          "status": "PASS",
+          "detail": "值=34.6% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 0.9648,
+          "status": "PASS",
+          "detail": "值=0.96 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.1354,
+          "status": "PASS",
+          "detail": "值=13.5% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": 0.0028,
+          "status": "PASS",
+          "detail": "值=0.3% 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 49,
+      "score": 50.6
+    },
+    {
+      "ticker": "601001.SS",
+      "name": "JINNENG HOLDING SHANXI COAL IND",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.1632,
+          "status": "PASS",
+          "detail": "值=16.3% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 14651741181.18,
+          "status": "PASS",
+          "detail": "值=14,651,741,181.18 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 17.0632,
+          "status": "PASS",
+          "detail": "值=17.06 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.4788,
+          "status": "PASS",
+          "detail": "值=47.9% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 1.6208,
+          "status": "PASS",
+          "detail": "值=1.62 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.1828,
+          "status": "PASS",
+          "detail": "值=18.3% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": 0.0031,
+          "status": "PASS",
+          "detail": "值=0.3% 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 50,
+      "score": 50.6
+    }
+  ],
+  "results": [
+    {
+      "ticker": "601000.SS",
+      "name": "TANGSHAN PORT GROUP CO LTD",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.0932,
+          "status": "PASS",
+          "detail": "值=9.3% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 6785477691.43,
+          "status": "PASS",
+          "detail": "值=6,785,477,691.43 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 16025.6349,
+          "status": "PASS",
+          "detail": "值=16,025.63 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.4491,
+          "status": "PASS",
+          "detail": "值=44.9% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 1.1985,
+          "status": "PASS",
+          "detail": "值=1.20 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.3318,
+          "status": "PASS",
+          "detail": "值=33.2% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": NaN,
+          "status": "PASS",
+          "detail": "值=N/A 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 1,
+      "score": 60.2
+    },
+    {
+      "ticker": "000672.SZ",
+      "name": "SFCL",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.0844,
+          "status": "PASS",
+          "detail": "值=8.4% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 1720374533.03,
+          "status": "PASS",
+          "detail": "值=1,720,374,533.03 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 6.7807,
+          "status": "PASS",
+          "detail": "值=6.78 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.2911,
+          "status": "PASS",
+          "detail": "值=29.1% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 1.4518,
+          "status": "PASS",
+          "detail": "值=1.45 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.1251,
+          "status": "PASS",
+          "detail": "值=12.5% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": -0.0159,
+          "status": "PASS",
+          "detail": "值=-1.6% 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 2,
+      "score": 58.9
+    },
+    {
+      "ticker": "600901.SS",
+      "name": "JIANGSU FINANCIAL LEASING CO",
+      "verdict": "FAIL",
+      "reason": "命中规则: ['r5']",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.1378,
+          "status": "PASS",
+          "detail": "值=13.8% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 1727678722.25,
+          "status": "PASS",
+          "detail": "值=1,727,678,722.25 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": null,
+          "status": "N/A",
+          "detail": "数据不足"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.8226,
+          "status": "PASS",
+          "detail": "值=82.3% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 0.2811,
+          "status": "FAIL",
+          "detail": "值=0.28 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.5496,
+          "status": "PASS",
+          "detail": "值=55.0% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": 0.1758,
+          "status": "PASS",
+          "detail": "值=17.6% 阈值=0.2"
+        }
+      },
+      "exemptions": {
+        "A": {
+          "name": "战略投入期",
+          "triggered": false,
+          "reason": "毛利率=82.3%, 上市年限=未知, 近2年OCF为正=False"
+        },
+        "B": {
+          "name": "主动低利润率",
+          "triggered": false,
+          "reason": "毛利率=82.3%, 净利率回升=False"
+        },
+        "C": {
+          "name": "高周转薄利",
+          "triggered": false,
+          "reason": "ROE=13.8%, OCF/NI=0.28（会员/平台模式需 AI 在 L2a 复核）"
+        }
+      },
+      "rank": 3,
+      "score": 58.5
+    },
+    {
+      "ticker": "600012.SS",
+      "name": "ANHUI EXPRESSWAY COMPANY LTD",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.1289,
+          "status": "PASS",
+          "detail": "值=12.9% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 3167316061.63,
+          "status": "PASS",
+          "detail": "值=3,167,316,061.63 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 11.0945,
+          "status": "PASS",
+          "detail": "值=11.09 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.4084,
+          "status": "PASS",
+          "detail": "值=40.8% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 1.6046,
+          "status": "PASS",
+          "detail": "值=1.60 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.2637,
+          "status": "PASS",
+          "detail": "值=26.4% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": NaN,
+          "status": "PASS",
+          "detail": "值=N/A 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 4,
+      "score": 56.7
+    },
+    {
+      "ticker": "600036.SS",
+      "name": "CHINA MERCHANTS BANK CO LTD",
+      "verdict": "FAIL",
+      "reason": "命中规则: ['r4']",
+      "coverage": "财务年数=4（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.1303,
+          "status": "PASS",
+          "detail": "值=13.0% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 1698252000000.0,
+          "status": "PASS",
+          "detail": "值=1,698,252,000,000.00 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": null,
+          "status": "N/A",
+          "detail": "数据不足"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.0,
+          "status": "FAIL",
+          "detail": "值=0.0% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 3.1475,
+          "status": "PASS",
+          "detail": "值=3.15 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.4335,
+          "status": "PASS",
+          "detail": "值=43.4% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": 0.0042,
+          "status": "PASS",
+          "detail": "值=0.4% 阈值=0.2"
+        }
+      },
+      "exemptions": {
+        "A": {
+          "name": "战略投入期",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 上市年限=未知, 近2年OCF为正=True"
+        },
+        "B": {
+          "name": "主动低利润率",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 净利率回升=True"
+        },
+        "C": {
+          "name": "高周转薄利",
+          "triggered": false,
+          "reason": "ROE=13.0%, OCF/NI=3.15（会员/平台模式需 AI 在 L2a 复核）"
+        }
+      },
+      "rank": 5,
+      "score": 56.2
+    },
+    {
+      "ticker": "601838.SS",
+      "name": "BANK OF CHENGDU CO LTD",
+      "verdict": "FAIL",
+      "reason": "命中规则: ['r2', 'r4', 'r5']",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.1528,
+          "status": "PASS",
+          "detail": "值=15.3% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": -35525078000.0,
+          "status": "FAIL",
+          "detail": "值=-35,525,078,000.00 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": null,
+          "status": "N/A",
+          "detail": "数据不足"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.0,
+          "status": "FAIL",
+          "detail": "值=0.0% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": -0.6906,
+          "status": "FAIL",
+          "detail": "值=-0.69 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.5419,
+          "status": "PASS",
+          "detail": "值=54.2% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": NaN,
+          "status": "PASS",
+          "detail": "值=N/A 阈值=0.2"
+        }
+      },
+      "exemptions": {
+        "A": {
+          "name": "战略投入期",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 上市年限=未知, 近2年OCF为正=False"
+        },
+        "B": {
+          "name": "主动低利润率",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 净利率回升=False"
+        },
+        "C": {
+          "name": "高周转薄利",
+          "triggered": false,
+          "reason": "ROE=15.3%, OCF/NI=-0.69（会员/平台模式需 AI 在 L2a 复核）"
+        }
+      },
+      "rank": 6,
+      "score": 55.8
+    },
+    {
+      "ticker": "601166.SS",
+      "name": "INDUSTRIAL BANK CO LTD",
+      "verdict": "FAIL",
+      "reason": "命中规则: ['r4']",
+      "coverage": "财务年数=4（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.0982,
+          "status": "PASS",
+          "detail": "值=9.8% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 476024000000.0,
+          "status": "PASS",
+          "detail": "值=476,024,000,000.00 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": null,
+          "status": "N/A",
+          "detail": "数据不足"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.0,
+          "status": "FAIL",
+          "detail": "值=0.0% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 1.8041,
+          "status": "PASS",
+          "detail": "值=1.80 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.3764,
+          "status": "PASS",
+          "detail": "值=37.6% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": 0.0221,
+          "status": "PASS",
+          "detail": "值=2.2% 阈值=0.2"
+        }
+      },
+      "exemptions": {
+        "A": {
+          "name": "战略投入期",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 上市年限=未知, 近2年OCF为正=False"
+        },
+        "B": {
+          "name": "主动低利润率",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 净利率回升=False"
+        },
+        "C": {
+          "name": "高周转薄利",
+          "triggered": false,
+          "reason": "ROE=9.8%, OCF/NI=1.8（会员/平台模式需 AI 在 L2a 复核）"
+        }
+      },
+      "rank": 7,
+      "score": 55.6
+    },
+    {
+      "ticker": "002756.SZ",
+      "name": "YONGXING MATERIALS",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.2284,
+          "status": "PASS",
+          "detail": "值=22.8% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 10552284469.07,
+          "status": "PASS",
+          "detail": "值=10,552,284,469.07 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 1306.8809,
+          "status": "PASS",
+          "detail": "值=1,306.88 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.3082,
+          "status": "PASS",
+          "detail": "值=30.8% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 0.9203,
+          "status": "PASS",
+          "detail": "值=0.92 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.2259,
+          "status": "PASS",
+          "detail": "值=22.6% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": -0.0011,
+          "status": "PASS",
+          "detail": "值=-0.1% 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 8,
+      "score": 55.4
+    },
+    {
+      "ticker": "601101.SS",
+      "name": "BEIJING HAOHUA ENERGY RESOURCE ",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.0878,
+          "status": "PASS",
+          "detail": "值=8.8% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 6926862634.13,
+          "status": "PASS",
+          "detail": "值=6,926,862,634.13 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 12.0152,
+          "status": "PASS",
+          "detail": "值=12.02 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.4681,
+          "status": "PASS",
+          "detail": "值=46.8% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 3.4412,
+          "status": "PASS",
+          "detail": "值=3.44 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.1113,
+          "status": "PASS",
+          "detail": "值=11.1% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": -0.0148,
+          "status": "PASS",
+          "detail": "值=-1.5% 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 9,
+      "score": 55.2
+    },
+    {
+      "ticker": "600919.SS",
+      "name": "BANK OF JIANGSU",
+      "verdict": "FAIL",
+      "reason": "命中规则: ['r4']",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.1109,
+          "status": "PASS",
+          "detail": "值=11.1% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 802125474000.0,
+          "status": "PASS",
+          "detail": "值=802,125,474,000.00 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": null,
+          "status": "N/A",
+          "detail": "数据不足"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.0,
+          "status": "FAIL",
+          "detail": "值=0.0% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 6.1717,
+          "status": "PASS",
+          "detail": "值=6.17 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.3835,
+          "status": "PASS",
+          "detail": "值=38.3% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": NaN,
+          "status": "PASS",
+          "detail": "值=N/A 阈值=0.2"
+        }
+      },
+      "exemptions": {
+        "A": {
+          "name": "战略投入期",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 上市年限=未知, 近2年OCF为正=True"
+        },
+        "B": {
+          "name": "主动低利润率",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 净利率回升=False"
+        },
+        "C": {
+          "name": "高周转薄利",
+          "triggered": false,
+          "reason": "ROE=11.1%, OCF/NI=6.17（会员/平台模式需 AI 在 L2a 复核）"
+        }
+      },
+      "rank": 10,
+      "score": 55.1
+    },
+    {
+      "ticker": "601225.SS",
+      "name": "SHAANXI COAL INDUSTRY",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.2436,
+          "status": "PASS",
+          "detail": "值=24.4% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 121642464286.62,
+          "status": "PASS",
+          "detail": "值=121,642,464,286.62 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 97.3782,
+          "status": "PASS",
+          "detail": "值=97.38 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.3602,
+          "status": "PASS",
+          "detail": "值=36.0% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 1.8524,
+          "status": "PASS",
+          "detail": "值=1.85 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.1414,
+          "status": "PASS",
+          "detail": "值=14.1% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": -0.0007,
+          "status": "PASS",
+          "detail": "值=-0.1% 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 11,
+      "score": 55.1
+    },
+    {
+      "ticker": "600938.SS",
+      "name": "CNOOC LIMITED",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.1899,
+          "status": "PASS",
+          "detail": "值=19.0% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 394707000000.0,
+          "status": "PASS",
+          "detail": "值=394,707,000,000.00 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 30.7345,
+          "status": "PASS",
+          "detail": "值=30.73 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.657,
+          "status": "PASS",
+          "detail": "值=65.7% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 1.6145,
+          "status": "PASS",
+          "detail": "值=1.61 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.3141,
+          "status": "PASS",
+          "detail": "值=31.4% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": NaN,
+          "status": "PASS",
+          "detail": "值=N/A 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 12,
+      "score": 54.8
+    },
+    {
+      "ticker": "000408.SZ",
+      "name": "ZANGGE MINING",
+      "verdict": "EXEMPT",
+      "reason": "命中规则: ['r5']；触发豁免: ['A']",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.2879,
+          "status": "PASS",
+          "detail": "值=28.8% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 10746608770.88,
+          "status": "PASS",
+          "detail": "值=10,746,608,770.88 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 3723.542,
+          "status": "PASS",
+          "detail": "值=3,723.54 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.6285,
+          "status": "PASS",
+          "detail": "值=62.8% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 0.6836,
+          "status": "FAIL",
+          "detail": "值=0.68 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.8038,
+          "status": "PASS",
+          "detail": "值=80.4% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": NaN,
+          "status": "PASS",
+          "detail": "值=N/A 阈值=0.2"
+        }
+      },
+      "exemptions": {
+        "A": {
+          "name": "战略投入期",
+          "triggered": true,
+          "reason": "毛利率=62.8%, 上市年限=未知, 近2年OCF为正=True"
+        },
+        "B": {
+          "name": "主动低利润率",
+          "triggered": false,
+          "reason": "毛利率=62.8%, 净利率回升=False"
+        },
+        "C": {
+          "name": "高周转薄利",
+          "triggered": false,
+          "reason": "ROE=28.8%, OCF/NI=0.68（会员/平台模式需 AI 在 L2a 复核）"
+        }
+      },
+      "rank": 13,
+      "score": 54.4
+    },
+    {
+      "ticker": "000651.SZ",
+      "name": "GREE",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.2337,
+          "status": "PASS",
+          "detail": "值=23.4% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 144340258572.13,
+          "status": "PASS",
+          "detail": "值=144,340,258,572.13 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 12.5929,
+          "status": "PASS",
+          "detail": "值=12.59 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.2903,
+          "status": "PASS",
+          "detail": "值=29.0% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 1.4063,
+          "status": "PASS",
+          "detail": "值=1.41 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.1523,
+          "status": "PASS",
+          "detail": "值=15.2% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": 0.0082,
+          "status": "PASS",
+          "detail": "值=0.8% 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 14,
+      "score": 54.2
+    },
+    {
+      "ticker": "601009.SS",
+      "name": "BANK OF NANJING CO. LTD.",
+      "verdict": "FAIL",
+      "reason": "命中规则: ['r4']",
+      "coverage": "财务年数=4（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.1099,
+          "status": "PASS",
+          "detail": "值=11.0% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 274240197000.0,
+          "status": "PASS",
+          "detail": "值=274,240,197,000.00 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": null,
+          "status": "N/A",
+          "detail": "数据不足"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.0,
+          "status": "FAIL",
+          "detail": "值=0.0% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 3.4239,
+          "status": "PASS",
+          "detail": "值=3.42 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.4115,
+          "status": "PASS",
+          "detail": "值=41.2% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": 0.0859,
+          "status": "PASS",
+          "detail": "值=8.6% 阈值=0.2"
+        }
+      },
+      "exemptions": {
+        "A": {
+          "name": "战略投入期",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 上市年限=未知, 近2年OCF为正=False"
+        },
+        "B": {
+          "name": "主动低利润率",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 净利率回升=False"
+        },
+        "C": {
+          "name": "高周转薄利",
+          "triggered": false,
+          "reason": "ROE=11.0%, OCF/NI=3.42（会员/平台模式需 AI 在 L2a 复核）"
+        }
+      },
+      "rank": 15,
+      "score": 54.1
+    },
+    {
+      "ticker": "002563.SZ",
+      "name": "SEMIR",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.0826,
+          "status": "PASS",
+          "detail": "值=8.3% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 4712004209.92,
+          "status": "PASS",
+          "detail": "值=4,712,004,209.92 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 82.3992,
+          "status": "PASS",
+          "detail": "值=82.40 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.4356,
+          "status": "PASS",
+          "detail": "值=43.6% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 1.6564,
+          "status": "PASS",
+          "detail": "值=1.66 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.0667,
+          "status": "PASS",
+          "detail": "值=6.7% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": 0.0189,
+          "status": "PASS",
+          "detail": "值=1.9% 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 16,
+      "score": 54.0
+    },
+    {
+      "ticker": "601077.SS",
+      "name": "CHONGQING RURAL COMMERCIAL BANK",
+      "verdict": "FAIL",
+      "reason": "命中规则: ['r4']",
+      "coverage": "财务年数=4（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.0887,
+          "status": "PASS",
+          "detail": "值=8.9% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 111460648000.0,
+          "status": "PASS",
+          "detail": "值=111,460,648,000.00 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": null,
+          "status": "N/A",
+          "detail": "数据不足"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.0,
+          "status": "FAIL",
+          "detail": "值=0.0% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 2.7373,
+          "status": "PASS",
+          "detail": "值=2.74 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.4016,
+          "status": "PASS",
+          "detail": "值=40.2% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": 0.0,
+          "status": "PASS",
+          "detail": "值=0.0% 阈值=0.2"
+        }
+      },
+      "exemptions": {
+        "A": {
+          "name": "战略投入期",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 上市年限=未知, 近2年OCF为正=True"
+        },
+        "B": {
+          "name": "主动低利润率",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 净利率回升=True"
+        },
+        "C": {
+          "name": "高周转薄利",
+          "triggered": false,
+          "reason": "ROE=8.9%, OCF/NI=2.74（会员/平台模式需 AI 在 L2a 复核）"
+        }
+      },
+      "rank": 17,
+      "score": 54.0
+    },
+    {
+      "ticker": "601229.SS",
+      "name": "BANK OF SHANGHAI CO LTD",
+      "verdict": "FAIL",
+      "reason": "命中规则: ['r2', 'r4', 'r5']",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.0956,
+          "status": "PASS",
+          "detail": "值=9.6% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": -38399944000.0,
+          "status": "FAIL",
+          "detail": "值=-38,399,944,000.00 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": null,
+          "status": "N/A",
+          "detail": "数据不足"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.0,
+          "status": "FAIL",
+          "detail": "值=0.0% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": -0.3294,
+          "status": "FAIL",
+          "detail": "值=-0.33 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.4389,
+          "status": "PASS",
+          "detail": "值=43.9% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": NaN,
+          "status": "PASS",
+          "detail": "值=N/A 阈值=0.2"
+        }
+      },
+      "exemptions": {
+        "A": {
+          "name": "战略投入期",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 上市年限=未知, 近2年OCF为正=False"
+        },
+        "B": {
+          "name": "主动低利润率",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 净利率回升=False"
+        },
+        "C": {
+          "name": "高周转薄利",
+          "triggered": false,
+          "reason": "ROE=9.6%, OCF/NI=-0.33（会员/平台模式需 AI 在 L2a 复核）"
+        }
+      },
+      "rank": 18,
+      "score": 54.0
+    },
+    {
+      "ticker": "601939.SS",
+      "name": "CHINA CONSTRUCTION BANK",
+      "verdict": "FAIL",
+      "reason": "命中规则: ['r4']",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.1032,
+          "status": "PASS",
+          "detail": "值=10.3% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 3958954000000.0,
+          "status": "PASS",
+          "detail": "值=3,958,954,000,000.00 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": null,
+          "status": "N/A",
+          "detail": "数据不足"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.0,
+          "status": "FAIL",
+          "detail": "值=0.0% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 3.0382,
+          "status": "PASS",
+          "detail": "值=3.04 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.4357,
+          "status": "PASS",
+          "detail": "值=43.6% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": NaN,
+          "status": "PASS",
+          "detail": "值=N/A 阈值=0.2"
+        }
+      },
+      "exemptions": {
+        "A": {
+          "name": "战略投入期",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 上市年限=未知, 近2年OCF为正=True"
+        },
+        "B": {
+          "name": "主动低利润率",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 净利率回升=False"
+        },
+        "C": {
+          "name": "高周转薄利",
+          "triggered": false,
+          "reason": "ROE=10.3%, OCF/NI=3.04（会员/平台模式需 AI 在 L2a 复核）"
+        }
+      },
+      "rank": 19,
+      "score": 54.0
+    },
+    {
+      "ticker": "603967.SS",
+      "name": "CHINA MASTER LOGISTICS CO LTD",
+      "verdict": "FAIL",
+      "reason": "命中规则: ['r4', 'r6']",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.1083,
+          "status": "PASS",
+          "detail": "值=10.8% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 1046480033.47,
+          "status": "PASS",
+          "detail": "值=1,046,480,033.47 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 22.7906,
+          "status": "PASS",
+          "detail": "值=22.79 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.0605,
+          "status": "FAIL",
+          "detail": "值=6.0% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 1.5813,
+          "status": "PASS",
+          "detail": "值=1.58 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.026,
+          "status": "FAIL",
+          "detail": "值=2.6% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": -0.0016,
+          "status": "PASS",
+          "detail": "值=-0.2% 阈值=0.2"
+        }
+      },
+      "exemptions": {
+        "A": {
+          "name": "战略投入期",
+          "triggered": false,
+          "reason": "毛利率=6.0%, 上市年限=未知, 近2年OCF为正=True"
+        },
+        "B": {
+          "name": "主动低利润率",
+          "triggered": false,
+          "reason": "毛利率=6.0%, 净利率回升=True"
+        },
+        "C": {
+          "name": "高周转薄利",
+          "triggered": false,
+          "reason": "ROE=10.8%, OCF/NI=1.58（会员/平台模式需 AI 在 L2a 复核）"
+        }
+      },
+      "rank": 20,
+      "score": 54.0
+    },
+    {
+      "ticker": "600015.SS",
+      "name": "HUAXIA BANK CO",
+      "verdict": "FAIL",
+      "reason": "命中规则: ['r1', 'r4']",
+      "coverage": "财务年数=4（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.0765,
+          "status": "FAIL",
+          "detail": "值=7.7% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 355282000000.0,
+          "status": "PASS",
+          "detail": "值=355,282,000,000.00 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": null,
+          "status": "N/A",
+          "detail": "数据不足"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.0,
+          "status": "FAIL",
+          "detail": "值=0.0% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 4.2082,
+          "status": "PASS",
+          "detail": "值=4.21 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.2828,
+          "status": "PASS",
+          "detail": "值=28.3% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": NaN,
+          "status": "PASS",
+          "detail": "值=N/A 阈值=0.2"
+        }
+      },
+      "exemptions": {
+        "A": {
+          "name": "战略投入期",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 上市年限=未知, 近2年OCF为正=True"
+        },
+        "B": {
+          "name": "主动低利润率",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 净利率回升=True"
+        },
+        "C": {
+          "name": "高周转薄利",
+          "triggered": false,
+          "reason": "ROE=7.7%, OCF/NI=4.21（会员/平台模式需 AI 在 L2a 复核）"
+        }
+      },
+      "rank": 21,
+      "score": 53.9
+    },
+    {
+      "ticker": "601963.SS",
+      "name": "BANK OF CHONGQING CO LTD",
+      "verdict": "FAIL",
+      "reason": "命中规则: ['r4']",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.0897,
+          "status": "PASS",
+          "detail": "值=9.0% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 35705625000.0,
+          "status": "PASS",
+          "detail": "值=35,705,625,000.00 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": null,
+          "status": "N/A",
+          "detail": "数据不足"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.0,
+          "status": "FAIL",
+          "detail": "值=0.0% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 1.6706,
+          "status": "PASS",
+          "detail": "值=1.67 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.3763,
+          "status": "PASS",
+          "detail": "值=37.6% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": NaN,
+          "status": "PASS",
+          "detail": "值=N/A 阈值=0.2"
+        }
+      },
+      "exemptions": {
+        "A": {
+          "name": "战略投入期",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 上市年限=未知, 近2年OCF为正=False"
+        },
+        "B": {
+          "name": "主动低利润率",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 净利率回升=False"
+        },
+        "C": {
+          "name": "高周转薄利",
+          "triggered": false,
+          "reason": "ROE=9.0%, OCF/NI=1.67（会员/平台模式需 AI 在 L2a 复核）"
+        }
+      },
+      "rank": 22,
+      "score": 53.8
+    },
+    {
+      "ticker": "601998.SS",
+      "name": "CHINA CITIC BANK CORPORATION LT",
+      "verdict": "FAIL",
+      "reason": "命中规则: ['r4']",
+      "coverage": "财务年数=4（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.0897,
+          "status": "PASS",
+          "detail": "值=9.0% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 379272000000.0,
+          "status": "PASS",
+          "detail": "值=379,272,000,000.00 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": null,
+          "status": "N/A",
+          "detail": "数据不足"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.0,
+          "status": "FAIL",
+          "detail": "值=0.0% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 1.6904,
+          "status": "PASS",
+          "detail": "值=1.69 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.3192,
+          "status": "PASS",
+          "detail": "值=31.9% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": 0.0044,
+          "status": "PASS",
+          "detail": "值=0.4% 阈值=0.2"
+        }
+      },
+      "exemptions": {
+        "A": {
+          "name": "战略投入期",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 上市年限=未知, 近2年OCF为正=False"
+        },
+        "B": {
+          "name": "主动低利润率",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 净利率回升=True"
+        },
+        "C": {
+          "name": "高周转薄利",
+          "triggered": false,
+          "reason": "ROE=9.0%, OCF/NI=1.69（会员/平台模式需 AI 在 L2a 复核）"
+        }
+      },
+      "rank": 23,
+      "score": 53.6
+    },
+    {
+      "ticker": "002154.SZ",
+      "name": "BAOXINIAO",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.1161,
+          "status": "PASS",
+          "detail": "值=11.6% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 1503245533.29,
+          "status": "PASS",
+          "detail": "值=1,503,245,533.29 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 58.2538,
+          "status": "PASS",
+          "detail": "值=58.25 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.6424,
+          "status": "PASS",
+          "detail": "值=64.2% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 1.5144,
+          "status": "PASS",
+          "detail": "值=1.51 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.1003,
+          "status": "PASS",
+          "detail": "值=10.0% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": 0.004,
+          "status": "PASS",
+          "detail": "值=0.4% 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 24,
+      "score": 53.5
+    },
+    {
+      "ticker": "600546.SS",
+      "name": "SHANXI COAL INTERNATIONAL ENERG",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.2355,
+          "status": "PASS",
+          "detail": "值=23.5% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 20640227471.54,
+          "status": "PASS",
+          "detail": "值=20,640,227,471.54 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 20.8538,
+          "status": "PASS",
+          "detail": "值=20.85 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.3796,
+          "status": "PASS",
+          "detail": "值=38.0% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 1.9977,
+          "status": "PASS",
+          "detail": "值=2.00 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.0993,
+          "status": "PASS",
+          "detail": "值=9.9% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": -0.0014,
+          "status": "PASS",
+          "detail": "值=-0.1% 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 25,
+      "score": 53.4
+    },
+    {
+      "ticker": "600398.SS",
+      "name": "HLA GROUP CORP LTD",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.1442,
+          "status": "PASS",
+          "detail": "值=14.4% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 13228873765.79,
+          "status": "PASS",
+          "detail": "值=13,228,873,765.79 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 32.9649,
+          "status": "PASS",
+          "detail": "值=32.96 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.4419,
+          "status": "PASS",
+          "detail": "值=44.2% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 1.5926,
+          "status": "PASS",
+          "detail": "值=1.59 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.1141,
+          "status": "PASS",
+          "detail": "值=11.4% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": NaN,
+          "status": "PASS",
+          "detail": "值=N/A 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 26,
+      "score": 52.9
+    },
+    {
+      "ticker": "601398.SS",
+      "name": "INDUSTRIAL & COMMERCIAL BK OF C",
+      "verdict": "FAIL",
+      "reason": "命中规则: ['r4']",
+      "coverage": "财务年数=4（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.0948,
+          "status": "PASS",
+          "detail": "值=9.5% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 5189352000000.0,
+          "status": "PASS",
+          "detail": "值=5,189,352,000,000.00 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": null,
+          "status": "N/A",
+          "detail": "数据不足"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.0,
+          "status": "FAIL",
+          "detail": "值=0.0% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 3.6238,
+          "status": "PASS",
+          "detail": "值=3.62 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.4347,
+          "status": "PASS",
+          "detail": "值=43.5% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": -0.01,
+          "status": "PASS",
+          "detail": "值=-1.0% 阈值=0.2"
+        }
+      },
+      "exemptions": {
+        "A": {
+          "name": "战略投入期",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 上市年限=未知, 近2年OCF为正=True"
+        },
+        "B": {
+          "name": "主动低利润率",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 净利率回升=True"
+        },
+        "C": {
+          "name": "高周转薄利",
+          "triggered": false,
+          "reason": "ROE=9.5%, OCF/NI=3.62（会员/平台模式需 AI 在 L2a 复核）"
+        }
+      },
+      "rank": 27,
+      "score": 52.9
+    },
+    {
+      "ticker": "601825.SS",
+      "name": "SHANGHAI RURAL COMMERCIAL BK CO",
+      "verdict": "FAIL",
+      "reason": "命中规则: ['r4']",
+      "coverage": "财务年数=4（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.1028,
+          "status": "PASS",
+          "detail": "值=10.3% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 200043342000.0,
+          "status": "PASS",
+          "detail": "值=200,043,342,000.00 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": null,
+          "status": "N/A",
+          "detail": "数据不足"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.0,
+          "status": "FAIL",
+          "detail": "值=0.0% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 4.4655,
+          "status": "PASS",
+          "detail": "值=4.47 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.4634,
+          "status": "PASS",
+          "detail": "值=46.3% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": -0.0008,
+          "status": "PASS",
+          "detail": "值=-0.1% 阈值=0.2"
+        }
+      },
+      "exemptions": {
+        "A": {
+          "name": "战略投入期",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 上市年限=未知, 近2年OCF为正=False"
+        },
+        "B": {
+          "name": "主动低利润率",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 净利率回升=True"
+        },
+        "C": {
+          "name": "高周转薄利",
+          "triggered": false,
+          "reason": "ROE=10.3%, OCF/NI=4.47（会员/平台模式需 AI 在 L2a 复核）"
+        }
+      },
+      "rank": 28,
+      "score": 52.9
+    },
+    {
+      "ticker": "601988.SS",
+      "name": "BANK OF CHINA LTD",
+      "verdict": "FAIL",
+      "reason": "命中规则: ['r4']",
+      "coverage": "财务年数=4（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.0864,
+          "status": "PASS",
+          "detail": "值=8.6% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 2022192000000.0,
+          "status": "PASS",
+          "detail": "值=2,022,192,000,000.00 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": null,
+          "status": "N/A",
+          "detail": "数据不足"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.0,
+          "status": "FAIL",
+          "detail": "值=0.0% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 2.2705,
+          "status": "PASS",
+          "detail": "值=2.27 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.377,
+          "status": "PASS",
+          "detail": "值=37.7% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": 0.0438,
+          "status": "PASS",
+          "detail": "值=4.4% 阈值=0.2"
+        }
+      },
+      "exemptions": {
+        "A": {
+          "name": "战略投入期",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 上市年限=未知, 近2年OCF为正=True"
+        },
+        "B": {
+          "name": "主动低利润率",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 净利率回升=False"
+        },
+        "C": {
+          "name": "高周转薄利",
+          "triggered": false,
+          "reason": "ROE=8.6%, OCF/NI=2.27（会员/平台模式需 AI 在 L2a 复核）"
+        }
+      },
+      "rank": 29,
+      "score": 52.8
+    },
+    {
+      "ticker": "000933.SZ",
+      "name": "SHENHUO CO.LTD",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=4（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.2828,
+          "status": "PASS",
+          "detail": "值=28.3% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 38233866996.44,
+          "status": "PASS",
+          "detail": "值=38,233,866,996.44 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 16.2783,
+          "status": "PASS",
+          "detail": "值=16.28 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.2556,
+          "status": "PASS",
+          "detail": "值=25.6% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 1.9314,
+          "status": "PASS",
+          "detail": "值=1.93 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.1359,
+          "status": "PASS",
+          "detail": "值=13.6% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": -0.0129,
+          "status": "PASS",
+          "detail": "值=-1.3% 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 30,
+      "score": 52.6
+    },
+    {
+      "ticker": "601997.SS",
+      "name": "BANK OF GUIYANG CO. LTD",
+      "verdict": "FAIL",
+      "reason": "命中规则: ['r2', 'r4', 'r5']",
+      "coverage": "财务年数=4（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.0878,
+          "status": "PASS",
+          "detail": "值=8.8% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": -4481102000.0,
+          "status": "FAIL",
+          "detail": "值=-4,481,102,000.00 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": null,
+          "status": "N/A",
+          "detail": "数据不足"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.0,
+          "status": "FAIL",
+          "detail": "值=0.0% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 0.1129,
+          "status": "FAIL",
+          "detail": "值=0.11 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.3773,
+          "status": "PASS",
+          "detail": "值=37.7% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": 0.0039,
+          "status": "PASS",
+          "detail": "值=0.4% 阈值=0.2"
+        }
+      },
+      "exemptions": {
+        "A": {
+          "name": "战略投入期",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 上市年限=未知, 近2年OCF为正=False"
+        },
+        "B": {
+          "name": "主动低利润率",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 净利率回升=True"
+        },
+        "C": {
+          "name": "高周转薄利",
+          "triggered": false,
+          "reason": "ROE=8.8%, OCF/NI=0.11（会员/平台模式需 AI 在 L2a 复核）"
+        }
+      },
+      "rank": 31,
+      "score": 52.6
+    },
+    {
+      "ticker": "601169.SS",
+      "name": "BANK OF BEIJING CO. LTD.",
+      "verdict": "FAIL",
+      "reason": "命中规则: ['r1', 'r4']",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.0715,
+          "status": "FAIL",
+          "detail": "值=7.2% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 668792000000.0,
+          "status": "PASS",
+          "detail": "值=668,792,000,000.00 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": null,
+          "status": "N/A",
+          "detail": "数据不足"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.0,
+          "status": "FAIL",
+          "detail": "值=0.0% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 7.6287,
+          "status": "PASS",
+          "detail": "值=7.63 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.3594,
+          "status": "PASS",
+          "detail": "值=35.9% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": NaN,
+          "status": "PASS",
+          "detail": "值=N/A 阈值=0.2"
+        }
+      },
+      "exemptions": {
+        "A": {
+          "name": "战略投入期",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 上市年限=未知, 近2年OCF为正=True"
+        },
+        "B": {
+          "name": "主动低利润率",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 净利率回升=False"
+        },
+        "C": {
+          "name": "高周转薄利",
+          "triggered": false,
+          "reason": "ROE=7.2%, OCF/NI=7.63（会员/平台模式需 AI 在 L2a 复核）"
+        }
+      },
+      "rank": 32,
+      "score": 52.5
+    },
+    {
+      "ticker": "601328.SS",
+      "name": "BANK OF COMMUNICATIONS CO LTD",
+      "verdict": "FAIL",
+      "reason": "命中规则: ['r4']",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.0831,
+          "status": "PASS",
+          "detail": "值=8.3% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 416019000000.0,
+          "status": "PASS",
+          "detail": "值=416,019,000,000.00 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": null,
+          "status": "N/A",
+          "detail": "数据不足"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.0,
+          "status": "FAIL",
+          "detail": "值=0.0% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 1.5628,
+          "status": "PASS",
+          "detail": "值=1.56 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.3616,
+          "status": "PASS",
+          "detail": "值=36.2% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": 0.0959,
+          "status": "PASS",
+          "detail": "值=9.6% 阈值=0.2"
+        }
+      },
+      "exemptions": {
+        "A": {
+          "name": "战略投入期",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 上市年限=未知, 近2年OCF为正=False"
+        },
+        "B": {
+          "name": "主动低利润率",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 净利率回升=True"
+        },
+        "C": {
+          "name": "高周转薄利",
+          "triggered": false,
+          "reason": "ROE=8.3%, OCF/NI=1.56（会员/平台模式需 AI 在 L2a 复核）"
+        }
+      },
+      "rank": 33,
+      "score": 52.5
+    },
+    {
+      "ticker": "601168.SS",
+      "name": "WESTERN MINING CO. LTD.",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.1906,
+          "status": "PASS",
+          "detail": "值=19.1% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 23877252028.0,
+          "status": "PASS",
+          "detail": "值=23,877,252,028.00 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 9.9629,
+          "status": "PASS",
+          "detail": "值=9.96 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.1916,
+          "status": "PASS",
+          "detail": "值=19.2% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 2.7165,
+          "status": "PASS",
+          "detail": "值=2.72 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.067,
+          "status": "PASS",
+          "detail": "值=6.7% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": NaN,
+          "status": "PASS",
+          "detail": "值=N/A 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 34,
+      "score": 52.4
+    },
+    {
+      "ticker": "601187.SS",
+      "name": "XIAMEN BANK CO LTD",
+      "verdict": "FAIL",
+      "reason": "命中规则: ['r4']",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.0884,
+          "status": "PASS",
+          "detail": "值=8.8% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 14938579972.66,
+          "status": "PASS",
+          "detail": "值=14,938,579,972.66 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": null,
+          "status": "N/A",
+          "detail": "数据不足"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.0,
+          "status": "FAIL",
+          "detail": "值=0.0% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 1.6916,
+          "status": "PASS",
+          "detail": "值=1.69 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.4509,
+          "status": "PASS",
+          "detail": "值=45.1% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": NaN,
+          "status": "PASS",
+          "detail": "值=N/A 阈值=0.2"
+        }
+      },
+      "exemptions": {
+        "A": {
+          "name": "战略投入期",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 上市年限=未知, 近2年OCF为正=False"
+        },
+        "B": {
+          "name": "主动低利润率",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 净利率回升=False"
+        },
+        "C": {
+          "name": "高周转薄利",
+          "triggered": false,
+          "reason": "ROE=8.8%, OCF/NI=1.69（会员/平台模式需 AI 在 L2a 复核）"
+        }
+      },
+      "rank": 35,
+      "score": 51.9
+    },
+    {
+      "ticker": "600256.SS",
+      "name": "GUANGHUI ENERGY CO LTD",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.1841,
+          "status": "PASS",
+          "detail": "值=18.4% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 20704295633.44,
+          "status": "PASS",
+          "detail": "值=20,704,295,633.44 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 9.1836,
+          "status": "PASS",
+          "detail": "值=9.18 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.2134,
+          "status": "PASS",
+          "detail": "值=21.3% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 1.9405,
+          "status": "PASS",
+          "detail": "值=1.94 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.1,
+          "status": "PASS",
+          "detail": "值=10.0% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": NaN,
+          "status": "PASS",
+          "detail": "值=N/A 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 36,
+      "score": 51.8
+    },
+    {
+      "ticker": "601916.SS",
+      "name": "CHINA ZHESHANG BANK CO. LTD",
+      "verdict": "FAIL",
+      "reason": "命中规则: ['r1', 'r4']",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.0761,
+          "status": "FAIL",
+          "detail": "值=7.6% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 193799000000.0,
+          "status": "PASS",
+          "detail": "值=193,799,000,000.00 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": null,
+          "status": "N/A",
+          "detail": "数据不足"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.0,
+          "status": "FAIL",
+          "detail": "值=0.0% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 4.0792,
+          "status": "PASS",
+          "detail": "值=4.08 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.2532,
+          "status": "PASS",
+          "detail": "值=25.3% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": NaN,
+          "status": "PASS",
+          "detail": "值=N/A 阈值=0.2"
+        }
+      },
+      "exemptions": {
+        "A": {
+          "name": "战略投入期",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 上市年限=未知, 近2年OCF为正=False"
+        },
+        "B": {
+          "name": "主动低利润率",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 净利率回升=False"
+        },
+        "C": {
+          "name": "高周转薄利",
+          "triggered": false,
+          "reason": "ROE=7.6%, OCF/NI=4.08（会员/平台模式需 AI 在 L2a 复核）"
+        }
+      },
+      "rank": 37,
+      "score": 51.7
+    },
+    {
+      "ticker": "301109.SZ",
+      "name": "JUNXIN",
+      "verdict": "EXEMPT",
+      "reason": "命中规则: ['r7']；触发豁免: ['A']",
+      "coverage": "财务年数=4（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.091,
+          "status": "PASS",
+          "detail": "值=9.1% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 1842788628.46,
+          "status": "PASS",
+          "detail": "值=1,842,788,628.46 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 7.0814,
+          "status": "PASS",
+          "detail": "值=7.08 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.514,
+          "status": "PASS",
+          "detail": "值=51.4% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 1.8919,
+          "status": "PASS",
+          "detail": "值=1.89 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.2637,
+          "status": "PASS",
+          "detail": "值=26.4% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": 0.4867,
+          "status": "FAIL",
+          "detail": "值=48.7% 阈值=0.2"
+        }
+      },
+      "exemptions": {
+        "A": {
+          "name": "战略投入期",
+          "triggered": true,
+          "reason": "毛利率=51.4%, 上市年限=未知, 近2年OCF为正=True"
+        },
+        "B": {
+          "name": "主动低利润率",
+          "triggered": false,
+          "reason": "毛利率=51.4%, 净利率回升=False"
+        },
+        "C": {
+          "name": "高周转薄利",
+          "triggered": false,
+          "reason": "ROE=9.1%, OCF/NI=1.89（会员/平台模式需 AI 在 L2a 复核）"
+        }
+      },
+      "rank": 38,
+      "score": 51.4
+    },
+    {
+      "ticker": "601098.SS",
+      "name": "CHINA SOUTH PUBLISHING & MEDIA ",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.1006,
+          "status": "PASS",
+          "detail": "值=10.1% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 2668994226.04,
+          "status": "PASS",
+          "detail": "值=2,668,994,226.04 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 311.275,
+          "status": "PASS",
+          "detail": "值=311.27 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.43,
+          "status": "PASS",
+          "detail": "值=43.0% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 0.7824,
+          "status": "PASS",
+          "detail": "值=0.78 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.1193,
+          "status": "PASS",
+          "detail": "值=11.9% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": NaN,
+          "status": "PASS",
+          "detail": "值=N/A 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 39,
+      "score": 51.4
+    },
+    {
+      "ticker": "601216.SS",
+      "name": "INNER MONGOLIA JUNZHENG ENERGY ",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.1198,
+          "status": "PASS",
+          "detail": "值=12.0% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 5687448535.47,
+          "status": "PASS",
+          "detail": "值=5,687,448,535.47 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 16.234,
+          "status": "PASS",
+          "detail": "值=16.23 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.2218,
+          "status": "PASS",
+          "detail": "值=22.2% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 0.946,
+          "status": "PASS",
+          "detail": "值=0.95 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.1447,
+          "status": "PASS",
+          "detail": "值=14.5% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": -0.0001,
+          "status": "PASS",
+          "detail": "值=-0.0% 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 40,
+      "score": 51.3
+    },
+    {
+      "ticker": "002233.SZ",
+      "name": "TAPAI GROUP",
+      "verdict": "FAIL",
+      "reason": "命中规则: ['r1']",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.0458,
+          "status": "FAIL",
+          "detail": "值=4.6% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 1581391414.91,
+          "status": "PASS",
+          "detail": "值=1,581,391,414.91 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 3444.3517,
+          "status": "PASS",
+          "detail": "值=3,444.35 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.2248,
+          "status": "PASS",
+          "detail": "值=22.5% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 1.6045,
+          "status": "PASS",
+          "detail": "值=1.60 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.1146,
+          "status": "PASS",
+          "detail": "值=11.5% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": NaN,
+          "status": "PASS",
+          "detail": "值=N/A 阈值=0.2"
+        }
+      },
+      "exemptions": {
+        "A": {
+          "name": "战略投入期",
+          "triggered": false,
+          "reason": "毛利率=22.5%, 上市年限=未知, 近2年OCF为正=True"
+        },
+        "B": {
+          "name": "主动低利润率",
+          "triggered": false,
+          "reason": "毛利率=22.5%, 净利率回升=False"
+        },
+        "C": {
+          "name": "高周转薄利",
+          "triggered": false,
+          "reason": "ROE=4.6%, OCF/NI=1.6（会员/平台模式需 AI 在 L2a 复核）"
+        }
+      },
+      "rank": 41,
+      "score": 51.2
+    },
+    {
+      "ticker": "601288.SS",
+      "name": "AGRICULTURAL BANK OF CHINA",
+      "verdict": "FAIL",
+      "reason": "命中规则: ['r4']",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.0929,
+          "status": "PASS",
+          "detail": "值=9.3% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 6510744000000.0,
+          "status": "PASS",
+          "detail": "值=6,510,744,000,000.00 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": null,
+          "status": "N/A",
+          "detail": "数据不足"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.0,
+          "status": "FAIL",
+          "detail": "值=0.0% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 5.9831,
+          "status": "PASS",
+          "detail": "值=5.98 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.39,
+          "status": "PASS",
+          "detail": "值=39.0% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": -0.0068,
+          "status": "PASS",
+          "detail": "值=-0.7% 阈值=0.2"
+        }
+      },
+      "exemptions": {
+        "A": {
+          "name": "战略投入期",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 上市年限=未知, 近2年OCF为正=True"
+        },
+        "B": {
+          "name": "主动低利润率",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 净利率回升=True"
+        },
+        "C": {
+          "name": "高周转薄利",
+          "triggered": false,
+          "reason": "ROE=9.3%, OCF/NI=5.98（会员/平台模式需 AI 在 L2a 复核）"
+        }
+      },
+      "rank": 42,
+      "score": 51.1
+    },
+    {
+      "ticker": "601818.SS",
+      "name": "CHINA EVERBRIGHT BANK CO LTD",
+      "verdict": "FAIL",
+      "reason": "命中规则: ['r1', 'r2', 'r4', 'r5']",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.0743,
+          "status": "FAIL",
+          "detail": "值=7.4% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": -128640000000.0,
+          "status": "FAIL",
+          "detail": "值=-128,640,000,000.00 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": null,
+          "status": "N/A",
+          "detail": "数据不足"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.0,
+          "status": "FAIL",
+          "detail": "值=0.0% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": -0.5158,
+          "status": "FAIL",
+          "detail": "值=-0.52 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.2977,
+          "status": "PASS",
+          "detail": "值=29.8% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": NaN,
+          "status": "PASS",
+          "detail": "值=N/A 阈值=0.2"
+        }
+      },
+      "exemptions": {
+        "A": {
+          "name": "战略投入期",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 上市年限=未知, 近2年OCF为正=False"
+        },
+        "B": {
+          "name": "主动低利润率",
+          "triggered": false,
+          "reason": "毛利率=0.0%, 净利率回升=False"
+        },
+        "C": {
+          "name": "高周转薄利",
+          "triggered": false,
+          "reason": "ROE=7.4%, OCF/NI=-0.52（会员/平台模式需 AI 在 L2a 复核）"
+        }
+      },
+      "rank": 43,
+      "score": 51.0
+    },
+    {
+      "ticker": "002737.SZ",
+      "name": "SFPM",
+      "verdict": "FAIL",
+      "reason": "命中规则: ['r5']",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.1216,
+          "status": "PASS",
+          "detail": "值=12.2% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 2641556786.62,
+          "status": "PASS",
+          "detail": "值=2,641,556,786.62 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 115.2753,
+          "status": "PASS",
+          "detail": "值=115.28 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.4927,
+          "status": "PASS",
+          "detail": "值=49.3% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 0.0545,
+          "status": "FAIL",
+          "detail": "值=0.05 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.1003,
+          "status": "PASS",
+          "detail": "值=10.0% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": 0.0,
+          "status": "PASS",
+          "detail": "值=0.0% 阈值=0.2"
+        }
+      },
+      "exemptions": {
+        "A": {
+          "name": "战略投入期",
+          "triggered": false,
+          "reason": "毛利率=49.3%, 上市年限=未知, 近2年OCF为正=False"
+        },
+        "B": {
+          "name": "主动低利润率",
+          "triggered": false,
+          "reason": "毛利率=49.3%, 净利率回升=False"
+        },
+        "C": {
+          "name": "高周转薄利",
+          "triggered": false,
+          "reason": "ROE=12.2%, OCF/NI=0.05（会员/平台模式需 AI 在 L2a 复核）"
+        }
+      },
+      "rank": 44,
+      "score": 50.7
+    },
+    {
+      "ticker": "600064.SS",
+      "name": "NANJING GAOKE COMPANY LIMITED",
+      "verdict": "FAIL",
+      "reason": "命中规则: ['r2', 'r3', 'r5']",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.1054,
+          "status": "PASS",
+          "detail": "值=10.5% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": -3667276865.75,
+          "status": "FAIL",
+          "detail": "值=-3,667,276,865.75 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 1.9137,
+          "status": "FAIL",
+          "detail": "值=1.91 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.1911,
+          "status": "PASS",
+          "detail": "值=19.1% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": -0.482,
+          "status": "FAIL",
+          "detail": "值=-0.48 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.5678,
+          "status": "PASS",
+          "detail": "值=56.8% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": -0.0005,
+          "status": "PASS",
+          "detail": "值=-0.1% 阈值=0.2"
+        }
+      },
+      "exemptions": {
+        "A": {
+          "name": "战略投入期",
+          "triggered": false,
+          "reason": "毛利率=19.1%, 上市年限=未知, 近2年OCF为正=False"
+        },
+        "B": {
+          "name": "主动低利润率",
+          "triggered": false,
+          "reason": "毛利率=19.1%, 净利率回升=True"
+        },
+        "C": {
+          "name": "高周转薄利",
+          "triggered": false,
+          "reason": "ROE=10.5%, OCF/NI=-0.48（会员/平台模式需 AI 在 L2a 复核）"
+        }
+      },
+      "rank": 45,
+      "score": 50.7
+    },
+    {
+      "ticker": "603565.SS",
+      "name": "SHANGHAI ZHONGGU LOGISTICS CO L",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=4（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.2031,
+          "status": "PASS",
+          "detail": "值=20.3% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 5151751947.99,
+          "status": "PASS",
+          "detail": "值=5,151,751,947.99 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 10.7897,
+          "status": "PASS",
+          "detail": "值=10.79 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.1887,
+          "status": "PASS",
+          "detail": "值=18.9% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 1.3974,
+          "status": "PASS",
+          "detail": "值=1.40 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.1706,
+          "status": "PASS",
+          "detail": "值=17.1% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": 0.0066,
+          "status": "PASS",
+          "detail": "值=0.7% 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 46,
+      "score": 50.7
+    },
+    {
+      "ticker": "603706.SS",
+      "name": "XINJIANG EAST UNIVERSE (GROUP) ",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.1119,
+          "status": "PASS",
+          "detail": "值=11.2% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 1032228255.98,
+          "status": "PASS",
+          "detail": "值=1,032,228,255.98 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 104.5591,
+          "status": "PASS",
+          "detail": "值=104.56 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.2698,
+          "status": "PASS",
+          "detail": "值=27.0% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 1.8402,
+          "status": "PASS",
+          "detail": "值=1.84 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.1482,
+          "status": "PASS",
+          "detail": "值=14.8% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": -0.0045,
+          "status": "PASS",
+          "detail": "值=-0.4% 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 47,
+      "score": 50.7
+    },
+    {
+      "ticker": "600177.SS",
+      "name": "YOUNGOR FASHION CO LTD",
+      "verdict": "EXEMPT",
+      "reason": "命中规则: ['r5']；触发豁免: ['A']",
+      "coverage": "财务年数=4（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.0866,
+          "status": "PASS",
+          "detail": "值=8.7% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 3161952624.32,
+          "status": "PASS",
+          "detail": "值=3,161,952,624.32 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 2.3334,
+          "status": "PASS",
+          "detail": "值=2.33 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.4624,
+          "status": "PASS",
+          "detail": "值=46.2% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 0.6465,
+          "status": "FAIL",
+          "detail": "值=0.65 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.2496,
+          "status": "PASS",
+          "detail": "值=25.0% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": 0.0013,
+          "status": "PASS",
+          "detail": "值=0.1% 阈值=0.2"
+        }
+      },
+      "exemptions": {
+        "A": {
+          "name": "战略投入期",
+          "triggered": true,
+          "reason": "毛利率=46.2%, 上市年限=未知, 近2年OCF为正=True"
+        },
+        "B": {
+          "name": "主动低利润率",
+          "triggered": false,
+          "reason": "毛利率=46.2%, 净利率回升=False"
+        },
+        "C": {
+          "name": "高周转薄利",
+          "triggered": false,
+          "reason": "ROE=8.7%, OCF/NI=0.65（会员/平台模式需 AI 在 L2a 复核）"
+        }
+      },
+      "rank": 48,
+      "score": 50.6
+    },
+    {
+      "ticker": "600757.SS",
+      "name": "CHANGJIANG PUBLISHING AND MEDIA",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.0997,
+          "status": "PASS",
+          "detail": "值=10.0% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 3027756693.87,
+          "status": "PASS",
+          "detail": "值=3,027,756,693.87 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 284.1349,
+          "status": "PASS",
+          "detail": "值=284.13 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.3461,
+          "status": "PASS",
+          "detail": "值=34.6% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 0.9648,
+          "status": "PASS",
+          "detail": "值=0.96 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.1354,
+          "status": "PASS",
+          "detail": "值=13.5% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": 0.0028,
+          "status": "PASS",
+          "detail": "值=0.3% 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 49,
+      "score": 50.6
+    },
+    {
+      "ticker": "601001.SS",
+      "name": "JINNENG HOLDING SHANXI COAL IND",
+      "verdict": "PASS",
+      "reason": "7 条硬指标全部通过（或数据不足不判负，宁可不误杀）",
+      "coverage": "财务年数=5（10 年口径按实际可得年限算，宁可不误杀）",
+      "rules": {
+        "r1": {
+          "rule": "10年平均ROE<8%",
+          "value": 0.1632,
+          "status": "PASS",
+          "detail": "值=16.3% 阈值=0.08"
+        },
+        "r2": {
+          "rule": "5年累计FCF为负",
+          "value": 14651741181.18,
+          "status": "PASS",
+          "detail": "值=14,651,741,181.18 阈值=0.0"
+        },
+        "r3": {
+          "rule": "利息覆盖<2x",
+          "value": 17.0632,
+          "status": "PASS",
+          "detail": "值=17.06 阈值=2.0"
+        },
+        "r4": {
+          "rule": "长期毛利率<15%",
+          "value": 0.4788,
+          "status": "PASS",
+          "detail": "值=47.9% 阈值=0.15"
+        },
+        "r5": {
+          "rule": "OCF/净利润5年均值<0.7",
+          "value": 1.6208,
+          "status": "PASS",
+          "detail": "值=1.62 阈值=0.7"
+        },
+        "r6": {
+          "rule": "长期净利率<5%",
+          "value": 0.1828,
+          "status": "PASS",
+          "detail": "值=18.3% 阈值=0.05"
+        },
+        "r7": {
+          "rule": "股本膨胀>20%",
+          "value": 0.0031,
+          "status": "PASS",
+          "detail": "值=0.3% 阈值=0.2"
+        }
+      },
+      "exemptions": {},
+      "rank": 50,
+      "score": 50.6
+    }
+  ]
+}

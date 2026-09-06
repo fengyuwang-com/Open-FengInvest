@@ -125,6 +125,14 @@ def get_ticker_data(ticker: str) -> dict:
 
 def compute_factors(target: dict, peers: list) -> dict:
     """Compute z-scores for target vs peer list."""
+    # ── 因子文献追溯（见 knowledge/methodology/papers/02-value-quality.md、01-trend-timing.md）──
+    # value_pe        价值(PE)：Liu-Stambaugh-Yuan 2019（A股价值因子首选 EP 而非 BM）+ Fama-French 1993（HML 价值因子）
+    # value_fwd_pe    价值(FwdPE)：Campbell-Shiller 1988（估值比率可预测长期收益）
+    # quality_roe     质量(ROE)：Novy-Marx 2013（盈利质量因子：毛利率/资产 预测力与 BM 相当）
+    # profit_margin   利润率：Novy-Marx 2013（同上，盈利质量维度）
+    # growth_revenue  收入增长：成长因子无直接标尺，与动量互补（Jegadeesh-Titman 1993）
+    # leverage_de     杠杆(D/E)：杠杆风险（Fama-French 1993 负债因子；银行股注意 Gandhi-Lustig 2015 规模效应）
+    # momentum_6m     动量(6m)：Jegadeesh-Titman 1993（3-12 月动量显著）——单独计算（价格数据），见下方
     factor_configs = [
         ("value_pe", "价值(PE)", lambda d: d.get("pe"), True),
         ("value_fwd_pe", "价值(FwdPE)", lambda d: d.get("fwd_pe"), True),
@@ -135,13 +143,16 @@ def compute_factors(target: dict, peers: list) -> dict:
     ]
 
     factors = []
+    abstained = []  # ai-hedge-fund abstain 语义：数据缺失 = "没观点"，不算中性，也不计入共识
     for key, label, extract_fn, invert in factor_configs:
         t_val = extract_fn(target)
         if t_val is None:
+            abstained.append({"factor": key, "label": label, "reason": "no_target_data"})
             continue
 
         p_vals = [extract_fn(p) for p in peers if extract_fn(p) is not None]
         if len(p_vals) < 2:
+            abstained.append({"factor": key, "label": label, "reason": "insufficient_peers"})
             continue
 
         z = zscore_small(t_val, p_vals)
@@ -173,6 +184,20 @@ def compute_factors(target: dict, peers: list) -> dict:
             "z_score": None,
             "signal": "BULL" if momentum > 10 else ("BEAR" if momentum < -10 else "NEUT"),
         })
+    elif not abstained:
+        abstained.append({"factor": "momentum_6m", "label": "动量(6m)", "reason": "no_target_data"})
+
+    # 共识统计：abstain 分子分母都排除（"没有观点"不得冒充"观点：中性"）
+    consensus = {
+        "bull": sum(1 for f in factors if f["signal"] == "BULL"),
+        "bear": sum(1 for f in factors if f["signal"] == "BEAR"),
+        "neut": sum(1 for f in factors if f["signal"] == "NEUT"),
+        "scored": len(factors),
+        "abstained": len(abstained),
+    }
+    if abstained:
+        consensus["note"] = (f"{len(abstained)} 个因子数据缺失 abstain，不计入共识"
+                             "（ai-hedge-fund 语义：没观点≠中性）")
 
     return {
         "method": "continuity_corrected_(rank-0.5)/n",
@@ -180,6 +205,8 @@ def compute_factors(target: dict, peers: list) -> dict:
         "peer_count": len(peers),
         "peer_names": [p.get("name", p["ticker"]) for p in peers],
         "factors": factors,
+        "abstained": abstained,
+        "consensus": consensus,
     }
 
 

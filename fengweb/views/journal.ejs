@@ -1,5 +1,5 @@
 <div class="page-header">
-  <h2>📝 决策日志</h2>
+  <h2 data-i18n="page.journal">📝 决策日志</h2>
 </div>
 
 <% if (entries.length > 0) { %>
@@ -7,7 +7,8 @@
   <% entries.forEach(function(e) { %>
   <div class="journal-entry">
     <div class="journal-date"><%= e.timestamp %></div>
-    <div class="journal-ticker"><%= e.ticker || '' %></div>
+    <% var nm = (names[e.ticker] || {}); %>
+    <div class="journal-ticker"><%= nm.zh || nm.en || e.ticker || '' %><% if ((nm.zh || nm.en) && e.ticker) { %> <span style="color:var(--text-muted);font-weight:400;font-size:12px;"><%= e.ticker %></span><% } %></div>
     <div class="journal-body">
       <% if (e.action) { %><span class="badge badge-neutral"><%= e.action %></span> <% } %>
       <%= e.message %>

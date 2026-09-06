@@ -4,29 +4,72 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= title || 'FengInvest' %></title>
-  <link rel="stylesheet" href="/css/style.css?v=5">
+  <link rel="stylesheet" href="/css/tokens.css?v=2">
+  <link rel="stylesheet" href="/css/style.css?v=18">
+  <script>
+    // 主题防闪烁（宪法册八）：渲染前先读本地主题
+    (function(){var t=localStorage.getItem('feng_theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');})();
+  </script>
+  <script src="/js/i18n.js?v=2"></script>
+  <script>
+    // R27 公司名总表：fengName('0700.HK') -> '腾讯控股'；显示规则 = 名字为主、代码为辅
+    var FENG_NAMES = <%- JSON.stringify(names || {}) %>;
+    function fengName(tk){ var n = FENG_NAMES[tk]; if(!n) return tk; return n.zh || n.en || tk; }
+    function fengNameTag(tk){ var n = FENG_NAMES[tk]; if(!n) return ''; return n.zh ? (n.en || '') : ''; }
+  </script>
+  <script src="/js/data-block.js?v=1"></script>
   <script src="/vendor/mermaid.min.js"></script>
-  <script>mermaid.initialize({startOnLoad:true,theme:'base',themeVariables:{background:'#ffffff',primaryColor:'#e8f5e9',primaryBorderColor:'#2e7d32',secondaryColor:'#fff3e0',tertiaryColor:'#e3f2fd',primaryTextColor:'#1a1d23',secondaryTextColor:'#1a1d23',tertiaryTextColor:'#1a1d23',clusterBkg:'#f3f4f6',clusterBorder:'#9ca3af',lineColor:'#6b7280',textColor:'#1a1d23',nodeTextColor:'#1a1d23',fontSize:'16px',fontFamily:'system-ui,sans-serif'},flowchart:{htmlLabels:true,curve:'basis',padding:24}});</script>
+  <script>
+    // Mermaid 主题变量随亮暗切换由页面重绘时读取（此处为亮色基准，暗色由 JS 重配）
+    window.FENG_MERMAID_VARS = function(dark){
+      return dark
+        ? {background:'#1A222D',primaryColor:'#26364A',primaryBorderColor:'#7FA3C7',secondaryColor:'#222C3A',tertiaryColor:'#26364A',primaryTextColor:'#E2E8F0',secondaryTextColor:'#E2E8F0',tertiaryTextColor:'#E2E8F0',clusterBkg:'#222C3A',clusterBorder:'#3D4C61',lineColor:'#8B99AB',textColor:'#E2E8F0',nodeTextColor:'#E2E8F0',fontFamily:'system-ui,sans-serif'}
+        : {background:'#ffffff',primaryColor:'#EAF0F6',primaryBorderColor:'#3D5A80',secondaryColor:'#EEF1F5',tertiaryColor:'#E2E8F0',primaryTextColor:'#1E293B',secondaryTextColor:'#1E293B',tertiaryTextColor:'#1E293B',clusterBkg:'#EEF1F5',clusterBorder:'#94A3B8',lineColor:'#64748B',textColor:'#1E293B',nodeTextColor:'#1E293B',fontSize:'16px',fontFamily:'system-ui,sans-serif'};
+    };
+    function fengInitMermaid(){var dark=document.documentElement.getAttribute('data-theme')==='dark';var v=window.FENG_MERMAID_VARS(dark);v.flowchart={htmlLabels:true,curve:'basis',padding:24};mermaid.initialize({startOnLoad:true,theme:'base',themeVariables:v});}
+    fengInitMermaid();
+  </script>
 </head>
 <body>
   <div class="layout">
     <nav class="sidebar" id="sidebar">
       <div class="sidebar-header">
-        <a href="/" class="sidebar-logo">FengInvest</a>
+        <a href="/" class="sidebar-logo" style="display:flex;align-items:center;gap:8px;">
+          <img src="/img/logo.svg" alt="FengInvest" width="26" height="26" style="border-radius:6px;">
+          FengInvest
+        </a>
         <button class="sidebar-toggle" type="button" id="sidebarToggle" aria-label="切换侧栏">✕</button>
       </div>
       <ul class="sidebar-nav">
-        <li><a href="/" class="nav-item">🏗️ 系统总览</a></li>
-        <li><a href="/market" class="nav-item">📊 市场数据</a></li>
-        <li><a href="/watch" class="nav-item">📡 持仓监控</a></li>
+        <li class="nav-group-label" data-i18n="group.core">主力</li>
+        <li><a href="/" class="nav-item" data-i18n="nav.home">🏠 首页</a></li>
+        <li><a href="/research" class="nav-item" data-i18n="nav.research">🔬 研究</a></li>
+        <li><a href="/reports" class="nav-item" data-i18n="nav.reports">📚 报告</a></li>
+        <li><a href="/holdings" class="nav-item" data-i18n="nav.holdings">💼 持仓</a></li>
+        <li><a href="/portfolio" class="nav-item" data-i18n="nav.portfolio">🧮 组合</a></li>
+        <li><a href="/workspace" class="nav-item" data-i18n="nav.workspace">🎯 决策台</a></li>
+        <li class="nav-group-label" data-i18n="group.ext">延伸</li>
+        <li><a href="/ledger" class="nav-item">🪞 纪律账本</a></li>
+        <li><a href="/alerts" class="nav-item" data-i18n="nav.alerts">🔔 提醒中心</a></li>
+        <li><a href="/watch" class="nav-item" data-i18n="nav.watch">📡 监控</a></li>
+        <li><a href="/spec" class="nav-item" data-i18n="nav.spec">🎲 投机钱包</a></li>
+        <li><a href="/discuss" class="nav-item" data-i18n="nav.discuss">🗣️ 讨论档案</a></li>
+        <li><a href="/market" class="nav-item" data-i18n="nav.market">📊 市场</a></li>
+        <li>
+          <button class="nav-more-toggle" type="button" id="navMoreToggle">⚙️ 更多工具 <span class="more-arrow">▾</span></button>
+        </li>
+        <li class="nav-more-group" hidden>
+          <ul style="list-style:none;margin:0;padding:0;">
+            <li><a href="/sector" class="nav-item" data-i18n="nav.sector">🧭 板块轮动</a></li>
+            <li><a href="/masters" class="nav-item" data-i18n="nav.masters">🧠 投资家列传</a></li>
+            <li><a href="/knowledge" class="nav-item" data-i18n="nav.knowledge">📚 知识库</a></li>
+            <li><a href="/rollover" class="nav-item" data-i18n="nav.rollover">🔄 钱仓滚存</a></li>
+            <li><a href="/journal" class="nav-item" data-i18n="nav.journal">📝 决策日志</a></li>
+            <li><a href="/system" class="nav-item" data-i18n="nav.system">🖼️ 架构图</a></li>
+          </ul>
+        </li>
         <!-- 股票分析已并入聊天方式，隐藏入口（代码保留，恢复时取消注释）
         <li><a href="/analyze" class="nav-item">🔍 股票分析</a></li> -->
-        <li><a href="/holdings" class="nav-item">💼 持仓</a></li>
-        <li><a href="/research" class="nav-item">🔬 研究</a></li>
-        <li><a href="/knowledge" class="nav-item">📚 知识库</a></li>
-        <li><a href="/system" class="nav-item">⚙️ 架构图</a></li>
-        <li><a href="/rollover" class="nav-item">🔄 钱仓滚存</a></li>
-        <li><a href="/journal" class="nav-item">📝 决策日志</a></li>
       </ul>
     </nav>
     <main class="main-content" id="mainContent">
@@ -34,11 +77,23 @@
         <button class="menu-toggle" type="button" id="menuToggle" aria-label="展开菜单">☰</button>
         <span class="topbar-title"><%= title || 'FengInvest' %></span>
         <span style="flex:1;"></span>
+        <button class="btn btn-sm" type="button" id="dataUpdateBtn" title="更新汇率/持仓现价/国际日线/财报" style="margin-right:8px;">⟳ 更新数据</button>
+        <button class="theme-btn" type="button" id="themeBtn" aria-label="切换亮暗主题" title="亮/暗主题">🌓</button>
+        <button class="settings-btn" type="button" id="langBtn" aria-label="切换语言" title="Language" >EN</button>
         <button class="settings-btn" type="button" id="settingsBtn" aria-label="系统设置" title="系统设置">⚙️</button>
       </div>
       <%- body %>
     </main>
   </div>
+
+  <!-- 移动端底部导航（宪法册八） -->
+  <nav class="bottom-nav">
+    <a href="/" class="bn-item">🏠<span>首页</span></a>
+    <a href="/research" class="bn-item">🔬<span>研究</span></a>
+    <a href="/holdings" class="bn-item">💼<span>持仓</span></a>
+    <a href="/portfolio" class="bn-item">🧮<span>组合</span></a>
+    <a href="/alerts" class="bn-item">🔔<span>提醒</span></a>
+  </nav>
 
   <!-- Settings Modal -->
   <div id="settingsModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.4);z-index:20000;align-items:center;justify-content:center;">
@@ -47,33 +102,100 @@
       <div style="margin-bottom:16px;">
         <div style="font-size:13px;font-weight:600;margin-bottom:6px;">涨跌颜色</div>
         <div style="display:flex;gap:8px;">
-          <button class="btn" data-scheme="red_up" style="flex:1;border:2px solid var(--border);padding:10px;border-radius:8px;background:var(--bg-card);cursor:pointer;font-size:13px;">
-            <span style="color:red;">🔴涨</span> <span style="color:green;">🟢跌</span><br><span style="font-size:11px;color:var(--text-muted);">A股风格</span>
+          <button class="scheme-opt" data-scheme="red_up" type="button">
+            <span style="color:var(--color-up);">🔴涨</span> <span style="color:var(--color-down);">🟢跌</span><br><span style="font-size:11px;color:var(--text-muted);">A股风格</span>
           </button>
-          <button class="btn" data-scheme="green_up" style="flex:1;border:2px solid var(--border);padding:10px;border-radius:8px;background:var(--bg-card);cursor:pointer;font-size:13px;">
-            <span style="color:green;">🟢涨</span> <span style="color:red;">🔴跌</span><br><span style="font-size:11px;color:var(--text-muted);">美股风格</span>
+          <button class="scheme-opt" data-scheme="green_up" type="button">
+            <span style="color:var(--color-down);">🟢涨</span> <span style="color:var(--color-up);">🔴跌</span><br><span style="font-size:11px;color:var(--text-muted);">美股风格</span>
           </button>
         </div>
       </div>
-      <button class="btn" id="settingsClose" style="width:100%;">关闭</button>
+      <div style="margin-bottom:16px;">
+        <div style="font-size:13px;font-weight:600;margin-bottom:6px;">🔑 自带钥匙（BYOK — AI 直跑用，钥匙只存本机）</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <select id="llmProvider" style="padding:7px 10px;border:1px solid var(--border-strong);border-radius:var(--radius);font-size:13px;background:var(--bg-card);color:var(--text);">
+            <option value="zhipu">智谱 GLM（open.bigmodel.cn）</option>
+            <option value="deepseek">DeepSeek</option>
+            <option value="moonshot">Moonshot Kimi</option>
+            <option value="openai">OpenAI</option>
+            <option value="custom">自定义（OpenAI 兼容）</option>
+          </select>
+          <input id="llmBaseUrl" placeholder="接口地址 https://..." style="padding:7px 10px;border:1px solid var(--border-strong);border-radius:var(--radius);font-size:13px;">
+          <input id="llmModel" placeholder="模型名，如 glm-4-flash / deepseek-chat" style="padding:7px 10px;border:1px solid var(--border-strong);border-radius:var(--radius);font-size:13px;">
+          <input id="llmKey" type="password" placeholder="API Key（留空 = 不改）" style="padding:7px 10px;border:1px solid var(--border-strong);border-radius:var(--radius);font-size:13px;">
+          <div style="display:flex;gap:8px;align-items:center;">
+            <button class="btn btn-sm btn-accent" id="llmSave" type="button">保存</button>
+            <button class="btn btn-sm btn-outline" id="llmTest" type="button">测试连通</button>
+            <span id="llmStatus" style="font-size:12px;color:var(--text-muted);"></span>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-primary" id="settingsClose" style="width:100%;">关闭</button>
     </div>
   </div>
 
   <script>
+    // 一键数据更新（宪法册三 3.3）：顶栏按钮 → 202 job_id → 轮询进度
     (function() {
-      // --- Color scheme from localStorage ---
+      var btn = document.getElementById('dataUpdateBtn');
+      if (!btn) return;
+      var label = btn.textContent;
+      var busy = false;
+      function setBtn(text, disable) { btn.textContent = text; btn.disabled = !!disable; }
+      function poll(jobId) {
+        fetch('/api/data/update/' + jobId).then(function(r){ return r.json(); }).then(function(j) {
+          var steps = (j.steps || []).map(function(s) {
+            var icon = s.status === 'done' ? '✅' : s.status === 'running' ? '⏳' : s.status === 'failed' ? '❌' : '·';
+            return icon + s.tool.replace('.py','') + (s.rows ? '(' + s.rows + '行)' : '');
+          }).join(' ');
+          if (j.status === 'running') { setBtn('⏳ ' + steps.slice(0, 40), true); setTimeout(function(){ poll(jobId); }, 3000); }
+          else {
+            busy = false;
+            setBtn(j.status === 'done' ? '✅ 已更新' : '⚠ 部分失败', false);
+            setTimeout(function(){ setBtn(label, false); }, 60000);
+          }
+        }).catch(function(){ busy = false; setBtn(label, false); });
+      }
+      btn.addEventListener('click', function() {
+        if (busy) return;
+        busy = true;
+        setBtn('⏳ 启动…', true);
+        fetch('/api/data/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' })
+          .then(function(r){ return r.json(); })
+          .then(function(d) { if (d.job_id) poll(d.job_id); else { busy = false; setBtn(label, false); } })
+          .catch(function(){ busy = false; setBtn(label, false); });
+      });
+    })();
+    (function() {
+      // --- 涨跌配色（宪法 token 值，经 CSS 变量覆盖） ---
       var scheme = localStorage.getItem('feng_color_scheme') || 'red_up';
       function applyScheme(s) {
         if (s === 'green_up') {
-          document.documentElement.style.setProperty('--color-up', '#22c55e');
-          document.documentElement.style.setProperty('--color-down', '#ef4444');
+          document.documentElement.style.setProperty('--color-up', '#0B8A5F');
+          document.documentElement.style.setProperty('--color-up-bg', '#EAF5F0');
+          document.documentElement.style.setProperty('--color-down', '#D92B34');
+          document.documentElement.style.setProperty('--color-down-bg', '#FBEDEE');
         } else {
-          document.documentElement.style.setProperty('--color-up', '#ef4444');
-          document.documentElement.style.setProperty('--color-down', '#22c55e');
+          document.documentElement.style.setProperty('--color-up', '#D92B34');
+          document.documentElement.style.setProperty('--color-up-bg', '#FBEDEE');
+          document.documentElement.style.setProperty('--color-down', '#0B8A5F');
+          document.documentElement.style.setProperty('--color-down-bg', '#EAF5F0');
         }
         localStorage.setItem('feng_color_scheme', s);
       }
       applyScheme(scheme);
+
+      // --- 亮/暗主题切换（宪法册二 [data-theme] 整体重映射） ---
+      var themeBtn = document.getElementById('themeBtn');
+      function applyTheme(t) {
+        if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+        else document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('feng_theme', t);
+        // Mermaid 图用固定配色，亮暗主题通用，无需重绘
+      }
+      if (themeBtn) themeBtn.addEventListener('click', function() {
+        applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+      });
 
       // --- Settings modal ---
       var btn = document.getElementById('settingsBtn');
@@ -89,6 +211,46 @@
           });
         });
       }
+
+      // --- BYOK 自带钥匙（LLM 配置：存本机 data/config/llm_config.json） ---
+      (function() {
+        var PRESETS = {
+          zhipu:    { url: 'https://open.bigmodel.cn/api/paas/v4',  model: 'glm-4-flash' },
+          deepseek: { url: 'https://api.deepseek.com/v1',           model: 'deepseek-chat' },
+          moonshot: { url: 'https://api.moonshot.cn/v1',            model: 'moonshot-v1-8k' },
+          openai:   { url: 'https://api.openai.com/v1',             model: 'gpt-4o-mini' }
+        };
+        var prov = document.getElementById('llmProvider');
+        var url = document.getElementById('llmBaseUrl');
+        var model = document.getElementById('llmModel');
+        var key = document.getElementById('llmKey');
+        var status = document.getElementById('llmStatus');
+        if (!prov) return;
+        prov.addEventListener('change', function() {
+          var p = PRESETS[prov.value];
+          if (p) { url.value = p.url; if (!model.value) model.value = p.model; }
+        });
+        fetch('/api/llm/config').then(function(r){ return r.json(); }).then(function(cfg) {
+          if (cfg.provider) prov.value = cfg.provider;
+          if (cfg.base_url) url.value = cfg.base_url;
+          if (cfg.model) model.value = cfg.model;
+          if (cfg.configured) status.textContent = '已配置 ' + cfg.api_key_masked;
+        }).catch(function(){});
+        document.getElementById('llmSave').addEventListener('click', function() {
+          status.textContent = '保存中…';
+          fetch('/api/llm/config', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ provider: prov.value, base_url: url.value, model: model.value, api_key: key.value }) })
+            .then(function(r){ return r.json(); })
+            .then(function(j){ status.textContent = j.ok ? '已保存 ✓' : (j.error || '保存失败'); if (j.ok) key.value = ''; })
+            .catch(function(e){ status.textContent = '失败: ' + e.message; });
+        });
+        document.getElementById('llmTest').addEventListener('click', function() {
+          status.textContent = '测试中…';
+          fetch('/api/llm/test', { method: 'POST' }).then(function(r){ return r.json(); })
+            .then(function(j){ status.textContent = j.ok ? ('连通 ✓ ' + j.content) : ('失败: ' + j.error); })
+            .catch(function(e){ status.textContent = '失败: ' + e.message; });
+        });
+      })();
 
       // --- Sidebar toggle ---
       var sidebar = document.getElementById('sidebar');
@@ -109,6 +271,31 @@
       if (toggle) toggle.addEventListener('click', openSidebar);
       if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
       if (window.innerWidth > 768) openSidebar();
+
+      // 更多工具折叠组
+      var moreToggle = document.getElementById('navMoreToggle');
+      var moreGroup = document.querySelector('.nav-more-group');
+      if (moreToggle && moreGroup) {
+        moreToggle.addEventListener('click', function() {
+          var open = moreGroup.hidden;
+          moreGroup.hidden = !open;
+          moreToggle.classList.toggle('expanded', open);
+        });
+        // 当前页在折叠组内时自动展开
+        var activeInGroup = moreGroup.querySelector('a.active');
+        if (activeInGroup) { moreGroup.hidden = false; moreToggle.classList.add('expanded'); }
+      }
+
+      // 根据当前路径高亮侧栏当前页
+      (function highlightActiveNav() {
+        var path = location.pathname.replace(/\/$/, '') || '/';
+        var items = document.querySelectorAll('.sidebar-nav .nav-item, .bottom-nav .bn-item');
+        items.forEach(function (el) {
+          var href = (el.getAttribute('href') || '').replace(/\/$/, '') || '/';
+          var match = href === '/' ? path === '/' : path === href || path.indexOf(href + '/') === 0;
+          if (match) el.classList.add('active');
+        });
+      })();
     })();
   </script>
 </body>

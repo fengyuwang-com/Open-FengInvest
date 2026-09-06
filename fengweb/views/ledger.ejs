@@ -1,0 +1,86 @@
+<div class="page-header">
+  <div class="breadcrumb"><span data-i18n="crumb.ledger">信条 7 — 执行 &gt; 判断：本系统存在的全部意义就是强迫执行</span></div>
+  <h2 data-i18n="page.ledger">🪞 纪律执行账本</h2>
+</div>
+
+<div class="card">
+  <p style="font-size:14px;line-height:var(--lh-body);color:var(--text-secondary);margin:0 0 4px 0;">
+    投资最难的不是判断，是坚持执行。本页只回答一个问题：<b>我说到做到了吗？</b>
+    所有数字由系统数据算出（holdings / research/state / logs/journal.jsonl），不是自我评分——镜子不会说好话。
+  </p>
+</div>
+
+<div class="dashboard-grid">
+  <div class="stat-card"><div class="stat-label">论文齐备率</div><div class="stat-value" id="m-thesis" style="font-size:26px;">…</div><div class="stat-label">有 thesis+redlines 的持仓</div></div>
+  <div class="stat-card"><div class="stat-label">回顾拖欠</div><div class="stat-value" id="m-overdue" style="font-size:26px;">…</div><div class="stat-label">回顾日已过期的持仓</div></div>
+  <div class="stat-card"><div class="stat-label">监控出勤（30天）</div><div class="stat-value" id="m-attend" style="font-size:26px;">…</div><div class="stat-label">daily_check 次数 / 最大断档</div></div>
+  <div class="stat-card"><div class="stat-label">分析烂尾</div><div class="stat-value" id="m-abandoned" style="font-size:26px;">…</div><div class="stat-label">30天未动且未走完的七层</div></div>
+</div>
+
+<div class="card">
+  <h3 class="section-title">🚨 当前红灯持仓（红灯可往上推翻，不能往下忽略）</h3>
+  <div id="red-now"><p style="color:var(--text-muted);font-size:13px;">加载中...</p></div>
+</div>
+
+<div class="card">
+  <h3 class="section-title">📋 问题清单（每一项都是一次没做到）</h3>
+  <div id="issue-list"><p style="color:var(--text-muted);font-size:13px;">加载中...</p></div>
+</div>
+
+<div class="card">
+  <h3 class="section-title">📈 历史红灯台账（每次出现都留痕）</h3>
+  <div id="red-log"><p style="color:var(--text-muted);font-size:13px;">加载中...</p></div>
+</div>
+
+<div class="card">
+  <h3 class="section-title">📅 监控出勤记录</h3>
+  <div id="attend-log"><p style="color:var(--text-muted);font-size:13px;">加载中...</p></div>
+</div>
+
+<script>
+function num(v, suffix) { return v == null ? '—' : v + (suffix || ''); }
+async function load() {
+  var r = await fetch('/api/discipline/ledger');
+  var d = await r.json();
+  if (!r.ok) { document.getElementById('issue-list').textContent = '加载失败：' + (d.error || ''); return; }
+  document.getElementById('m-thesis').textContent = d.thesis_rate == null ? '—' : Math.round(d.thesis_rate * 100) + '%';
+  document.getElementById('m-thesis').style.color = d.thesis_rate != null && d.thesis_rate < 1 ? 'var(--warn)' : 'var(--ok)';
+  document.getElementById('m-overdue').textContent = d.review_overdue.length;
+  document.getElementById('m-overdue').style.color = d.review_overdue.length ? 'var(--danger)' : 'var(--ok)';
+  document.getElementById('m-attend').innerHTML = num(d.check_last30) + '<span style="font-size:14px;color:var(--text-muted);"> 次 · 断档 ' + num(d.check_max_gap_days) + ' 天</span>';
+  document.getElementById('m-abandoned').textContent = d.states_abandoned.length;
+  document.getElementById('m-abandoned').style.color = d.states_abandoned.length ? 'var(--warn)' : 'var(--ok)';
+
+  var rn = document.getElementById('red-now');
+  rn.innerHTML = d.red_current.length
+    ? '<div class="alert-list">' + d.red_current.map(function(x) {
+        return '<div class="alert-item danger"><span class="num">' + x.date + '</span><span><b>' + fengName(x.ticker) + '</b>（' + x.ticker + '）最新检查为红灯</span><a class="btn btn-sm" href="/holdings/' + x.ticker + '">查看 →</a></div>';
+      }).join('') + '</div>'
+    : '<div class="empty-state"><p>当前无红灯持仓。✓</p></div>';
+
+  var issues = [];
+  (d.thesis_missing || []).forEach(function(h) { issues.push({ lv: 'warning', t: '<b>' + (h.name || h.ticker) + '</b> 没有登记论文（thesis + redlines）——无论文持有 = 处置效应温床', href: '/holdings/' + h.ticker, act: '补论文' }); });
+  (d.review_overdue || []).forEach(function(h) { issues.push({ lv: 'danger', t: '<b>' + (h.name || h.ticker) + '</b> 回顾日过期 ' + h.days + ' 天（' + h.date + '）', href: '/holdings/' + h.ticker + '/review', act: '去复盘' }); });
+  (d.states_abandoned || []).forEach(function(s) { issues.push({ lv: 'info', t: '<b>' + fengName(s.ticker) + '</b>（' + s.ticker + '）七层走到第 ' + s.layers + '/8 层后已停 ' + s.age_days + ' 天——烂尾或补完', href: '/research/' + s.ticker, act: '查看' }); });
+  if (d.check_last_date) {
+    var sinceDays = Math.round((Date.now() - new Date(d.check_last_date).getTime()) / 86400000);
+    if (sinceDays > 3) issues.push({ lv: 'warning', t: '最后一次 daily_check 是 ' + d.check_last_date + '（' + sinceDays + ' 天前）', href: '/watch', act: '去监控' });
+  }
+  document.getElementById('issue-list').innerHTML = issues.length
+    ? '<div class="alert-list">' + issues.map(function(i) {
+        return '<div class="alert-item ' + i.lv + '"><span>' + i.t + '</span><a class="btn btn-sm" href="' + i.href + '">' + i.act + ' →</a></div>';
+      }).join('') + '</div>'
+    : '<div class="empty-state"><p>没有拖欠、没有烂尾、没有缺论文。全部做到。✓</p></div>';
+
+  document.getElementById('red-log').innerHTML = d.red_events_total
+    ? '<p style="font-size:13px;color:var(--text-muted);margin:0 0 8px 0;">历史上共出现 ' + d.red_events_total + ' 次〈持仓×日期〉红灯读数（详见 /watch 监控历史）。每次红灯都应当留下处置结论：推翻、修复或退出。</p>' +
+      '<p style="font-size:13px;margin:0;"><a href="/watch/history">查看监控历史 →</a></p>'
+    : '<div class="empty-state"><p>日志中尚无红灯记录（或尚未跑过 daily_check）。</p></div>';
+
+  var dates = d.check_dates || [];
+  document.getElementById('attend-log').innerHTML = dates.length
+    ? '<p style="font-size:13px;color:var(--text-muted);margin:0;">共 ' + dates.length + ' 次每日检查，最近一次 ' + dates[dates.length - 1] + '。30 天窗口内 ' + d.check_last30 + ' 次，最大断档 ' + d.check_max_gap_days + ' 天。</p>'
+    : '<div class="empty-state"><p>还没有 daily_check 记录——<a href="/watch">去监控页跑第一次</a></p></div>';
+}
+load();
+</script>

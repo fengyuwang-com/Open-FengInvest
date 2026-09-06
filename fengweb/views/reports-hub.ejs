@@ -1,0 +1,26 @@
+<div class="page-header">
+  <div class="breadcrumb"><a href="/">首页</a> / 报告</div>
+  <h2>📚 报告中心</h2>
+  <p style="color:var(--text-muted);font-size:14px;">所有公司的报告书架。✍️ 自有 = 七层分析产出（日期目录）；📥 外来 = 书籍摘要、社区文章等非本人产出。</p>
+</div>
+
+<% if (shelves.length === 0) { %>
+  <div class="empty-state"><p>暂无公司报告。</p></div>
+<% } else { %>
+  <div class="entry-list">
+    <% for (const s of shelves) { %>
+      <a class="entry-item" href="/reports/<%= s.ticker %>" style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
+        <div>
+          <div class="entry-title"><%= s.name %> <span style="color:var(--text-muted);font-weight:400;font-size:13px;"><%= s.ticker %></span> <% if (domains && domains[s.ticker]) { %><span class="badge badge-primary"><%= domains[s.ticker] %></span><% } %></div>
+          <% if (s.latestDate) { %>
+            <div style="font-size:12px;color:var(--text-muted);">最近分析 <%= s.latestDate %><%= s.hasRedteam ? ' · ✓ 红队检验' : '' %></div>
+          <% } %>
+        </div>
+        <div style="white-space:nowrap;font-size:13px;">
+          <span class="source-tag own">✍️ 自有 <%= s.own %></span>
+          <span class="source-tag community">📥 外来 <%= s.community %></span>
+        </div>
+      </a>
+    <% } %>
+  </div>
+<% } %>

@@ -15,7 +15,7 @@ AI+代码协作投资分析系统。7层：能力圈(L0)→市场数据(M)→硬
 FengInvest/
 ├── CLAUDE.md, README.md
 ├── docs/              ← 分层文档 + 结构标准
-├── tools/             ← 44 个 Python 工具
+├── tools/             ← 62 个 Python 工具
 ├── knowledge/         ← DK知识库(principles/discipline/methodology/market_view)
 ├── holdings/          ← 持仓 (hold_<TICKER>.json) — 本地，gitignored
 ├── alerts/            ← 触发引擎输出 — 本地
@@ -32,14 +32,20 @@ FengInvest/
 ## 入口
 
 ```bash
-/fenginvest <TICKER>    # 完整七层
-Skill("fenginvest")      # skill 入口
+/fenginvest <TICKER>    # 买入前：完整七层分析（状态机强制执行）
+/fengscreen             # 买入前：去劣筛选（7硬指标+3豁免，候选池体检/行业扫描）
+/fengbatch              # 批量选股：公开list→规则粗筛→规则精筛→幸存者→逐只七层→汇总报告
+/fengholding            # 持有期：总览/登记分析(四段)/单只检查/后管理
+/fengexit <TICKER>      # 卖出：触发源→理由分类→卖出前检查→滚存/清仓执行
+/fengreview <TICKER>    # 复盘：论文有效性评估→写回 reviews→推进下次回顾
+/fengverify <N>         # 论断验证/复测：跑引擎+12项协议红绿灯→出白话论断卡
+/fengdiscuss            # 观点交锋：读 Discussion/discuss-config.json 建锚→基于框架+事实辩论→落档 Discussion/（独立于个股分析）
+/fengdiscusslog         # 讨论记录员：客观记录讨论过程，不发表意见，写入 Discussion/
 ```
 
-自动走7层，状态机强制执行（单 skill 统一调度）：
-```
-/fenginvest <TICKER>    # 完整七层
-```
+五 skill 全景：买入前（fengscreen 去劣 → fenginvest 七层）→ 持有期（fengholding）→ 卖出（fengexit）→ 复盘（fengreview）。另设 `/fengbatch`（批量选股流水线）、`/fengverify`（论断验证）与 `/fengdiscuss` + `/fengdiscusslog`（观点交锋/记录，落档 `Discussion/`，独立于个股分析）。
+
+
 
 ## 引用文档
 
@@ -74,7 +80,7 @@ cd fengweb && npm run build && node dist/index.js  # 或双击 start-web.bat →
 
 11 页 + 5 详情路由：总览 / 系统架构 / 持仓总览+详情 / 研究 / 知识库 / 钱仓滚存 / 决策日志 / 市场数据(53源) / 持仓监控(exit+复盘+卖出) / 持仓历史 / 股票分析。持仓页显示市场/板块徽章 + 准现金标注 + 实时汇率脚注（快照回退）。
 
-## Python 工具集（44 个）
+## Python 工具集（62 个）
 
 | 类别 | 工具 | 功能 |
 |:-----|:-----|:------|
@@ -87,21 +93,37 @@ cd fengweb && npm run build && node dist/index.js  # 或双击 start-web.bat →
 | | fengdbrefine.py | 分红回填 |
 | | fengindexdb.py (+akshare/verify) | 指数数据 |
 | | fengstockdb.py / fengstockcnfix.py | 股票 DB 构建/补爬 |
+| | fengdb.py | 统一安全写库：safe_batch 自动产可回滚变更集 + undo/snapshot/status（批量写库必经） |
+| | fengfuyao.py | A股财报回填（同花顺 fuyao 免费接口，全市场 5,828 只断点续传） |
+| | fengastock.py | A股 12 端点按需取数（估值史/申万行业变迁/复权因子/社融PMI/龙虎榜等，不入库） |
+| | fengstockintl.py | 国际日线四源适配器（probe/fetch/fill，默认 dry-run） |
+| | fengsector.py | 板块轮动三层（US SPDR/全球 ETF/申万31）：update 入库 + analyze RRG 象限 + longterm 沉寂体检；GUI 页 /sector（ECharts 本地 vendor） |
 | | feng10k.py | 年报分析 |
 | | feng_add_capex.py / feng_import_csmar.py | CSMAR 导入 |
 | | fill_hk_gaps.py / fix_hk_nodata.py | HK 数据修复 |
 | | feng_total_return.py | 总回报指数 |
 | | xueqiu_scraper.py / twstock_data.py | 数据采集 |
+| **回测** | fengbacktest.py | 信号驱动组合回测（vnpy 范式+成本+T+1+涨跌停过滤+quantstats 报告 + `--sig-csv`/`--walkforward-fold`/`--grid` 三参数） |
+| | backtest_core.py | 共享回测引擎库（前复权/防前视/前向收益/2000 次 bootstrap/成本 25bps/样本外 20%/协议打标/统一事实包=白话卡唯一填数源） |
+| | fengverify.py | 论断复核引擎（cli: `fengverify.py <claim_id>`；#1 年线 → ❌、#8 月暴涨 → ❌；#3/#5/#6 已登记待实现） |
+| **侧车** | fengtick.py | tickflow 投机侧车薄桥（T0 候选/T2 防线位/T4 监控，纯本地零依赖，幽灵原则） |
+| **门禁** | fengbench.py | FinEval 金融知识门禁（学术 dev/val/test 集本地就绪，selfcheck 全绿；评分需 API key） |
 | **分析** | fengquant.py | 量化因子 z-score |
 | | fengrule.py | 纪律检查 |
-| | fengscreen.py | 多因子全市场筛选 |
+| | fengscreen.py | 多因子全市场筛选 + `--hard-rules` 纯规则精筛（7硬指标+3豁免） |
+| | fengbatch.py | 批量选股流水线：plan/status/summary（公开list→粗筛→精筛→幸存者→逐只七层） |
 | | financial_rigor.py | 市值验算+三情景估值 |
 | | morningstar_fair_value.py | 晨星公允价值 |
 | | leftright.py | 左侧/右侧回测 |
 | | star_history_chart.py | 明星股历史回测 |
 | | stock_screener.py | 选股筛选器 |
-| **持仓** | fengwatch.py | 持仓监控 |
-| | fengportfolio.py | 组合三轴正交盘面+买入预算 |
+| | fengvaluation.py | 多方法估值（预期法/两阶段 DCF/敏感性/综合） |
+| | fengfactor.py | 因子验证（IC/分位收益/换手） |
+| | fengpit.py | PIT 双轴可见性（companyfacts/cn_financials） |
+| | fengsec.py | SEC EDGAR 一手资料（facts PIT 双轴/financials/ownership 内部人/13f，edgartools 数据层） |
+| **持仓** | fengwatch.py | 持仓监控（10 退出规则/卖出闭环） |
+| | fengholding.py | 持仓域入口：登记分析四段/SCHEMA 校验/查询 |
+| | fengportfolio.py | 组合三轴正交盘面+买入预算+optimize 再平衡+risk 下行贡献+hrp 层次风险平价 |
 | **辅助** | fengview.py | 速查搜索 |
 | | fenglearn.py | 学习路径 |
 | | fenghealth.py | 系统健康检查 |
@@ -147,6 +169,8 @@ python tools/clashproxy.py status|list|jp|us|sg
 - 状态文件 → `research/state/temp_state_<TICKER>.json`（fengstate.py 自动管理）
 - 每层 skill 输出路径写死在 skill 指令中
 - 持仓 JSON → `holdings/hold_<TICKER>.json`（本地，gitignored；三轴字段见 holdings/SCHEMA.md）
+- 研究清单 → `data/config/research_list.json`（独立于持仓的研究/候选/观察清单，status: researching/candidate/watching/parked/holding）
+- **开源项目清单 → `data/config/opensource_list.json`**：任何对话/文档中提及的开源项目（无论是否采用）必须登记入表，status: adopted/evaluating/noted/rejected。规则：提到 = 入表，一次都不许漏。
 
 ## 速查工具
 
@@ -171,12 +195,15 @@ with open(path, "r", encoding="utf-8") as f:
 
 ## 数据库状态
 
-多市场 SQLite（`data/market_data.db`，gitignored）：2.2GB/13M 日线/19 市场/2,020 只。完整性审核见 `research/070-reports/DATABASE-AUDIT-20260723.md`，数据清单见 `research/070-reports/DATA-INVENTORY.md`，构建记录见 `docs/todo.md`。
+多市场 SQLite（`data/market_data.db`，gitignored）：13,053,253 行日线 / 19 国 21 市场活跃标的最新统一至 2026-08-21 收盘；指数主档 2,126 只（2,118 只有行情）。完整性审核见 `research/070-reports/DATABASE-AUDIT-20260723.md`，数据清单见 `research/070-reports/DATA-INVENTORY.md`，构建记录见 `docs/todo.md`。
+
+**数据管理铁律**见 [docs/DATA-MANAGEMENT.md](docs/DATA-MANAGEMENT.md)：任何批量写入必须经 `tools/fengdb.py safe_batch` 可回滚（自动产 changeset 变更集可 invert 精确撤销 + 文件快照 + 分批事务）；对外同步只传增量。
 
 ## 数据原则
 
 - 数据源不限，哪个准用哪个(Futu OpenD/yfinance/AKShare/baostock)。多源交叉验证。
 - 搜索优先：不凭训练知识回答，先搜再说。没搜到就说没搜到
+- 批量写 market_data.db 必须可回滚；对外同步只传增量 changeset。详见 docs/DATA-MANAGEMENT.md
 
 ## ⚠️ 工具完整性铁律
 
@@ -186,7 +213,7 @@ with open(path, "r", encoding="utf-8") as f:
 
 每层结果必须由对应工具产生，AI不得冒充：
 - L1→fengrule.py / L2b→fengquant.py / M→fengdata.py
-- 搜索→Search-King，失败标"未验证"
+- 搜索→opencli（或等价搜索工具），失败标"未验证"
 - 定性→investment-team 4 Agent并行
 
 状态机 cmd_complete 已配备输出验证(缺关键字段 exit(1))。

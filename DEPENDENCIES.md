@@ -29,15 +29,25 @@
 
 | 库 | 用途 | 使用到的脚本 |
 |:---|:-----|:-------------|
-| `yfinance` | 美股财务/基本面增强、历史回退 | fengdata（financials 等次要模式）、fengfundamentals、fengportfolio（矩阵）、fengindexdb 系列等 |
+| `yfinance` | 美股财务/基本面增强、历史回退；海外日线主源。⚠️ 必须显式 `auto_adjust=False`（≥0.2.51 起默认 True 会破坏 close/unadj_close 双列口径）；批量取数限流 ≥1s/ticker 防 429 | fengdata（次要模式）、fengfundamentals、fengportfolio、fengstockdb、fengstockintl 等 |
 | `pandas` | 数据框处理（跟随 yfinance） | fengdbrefine、fengportfolio、fengstockdb 等 |
 | `futu-api` | 富途 OpenD 实时行情（需另开 OpenD） | fengdata、fengindexdb_verify、fengmarketdata |
-| `akshare` | A股/港股/宏观增强 | fengindexdb_akshare、fill_hk_gaps 等 |
+| `akshare` | A股/港股/宏观增强；HK 日线走新浪后端 `stock_hk_daily`（东财源被 WAF 掐 Python TLS，不可用） | fengindexdb_akshare、fill_hk_gaps、fengstockdb(HK) 等 |
+| `apsw` | SQLite session 扩展绑定：changeset 增量捕获 + invert 回滚（统一入口 `tools/fengdb.py safe_batch`） | fengdb、fengfuyao、fengstockdb、fengstockintl |
+| `baostock` | A股日线 / PE·PB 估值历史。⚠️ 单 socket 无锁无超时，必须 workers=1 串行 + timeout 60s，并发必死锁 | fengastock、fengstockdb(CN) |
+| `FinMind` | 台湾日线源（TW 市场补数路径） | fengstockdb(TW)、fengstockintl |
 | `numpy` | 数值计算 | 多个工具 |
 | `pyyaml` | YAML 配置 | 若干 |
 | `scipy` | 统计 | 若干 |
 | `cognee` | 知识图谱（可挂） | 独立图谱功能 |
 | `playwright` | 浏览器抓取 | 独立爬虫 |
+
+### 2.1 数据源可用性现状（2026-08-24 实测）
+
+- **东财 push2his**：WAF 掐 Python 的 HTTP/1.1/TLS 指纹（curl 可通）→ HK 改走新浪源；东财系接口必须走限流封装（如 fengastock 内置 em_get()）防封 IP。
+- **stooq**：已死——CSV 端点 JS PoW（Access denied），不再使用。
+- **naver**：KR 备源（EUC-KR 编码、单次 3,000 行上限）。
+- **Yahoo**：曾全域 403 后恢复；批量取数保持 ≥1s/ticker 限流防 429。
 
 ---
 
@@ -76,6 +86,7 @@ node dist/index.js   # 或 start-web.sh
 
 > 注意：`futu-api` 需要额外启动富途 OpenD 客户端（`fengdata` 已自动探测并回退到 urllib/Yahoo，未开 OpenD 也不影响）。
 > `numpy` 通常随 pandas 自动装，单独列出以防万一。
+> ⚠️ `apsw` / `baostock` / `FinMind` 为 2026-08 数据基建新增依赖（安全写库与国际/A股补数管线必需），**尚未固定进 requirements.txt**，待补记版本。
 
 ---
 

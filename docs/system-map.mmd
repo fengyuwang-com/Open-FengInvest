@@ -5,6 +5,7 @@ flowchart LR
   subgraph G_data["数据层"]
     n_csmar["CSMAR 原始数据"]:::data
     n_market_data_db["data/market_data.db"]:::data
+    n_sina["新浪财经 A股三表"]:::data
   end
   subgraph G_tools["工具层"]
     n_importer["导入脚本 feng_import_csmar"]:::tools
@@ -14,6 +15,11 @@ flowchart LR
     n_portfolio_tools["组合工具 fengportfolio"]:::tools
     n_audit_tools["质量审计 fenghealth 族"]:::tools
     n_watch["行情监控 fengmarket"]:::tools
+    n_fengdata["行情采集 fengdata"]:::tools
+    n_fengsec["SEC 一手资料 fengsec"]:::tools
+    n_fengpit["PIT 双轴 fengpit"]:::tools
+    n_fengvaluation["多方法估值 fengvaluation"]:::tools
+    n_fengfactor["因子验证 fengfactor"]:::tools
   end
   subgraph G_research["研究层"]
     n_verification["110-strategy-verification"]:::research
@@ -28,6 +34,7 @@ flowchart LR
   subgraph G_board["决策与展示"]
     n_rules_reviews["rules/ + reviews/"]:::board
     n_portfolio_ledger["portfolio/ + holdings/"]:::board
+    n_outcome["复盘 outcome 闭环"]:::board
     n_fengweb["fengweb/"]:::board
     n_logs["logs/"]:::board
   end
@@ -37,6 +44,7 @@ flowchart LR
     n_opencli["opencli"]:::external
     n_mail["agently-mail"]:::external
     n_everything["Everything es.exe"]:::external
+    n_edgartools["edgartools 5.48.0"]:::external
   end
   subgraph G_sync["同步层"]
     n_github["GitHub fengyuwang-com/FengInvest"]:::sync
@@ -60,6 +68,13 @@ flowchart LR
   n_market_data_db -->|"组合读取"| n_portfolio_tools
   n_market_data_db -->|"监控读取"| n_watch
   n_market_data_db -->|"研究读取"| n_research_other
+  n_market_data_db -->|"价格读取"| n_fengfactor
+  n_market_data_db -->|"cn_financials PIT"| n_fengpit
+  n_sina -->|"A股三表"| n_fengdata
+  n_edgartools -->|"XBRL/companyfacts 数据"| n_fengsec
+  n_fengsec -->|"companyfacts 双轴同源"| n_fengpit
+  n_fengpit -->|"PIT 数据供估值"| n_fengvaluation
+  n_watch -->|"outcome 统计"| n_portfolio_ledger
   n_verification -->|"方法对照"| n_methodology
   n_methodology -->|"准入/复核规则"| n_verification
   n_audit_tools -->|"回测质量审计"| n_verification

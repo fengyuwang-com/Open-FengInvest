@@ -1,7 +1,9 @@
 # FengInvest — 数据清单 (Data Inventory)
 
-> 最后更新: 2026-07-23
-> 数据库: `data/market_data.db` (2,100 MB)
+> 最后更新: 2026-08-24（数据基建总攻收工）
+> 数据库: `data/market_data.db` (≈2.2 GB)
+> 终态数字与新数据源见 §十六；§一~§十五 为各阶段历史审计快照，保留原貌不重算。
+> 跨源抽查报告: [DATA-SPOTCHECK-20260824.md](DATA-SPOTCHECK-20260824.md)（15 样本对拍）
 
 ## 一、总览
 
@@ -206,7 +208,7 @@ CSMAR 数据库（闲鱼 0.1元）通过 `tools/feng_import_csmar.py` 导入，�
 | 股票数 | 5,828（含已退市） |
 | 行数 | 356,728 |
 | 列数 | 197 个财务字段 |
-| 时间范围 | 1990-12-31 ~ 2025-03-31 |
+| 时间范围 | 1990-12-31 ~ 2025-03-31（CSMAR 冷数据）；2026-08-24 fuyao 全市场回填完成，增量至 2026Q1/Q2（共 384,206 行，见 §十六） |
 | 数据频率 | 季度（支持 `--mode annual` 切换年度） |
 
 ### 9.2 数据结构
@@ -334,4 +336,77 @@ python tools/feng_import_csmar.py --status       # 查看进度
 6. **DCF 估值 ✅ 已就绪** — 自由现金流折现（CAPEX 已补）
 
 ---
-> 工具: `fengfundamentals.py` — 基本面拉取 | `fengdbrefine.py` — unadj_close + 分紅回填 | `fengstockdb.py` — 初始導入 | `feng_import_csmar.py` — CSMAR 财务数据导入
+
+## 十五、数据管理与回滚机制（2026-08-23 定稿）
+
+董事长两条硬需求：①**任何批量写入必须可回滚**（绝不允许乱写毁库）②**多 GB 库对外只传增量**。机制 = SQLite session 扩展：每批写入自动落 changeset（`cs_<日期>_<批次>.bin`，实测 ≈749 B/行、常规一批 <1 MB）；撤销单批 = `Changeset.invert()+apply()` 精确还原；整库回退 = 文件快照 ⊕ 按序重放。
+
+安全网现状：`market_data.db.snap_20260823_pre_fuyao`（文件级快照）+ 库内 `cn_financials_bak_20260823`（356,728 行逻辑备份）。同步方式 = changeset 增量小文件（本地双备份 + 定时复制至网盘同步目录，todo K）。
+
+> 完整规范与操作铁律：[docs/DATA-MANAGEMENT.md](../../docs/DATA-MANAGEMENT.md)
+
+---
+
+## 十六、新数据源与数据终态（2026-08）
+
+### 16.1 数据终态（2026-08-24 验收）
+
+| 度量 | 值 |
+|:-----|:----|
+| daily_data 行数 | 13,053,253 |
+| 指数主档 | indices 2,126 只 / 2,118 只有行情；指数/ETF/宏观 50 条更新至同日 |
+| 日线新鲜度 | 19 国 21 市场活跃标的最新统一到 2026-08-21（上周五全球收盘） |
+| 无行情标的 | 8 只均为已验明退市（7205.T / 9613.T / IFL.AX / NSR.AX / XYX.AX / ARV.NZ / GMT.NZ / MNW.NZ）；另有 EA（2026-08-04 私有化退市）、QUB.AX（麦格理财团协议收购停牌）数据止于退市前 —— 均属标的灭失，非缺口 |
+| cn_financials | 384,206 行、覆盖 5,828 只：done 5,129 + failed 699（全部 code=1002 退市/无码）= 账目自洽 |
+| cn_financials 近五季覆盖 | ~5,128/5,828（此前 ~1,758）；2026H1 1,566 只；近期关键字段质量 100% |
+| 可回滚变更集 | `data/changesets/` 共 142 个 |
+
+> §二~§四 的分市场行数表为 2026-07 审计快照，本轮未重算；以本节终态为准。
+
+### 16.2 同花顺 fuyao（A股财报增量，tools/fengfuyao.py）
+
+- 免费接口回填管线：backfill（`--tickers/--universe --limit --batch-size --force`）/ status / test-conn；34 原始科目 → 24 映射字段入 `cn_financials`。
+- thscode 自动补交易所后缀（6→SH、0/3→SZ、4/8/92→BJ）；cash 端点字段实为 act_cash_flow_net / invest_cash_flow_net。
+- 断点续传进度文件：`data/cache/fuyao_progress.json`。已知缺陷：flush_batch 整批全败不落盘（todo S 条，锚点法 workaround 收尾）。
+
+### 16.3 a-stock-data 后端（tools/fengastock.py，Apache-2.0）
+
+定位：**按需取用补缺口，不做批量回填，不入库**（入库统一走 fengdb）。12 端点全部实跑验证：
+
+| 端点 | 用途 |
+|:-----|:-----|
+| quote | 腾讯实时估值 |
+| valuation-hist | baostock PE/PB 历史 + 分位 |
+| ipo-date | 上市日期（幸存者偏差研究输入） |
+| sw-industry | 申万行业变迁史（as-of 消前视） |
+| adj-factor | 新浪 qfq/hfq 复权因子 |
+| macro | 社融 + PMI（官方来源 URL） |
+| lhb / lhb-market | 龙虎榜个股明细 / 全市场 |
+| limit-pool | 涨停池 |
+| unlock / margin / moneyflow | 解禁 / 两融 / 资金流 |
+
+东财系端点必须走内置 em_get() 限流防封。
+
+### 16.4 国际日线四源适配矩阵（tools/fengstockintl.py + fengstockdb.py）
+
+| 市场/用途 | 主源 | 备源 |
+|:----------|:-----|:-----|
+| 海外个股+指数（通用） | yfinance（显式 `auto_adjust=False`；≥1s/ticker 限流防 429） | — |
+| US | yfinance | 腾讯（.OQ/.N 后缀） |
+| JP/KR/UK/指数 | yfinance | 东财 push2his（须 em_get() 限流） |
+| KR 深历史 | yfinance | naver（EUC-KR 编码、单次 3,000 行上限） |
+| TW | FinMind | — |
+| HK | 新浪（AKShare stock_hk_daily，与东财逐值一致） | — （东财 WAF 掐 Python TLS 指纹不可用） |
+| CN | baostock（必须 workers=1 串行 + timeout 60s 防死锁） | — |
+| ~~stooq~~ | 已死：CSV 端点 JS PoW，弃用 | — |
+
+适配器默认 `--dry-run`；真写需 `FENG_INTL_FILL_CONFIRM=YES` 且走 fengdb.safe_batch。
+
+### 16.5 口径备注（重要）
+
+- **daily_data 两代语义**：2026-07-21 及以前 close=裸价（unadj_close 多为空）；07-22 起 close=下载日锚定前复权、unadj_close=原始 Close。
+- **yfinance ≥0.2.51 默认 auto_adjust=True 会破坏口径**，调用必须显式 False。
+- **16 市场 unadj_close 整列待补**（AU/CA/CH/DE/ES/FR/IN/IT/JP/KR/NL/NZ/SE/SG/TW/UK，todo Q）。
+
+---
+> 工具: `fengfundamentals.py` — 基本面拉取 | `fengdbrefine.py` — unadj_close + 分紅回填 | `fengstockdb.py` — 初始導入/日线补齐 | `feng_import_csmar.py` — CSMAR 财务数据导入 | `fengfuyao.py` — fuyao API 财报全市场回填 | `fengastock.py` — A股 12 端点按需取数 | `fengstockintl.py` — 国际四源日线补数 | `fengdb.py` — 安全写库/变更集/undo

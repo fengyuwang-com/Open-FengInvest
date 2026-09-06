@@ -40,7 +40,7 @@ python <搜索工具>/scraper.py --search "<标的> 2026 新闻 财报"
 
 写入 `research/060-companies/<TICKER>-<中文名>/<YYYY-MM-DD>/02-market.json`（060-companies 为本地 gitignored 目录），包含：
 - `price_data`: price, MA50/120/200, returns
-- `financials`: PE, PB, ROE, FCF, revenue
+- `financials`: **键名必须用 `pe_ttm`**（fengquality `--cross-check` 门禁期望字段，缺它门禁会 SKIP 空转；`trailing_pe` 仅为可选别名，不能替代 `pe_ttm`）+ PB, ROE, FCF, revenue
 - `m_layer`: macro/valuation/trend/sentiment 四个灯 + 说明
 - `sources`: 所有数据来源 URL + 获取时间
 

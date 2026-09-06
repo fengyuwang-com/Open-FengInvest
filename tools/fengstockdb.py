@@ -6,15 +6,21 @@
 
 用法：
     python fengstockdb.py build [market]   # 全量构建（所有市场或指定市场）
-    python fengstockdb.py update [market]  # 增量更新
+    python fengstockdb.py update [market]  # 增量更新（hk/tw 走 AKShare/FinMind 备用源）
     python fengstockdb.py status           # 数据统计
     python fengstockdb.py list [market]    # 列出股票
     python fengstockdb.py info <ticker>    # 查看某只股票
     python fengstockdb.py verify           # 随机验证数据
 
 市场: us, cn, hk, jp, uk, de, fr, kr, in, tw, au, sg
+
+写库通道（2026-08-24 起）：对 daily_data / indices / update_log 的批量写入一律经
+fengdb.safe_batch（apsw Session 变更集），每市场一批、label 如 daily_cn_20260824，
+自动落 data/changesets/cs_*.bin 可精确回滚。下载线程只取数不写库。
+HK/TW 增量备用源：hk=AKShare stock_hk_hist（东财底层，每只间隔>=1s），
+tw=FinMind TaiwanStockPrice（复用 tools/twstock_data.py 的零依赖客户端）。
 """
-import json, os, random, sqlite3, sys, time, threading
+import json, os, random, sqlite3, sys, time, threading, contextlib
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timedelta
 from io import StringIO
@@ -25,7 +31,44 @@ import requests
 random.seed(20260721)
 
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "market_data.db")
+TOOLS_DIR = os.path.dirname(os.path.abspath(__file__))
 WIKI_HEADERS = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
+
+def _fengdb():
+    """惰性加载 fengdb（safe_batch 安全写库通道，apsw Session 变更集）。
+    busy_timeout 提到 30s：库可能被其他任务（指数补齐/财报回填）并发写入。"""
+    if TOOLS_DIR not in sys.path:
+        sys.path.insert(0, TOOLS_DIR)
+    import fengdb
+    fd_bt = getattr(fengdb, "BUSY_TIMEOUT_MS", 0)
+    fengdb.BUSY_TIMEOUT_MS = max(fd_bt, 30000)
+    return fengdb
+
+@contextlib.contextmanager
+def _safe_batch_retry(tables, label, attempts=3, wait_s=30):
+    """fengdb.safe_batch 包装：进入事务遇 database is locked/busy 时等 wait_s 重试，
+    最多 attempts 次。仅对锁类错误重试，其他异常原样上抛；进入成功后块内异常不重试。"""
+    fd = _fengdb()
+    ctx = None
+    con = None
+    for i in range(attempts):
+        try:
+            ctx = fd.safe_batch(tables, label)
+            con = ctx.__enter__()  # BEGIN IMMEDIATE 在此发生
+            break
+        except Exception as e:
+            msg = str(e).lower()
+            if ("lock" not in msg and "busy" not in msg) or i == attempts - 1:
+                raise
+            print(f"    [LOCK] 写库被占用（{e}），{wait_s}s 后重试 {i + 2}/{attempts}: {label}", flush=True)
+            time.sleep(wait_s)
+    try:
+        yield con
+    except BaseException:
+        ctx.__exit__(*sys.exc_info())
+        raise
+    else:
+        ctx.__exit__(None, None, None)
 _EARLIEST = (datetime.now() - timedelta(days=100 * 365.25)).strftime("%Y-%m-%d")
 
 # yfinance session 池 — 轮换 UA 防限流
@@ -325,14 +368,14 @@ def get_db():
     return conn
 
 def seed_and_map(conn, stocks, market):
-    """写入 indices 表，返回 {(db_ticker): (index_id, yf_ticker)}"""
+    """写入 indices 表（经 safe_batch，可回滚），返回 {(db_ticker): (index_id, yf_ticker)}"""
     cur = conn.execute("SELECT ticker, id FROM indices")
     existing = {r["ticker"]: r["id"] for r in cur.fetchall()}
-    for db_t, _ in stocks:
-        if db_t not in existing:
-            conn.execute("INSERT OR IGNORE INTO indices (ticker, name, market, category) VALUES (?, ?, ?, ?)",
-                         (db_t, db_t, market, "stock"))
-    conn.commit()
+    missing = [(db_t, db_t, market, "stock") for db_t, _ in stocks if db_t not in existing]
+    if missing:
+        with _safe_batch_retry(["indices"], f"seed_indices_{market}") as acon:
+            acon.executemany("INSERT OR IGNORE INTO indices (ticker, name, market, category) VALUES (?, ?, ?, ?)",
+                             missing)
     cur = conn.execute("SELECT ticker, id FROM indices WHERE market=? AND category='stock'", (market,))
     db_ids = {r["ticker"]: r["id"] for r in cur.fetchall()}
     stocks_dict = dict(stocks)
@@ -371,49 +414,200 @@ def download_yf(ticker, force_all, skip_dates):
 _bs_login = threading.local()
 
 def _ensure_bs():
-    """确保当前线程已登录 baostock"""
+    """确保当前线程已登录 baostock。
+    注意：baostock 的 context.default_socket 是模块级全局单 socket 且非线程安全，
+    本工具对 baostock 的调用必须串行（workers=1）；登录前设全局 socket 超时防挂死。"""
+    import socket as _socket
+    if _socket.getdefaulttimeout() is None:
+        _socket.setdefaulttimeout(60)  # baostock 裸 socket 默认无超时，隧道抖动会永久阻塞
     if not getattr(_bs_login, "ok", False):
         import baostock as bs
         bs.login()
         _bs_login.ok = True
 
 def download_baostock(symbol, force_all, skip_dates):
-    """用 baostock 下载 A 股，返回 [(date, open, high, low, close, volume), ...]"""
+    """用 baostock 下载 A 股，返回 [(date, open, high, low, close, volume), ...]。
+    共享 socket 可能被隧道抖动弄坏：失败强制 logout 重登后再试一次，
+    仍失败则上抛由调用方记 [ERR]，不静默吞掉。"""
     import baostock as bs
-    _ensure_bs()
-    try:
-        end = datetime.now().strftime("%Y-%m-%d")
-        start = "1990-12-01" if force_all else "2020-01-01"
-        if symbol.startswith(("6", "9")):
-            code = f"sh.{symbol}"
-        else:
-            code = f"sz.{symbol}"
-        rs = bs.query_history_k_data_plus(code,
-            "date,open,high,low,close,volume",
-            start_date=start, end_date=end,
-            frequency="d", adjustflag="3")
-        rows = []
-        while rs.next():
-            d, o, h, l, c, v = rs.get_row_data()
-            if d in skip_dates:
-                continue
+    last_err = None
+    for _attempt in (1, 2):
+        try:
+            _ensure_bs()
+            end = datetime.now().strftime("%Y-%m-%d")
+            start = "1990-12-01" if force_all else "2020-01-01"
+            if symbol.startswith(("6", "9")):
+                code = f"sh.{symbol}"
+            else:
+                code = f"sz.{symbol}"
+            rs = bs.query_history_k_data_plus(code,
+                "date,open,high,low,close,volume",
+                start_date=start, end_date=end,
+                frequency="d", adjustflag="3")
+            rows = []
+            while rs.next():
+                d, o, h, l, c, v = rs.get_row_data()
+                if d in skip_dates:
+                    continue
+                try:
+                    rows.append((
+                        d,
+                        float(o) if o else None,
+                        float(h) if h else None,
+                        float(l) if l else None,
+                        float(c) if c else None,
+                        int(float(v)) if v else None,
+                    ))
+                except (ValueError, TypeError):
+                    continue
+            return rows
+        except Exception as e:
+            last_err = e
             try:
-                rows.append((
-                    d,
-                    float(o) if o else None,
-                    float(h) if h else None,
-                    float(l) if l else None,
-                    float(c) if c else None,
-                    int(float(v)) if v else None,
-                ))
-            except (ValueError, TypeError):
-                continue
-    except Exception:
+                bs.logout()
+            except Exception:
+                pass
+            _bs_login.ok = False  # 强制下次重登，换新 socket
+            time.sleep(2)
+    raise RuntimeError(f"baostock {symbol}: {type(last_err).__name__}: {last_err}")
+
+def download_hk_akshare(symbol, force_all, skip_dates):
+    """AKShare 港股日线，symbol 形如 0700.HK。失败抛异常由调用方记清单。
+    主源 stock_hk_daily（新浪，全量返回、客户端按 skip_dates 过滤增量）；
+    备源 stock_hk_hist 为东财接口，但本机网络环境其 WAF 会掐断 Python 的
+    HTTP/1.1/TLS 指纹连接（curl h2 可通），故仅作参考不作默认。
+    返回 [(date, open, high, low, close, volume), ...]，不复权。"""
+    import akshare as ak
+    code = symbol.split(".")[0].zfill(5)
+    try:
+        df = ak.stock_hk_daily(symbol=code)
+    except Exception as e:
+        time.sleep(1.2)  # 失败也限速，避免连续触发风控
+        raise RuntimeError(f"AKShare {symbol}: {type(e).__name__}: {e}") from e
+    time.sleep(1.0 + random.random())  # 新浪限流护栏：每只之间 >=1 秒
+    if df is None or df.empty:
         return []
+    rows = []
+    for _, r in df.iterrows():
+        d = str(r["date"])[:10]
+        if d in skip_dates:
+            continue
+        try:
+            rows.append((
+                d,
+                float(r["open"]) if pd.notna(r["open"]) else None,
+                float(r["high"]) if pd.notna(r["high"]) else None,
+                float(r["low"]) if pd.notna(r["low"]) else None,
+                float(r["close"]) if pd.notna(r["close"]) else None,
+                int(float(r["volume"])) if pd.notna(r["volume"]) else None,
+            ))
+        except (ValueError, TypeError):
+            continue
     return rows
 
+def download_tw_finmind(symbol, force_all, skip_dates):
+    """FinMind TaiwanStockPrice 台股日线，symbol 形如 2330.TW。
+    复用 tools/twstock_data.py 的零依赖 API 客户端（token: FINMIND_TOKEN 或 local/finmind_token.txt）。
+    返回 [(date, open, high, low, close, volume), ...]。"""
+    if TOOLS_DIR not in sys.path:
+        sys.path.insert(0, TOOLS_DIR)
+    from twstock_data import _get
+    sid = symbol.split(".")[0]
+    end = datetime.now().strftime("%Y-%m-%d")
+    start = "2010-01-01" if force_all else (datetime.now() - timedelta(days=140)).strftime("%Y-%m-%d")
+    data = _get("TaiwanStockPrice", data_id=sid, start_date=start, end_date=end)
+    time.sleep(0.8 + random.random() * 0.6)  # FinMind 匿名额度小时级限额，温和限速
+    rows = []
+    for r in data:
+        d = str(r.get("date"))[:10]
+        if d in skip_dates:
+            continue
+        try:
+            rows.append((
+                d,
+                float(r["open"]) if r.get("open") else None,
+                float(r["max"]) if r.get("max") else None,
+                float(r["min"]) if r.get("min") else None,
+                float(r["close"]) if r.get("close") else None,
+                int(float(r["Trading_Volume"])) if r.get("Trading_Volume") else None,
+            ))
+        except (ValueError, TypeError):
+            continue
+    return rows
+
+def _market_mapping(market):
+    """indices 表直取该市场股票映射 {db_ticker: index_id}（不重拉成分股，纯只读）"""
+    conn = get_db()
+    cur = conn.execute("SELECT ticker, id FROM indices WHERE market=? AND category='stock'", (market,))
+    out = {r["ticker"]: r["id"] for r in cur.fetchall()}
+    conn.close()
+    return out
+
+def _market_skipdates(market):
+    """该市场每只股票已有日期集合 {index_id: {date,...}}（增量跳过）"""
+    conn = get_db()
+    cur = conn.execute(
+        "SELECT d.index_id, d.date FROM daily_data d JOIN indices i ON i.id=d.index_id WHERE i.market=?",
+        (market,))
+    out = {}
+    for r in cur.fetchall():
+        out.setdefault(r["index_id"], set()).add(r["date"])
+    conn.close()
+    return out
+
+def update_market_alt(mk):
+    """HK/TW 增量补齐：indices 直取映射 → 串行限速下载 → 单批 safe_batch 落库。
+    单只失败记入失败清单继续跑，不中断。"""
+    cfg = MARKETS[mk]
+    market = cfg["market"]
+    mapping = _market_mapping(market)
+    if not mapping:
+        print(f"[ERR] indices 表无 {market} 股票")
+        return {"total": 0, "ok": [], "empty": [], "failed": [], "inserted": 0}
+    print(f"\n{'='*60}\n {cfg['name']} ({mk.upper()}) 增量补齐 [{cfg['src']}_alt]\n{'='*60}")
+    skip = _market_skipdates(market)
+    dl = download_hk_akshare if mk == "hk" else download_tw_finmind
+    total = len(mapping)
+    done = 0
+    pending = []  # [(index_id, db_t, rows)]
+    ok, empty, failed = [], [], []
+    for db_t, idx_id in sorted(mapping.items()):
+        done += 1
+        try:
+            rows = dl(db_t, False, skip.get(idx_id, set()))
+        except Exception as e:
+            failed.append(db_t)
+            print(f"    [FAIL {done}/{total}] {db_t}: {e}", flush=True)
+            continue
+        if not rows:
+            empty.append(db_t)
+            print(f"    [{done}/{total}] {db_t}: 无新增", flush=True)
+            continue
+        ok.append(db_t)
+        pending.append((idx_id, db_t, rows))
+        print(f"    [{done}/{total}] {db_t}: +{len(rows)} ({rows[0][0]}~{rows[-1][0]})", flush=True)
+
+    inserted = 0
+    if pending:
+        label = f"daily_{mk}_{datetime.now():%Y%m%d}"
+        with _safe_batch_retry(["daily_data", "update_log"], label) as acon:
+            for idx_id, db_t, rows in pending:
+                before = acon.total_changes()
+                acon.executemany(
+                    "INSERT OR IGNORE INTO daily_data "
+                    "(index_id,date,open,high,low,close,volume) VALUES (?,?,?,?,?,?,?)",
+                    [(idx_id, *r) for r in rows])
+                inserted += acon.total_changes() - before
+            _refresh_update_log(acon, mapping)
+
+    print(f"\n  [{cfg['name']}] 完成: 成功 {len(ok)} / 空 {len(empty)} / 失败 {len(failed)}，实际插入 {inserted} 条")
+    if failed:
+        print(f"  失败清单: {', '.join(failed)}")
+    return {"total": total, "ok": ok, "empty": empty, "failed": failed, "inserted": inserted}
+
+
 def download_one(idx_id, db_t, yf_t, source, force_all, skip_dates=None):
-    """单只股票下载+写入，返回新增行数"""
+    """单只股票下载（只取数不写库），返回 (db_t, rows)；写库由调用方统一走 safe_batch"""
     if skip_dates is None:
         conn = get_db()
         cur = conn.execute("SELECT date FROM daily_data WHERE index_id=?", (idx_id,))
@@ -424,20 +618,28 @@ def download_one(idx_id, db_t, yf_t, source, force_all, skip_dates=None):
         rows = download_yf(yf_t, force_all, skip_dates)
     elif source == "baostock":
         rows = download_baostock(yf_t, force_all, skip_dates)
+    elif source == "akshare":
+        rows = download_hk_akshare(yf_t, force_all, skip_dates)
+    elif source == "finmind":
+        rows = download_tw_finmind(yf_t, force_all, skip_dates)
     else:
-        return None, 0
-    if not rows:
-        return db_t, 0
-    conn = get_db()
-    data = [(idx_id, *r) for r in rows]
-    conn.executemany("INSERT OR IGNORE INTO daily_data (index_id,date,open,high,low,close,volume) VALUES (?,?,?,?,?,?,?)", data)
-    conn.commit()
-    conn.close()
-    return db_t, len(rows)
+        return db_t, []
+    return db_t, rows
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # 构建逻辑
 # ═══════════════════════════════════════════════════════════════════════════════
+
+def _refresh_update_log(con, mapping):
+    """在 safe_batch 事务内刷新 update_log（INSERT OR REPLACE，进同一变更集可回滚）。
+    mapping 值兼容两种形态：(index_id, yf_ticker) 元组或裸 index_id。"""
+    now = datetime.now().isoformat(timespec="seconds")
+    for db_t, val in mapping.items():
+        idx = val[0] if isinstance(val, (tuple, list)) else val
+        row = con.execute("SELECT MAX(date), COUNT(*) FROM daily_data WHERE index_id=?", (idx,)).fetchone()
+        con.execute("INSERT OR REPLACE INTO update_log (ticker, last_date, rows, updated_at) VALUES (?, ?, ?, ?)",
+                    (db_t, row[0], row[1], now))
+
 
 def build_market(mk, force_all, workers=6):
     cfg = MARKETS[mk]
@@ -458,7 +660,7 @@ def build_market(mk, force_all, workers=6):
 
     total = len(mapping)
     done = 0
-    new_rows = 0
+    pending = []  # [(db_t, index_id, rows)] 下载结果统一收口，最后一批写库
     pool_args = [(idx, db_t, yf_t, cfg["src"], force_all) for db_t, (idx, yf_t) in mapping.items()]
 
     with ThreadPoolExecutor(max_workers=workers) as ex:
@@ -467,26 +669,31 @@ def build_market(mk, force_all, workers=6):
             db_t = fut[f]
             done += 1
             try:
-                _, n = f.result()
+                _, rows = f.result()
             except Exception as e:
-                n = 0
+                rows = []
                 print(f"    [ERR] {db_t}: {e}")
-            new_rows += n
-            if n > 0:
-                print(f"    [{done}/{total}] {db_t}: +{n}")
+            if rows:
+                pending.append((db_t, mapping[db_t][0], rows))
+                print(f"    [{done}/{total}] {db_t}: +{len(rows)}")
             elif done % 50 == 0 or done == total:
-                print(f"    [{done}/{total}] ...{n} new")
+                print(f"    [{done}/{total}] ...0 new")
 
-    # 更新日志
-    conn = get_db()
-    for db_t, (idx, _) in mapping.items():
-        cur = conn.execute("SELECT MAX(date) as md FROM daily_data WHERE index_id=?", (idx,))
-        last = cur.fetchone()["md"]
-        conn.execute("INSERT OR REPLACE INTO update_log (ticker, last_date, rows, updated_at) VALUES (?, ?, "
-                     "(SELECT COUNT(*) FROM daily_data WHERE index_id=?), datetime('now'))",
-                     (db_t, last, idx))
-    conn.commit()
-    conn.close()
+    # 统一写库：整个市场一批 safe_batch（changeset 可回滚），含 update_log 刷新
+    new_rows = 0
+    if pending:
+        fd = _fengdb()
+        label = f"daily_{mk.lower()}_{datetime.now():%Y%m%d}"
+        with _safe_batch_retry(["daily_data", "update_log"], label) as acon:
+            for db_t, idx_id, rows in pending:
+                before = acon.total_changes()
+                acon.executemany(
+                    "INSERT OR IGNORE INTO daily_data "
+                    "(index_id,date,open,high,low,close,volume) VALUES (?,?,?,?,?,?,?)",
+                    [(idx_id, *r) for r in rows])
+                new_rows += acon.total_changes() - before
+            _refresh_update_log(acon, mapping)
+
     print(f"\n  [{cfg['name']}] 完成: +{new_rows} 条")
     return total, new_rows
 
@@ -508,8 +715,16 @@ def cmd_build(target):
         time.sleep(2)
 
 def cmd_update(target):
+    if target == "hk":
+        update_market_alt("hk")
+        return
+    if target == "tw":
+        update_market_alt("tw")
+        return
     for mk in _resolve(target):
-        build_market(mk, force_all=False)
+        # baostock 全局共享单条 socket 且非线程安全：CN 下载必须串行
+        workers = 1 if MARKETS[mk].get("src") == "baostock" else 6
+        build_market(mk, force_all=False, workers=workers)
         time.sleep(1)
 
 def cmd_status():

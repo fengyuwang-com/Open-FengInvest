@@ -25,6 +25,8 @@ def _light(level: str, emoji: str) -> str:
     return f"{level}"
 
 
+# 文献：本规则=趋势确认+极端估值双条件。极端估值判断（PE<10/PB<1/股息率>5%）属估值类，
+# → Liu-Stambaugh-Yuan 2019（A股价值首选 EP 口径，PB 用于 A 股有口径风险）；趋势部分无直接单篇标尺
 def check_no_knife(ticker: str) -> dict:
     """L1-1: 不接飞刀"""
     t = yf.Ticker(ticker)
@@ -401,6 +403,8 @@ def check_no_first_mover(ticker: str) -> dict:
     }
 
 
+# 文献：波动率→敞口判断属「现金/波动率管理」类 → Moreira-Muir 2017（波动率高时降敞口提升风险调整收益）；
+# 反证 Cederburg et al. 2020 JFE（波动率择时样本外不可实施）
 def check_divergence_consensus(ticker: str) -> dict:
     """DK: divergence_or_consensus — 买分歧卖共识（分歧/共识判断）"""
     t = yf.Ticker(ticker)

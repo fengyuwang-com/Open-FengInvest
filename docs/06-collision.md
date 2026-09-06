@@ -65,5 +65,14 @@ L1 🟢/🟡：
 
 ## 输出
 
-写入 `research/060-companies/<TICKER>-<中文名>/<YYYY-MM-DD>/06-collision.md`（060-companies 为本地 gitignored 目录）
-必须包含 `conflicts` 数组（冲突来源+消息+处理方式）。
+**双格式（状态机出站验证要求 JSON，需与 fengstate 一致）：**
+
+1. 写入 `research/060-companies/<TICKER>-<中文名>/<YYYY-MM-DD>/06-collision.json`（060-companies 为本地 gitignored 目录），**必须包含**：
+   - `decision`（BUY/HOLD/WAIT/PASS）
+   - `confidence`（0-1）
+   - `position_pct`（建议仓位）
+   - `conflicts` 数组（冲突来源+消息+处理方式）
+
+2. 补写 `06-collision.md` 可读版（反方人物视角 + 偏误检查 + 规则树命中明细）。
+
+`complete` 参数用 JSON 文件（`fengstate.py complete <TICKER> 06-collision "$BASE/06-collision.json"`）。

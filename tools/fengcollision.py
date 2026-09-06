@@ -56,6 +56,15 @@ def _confidence_text(pct):
     return "low"
 
 
+def _confidence_score(text: str) -> float:
+    """逆映射：confidence 文本 → 0-1 数值（与 _confidence_text 阈值对应）。
+
+    供出站文件（06-collision.json）使用——SKILL 模板要求 confidence 为 0-1 数值，
+    引擎内部为文本，此处取各档位中点：high→0.85 / medium→0.65 / low→0.35。
+    """
+    return {"high": 0.85, "medium": 0.65, "low": 0.35}.get(text, 0.5)
+
+
 def proxy_l2a_lights(fundamentals: dict, degraded: bool = False) -> dict:
     """Infer L2a qualitative-style lights from available quantitative data.
 
@@ -106,11 +115,18 @@ def proxy_l2a_lights(fundamentals: dict, degraded: bool = False) -> dict:
     )
     moat_light = "GREEN" if moat_score >= 0.6 else ("YELLOW" if moat_score >= 0.35 else "RED")
 
-    # ── 安全边际 proxy: PE vs sector, FCF yield ────────────────
-    # Low PE = more margin of safety
+    # ── 安全边际 proxy: PE 历史分位为主 + FCF 质量为辅 ─────────
+    # 修复 (2026-08-16): 原公式混入 ROE（质量维度），高 ROE 对冲高 PE 导致
+    # 安全边际误判 GREEN（AAPL 案例：ROE 148.8% + PE 35x → 引擎误判 BUY）。
+    # 安全边际应纯由价格决定：PE 5 年分位越高 → 边际越低；无分位数据时
+    # 退化到相对刻度打分。ROE/利润率归"好生意/管理层"维度，不再混入。
+    pe_pct = fundamentals.get("pe_5y_percentile")
+    if pe_pct is not None:
+        pe_invert = max(0.0, 1.0 - pe_pct / 100.0)  # 100 分位 → 0
+    else:
+        pe_invert = _score(pe, 5, 40, invert=True)
     safe_score = (
-        0.40 * _score(pe, 5, 40, invert=True) +
-        0.30 * _score(roe, 0, 30, invert=False) +
+        0.70 * pe_invert +
         0.30 * (1.0 if fcf_consistency >= 0.5 else 0.0)
     )
     safe_light = "GREEN" if safe_score >= 0.6 else ("YELLOW" if safe_score >= 0.35 else "RED")
@@ -956,9 +972,17 @@ def _find_file(ticker: str, prefix: str) -> str:
             candidates.insert(0, p)
 
     # Search new dir convention: research/<TICKER>-*/<date>/<prefix>.*
-    for d in gmod.glob(os.path.join(RESEARCH, f"{ticker.upper()}-*")):
-        for p in gmod.glob(os.path.join(d, "*", f"{prefix}.*")):
-            candidates.insert(0, p)
+    # 修复 (2026-08-16): 实际目录在 research/060-companies/ 下，原 glob 只搜
+    # research/<TICKER>-* 导致找不到 lights JSON（状态文件只有 .md 的 output 记录）
+    company_roots = [
+        os.path.join(RESEARCH, "060-companies"),
+        os.path.join(RESEARCH, "companies"),
+        RESEARCH,
+    ]
+    for root in company_roots:
+        for d in gmod.glob(os.path.join(root, f"{ticker.upper()}-*")):
+            for p in gmod.glob(os.path.join(d, "*", f"{prefix}.*")):
+                candidates.insert(0, p)
 
     for c in candidates:
         if os.path.exists(c):
@@ -1053,7 +1077,9 @@ def main():
     l2b_file = paths.get("--l2b") or _find_file(ticker, "04-quantitative")
     fundamentals_file = paths.get("--fundamentals")
     market_file = paths.get("--market")
-    l2a_file = paths.get("--l2a") or _find_file(ticker, "05-qualitative")
+    # 优先机器可读 lights JSON（真实灯，2026-08-16 修复：MD 版读不了 → 此前
+    # 退到 proxy 推断导致误判），其次 MD 版（_read_json 失败 → proxy 降级）
+    l2a_file = paths.get("--l2a") or _find_file(ticker, "05-qualitative_lights") or _find_file(ticker, "05-qualitative")
 
     l1 = _read_json(l1_file)
     l2b = _read_json(l2b_file)
@@ -1135,6 +1161,7 @@ def main():
         "collided_at": datetime.now().isoformat(),
         "decision": decision["decision"],
         "confidence": decision["confidence"],
+        "confidence_score": _confidence_score(decision["confidence"]),
         "position_pct": decision["position_pct"],
         "applicable_rule": decision.get("applicable_rule"),
         "reason": decision.get("reason", ""),

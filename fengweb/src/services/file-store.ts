@@ -169,6 +169,20 @@ export interface JournalEntry {
   message: string;
 }
 
+export interface RedTeamData {
+  completed: boolean;
+  answers: { q: string; answer: string }[];
+}
+
+export interface ReportMeta {
+  date: string | null;   // YYYY-MM-DD（日期目录报告）；根/社区文件为 null
+  file: string;
+  rel: string;           // 相对公司目录的路径（正斜杠）
+  title: string;
+  source: 'own' | 'community';
+  redteam: RedTeamData | null;
+}
+
 export interface DashboardData {
   holdings_count: number;
   alerts: AlertItem[];
@@ -248,7 +262,7 @@ export class FileStore {
     // numbered: 02-market → m
     if (FileStore.LAYER_ALIASES[base]) return FileStore.LAYER_ALIASES[base];
     // plain: m, l0, l1, l2a, l2b, l3, l4
-    if (/^(l[0-4][abn]?|m)$/.test(base)) return base;
+    if (/^(l[0-4][abn]?.|m)$/.test(base)) return base;
     return null;
   }
 
@@ -304,6 +318,38 @@ export class FileStore {
     }
 
     return results;
+  }
+
+  /** 关注领域标注（knowledge/关注领域.md 三领域，创始人可编辑 data/config/attention-domains.json） */
+  getAttentionDomains(): Record<string, string> {
+    try {
+      const d = JSON.parse(fs.readFileSync(path.join(this.baseDir, 'data', 'config', 'attention-domains.json'), 'utf-8'));
+      return d.mapping || {};
+    } catch { return {}; }
+  }
+
+  /** 公司名总表（data/config/company_names.json：A股 cn_financials.short_name + 研究清单 + 持仓 + 研究目录名） */
+  getCompanyNames(): Record<string, { zh?: string; en?: string }> {
+    try {
+      return JSON.parse(fs.readFileSync(path.join(this.baseDir, 'data', 'config', 'company_names.json'), 'utf-8'));
+    } catch { return {}; }
+  }
+
+  /** BYOK：自带钥匙 LLM 配置（data/config/llm_config.json，gitignored，永不出本机） */
+  getLlmConfig(): { provider?: string; base_url?: string; model?: string; api_key?: string; updated_at?: string } {
+    try {
+      return JSON.parse(fs.readFileSync(path.join(this.baseDir, 'data', 'config', 'llm_config.json'), 'utf-8'));
+    } catch { return {}; }
+  }
+
+  saveLlmConfig(cfg: { provider?: string; base_url?: string; model?: string; api_key?: string }): void {
+    const file = path.join(this.baseDir, 'data', 'config', 'llm_config.json');
+    fs.mkdirSync(path.dirname(file), { recursive: true });
+    const prev = this.getLlmConfig();
+    const next = { ...prev, ...cfg, updated_at: new Date().toISOString() };
+    // 空字符串 = 保留旧 key（前端打码回传时不覆盖）
+    if (!cfg.api_key) next.api_key = prev.api_key;
+    fs.writeFileSync(file, JSON.stringify(next, null, 2), 'utf-8');
   }
 
   getResearchMeta(): { ticker: string; name: string; layers: ResearchLayer[] }[] {
@@ -383,6 +429,22 @@ export class FileStore {
     return m ? m[1] : null;
   }
 
+  // 卡片摘要用：把 Markdown 洗成纯文本（**加粗**/引用/列表符/表格竖线/代码围栏全剥掉）
+  private _plain(md: string): string {
+    return md
+      .replace(/^---[\s\S]*?---/, '')
+      .replace(/```[\s\S]*?```/g, ' ')
+      .replace(/\*\*([^*]+)\*\*/g, '$1')
+      .replace(/^\s{0,3}#{1,6}\s+/gm, '')
+      .replace(/^\s{0,3}>\s?/gm, '')
+      .replace(/^\s{0,3}[-*+]\s+/gm, '')
+      .replace(/\|/g, ' ')
+      .replace(/`([^`]*)`/g, '$1')
+      .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
   // --- Knowledge ---
 
   getKnowledgeTree(): KnowledgeCategory[] {
@@ -406,7 +468,7 @@ export class FileStore {
             name: f.replace(/\.md$/, ''),
             path: `knowledge/${d.name}/${f}`,
             frontmatter,
-            preview: body.slice(0, 120).replace(/#/g, '').trim(),
+            preview: this._plain(body).slice(0, 120),
           };
         });
       if (entries.length > 0) {
@@ -433,7 +495,7 @@ export class FileStore {
             name: frontmatter['name'] || f.replace(/\.md$/, ''),
             path: `knowledge/people/${f}`,
             frontmatter,
-            preview: `${frontmatter['school'] || ''} | ${frontmatter['representative'] || ''} — ${body.slice(0, 100).replace(/#/g, '').trim()}`,
+            preview: `${frontmatter['school'] || ''} | ${frontmatter['representative'] || ''} — ${this._plain(body).slice(0, 100)}`,
           };
         });
       if (peopleEntries.length > 0) {
@@ -471,7 +533,7 @@ export class FileStore {
           name: frontmatter['name'] || rel.replace(/\.md$/, '').replace(/\\/g, '/'),
           path: `research/${resDir}/${rel.replace(/\\/g, '/')}`,
           frontmatter,
-          preview: body.slice(0, 120).replace(/#/g, '').trim(),
+          preview: this._plain(body).slice(0, 120),
         };
       }).slice(0, 40); // cap per category to keep the page manageable
       categories.push({ name: resDir, label, entries });
@@ -530,7 +592,7 @@ export class FileStore {
           sources: fm['sources'] || '',
           disclaimer: fm['disclaimer'] || '',
           distilled_at: fm['distilled_at'] || '',
-          preview: body.slice(0, 200).replace(/#/g, '').trim(),
+          preview: this._plain(body).slice(0, 200),
           content: body,
         };
       })
@@ -717,6 +779,226 @@ export class FileStore {
     };
     walk(dir);
     return out.sort();
+  }
+
+  /** 已清仓持仓（hold_<T>_closed_<date>.json） */
+  getClosedHoldings(): { holding: Holding; closed_date: string }[] {
+    const dir = path.join(this.baseDir, 'holdings');
+    if (!fs.existsSync(dir)) return [];
+    const out: { holding: Holding; closed_date: string }[] = [];
+    for (const f of fs.readdirSync(dir)) {
+      const m = f.match(/^hold_(.+)_closed_(\d{4}-\d{2}-\d{2})\.json$/);
+      if (!m) continue;
+      const h = this._readJson<Holding>(path.join(dir, f));
+      if (h) out.push({ holding: h, closed_date: m[2] });
+    }
+    return out.sort((a, b) => b.closed_date.localeCompare(a.closed_date));
+  }
+
+  // --- Research List（研究清单：在研/候选/观察/持仓/停靠 五态） ---
+
+  getResearchList(): { ticker: string; name: string; status: string; added?: string; note?: string; updated?: string }[] {
+    const data = this._readJson<{ companies?: any[] }>(
+      path.join(this.baseDir, 'data', 'config', 'research_list.json')
+    );
+    if (!data || !Array.isArray(data.companies)) return [];
+    return data.companies.map((c: any) => ({
+      ticker: c.ticker, name: c.name || c.ticker, status: c.status || 'watching',
+      added: c.added, note: c.note, updated: c.updated,
+    }));
+  }
+
+  // --- Discussion（宪法 6.17：讨论档案只读 + 锚定配置置顶） ---
+
+  getDiscussion(): { config: any; entries: { file: string; title: string; preview: string }[] } {
+    const dir = path.join(this.baseDir, 'Discussion');
+    const config = this._readJson<any>(path.join(dir, 'discuss-config.json')) || {};
+    const entries: { file: string; title: string; preview: string }[] = [];
+    if (fs.existsSync(dir)) {
+      for (const f of fs.readdirSync(dir).filter(f => f.endsWith('.md')).sort().reverse()) {
+        const fullPath = path.join(dir, f);
+        const content = fs.readFileSync(fullPath, 'utf-8');
+        const body = content.replace(/^---[\s\S]*?---\n?/, '').trim();
+        const h1 = body.match(/^#\s+(.+)$/m);
+        entries.push({ file: f, title: this._readFrontmatter(fullPath)['name'] || (h1 ? h1[1].trim() : f.replace(/\.md$/, '')), preview: this._plain(body).slice(0, 100) });
+      }
+    }
+    return { config, entries };
+  }
+
+  getDiscussionDoc(file: string): { content: string; title: string } | null {
+    if (!/\.md$/.test(file) || file.includes('..') || file.includes('/') || file.includes('\\')) return null;
+    const fullPath = path.join(this.baseDir, 'Discussion', file);
+    if (!fs.existsSync(fullPath)) return null;
+    const content = fs.readFileSync(fullPath, 'utf-8');
+    const body = content.replace(/^---[\s\S]*?---\n?/, '').trim();
+    const h1 = body.match(/^#\s+(.+)$/m);
+    return { content: body, title: (h1 ? h1[1].trim() : file.replace(/\.md$/, '')) };
+  }
+
+  // --- Spec Wallet（宪法 6.16：投机钱包轨道，幽灵原则） ---
+
+  getSpecWallet(): { holdings: Holding[]; notes: { file: string; title: string }[] } {
+    const holdings = this.getHoldings().filter((h: any) => h.account_type === 'TRADING');
+    const dir = path.join(this.baseDir, 'research', 'speculative');
+    const notes: { file: string; title: string }[] = [];
+    if (fs.existsSync(dir)) {
+      for (const md of this._findMdRecursive(dir).slice(0, 50)) {
+        notes.push({ file: path.relative(dir, md).replace(/\\/g, '/'), title: this._reportTitle(md, path.basename(md, '.md')) });
+      }
+    }
+    return { holdings, notes };
+  }
+
+  // --- Reports（宪法册五：自有 vs 外来，目录即真相） ---
+
+  /** 红队检验数据（adversarial_check.json，与报告同目录） */
+  private _redTeam(dir: string): RedTeamData | null {
+    const p = path.join(dir, 'adversarial_check.json');
+    const data = this._readJson<{ completed?: boolean; answers?: { q: string; answer: string }[] }>(p);
+    if (!data || !Array.isArray(data.answers) || data.answers.length === 0) return null;
+    return { completed: data.completed !== false, answers: data.answers };
+  }
+
+  private _reportTitle(fullPath: string, fallback: string): string {
+    const fm = this._readFrontmatter(fullPath);
+    if (fm['name']) return fm['name'];
+    try {
+      const head = fs.readFileSync(fullPath, 'utf-8').slice(0, 600);
+      const h1 = head.match(/^#\s+(.+)$/m);
+      if (h1) return h1[1].trim();
+    } catch { /* fallthrough */ }
+    return fallback;
+  }
+
+  /** 公司目录名 → 显示名（"0700.HK-腾讯" → "腾讯"） */
+  private _companyDisplayName(dirName: string): string {
+    const m = dirName.match(/^[^-\s]+[-－]\s*(.+)$/);
+    return m ? m[1] : dirName;
+  }
+
+  /** 某公司的全部报告书架（日期目录=自有；community/=外来；根散文件=自有未归档） */
+  getReports(ticker: string): { name: string; reports: ReportMeta[] } | null {
+    const companiesDir = path.join(this.baseDir, 'research', '060-companies');
+    if (!fs.existsSync(companiesDir)) return null;
+    let companyDir: string | null = null;
+    let displayName = ticker;
+    for (const e of fs.readdirSync(companiesDir, { withFileTypes: true })) {
+      if (!e.isDirectory()) continue;
+      if (this._extractTicker(e.name) === ticker) {
+        companyDir = path.join(companiesDir, e.name);
+        displayName = this._companyDisplayName(e.name);
+        break;
+      }
+    }
+    if (!companyDir || !fs.existsSync(companyDir)) return null;
+
+    const reports: ReportMeta[] = [];
+    // 层文件不进书架；但 07-report / 07-narrative 是主报告，必须可读
+    const LAYER_RE = /^(0[1-6]-|08-|l[0-4][abn]?\.(md|json)$|m\.(md|json)$|temp_)/i;
+
+    const pushFile = (fullPath: string, date: string | null, source: 'own' | 'community') => {
+      const file = path.basename(fullPath);
+      if (!file.endsWith('.md')) return;
+      if (LAYER_RE.test(file)) return; // 层文件走研究层视图，不进书架
+      if (/^(README|TODO)\.md$/i.test(file)) return; // 元文件不进书架
+      reports.push({
+        date,
+        file,
+        rel: path.relative(companyDir!, fullPath).replace(/\\/g, '/'),
+        title: this._reportTitle(fullPath, file.replace(/\.md$/, '')),
+        source,
+        redteam: date ? this._redTeam(path.join(companyDir!, date)) : null,
+      });
+    };
+
+    const communityDir = path.join(companyDir, 'community');
+    for (const e of fs.readdirSync(companyDir, { withFileTypes: true })) {
+      if (e.isFile()) {
+        // 目录即真相：自有 = 日期目录里的七层产出；根目录散文件默认外来；
+        // 确属本人产出的散文件移入 own/ 子目录即可改判
+        pushFile(path.join(companyDir, e.name), null, 'community');
+      } else if (e.isDirectory()) {
+        if (/^\d{4}-\d{2}-\d{2}$/.test(e.name)) {
+          const dateDir = path.join(companyDir, e.name);
+          const rt = this._redTeam(dateDir);
+          for (const de of fs.readdirSync(dateDir, { withFileTypes: true })) {
+            if (de.isFile()) {
+              const file = de.name;
+              if (!file.endsWith('.md')) continue;
+              if (LAYER_RE.test(file)) continue;
+              reports.push({
+                date: e.name, file,
+                rel: `${e.name}/${file}`,
+                title: this._reportTitle(path.join(dateDir, file), file.replace(/\.md$/, '')),
+                source: 'own', redteam: rt,
+              });
+            }
+          }
+        } else if (e.name === 'community') {
+          for (const md of this._findMdRecursive(communityDir)) {
+            pushFile(md, null, 'community');
+          }
+        } else if (e.name === 'own') {
+          for (const md of this._findMdRecursive(path.join(companyDir, e.name))) {
+            pushFile(md, null, 'own');
+          }
+        } else if (e.name !== 'sources' && e.name !== 'temp') {
+          // 其他子目录（如未拆分的外来书系）按外来算
+          for (const md of this._findMdRecursive(path.join(companyDir, e.name))) {
+            pushFile(md, null, 'community');
+          }
+        }
+      }
+    }
+    reports.sort((a, b) => (b.date || '').localeCompare(a.date || '') || a.file.localeCompare(b.file));
+    return { name: displayName, reports };
+  }
+
+  /** 全部公司书架概览（/reports 总览页用） */
+  getAllShelves(): { ticker: string; name: string; own: number; community: number; latestDate: string | null; hasRedteam: boolean }[] {
+    const companiesDir = path.join(this.baseDir, 'research', '060-companies');
+    if (!fs.existsSync(companiesDir)) return [];
+    const out: { ticker: string; name: string; own: number; community: number; latestDate: string | null; hasRedteam: boolean }[] = [];
+    for (const e of fs.readdirSync(companiesDir, { withFileTypes: true })) {
+      if (!e.isDirectory()) continue;
+      const ticker = this._extractTicker(e.name);
+      if (!ticker) continue;
+      const shelf = this.getReports(ticker);
+      if (!shelf) continue;
+      const own = shelf.reports.filter(r => r.source === 'own');
+      out.push({
+        ticker,
+        name: shelf.name,
+        own: own.length,
+        community: shelf.reports.length - own.length,
+        latestDate: own[0]?.date || null,
+        hasRedteam: own.some(r => r.redteam),
+      });
+    }
+    return out;
+  }
+
+  /** 读单篇报告（带红队数据与来源） */
+  getReportDoc(ticker: string, rel: string): { content: string; title: string; source: 'own' | 'community'; redteam: RedTeamData | null; rel: string } | null {
+    const shelf = this.getReports(ticker);
+    if (!shelf) return null;
+    const meta = shelf.reports.find(r => r.rel === rel.replace(/\\/g, '/'));
+    if (!meta) return null; // 只允许书架内已知文件，防路径穿越
+    const companiesDir = path.join(this.baseDir, 'research', '060-companies');
+    let companyDir: string | null = null;
+    for (const e of fs.readdirSync(companiesDir, { withFileTypes: true })) {
+      if (e.isDirectory() && this._extractTicker(e.name) === ticker) { companyDir = path.join(companiesDir, e.name); break; }
+    }
+    if (!companyDir) return null;
+    const fullPath = path.join(companyDir, ...meta.rel.split('/'));
+    if (!fs.existsSync(fullPath)) return null;
+    let content = fs.readFileSync(fullPath, 'utf-8');
+    content = content.replace(/^---[\s\S]*?---\n?/, '').trim();
+    const redteam = meta.date
+      ? this._redTeam(path.join(companyDir, meta.date))
+      : null;
+    return { content, title: meta.title, source: meta.source, redteam, rel: meta.rel };
   }
 
   private _categoryLabel(name: string): string {

@@ -1,12 +1,12 @@
 <div class="page-header">
-  <h2>📡 持仓监控</h2>
+  <h2 data-i18n="page.watch">📡 持仓监控</h2>
   <div class="breadcrumb"><a href="/">系统总览</a> / 持仓监控</div>
 </div>
 
 <!-- Action Bar -->
 <div class="card" style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
   <button class="btn btn-primary" onclick="runDailyCheck()">▶ 每日检查</button>
-  <a href="/watch/history" class="btn" style="border:1px solid var(--border);background:transparent;text-decoration:none;">📜 历史持仓</a>
+  <a href="/watch/history" class="btn btn-outline">📜 历史持仓</a>
   <span id="last-check" style="font-size:13px;color:var(--text-muted);">—</span>
   <span id="status-spinner" style="display:none;font-size:13px;color:var(--primary);">⏳ 运行中...</span>
 </div>
@@ -104,8 +104,9 @@ function renderHoldings(holdings) {
 
     html += '<div class="card">';
     html += '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">';
-    html += '<div><strong style="font-size:18px;">' + icon + ' ' + h.ticker + '</strong>';
-    if (h.name && h.name !== h.ticker) html += ' <span style="font-size:13px;color:var(--text-muted)">' + h.name + '</span>';
+    const dispName = h.name && h.name !== h.ticker ? h.name : fengName(h.ticker);
+    html += '<div><strong style="font-size:18px;">' + icon + ' ' + dispName + '</strong>';
+    if (dispName !== h.ticker) html += ' <span style="font-size:13px;color:var(--text-muted)">' + h.ticker + '</span>';
     html += '</div>';
     html += '<span style="padding:4px 10px;border-radius:4px;font-weight:600;font-size:14px;background:' + statusColor + '22;color:' + statusColor + ';">' + h.overall + '</span>';
     html += '</div>';
@@ -124,9 +125,9 @@ function renderHoldings(holdings) {
     html += '<div style="margin-top:4px;font-size:12px;color:var(--text-muted);">资本阶段: ' + (h.capital_phase || 'capital_at_risk') + '</div>';
 
     html += '<div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;">';
-    html += '<a href="/holdings/' + h.ticker + '" class="btn btn-primary" style="font-size:12px;padding:4px 10px;">持仓详情</a>';
-    html += '<button class="btn" style="font-size:12px;padding:4px 10px;border:1px solid var(--border);background:transparent;cursor:pointer;" onclick="runReview(\'' + h.ticker + '\')">复盘</button>';
-    html += '<a href="/watch/sell/' + h.ticker + '" class="btn" style="font-size:12px;padding:4px 10px;border:1px solid var(--red);color:var(--red);background:transparent;text-decoration:none;">卖出</a>';
+    html += '<a href="/holdings/' + h.ticker + '" class="btn btn-sm btn-primary">持仓详情</a>';
+    html += '<button class="btn btn-sm btn-outline" onclick="runReview(\'' + h.ticker + '\')">复盘</button>';
+    html += '<a href="/watch/sell/' + h.ticker + '" class="btn btn-sm btn-danger-outline">卖出</a>';
     html += '</div>';
 
     html += '</div>';
@@ -171,7 +172,7 @@ async function loadLog() {
       html += '</div>';
     });
     html += '</div>';
-    html += '<div style="margin-top:8px;"><a href="/journal" class="btn" style="font-size:12px;padding:4px 10px;border:1px solid var(--border);">查看全部 →</a></div>';
+    html += '<div style="margin-top:8px;"><a href="/journal" class="btn btn-sm btn-outline">查看全部 →</a></div>';
     container.innerHTML = html;
   } catch (e) {
     // ignore

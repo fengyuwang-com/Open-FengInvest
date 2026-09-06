@@ -70,7 +70,7 @@ ai-berkshire 提供 **19 个 AI 分析技能** + **7 个 Python 工具** + **150
 
 | Skill | 文件 | 说明 | FengInvest 位置 |
 |:------|:-----|:------|:---------------|
-| **investment-team** | `~/.claude/skills/investment-team/SKILL.md`（ai-berkshire 提供，需本地安装） | 四大师并行 Agent 分析（段永平/巴菲特/芒格/李录） | ✅ 已集成至 L2a |
+| **investment-team** | `ai-berkshire/skills/`（外部项目提供，需本地安装到用户 skill 目录） | 四大师并行 Agent 分析（段永平/巴菲特/芒格/李录） | ✅ 已集成至 L2a |
 | **investment-research** | `ai-berkshire/skills/investment-research.md` | 四大师综合分析框架（非并行，适合单轮对话） | `research/040-people/` — 补充方法论 |
 | **management-deep-dive** | `ai-berkshire/skills/management-deep-dive.md` | 管理层纵深研究：CEO 能力圈/诚信度/资本配置/历史决策 | 增强 L2a 李录视角 |
 | **financial-data** | `ai-berkshire/skills/financial-data.md` | 财务数据多源交叉验证规范 | `docs/` — 数据质量参考 |
@@ -83,8 +83,9 @@ ai-berkshire 提供 **19 个 AI 分析技能** + **7 个 Python 工具** + **150
 
 | Skill | 文件 | 说明 | FengInvest 位置 |
 |:------|:-----|:------|:---------------|
-| **investment-checklist** | `ai-berkshire/skills/investment-checklist.md` | 巴菲特买入前 10 项 Checklist：护城河/ROE/安全边际/管理层/估值/催化剂等 | 增强 L3 碰撞规则 |
 | **private-company-research** | `ai-berkshire/skills/private-company-research.md` | 未上市公司研究框架（1071 行，最详细） | `research/070-reports/` |
+
+> 注：原 `investment-checklist`（巴菲特买入前 10 项 Checklist）不再作为独立引用——买入前检查已由 L1 硬纪律 + L3 碰撞规则（含息价原则安全边际）覆盖。
 
 ### 2.4 持仓监控与纪律（P 层补充）
 

@@ -1,0 +1,4418 @@
+{
+  "claim": {
+    "id": 1,
+    "title": "年线之上买入收益优于下方",
+    "statement": "指数/个股收盘价在 200 日均线（年线）上方时买入持有，其（风险调整后） 收益显著优于在年线下方买入；持有期越长优势越明显。",
+    "h0": "年线上下买入的持有期收益无差异（above 均值 − below 均值 = 0）。",
+    "price_basis": "前复权 close（daily_data.close，见 000-data-biases.md A.1 已确认）",
+    "cost_bps": 25,
+    "holding_days": [
+      20,
+      60,
+      120
+    ],
+    "signal_def": {
+      "key": "close > MA200(200 交易日收盘移动平均)",
+      "lookahead": "信号在 T 日收盘后可确定；成交从 T+1 交易日开始持有，避免\"当日收盘价 又做信号又做成交\"的前视。"
+    },
+    "verdict_metric": {
+      "primary": "平均收益（above 组·扣除成本后均值 − below 组·未扣成本均值）",
+      "secondary": "中位收益",
+      "reference_only": "胜率",
+      "note": "原论断承诺\"收益\"，故主判据必须用收益（铁律一）。原脚本用胜率裁决属 判据错位。\"风险调整后\"在本条 v1 复测中操作化为持有期平均收益（未做 波动率口径调整，见 audit-notes）。"
+    },
+    "data_scope": {
+      "markets": [
+        "AU",
+        "CA",
+        "CH",
+        "CN",
+        "DE",
+        "ES",
+        "FR",
+        "HK",
+        "IN",
+        "IT",
+        "JP",
+        "KR",
+        "NL",
+        "NZ",
+        "SE",
+        "SG",
+        "TW",
+        "UK",
+        "US"
+      ],
+      "category": "stock",
+      "survivorship": "本地库 indices 仅含当前成分股快照，不含退市/被剔除股票（见 survivorship-bias-report.md）；结果存在幸存者偏差，方向为高估收益。"
+    }
+  },
+  "generated_at": "2026-08-20 23:22:13",
+  "config": {
+    "bootstrap_iters": 2000,
+    "rng_seed": 20260820,
+    "oos_frac": 0.2,
+    "vma_window": 200,
+    "cost_bps": 25,
+    "markets": [
+      "AU",
+      "CA",
+      "CH",
+      "CN",
+      "DE",
+      "ES",
+      "FR",
+      "HK",
+      "IN",
+      "IT",
+      "JP",
+      "KR",
+      "NL",
+      "NZ",
+      "SE",
+      "SG",
+      "TW",
+      "UK",
+      "US"
+    ]
+  },
+  "pools": {
+    "markets": [
+      "AU",
+      "CA",
+      "CH",
+      "CN",
+      "DE",
+      "ES",
+      "FR",
+      "HK",
+      "IN",
+      "IT",
+      "JP",
+      "KR",
+      "NL",
+      "NZ",
+      "SE",
+      "SG",
+      "TW",
+      "UK",
+      "US"
+    ],
+    "stocks_total_by_market": {
+      "AU": 197,
+      "CA": 53,
+      "CH": 19,
+      "CN": 300,
+      "DE": 40,
+      "ES": 35,
+      "FR": 39,
+      "HK": 85,
+      "IN": 50,
+      "IT": 40,
+      "JP": 204,
+      "KR": 197,
+      "NL": 24,
+      "NZ": 47,
+      "SE": 30,
+      "SG": 30,
+      "TW": 50,
+      "UK": 96,
+      "US": 484
+    },
+    "stocks_processed_by_market": {
+      "AU": 196,
+      "CA": 53,
+      "CH": 19,
+      "CN": 299,
+      "DE": 40,
+      "ES": 35,
+      "FR": 39,
+      "HK": 85,
+      "IN": 50,
+      "IT": 40,
+      "JP": 204,
+      "KR": 196,
+      "NL": 24,
+      "NZ": 47,
+      "SE": 30,
+      "SG": 30,
+      "TW": 50,
+      "UK": 96,
+      "US": 481
+    }
+  },
+  "survivorship_note": "本地库 indices 仅当前成分股快照，不含退市/被剔除股；收益被系统性高估（方向已知，现有数据无法修复）",
+  "protocol_lights": [
+    {
+      "item": "判据对齐（论断=收益 → 判据=平均收益）",
+      "status": "✅",
+      "note": "主判据=above 组均值(扣成本) − below 组均值；中位数辅助，胜率仅参考（铁律一）"
+    },
+    {
+      "item": "价格口径（前复权 close）",
+      "status": "✅",
+      "note": "daily_data.close 为前复权（000-data-biases.md A.1），排除未复权假跳空污染"
+    },
+    {
+      "item": "成交时机（无前视）",
+      "status": "✅",
+      "note": "T 日收盘定价信号，T+1 开始持有；不用当日收盘价当日成交"
+    },
+    {
+      "item": "交易成本",
+      "status": "⚠️",
+      "note": "信号组持有期满卖出扣 25bps 一次（FEE0.15%+SLIP0.1% 单边口径）；对照组不扣=毛差；未计冲击/印花税，未用 T+1 开盘价成交"
+    },
+    {
+      "item": "显著性检验（Bootstrap 95% CI + p）",
+      "status": "✅",
+      "note": "市场层面 2000 次股票级 block bootstrap（种子 20260820，可复现）"
+    },
+    {
+      "item": "重叠样本处理",
+      "status": "⚠️",
+      "note": "每股坍缩为均值再做股级 bootstrap（等价降采样到每股）；同股跨日重叠被压缩进每股均值，跨股同日历相关未建模"
+    },
+    {
+      "item": "样本外验证（后 20%）",
+      "status": "✅",
+      "note": "每标的自有交易日后 20% 数据单独跑同口径，报告收益差与 CI"
+    },
+    {
+      "item": "幸存者偏差（含退市股）",
+      "status": "⚠️",
+      "note": "本地库 indices 仅当前成分股快照，不含退市/被剔除股（survivorship-bias-report.md）→ 收益被系统性高估，现有数据无法修复，如实记录"
+    },
+    {
+      "item": "对标权威文献（Brock et al. 1992）",
+      "status": "⚠️",
+      "note": "已实现『信号 vs 对照组 + Bootstrap 显著性』；未做『信号 vs 无条件全样本基准』对照；持有期收益未做波动率/风险调整口径"
+    }
+  ],
+  "aggregate": {
+    "d20": {
+      "above": {
+        "n": 7494339,
+        "mean": 0.011949695646762848,
+        "median": 0.006935999263077974,
+        "win_rate": 0.5412037005531776,
+        "mean_gross": 0.01444969605654478,
+        "mean_net": 0.011949695646762848
+      },
+      "below": {
+        "n": 4698893,
+        "mean": 0.021734893321990967,
+        "median": 0.008597025647759438,
+        "win_rate": 0.537829016323632
+      },
+      "diff_net_stock_ew": -0.008420006488587928,
+      "n_paired_stocks": 2006,
+      "diff_net_pooled": -0.009785197675228119,
+      "diff_gross_pooled": -0.007285197265446186,
+      "bootstrap": {
+        "n_stocks": 2006,
+        "obs_mean_diff": -0.008420006488587928,
+        "n_boot": 2000,
+        "ci95_low": -0.01928490538577226,
+        "ci95_high": -0.0022133851958573017,
+        "p_directional_above_gt_below": 1.0,
+        "p_two_sided": 0.0
+      },
+      "signal_stocks": {
+        "above": 2010,
+        "below": 2008
+      }
+    },
+    "d60": {
+      "above": {
+        "n": 7448291,
+        "mean": 0.0423722118139267,
+        "median": 0.026300935074687004,
+        "win_rate": 0.5856222588510572,
+        "mean_gross": 0.044872213155031204,
+        "mean_net": 0.0423722118139267
+      },
+      "below": {
+        "n": 4664491,
+        "mean": 0.06366882473230362,
+        "median": 0.024702589958906174,
+        "win_rate": 0.5665857217861499
+      },
+      "diff_net_stock_ew": -0.015254531431374195,
+      "n_paired_stocks": 2003,
+      "diff_net_pooled": -0.021296612918376923,
+      "diff_gross_pooled": -0.018796611577272415,
+      "bootstrap": {
+        "n_stocks": 2003,
+        "obs_mean_diff": -0.015254531431374195,
+        "n_boot": 2000,
+        "ci95_low": -0.04964089279868167,
+        "ci95_high": 0.004072974732210643,
+        "p_directional_above_gt_below": 0.8095,
+        "p_two_sided": 0.381
+      },
+      "signal_stocks": {
+        "above": 2008,
+        "below": 2005
+      }
+    },
+    "d120": {
+      "above": {
+        "n": 7372908,
+        "mean": 0.08998801559209824,
+        "median": 0.05480014532804489,
+        "win_rate": 0.6213141409061391,
+        "mean_gross": 0.09248801320791245,
+        "mean_net": 0.08998801559209824
+      },
+      "below": {
+        "n": 4619454,
+        "mean": 0.1322658210992813,
+        "median": 0.04579773172736168,
+        "win_rate": 0.5870695974026368
+      },
+      "diff_net_stock_ew": -0.029318338944692754,
+      "n_paired_stocks": 2001,
+      "diff_net_pooled": -0.042277805507183075,
+      "diff_gross_pooled": -0.039777807891368866,
+      "bootstrap": {
+        "n_stocks": 2001,
+        "obs_mean_diff": -0.029318338944692754,
+        "n_boot": 2000,
+        "ci95_low": -0.10086353509096939,
+        "ci95_high": 0.010586108828729762,
+        "p_directional_above_gt_below": 0.731,
+        "p_two_sided": 0.538
+      },
+      "signal_stocks": {
+        "above": 2005,
+        "below": 2002
+      }
+    }
+  },
+  "aggregate_oos": {
+    "d20": {
+      "above": {
+        "n": 1549392,
+        "mean": 0.010280998423695564,
+        "median": 0.005730553530156612,
+        "win_rate": 0.533986234600411,
+        "mean_gross": 0.012780998833477497,
+        "mean_net": 0.010280998423695564
+      },
+      "below": {
+        "n": 936240,
+        "mean": 0.014379188418388367,
+        "median": 0.009695131331682205,
+        "win_rate": 0.5495748953259848
+      },
+      "diff_net_stock_ew": -0.016144195673949188,
+      "n_paired_stocks": 1977,
+      "diff_net_pooled": -0.004098189994692802,
+      "diff_gross_pooled": -0.0015981895849108696,
+      "bootstrap": {
+        "n_stocks": 1977,
+        "obs_mean_diff": -0.016144195673949188,
+        "n_boot": 2000,
+        "ci95_low": -0.01784273371058867,
+        "ci95_high": -0.01457919857553156,
+        "p_directional_above_gt_below": 1.0,
+        "p_two_sided": 0.0
+      },
+      "signal_stocks": {
+        "above": 2008,
+        "below": 1981
+      }
+    },
+    "d60": {
+      "above": {
+        "n": 1503360,
+        "mean": 0.03940341994166374,
+        "median": 0.023607909679412842,
+        "win_rate": 0.5771744625372499,
+        "mean_gross": 0.04190341755747795,
+        "mean_net": 0.03940341994166374
+      },
+      "below": {
+        "n": 901844,
+        "mean": 0.039056260138750076,
+        "median": 0.02490268461406231,
+        "win_rate": 0.5747801171821291
+      },
+      "diff_net_stock_ew": -0.03441366360746134,
+      "n_paired_stocks": 1969,
+      "diff_net_pooled": 0.00034715980291366577,
+      "diff_gross_pooled": 0.0028471574187278748,
+      "bootstrap": {
+        "n_stocks": 1969,
+        "obs_mean_diff": -0.03441366360746134,
+        "n_boot": 2000,
+        "ci95_low": -0.040984996279004135,
+        "ci95_high": -0.02838005172561348,
+        "p_directional_above_gt_below": 1.0,
+        "p_two_sided": 0.0
+      },
+      "signal_stocks": {
+        "above": 2001,
+        "below": 1974
+      }
+    },
+    "d120": {
+      "above": {
+        "n": 1428233,
+        "mean": 0.08473832905292511,
+        "median": 0.05161578580737114,
+        "win_rate": 0.6174545749888148,
+        "mean_gross": 0.08723833411931992,
+        "mean_net": 0.08473832905292511
+      },
+      "below": {
+        "n": 856910,
+        "mean": 0.07750797271728516,
+        "median": 0.047218017280101776,
+        "win_rate": 0.6017271358719118
+      },
+      "diff_net_stock_ew": -0.05478890043330291,
+      "n_paired_stocks": 1939,
+      "diff_net_pooled": 0.007230356335639954,
+      "diff_gross_pooled": 0.00973036140203476,
+      "bootstrap": {
+        "n_stocks": 1939,
+        "obs_mean_diff": -0.05478890043330291,
+        "n_boot": 2000,
+        "ci95_low": -0.0663627000198231,
+        "ci95_high": -0.044928737438891454,
+        "p_directional_above_gt_below": 1.0,
+        "p_two_sided": 0.0
+      },
+      "signal_stocks": {
+        "above": 1989,
+        "below": 1943
+      }
+    }
+  },
+  "per_market": {
+    "AU": {
+      "market": "AU",
+      "stocks_total": 197,
+      "stocks_processed": 196,
+      "holdings": {
+        "d20": {
+          "above": {
+            "n": 679498,
+            "mean": 0.015259427949786186,
+            "median": 0.006963700521737337,
+            "win_rate": 0.5419559733803484,
+            "mean_gross": 0.017759429290890694,
+            "mean_net": 0.015259427949786186
+          },
+          "below": {
+            "n": 407204,
+            "mean": 0.015330749563872814,
+            "median": 0.002977921161800623,
+            "win_rate": 0.5084601330045874
+          },
+          "diff_net_stock_ew": -0.0020790265820285966,
+          "diff_gross_stock_ew": 0.00042097297639050527,
+          "n_paired_stocks": 192,
+          "diff_net_pooled": -7.132161408662796e-05,
+          "diff_gross_pooled": 0.0024286797270178795,
+          "bootstrap": {
+            "n_stocks": 192,
+            "obs_mean_diff": -0.0020790265820285966,
+            "n_boot": 2000,
+            "ci95_low": -0.004670134870454017,
+            "ci95_high": 0.000588162625992557,
+            "p_directional_above_gt_below": 0.9455,
+            "p_two_sided": 0.109
+          },
+          "signal_stocks": {
+            "above": 193,
+            "below": 193
+          }
+        },
+        "d60": {
+          "above": {
+            "n": 676072,
+            "mean": 0.051517512649297714,
+            "median": 0.029245734214782715,
+            "win_rate": 0.5990530594374563,
+            "mean_gross": 0.05401751026511192,
+            "mean_net": 0.051517512649297714
+          },
+          "below": {
+            "n": 402870,
+            "mean": 0.04875866323709488,
+            "median": 0.019249070435762405,
+            "win_rate": 0.5460818626355897
+          },
+          "diff_net_stock_ew": -0.0016324874814775611,
+          "diff_gross_stock_ew": 0.0008675115060062383,
+          "n_paired_stocks": 192,
+          "diff_net_pooled": 0.002758849412202835,
+          "diff_gross_pooled": 0.005258847028017044,
+          "bootstrap": {
+            "n_stocks": 192,
+            "obs_mean_diff": -0.0016324874814775611,
+            "n_boot": 2000,
+            "ci95_low": -0.009054415532673003,
+            "ci95_high": 0.005966909657384651,
+            "p_directional_above_gt_below": 0.6585,
+            "p_two_sided": 0.683
+          },
+          "signal_stocks": {
+            "above": 193,
+            "below": 193
+          }
+        },
+        "d120": {
+          "above": {
+            "n": 670443,
+            "mean": 0.10743460059165955,
+            "median": 0.06273920089006424,
+            "win_rate": 0.6405525898547677,
+            "mean_gross": 0.10993459820747375,
+            "mean_net": 0.10743460059165955
+          },
+          "below": {
+            "n": 396951,
+            "mean": 0.1114722341299057,
+            "median": 0.03901329264044762,
+            "win_rate": 0.5670523565880927
+          },
+          "diff_net_stock_ew": -0.013271271688305816,
+          "diff_gross_stock_ew": -0.010771270189555565,
+          "n_paired_stocks": 192,
+          "diff_net_pooled": -0.004037633538246155,
+          "diff_gross_pooled": -0.0015376359224319458,
+          "bootstrap": {
+            "n_stocks": 192,
+            "obs_mean_diff": -0.013271271688305816,
+            "n_boot": 2000,
+            "ci95_low": -0.03227520635430967,
+            "ci95_high": 0.004511939783409005,
+            "p_directional_above_gt_below": 0.9215,
+            "p_two_sided": 0.157
+          },
+          "signal_stocks": {
+            "above": 192,
+            "below": 192
+          }
+        }
+      },
+      "oos": {
+        "d20": {
+          "above": {
+            "n": 134946,
+            "mean": 0.008672052063047886,
+            "median": 0.004349325783550739,
+            "win_rate": 0.5256176544691951,
+            "mean_gross": 0.011172052472829819,
+            "mean_net": 0.008672052063047886
+          },
+          "below": {
+            "n": 86923,
+            "mean": 0.015964249148964882,
+            "median": 0.011421273462474346,
+            "win_rate": 0.5545482783613083
+          },
+          "diff_net_stock_ew": -0.017195115834422386,
+          "n_paired_stocks": 190,
+          "diff_net_pooled": -0.007292197085916996,
+          "diff_gross_pooled": -0.004792196676135063,
+          "bootstrap": {
+            "n_stocks": 190,
+            "obs_mean_diff": -0.017195115834422386,
+            "n_boot": 2000,
+            "ci95_low": -0.022794048188115038,
+            "ci95_high": -0.011936047777932246,
+            "p_directional_above_gt_below": 1.0,
+            "p_two_sided": 0.0
+          },
+          "signal_stocks": {
+            "above": 193,
+            "below": 191
+          }
+        },
+        "d60": {
+          "above": {
+            "n": 131526,
+            "mean": 0.03346024081110954,
+            "median": 0.01798100769519806,
+            "win_rate": 0.559699222967322,
+            "mean_gross": 0.03596023470163345,
+            "mean_net": 0.03346024081110954
+          },
+          "below": {
+            "n": 82595,
+            "mean": 0.04842182621359825,
+            "median": 0.03042595088481903,
+            "win_rate": 0.5873479024154005
+          },
+          "diff_net_stock_ew": -0.05509879433192168,
+          "n_paired_stocks": 189,
+          "diff_net_pooled": -0.014961585402488708,
+          "diff_gross_pooled": -0.012461591511964798,
+          "bootstrap": {
+            "n_stocks": 189,
+            "obs_mean_diff": -0.05509879433192168,
+            "n_boot": 2000,
+            "ci95_low": -0.10385282401188571,
+            "ci95_high": -0.023798262564185393,
+            "p_directional_above_gt_below": 1.0,
+            "p_two_sided": 0.0
+          },
+          "signal_stocks": {
+            "above": 192,
+            "below": 189
+          }
+        },
+        "d120": {
+          "above": {
+            "n": 125936,
+            "mean": 0.07349780946969986,
+            "median": 0.04033854603767395,
+            "win_rate": 0.5902283699656968,
+            "mean_gross": 0.07599782198667526,
+            "mean_net": 0.07349780946969986
+          },
+          "below": {
+            "n": 76690,
+            "mean": 0.10576677322387695,
+            "median": 0.05743589252233505,
+            "win_rate": 0.621684704655105
+          },
+          "diff_net_stock_ew": -0.10981972405306556,
+          "n_paired_stocks": 183,
+          "diff_net_pooled": -0.032268963754177094,
+          "diff_gross_pooled": -0.02976895123720169,
+          "bootstrap": {
+            "n_stocks": 183,
+            "obs_mean_diff": -0.10981972405306556,
+            "n_boot": 2000,
+            "ci95_low": -0.2145971036721527,
+            "ci95_high": -0.046863365074553825,
+            "p_directional_above_gt_below": 1.0,
+            "p_two_sided": 0.0
+          },
+          "signal_stocks": {
+            "above": 190,
+            "below": 183
+          }
+        }
+      }
+    },
+    "CA": {
+      "market": "CA",
+      "stocks_total": 53,
+      "stocks_processed": 53,
+      "holdings": {
+        "d20": {
+          "above": {
+            "n": 223332,
+            "mean": 0.010492829605937004,
+            "median": 0.00948338769376278,
+            "win_rate": 0.5698825067612344,
+            "mean_gross": 0.012992828153073788,
+            "mean_net": 0.010492829605937004
+          },
+          "below": {
+            "n": 102076,
+            "mean": 0.015066876076161861,
+            "median": 0.011921567842364311,
+            "win_rate": 0.5664896743602805
+          },
+          "diff_net_stock_ew": -0.00463836879429917,
+          "diff_gross_stock_ew": -0.002138369227979192,
+          "n_paired_stocks": 53,
+          "diff_net_pooled": -0.004574046470224857,
+          "diff_gross_pooled": -0.0020740479230880737,
+          "bootstrap": {
+            "n_stocks": 53,
+            "obs_mean_diff": -0.00463836879429917,
+            "n_boot": 2000,
+            "ci95_low": -0.007117894442146863,
+            "ci95_high": -0.002229744400625901,
+            "p_directional_above_gt_below": 1.0,
+            "p_two_sided": 0.0
+          },
+          "signal_stocks": {
+            "above": 53,
+            "below": 53
+          }
+        },
+        "d60": {
+          "above": {
+            "n": 221855,
+            "mean": 0.03789016604423523,
+            "median": 0.03334071487188339,
+            "win_rate": 0.6325077190056568,
+            "mean_gross": 0.04039016366004944,
+            "mean_net": 0.03789016604423523
+          },
+          "below": {
+            "n": 101433,
+            "mean": 0.04163689911365509,
+            "median": 0.03301138058304787,
+            "win_rate": 0.6064101426557432
+          },
+          "diff_net_stock_ew": -0.0022460964710434086,
+          "diff_gross_stock_ew": 0.00025390273065499513,
+          "n_paired_stocks": 53,
+          "diff_net_pooled": -0.003746733069419861,
+          "diff_gross_pooled": -0.0012467354536056519,
+          "bootstrap": {
+            "n_stocks": 53,
+            "obs_mean_diff": -0.0022460964710434086,
+            "n_boot": 2000,
+            "ci95_low": -0.009703497387214018,
+            "ci95_high": 0.004912089818719558,
+            "p_directional_above_gt_below": 0.7135,
+            "p_two_sided": 0.573
+          },
+          "signal_stocks": {
+            "above": 53,
+            "below": 53
+          }
+        },
+        "d120": {
+          "above": {
+            "n": 219516,
+            "mean": 0.08144699037075043,
+            "median": 0.06908522546291351,
+            "win_rate": 0.6850799030594581,
+            "mean_gross": 0.08394698798656464,
+            "mean_net": 0.08144699037075043
+          },
+          "below": {
+            "n": 100592,
+            "mean": 0.07814159244298935,
+            "median": 0.0620708167552948,
+            "win_rate": 0.6399415460473994
+          },
+          "diff_net_stock_ew": 0.0015690511659244566,
+          "diff_gross_stock_ew": 0.004069049554912121,
+          "n_paired_stocks": 53,
+          "diff_net_pooled": 0.003305397927761078,
+          "diff_gross_pooled": 0.005805395543575287,
+          "bootstrap": {
+            "n_stocks": 53,
+            "obs_mean_diff": 0.0015690511659244566,
+            "n_boot": 2000,
+            "ci95_low": -0.0118615912668899,
+            "ci95_high": 0.01419849107860157,
+            "p_directional_above_gt_below": 0.4415,
+            "p_two_sided": 0.883
+          },
+          "signal_stocks": {
+            "above": 53,
+            "below": 53
+          }
+        }
+      },
+      "oos": {
+        "d20": {
+          "above": {
+            "n": 45779,
+            "mean": 0.013380452059209347,
+            "median": 0.011034730821847916,
+            "win_rate": 0.5739968107647612,
+            "mean_gross": 0.01588045060634613,
+            "mean_net": 0.013380452059209347
+          },
+          "below": {
+            "n": 20546,
+            "mean": 0.018847065046429634,
+            "median": 0.014015233144164085,
+            "win_rate": 0.5866835393750608
+          },
+          "diff_net_stock_ew": -0.01242862901339182,
+          "n_paired_stocks": 52,
+          "diff_net_pooled": -0.005466612987220287,
+          "diff_gross_pooled": -0.0029666144400835037,
+          "bootstrap": {
+            "n_stocks": 52,
+            "obs_mean_diff": -0.01242862901339182,
+            "n_boot": 2000,
+            "ci95_low": -0.018845406455665608,
+            "ci95_high": -0.00641064311929278,
+            "p_directional_above_gt_below": 1.0,
+            "p_two_sided": 0.0
+          },
+          "signal_stocks": {
+            "above": 53,
+            "below": 52
+          }
+        },
+        "d60": {
+          "above": {
+            "n": 44302,
+            "mean": 0.049133844673633575,
+            "median": 0.041142117232084274,
+            "win_rate": 0.6490677621777798,
+            "mean_gross": 0.051633842289447784,
+            "mean_net": 0.049133844673633575
+          },
+          "below": {
+            "n": 19903,
+            "mean": 0.04848816618323326,
+            "median": 0.033008091151714325,
+            "win_rate": 0.628447972667437
+          },
+          "diff_net_stock_ew": -0.01602392208042147,
+          "n_paired_stocks": 52,
+          "diff_net_pooled": 0.0006456784904003143,
+          "diff_gross_pooled": 0.0031456761062145233,
+          "bootstrap": {
+            "n_stocks": 52,
+            "obs_mean_diff": -0.01602392208042147,
+            "n_boot": 2000,
+            "ci95_low": -0.03455648894319334,
+            "ci95_high": 0.0025239840144632196,
+            "p_directional_above_gt_below": 0.957,
+            "p_two_sided": 0.086
+          },
+          "signal_stocks": {
+            "above": 53,
+            "below": 52
+          }
+        },
+        "d120": {
+          "above": {
+            "n": 41963,
+            "mean": 0.1063677966594696,
+            "median": 0.08758819848299026,
+            "win_rate": 0.7111741295903534,
+            "mean_gross": 0.10886780172586441,
+            "mean_net": 0.1063677966594696
+          },
+          "below": {
+            "n": 19062,
+            "mean": 0.09744841605424881,
+            "median": 0.06755324453115463,
+            "win_rate": 0.67233238904627
+          },
+          "diff_net_stock_ew": -0.02160792361246422,
+          "n_paired_stocks": 52,
+          "diff_net_pooled": 0.008919380605220795,
+          "diff_gross_pooled": 0.0114193856716156,
+          "bootstrap": {
+            "n_stocks": 52,
+            "obs_mean_diff": -0.02160792361246422,
+            "n_boot": 2000,
+            "ci95_low": -0.059808257731044874,
+            "ci95_high": 0.015148658249997329,
+            "p_directional_above_gt_below": 0.8615,
+            "p_two_sided": 0.277
+          },
+          "signal_stocks": {
+            "above": 53,
+            "below": 52
+          }
+        }
+      }
+    },
+    "CH": {
+      "market": "CH",
+      "stocks_total": 19,
+      "stocks_processed": 19,
+      "holdings": {
+        "d20": {
+          "above": {
+            "n": 80021,
+            "mean": 0.008150873705744743,
+            "median": 0.00848027877509594,
+            "win_rate": 0.5651391509728696,
+            "mean_gross": 0.010650874115526676,
+            "mean_net": 0.008150873705744743
+          },
+          "below": {
+            "n": 42773,
+            "mean": 0.008989020250737667,
+            "median": 0.01061791367828846,
+            "win_rate": 0.5551399247188648
+          },
+          "diff_net_stock_ew": -0.008231988329881508,
+          "diff_gross_stock_ew": -0.005731989568295448,
+          "n_paired_stocks": 19,
+          "diff_net_pooled": -0.0008381465449929237,
+          "diff_gross_pooled": 0.001661853864789009,
+          "bootstrap": {
+            "n_stocks": 19,
+            "obs_mean_diff": -0.008231988329881508,
+            "n_boot": 2000,
+            "ci95_low": -0.022560975768321535,
+            "ci95_high": 0.000913111921124102,
+            "p_directional_above_gt_below": 0.9455,
+            "p_two_sided": 0.109
+          },
+          "signal_stocks": {
+            "above": 19,
+            "below": 19
+          }
+        },
+        "d60": {
+          "above": {
+            "n": 79561,
+            "mean": 0.030637796968221664,
+            "median": 0.029932396486401558,
+            "win_rate": 0.61980115885924,
+            "mean_gross": 0.03313779458403587,
+            "mean_net": 0.030637796968221664
+          },
+          "below": {
+            "n": 42473,
+            "mean": 0.024669354781508446,
+            "median": 0.02597232162952423,
+            "win_rate": 0.5847008687872295
+          },
+          "diff_net_stock_ew": 0.0045670321495789624,
+          "diff_gross_stock_ew": 0.007067031197948385,
+          "n_paired_stocks": 18,
+          "diff_net_pooled": 0.005968442186713219,
+          "diff_gross_pooled": 0.008468439802527428,
+          "bootstrap": {
+            "n_stocks": 18,
+            "obs_mean_diff": 0.0045670321495789624,
+            "n_boot": 2000,
+            "ci95_low": -0.004263782431694885,
+            "ci95_high": 0.013718929490359084,
+            "p_directional_above_gt_below": 0.158,
+            "p_two_sided": 0.316
+          },
+          "signal_stocks": {
+            "above": 19,
+            "below": 18
+          }
+        },
+        "d120": {
+          "above": {
+            "n": 79047,
+            "mean": 0.06566961854696274,
+            "median": 0.05855169519782066,
+            "win_rate": 0.6589750401659772,
+            "mean_gross": 0.06816962361335754,
+            "mean_net": 0.06566961854696274
+          },
+          "below": {
+            "n": 41896,
+            "mean": 0.049081578850746155,
+            "median": 0.046231627464294434,
+            "win_rate": 0.5954745083062822
+          },
+          "diff_net_stock_ew": 0.01369735184643004,
+          "diff_gross_stock_ew": 0.01619735163533026,
+          "n_paired_stocks": 18,
+          "diff_net_pooled": 0.016588039696216583,
+          "diff_gross_pooled": 0.01908804476261139,
+          "bootstrap": {
+            "n_stocks": 18,
+            "obs_mean_diff": 0.01369735184643004,
+            "n_boot": 2000,
+            "ci95_low": -0.0002518800785765074,
+            "ci95_high": 0.02820375092172373,
+            "p_directional_above_gt_below": 0.03,
+            "p_two_sided": 0.06
+          },
+          "signal_stocks": {
+            "above": 18,
+            "below": 18
+          }
+        }
+      },
+      "oos": {
+        "d20": {
+          "above": {
+            "n": 15385,
+            "mean": 0.00605107331648469,
+            "median": 0.007257068995386362,
+            "win_rate": 0.5526161845953851,
+            "mean_gross": 0.008551073260605335,
+            "mean_net": 0.00605107331648469
+          },
+          "below": {
+            "n": 9620,
+            "mean": 0.012127780355513096,
+            "median": 0.007603979669511318,
+            "win_rate": 0.5437629937629938
+          },
+          "diff_net_stock_ew": -0.01812858346587937,
+          "n_paired_stocks": 19,
+          "diff_net_pooled": -0.006076707039028406,
+          "diff_gross_pooled": -0.0035767070949077606,
+          "bootstrap": {
+            "n_stocks": 19,
+            "obs_mean_diff": -0.01812858346587937,
+            "n_boot": 2000,
+            "ci95_low": -0.02878131988670224,
+            "ci95_high": -0.008460056437674644,
+            "p_directional_above_gt_below": 1.0,
+            "p_two_sided": 0.0
+          },
+          "signal_stocks": {
+            "above": 19,
+            "below": 19
+          }
+        },
+        "d60": {
+          "above": {
+            "n": 14931,
+            "mean": 0.023507116362452507,
+            "median": 0.02542012743651867,
+            "win_rate": 0.5960083048690643,
+            "mean_gross": 0.026007115840911865,
+            "mean_net": 0.023507116362452507
+          },
+          "below": {
+            "n": 9320,
+            "mean": 0.02495577000081539,
+            "median": 0.015590718947350979,
+            "win_rate": 0.5525751072961373
+          },
+          "diff_net_stock_ew": -0.02089057745049811,
+          "n_paired_stocks": 18,
+          "diff_net_pooled": -0.0014486536383628845,
+          "diff_gross_pooled": 0.0010513458400964737,
+          "bootstrap": {
+            "n_stocks": 18,
+            "obs_mean_diff": -0.02089057745049811,
+            "n_boot": 2000,
+            "ci95_low": -0.037174079044618544,
+            "ci95_high": -0.004553732487774062,
+            "p_directional_above_gt_below": 0.9945,
+            "p_two_sided": 0.011
+          },
+          "signal_stocks": {
+            "above": 18,
+            "below": 18
+          }
+        },
+        "d120": {
+          "above": {
+            "n": 14428,
+            "mean": 0.04601828753948212,
+            "median": 0.04514538124203682,
+            "win_rate": 0.6282922095924591,
+            "mean_gross": 0.04851829260587692,
+            "mean_net": 0.04601828753948212
+          },
+          "below": {
+            "n": 8743,
+            "mean": 0.0467747300863266,
+            "median": 0.03532275930047035,
+            "win_rate": 0.5827519158183689
+          },
+          "diff_net_stock_ew": -0.03652985076445879,
+          "n_paired_stocks": 18,
+          "diff_net_pooled": -0.0007564425468444824,
+          "diff_gross_pooled": 0.0017435625195503235,
+          "bootstrap": {
+            "n_stocks": 18,
+            "obs_mean_diff": -0.03652985076445879,
+            "n_boot": 2000,
+            "ci95_low": -0.06352250878052372,
+            "ci95_high": -0.009859079702679702,
+            "p_directional_above_gt_below": 0.9985,
+            "p_two_sided": 0.003
+          },
+          "signal_stocks": {
+            "above": 18,
+            "below": 18
+          }
+        }
+      }
+    },
+    "CN": {
+      "market": "CN",
+      "stocks_total": 300,
+      "stocks_processed": 299,
+      "holdings": {
+        "d20": {
+          "above": {
+            "n": 563647,
+            "mean": 0.011664151214063168,
+            "median": -0.0024999999441206455,
+            "win_rate": 0.48232493031986334,
+            "mean_gross": 0.014164149761199951,
+            "mean_net": 0.011664151214063168
+          },
+          "below": {
+            "n": 621801,
+            "mean": 0.007516900077462196,
+            "median": 0.0,
+            "win_rate": 0.4909368109732857
+          },
+          "diff_net_stock_ew": -0.001506763918164844,
+          "diff_gross_stock_ew": 0.000993235129596889,
+          "n_paired_stocks": 298,
+          "diff_net_pooled": 0.004147251136600971,
+          "diff_gross_pooled": 0.006647249683737755,
+          "bootstrap": {
+            "n_stocks": 298,
+            "obs_mean_diff": -0.001506763918164844,
+            "n_boot": 2000,
+            "ci95_low": -0.004090499355956334,
+            "ci95_high": 0.0009989832895752847,
+            "p_directional_above_gt_below": 0.877,
+            "p_two_sided": 0.246
+          },
+          "signal_stocks": {
+            "above": 298,
+            "below": 299
+          }
+        },
+        "d60": {
+          "above": {
+            "n": 558939,
+            "mean": 0.04037237539887428,
+            "median": -0.003624226897954941,
+            "win_rate": 0.48495631902586867,
+            "mean_gross": 0.04287237673997879,
+            "mean_net": 0.04037237539887428
+          },
+          "below": {
+            "n": 614563,
+            "mean": 0.024707311764359474,
+            "median": -0.0020242915488779545,
+            "win_rate": 0.4894843978566884
+          },
+          "diff_net_stock_ew": 0.002294366993198682,
+          "diff_gross_stock_ew": 0.004794366127409702,
+          "n_paired_stocks": 297,
+          "diff_net_pooled": 0.01566506363451481,
+          "diff_gross_pooled": 0.018165064975619316,
+          "bootstrap": {
+            "n_stocks": 297,
+            "obs_mean_diff": 0.002294366993198682,
+            "n_boot": 2000,
+            "ci95_low": -0.00523285385601418,
+            "ci95_high": 0.009680349530713605,
+            "p_directional_above_gt_below": 0.251,
+            "p_two_sided": 0.502
+          },
+          "signal_stocks": {
+            "above": 297,
+            "below": 298
+          }
+        },
+        "d120": {
+          "above": {
+            "n": 549877,
+            "mean": 0.0835985466837883,
+            "median": -0.0024999999441206455,
+            "win_rate": 0.49671471983734544,
+            "mean_gross": 0.08609854429960251,
+            "mean_net": 0.0835985466837883
+          },
+          "below": {
+            "n": 605745,
+            "mean": 0.05579302832484245,
+            "median": -0.00325203244574368,
+            "win_rate": 0.4910828814104945
+          },
+          "diff_net_stock_ew": 0.0034387893321169705,
+          "diff_gross_stock_ew": 0.005938789552564772,
+          "n_paired_stocks": 297,
+          "diff_net_pooled": 0.027805518358945847,
+          "diff_gross_pooled": 0.030305515974760056,
+          "bootstrap": {
+            "n_stocks": 297,
+            "obs_mean_diff": 0.0034387893321169705,
+            "n_boot": 2000,
+            "ci95_low": -0.00905864287467351,
+            "ci95_high": 0.01645613920751226,
+            "p_directional_above_gt_below": 0.2995,
+            "p_two_sided": 0.599
+          },
+          "signal_stocks": {
+            "above": 297,
+            "below": 298
+          }
+        }
+      },
+      "oos": {
+        "d20": {
+          "above": {
+            "n": 124701,
+            "mean": 0.009609525091946125,
+            "median": -0.008035055361688137,
+            "win_rate": 0.46268273710716035,
+            "mean_gross": 0.012109522707760334,
+            "mean_net": 0.009609525091946125
+          },
+          "below": {
+            "n": 119374,
+            "mean": 0.00788762979209423,
+            "median": -0.0028818442951887846,
+            "win_rate": 0.47979459513796974
+          },
+          "diff_net_stock_ew": -0.021970600306742888,
+          "n_paired_stocks": 290,
+          "diff_net_pooled": 0.0017218952998518944,
+          "diff_gross_pooled": 0.004221892915666103,
+          "bootstrap": {
+            "n_stocks": 290,
+            "obs_mean_diff": -0.021970600306742888,
+            "n_boot": 2000,
+            "ci95_low": -0.027674825113172118,
+            "ci95_high": -0.01669528787417974,
+            "p_directional_above_gt_below": 1.0,
+            "p_two_sided": 0.0
+          },
+          "signal_stocks": {
+            "above": 297,
+            "below": 292
+          }
+        },
+        "d60": {
+          "above": {
+            "n": 119993,
+            "mean": 0.035518016666173935,
+            "median": -0.009663927368819714,
+            "win_rate": 0.4736276282783162,
+            "mean_gross": 0.038018014281988144,
+            "mean_net": 0.035518016666173935
+          },
+          "below": {
+            "n": 112136,
+            "mean": 0.030397385358810425,
+            "median": -0.0016847632359713316,
+            "win_rate": 0.4932581864878362
+          },
+          "diff_net_stock_ew": -0.06060755725575229,
+          "n_paired_stocks": 289,
+          "diff_net_pooled": 0.00512063130736351,
+          "diff_gross_pooled": 0.007620628923177719,
+          "bootstrap": {
+            "n_stocks": 289,
+            "obs_mean_diff": -0.06060755725575229,
+            "n_boot": 2000,
+            "ci95_low": -0.07980925029618743,
+            "ci95_high": -0.04388478389493346,
+            "p_directional_above_gt_below": 1.0,
+            "p_two_sided": 0.0
+          },
+          "signal_stocks": {
+            "above": 296,
+            "below": 291
+          }
+        },
+        "d120": {
+          "above": {
+            "n": 110931,
+            "mean": 0.08132960647344589,
+            "median": 0.0046225073747336864,
+            "win_rate": 0.5088478423524533,
+            "mean_gross": 0.0838296040892601,
+            "mean_net": 0.08132960647344589
+          },
+          "below": {
+            "n": 103363,
+            "mean": 0.06133396178483963,
+            "median": 0.004112405702471733,
+            "win_rate": 0.508237957489624
+          },
+          "diff_net_stock_ew": -0.09717886096923588,
+          "n_paired_stocks": 282,
+          "diff_net_pooled": 0.019995644688606262,
+          "diff_gross_pooled": 0.02249564230442047,
+          "bootstrap": {
+            "n_stocks": 282,
+            "obs_mean_diff": -0.09717886096923588,
+            "n_boot": 2000,
+            "ci95_low": -0.13092894310758177,
+            "ci95_high": -0.06773794140370504,
+            "p_directional_above_gt_below": 1.0,
+            "p_two_sided": 0.0
+          },
+          "signal_stocks": {
+            "above": 296,
+            "below": 283
+          }
+        }
+      }
+    },
+    "DE": {
+      "market": "DE",
+      "stocks_total": 40,
+      "stocks_processed": 40,
+      "holdings": {
+        "d20": {
+          "above": {
+            "n": 148444,
+            "mean": 0.006658002268522978,
+            "median": 0.0071769580245018005,
+            "win_rate": 0.5432890517636281,
+            "mean_gross": 0.009158002212643623,
+            "mean_net": 0.006658002268522978
+          },
+          "below": {
+            "n": 91300,
+            "mean": 0.010624375194311142,
+            "median": 0.011817601509392262,
+            "win_rate": 0.5544359255202629
+          },
+          "diff_net_stock_ew": -0.004700033616973087,
+          "diff_gross_stock_ew": -0.0022000338554278194,
+          "n_paired_stocks": 40,
+          "diff_net_pooled": -0.003966372925788164,
+          "diff_gross_pooled": -0.0014663729816675186,
+          "bootstrap": {
+            "n_stocks": 40,
+            "obs_mean_diff": -0.004700033616973087,
+            "n_boot": 2000,
+            "ci95_low": -0.010048824397235877,
+            "ci95_high": 0.0015509378052956883,
+            "p_directional_above_gt_below": 0.9415,
+            "p_two_sided": 0.117
+          },
+          "signal_stocks": {
+            "above": 40,
+            "below": 40
+          }
+        },
+        "d60": {
+          "above": {
+            "n": 147726,
+            "mean": 0.025851910933852196,
+            "median": 0.026027992367744446,
+            "win_rate": 0.5879398345585747,
+            "mean_gross": 0.028351910412311554,
+            "mean_net": 0.025851910933852196
+          },
+          "below": {
+            "n": 90418,
+            "mean": 0.02975882962346077,
+            "median": 0.026838429272174835,
+            "win_rate": 0.5707049481297972
+          },
+          "diff_net_stock_ew": -0.005750809103483336,
+          "diff_gross_stock_ew": -0.003250810429744889,
+          "n_paired_stocks": 40,
+          "diff_net_pooled": -0.003906918689608574,
+          "diff_gross_pooled": -0.0014069192111492157,
+          "bootstrap": {
+            "n_stocks": 40,
+            "obs_mean_diff": -0.005750809103483336,
+            "n_boot": 2000,
+            "ci95_low": -0.02001189244911075,
+            "ci95_high": 0.008907096102775536,
+            "p_directional_above_gt_below": 0.7845,
+            "p_two_sided": 0.431
+          },
+          "signal_stocks": {
+            "above": 40,
+            "below": 40
+          }
+        },
+        "d120": {
+          "above": {
+            "n": 146553,
+            "mean": 0.055635955184698105,
+            "median": 0.05211637541651726,
+            "win_rate": 0.621979761587958,
+            "mean_gross": 0.058135952800512314,
+            "mean_net": 0.055635955184698105
+          },
+          "below": {
+            "n": 89191,
+            "mean": 0.060238223522901535,
+            "median": 0.04897117614746094,
+            "win_rate": 0.5907434606630714
+          },
+          "diff_net_stock_ew": -0.005272209917893629,
+          "diff_gross_stock_ew": -0.002772213175194327,
+          "n_paired_stocks": 40,
+          "diff_net_pooled": -0.00460226833820343,
+          "diff_gross_pooled": -0.002102270722389221,
+          "bootstrap": {
+            "n_stocks": 40,
+            "obs_mean_diff": -0.005272209917893629,
+            "n_boot": 2000,
+            "ci95_low": -0.024459050440200372,
+            "ci95_high": 0.018301442382798964,
+            "p_directional_above_gt_below": 0.686,
+            "p_two_sided": 0.628
+          },
+          "signal_stocks": {
+            "above": 40,
+            "below": 40
+          }
+        }
+      },
+      "oos": {
+        "d20": {
+          "above": {
+            "n": 30474,
+            "mean": 0.00781287718564272,
+            "median": 0.004906723275780678,
+            "win_rate": 0.5291724092669161,
+            "mean_gross": 0.010312876664102077,
+            "mean_net": 0.00781287718564272
+          },
+          "below": {
+            "n": 18409,
+            "mean": 0.011305803433060646,
+            "median": 0.009635952301323414,
+            "win_rate": 0.5532619914172415
+          },
+          "diff_net_stock_ew": -0.011960978924225155,
+          "n_paired_stocks": 39,
+          "diff_net_pooled": -0.003492926247417927,
+          "diff_gross_pooled": -0.0009929267689585686,
+          "bootstrap": {
+            "n_stocks": 39,
+            "obs_mean_diff": -0.011960978924225155,
+            "n_boot": 2000,
+            "ci95_low": -0.0200872657766106,
+            "ci95_high": -0.0033535257383333324,
+            "p_directional_above_gt_below": 0.998,
+            "p_two_sided": 0.004
+          },
+          "signal_stocks": {
+            "above": 40,
+            "below": 39
+          }
+        },
+        "d60": {
+          "above": {
+            "n": 29756,
+            "mean": 0.033575836569070816,
+            "median": 0.02619021013379097,
+            "win_rate": 0.587511762333647,
+            "mean_gross": 0.036075837910175323,
+            "mean_net": 0.033575836569070816
+          },
+          "below": {
+            "n": 17527,
+            "mean": 0.022909531369805336,
+            "median": 0.017490580677986145,
+            "win_rate": 0.5505220516916757
+          },
+          "diff_net_stock_ew": -0.013477857205240674,
+          "n_paired_stocks": 39,
+          "diff_net_pooled": 0.01066630519926548,
+          "diff_gross_pooled": 0.013166306540369987,
+          "bootstrap": {
+            "n_stocks": 39,
+            "obs_mean_diff": -0.013477857205240674,
+            "n_boot": 2000,
+            "ci95_low": -0.03022490808690259,
+            "ci95_high": 0.0030092610077983124,
+            "p_directional_above_gt_below": 0.9435,
+            "p_two_sided": 0.113
+          },
+          "signal_stocks": {
+            "above": 40,
+            "below": 39
+          }
+        },
+        "d120": {
+          "above": {
+            "n": 28583,
+            "mean": 0.06984982639551163,
+            "median": 0.05233997851610184,
+            "win_rate": 0.6085785256970927,
+            "mean_gross": 0.07234982401132584,
+            "mean_net": 0.06984982639551163
+          },
+          "below": {
+            "n": 16300,
+            "mean": 0.04802684113383293,
+            "median": 0.038050249218940735,
+            "win_rate": 0.589079754601227
+          },
+          "diff_net_stock_ew": -0.029378281345065586,
+          "n_paired_stocks": 39,
+          "diff_net_pooled": 0.021822985261678696,
+          "diff_gross_pooled": 0.024322982877492905,
+          "bootstrap": {
+            "n_stocks": 39,
+            "obs_mean_diff": -0.029378281345065586,
+            "n_boot": 2000,
+            "ci95_low": -0.057256949567892707,
+            "ci95_high": 0.00039398185311791584,
+            "p_directional_above_gt_below": 0.9715,
+            "p_two_sided": 0.057
+          },
+          "signal_stocks": {
+            "above": 40,
+            "below": 39
+          }
+        }
+      }
+    },
+    "ES": {
+      "market": "ES",
+      "stocks_total": 35,
+      "stocks_processed": 35,
+      "holdings": {
+        "d20": {
+          "above": {
+            "n": 110955,
+            "mean": 0.01006257813423872,
+            "median": 0.0079825259745121,
+            "win_rate": 0.5525212924158442,
+            "mean_gross": 0.012562578544020653,
+            "mean_net": 0.01006257813423872
+          },
+          "below": {
+            "n": 67779,
+            "mean": 0.010402240790426731,
+            "median": 0.009618069045245647,
+            "win_rate": 0.5448885347969135
+          },
+          "diff_net_stock_ew": -0.002062357571308633,
+          "diff_gross_stock_ew": 0.00043764195787454434,
+          "n_paired_stocks": 35,
+          "diff_net_pooled": -0.00033966265618801117,
+          "diff_gross_pooled": 0.0021603377535939217,
+          "bootstrap": {
+            "n_stocks": 35,
+            "obs_mean_diff": -0.002062357571308633,
+            "n_boot": 2000,
+            "ci95_low": -0.006040492520738295,
+            "ci95_high": 0.001984489640100426,
+            "p_directional_above_gt_below": 0.839,
+            "p_two_sided": 0.322
+          },
+          "signal_stocks": {
+            "above": 35,
+            "below": 35
+          }
+        },
+        "d60": {
+          "above": {
+            "n": 109803,
+            "mean": 0.03506845608353615,
+            "median": 0.028559431433677673,
+            "win_rate": 0.6022877334863346,
+            "mean_gross": 0.03756845369935036,
+            "mean_net": 0.03506845608353615
+          },
+          "below": {
+            "n": 67531,
+            "mean": 0.022906742990016937,
+            "median": 0.0219781044870615,
+            "win_rate": 0.5623639513704817
+          },
+          "diff_net_stock_ew": 0.007637764854423169,
+          "diff_gross_stock_ew": 0.010137762704731101,
+          "n_paired_stocks": 35,
+          "diff_net_pooled": 0.01216171309351921,
+          "diff_gross_pooled": 0.01466171070933342,
+          "bootstrap": {
+            "n_stocks": 35,
+            "obs_mean_diff": 0.007637764854423169,
+            "n_boot": 2000,
+            "ci95_low": -0.0008000139141638228,
+            "ci95_high": 0.017591635352998437,
+            "p_directional_above_gt_below": 0.043,
+            "p_two_sided": 0.086
+          },
+          "signal_stocks": {
+            "above": 35,
+            "below": 35
+          }
+        },
+        "d120": {
+          "above": {
+            "n": 108208,
+            "mean": 0.07131222635507584,
+            "median": 0.060501933097839355,
+            "win_rate": 0.6363854798166494,
+            "mean_gross": 0.07381222397089005,
+            "mean_net": 0.07131222635507584
+          },
+          "below": {
+            "n": 67026,
+            "mean": 0.0506075955927372,
+            "median": 0.04465412348508835,
+            "win_rate": 0.5855638110583953
+          },
+          "diff_net_stock_ew": 0.013318697509488886,
+          "diff_gross_stock_ew": 0.015818694965647792,
+          "n_paired_stocks": 35,
+          "diff_net_pooled": 0.02070463076233864,
+          "diff_gross_pooled": 0.023204628378152847,
+          "bootstrap": {
+            "n_stocks": 35,
+            "obs_mean_diff": 0.013318697509488886,
+            "n_boot": 2000,
+            "ci95_low": -0.0033393737098335176,
+            "ci95_high": 0.03258253868769056,
+            "p_directional_above_gt_below": 0.0665,
+            "p_two_sided": 0.133
+          },
+          "signal_stocks": {
+            "above": 35,
+            "below": 35
+          }
+        }
+      },
+      "oos": {
+        "d20": {
+          "above": {
+            "n": 26768,
+            "mean": 0.014584537595510483,
+            "median": 0.012936984188854694,
+            "win_rate": 0.5824491930663479,
+            "mean_gross": 0.01708453707396984,
+            "mean_net": 0.014584537595510483
+          },
+          "below": {
+            "n": 9804,
+            "mean": 0.02146710455417633,
+            "median": 0.020235218107700348,
+            "win_rate": 0.6078131374949001
+          },
+          "diff_net_stock_ew": -0.026000785473401525,
+          "n_paired_stocks": 35,
+          "diff_net_pooled": -0.006882566958665848,
+          "diff_gross_pooled": -0.0043825674802064896,
+          "bootstrap": {
+            "n_stocks": 35,
+            "obs_mean_diff": -0.026000785473401525,
+            "n_boot": 2000,
+            "ci95_low": -0.0366066345269376,
+            "ci95_high": -0.015920156988431702,
+            "p_directional_above_gt_below": 1.0,
+            "p_two_sided": 0.0
+          },
+          "signal_stocks": {
+            "above": 35,
+            "below": 35
+          }
+        },
+        "d60": {
+          "above": {
+            "n": 25616,
+            "mean": 0.05247335508465767,
+            "median": 0.044907353818416595,
+            "win_rate": 0.6615787008119925,
+            "mean_gross": 0.054973356425762177,
+            "mean_net": 0.05247335508465767
+          },
+          "below": {
+            "n": 9556,
+            "mean": 0.051403895020484924,
+            "median": 0.049334920942783356,
+            "win_rate": 0.664608622854751
+          },
+          "diff_net_stock_ew": -0.03677940469434751,
+          "n_paired_stocks": 35,
+          "diff_net_pooled": 0.0010694600641727448,
+          "diff_gross_pooled": 0.003569461405277252,
+          "bootstrap": {
+            "n_stocks": 35,
+            "obs_mean_diff": -0.03677940469434751,
+            "n_boot": 2000,
+            "ci95_low": -0.056082135598241746,
+            "ci95_high": -0.01705559764049084,
+            "p_directional_above_gt_below": 1.0,
+            "p_two_sided": 0.0
+          },
+          "signal_stocks": {
+            "above": 35,
+            "below": 35
+          }
+        },
+        "d120": {
+          "above": {
+            "n": 24028,
+            "mean": 0.11342868208885193,
+            "median": 0.09472236037254333,
+            "win_rate": 0.7293990344597969,
+            "mean_gross": 0.11592869460582733,
+            "mean_net": 0.11342868208885193
+          },
+          "below": {
+            "n": 9051,
+            "mean": 0.10006536543369293,
+            "median": 0.0873827114701271,
+            "win_rate": 0.6977129598939343
+          },
+          "diff_net_stock_ew": -0.04465152262983954,
+          "n_paired_stocks": 34,
+          "diff_net_pooled": 0.013363316655158997,
+          "diff_gross_pooled": 0.0158633291721344,
+          "bootstrap": {
+            "n_stocks": 34,
+            "obs_mean_diff": -0.04465152262983954,
+            "n_boot": 2000,
+            "ci95_low": -0.08274555298951729,
+            "ci95_high": -0.006685649305034251,
+            "p_directional_above_gt_below": 0.988,
+            "p_two_sided": 0.024
+          },
+          "signal_stocks": {
+            "above": 34,
+            "below": 34
+          }
+        }
+      }
+    },
+    "FR": {
+      "market": "FR",
+      "stocks_total": 39,
+      "stocks_processed": 39,
+      "holdings": {
+        "d20": {
+          "above": {
+            "n": 158483,
+            "mean": 0.008009348064661026,
+            "median": 0.006787008140236139,
+            "win_rate": 0.5437744111355792,
+            "mean_gross": 0.010509347543120384,
+            "mean_net": 0.008009348064661026
+          },
+          "below": {
+            "n": 94193,
+            "mean": 0.009717024862766266,
+            "median": 0.009145911782979965,
+            "win_rate": 0.5416219888951408
+          },
+          "diff_net_stock_ew": -0.004819351093875669,
+          "diff_gross_stock_ew": -0.0023193514714829437,
+          "n_paired_stocks": 39,
+          "diff_net_pooled": -0.0017076767981052399,
+          "diff_gross_pooled": 0.0007923226803541183,
+          "bootstrap": {
+            "n_stocks": 39,
+            "obs_mean_diff": -0.004819351093875669,
+            "n_boot": 2000,
+            "ci95_low": -0.010212668993671497,
+            "ci95_high": -0.0008565845465361623,
+            "p_directional_above_gt_below": 0.997,
+            "p_two_sided": 0.006
+          },
+          "signal_stocks": {
+            "above": 39,
+            "below": 39
+          }
+        },
+        "d60": {
+          "above": {
+            "n": 157596,
+            "mean": 0.029905255883932114,
+            "median": 0.026116373017430305,
+            "win_rate": 0.5954973476484174,
+            "mean_gross": 0.03240525722503662,
+            "mean_net": 0.029905255883932114
+          },
+          "below": {
+            "n": 93520,
+            "mean": 0.02614738792181015,
+            "median": 0.021837156265974045,
+            "win_rate": 0.5609495295124037
+          },
+          "diff_net_stock_ew": -0.00041976974059182784,
+          "diff_gross_stock_ew": 0.0020802290751956998,
+          "n_paired_stocks": 39,
+          "diff_net_pooled": 0.0037578679621219635,
+          "diff_gross_pooled": 0.006257869303226471,
+          "bootstrap": {
+            "n_stocks": 39,
+            "obs_mean_diff": -0.00041976974059182784,
+            "n_boot": 2000,
+            "ci95_low": -0.00774200235893472,
+            "ci95_high": 0.007045023493432937,
+            "p_directional_above_gt_below": 0.5385,
+            "p_two_sided": 0.923
+          },
+          "signal_stocks": {
+            "above": 39,
+            "below": 39
+          }
+        },
+        "d120": {
+          "above": {
+            "n": 156346,
+            "mean": 0.06077925115823746,
+            "median": 0.05368945747613907,
+            "win_rate": 0.6345861102938355,
+            "mean_gross": 0.06327924877405167,
+            "mean_net": 0.06077925115823746
+          },
+          "below": {
+            "n": 92430,
+            "mean": 0.05834896117448807,
+            "median": 0.044408705085515976,
+            "win_rate": 0.5838580547441307
+          },
+          "diff_net_stock_ew": -0.006403967769494132,
+          "diff_gross_stock_ew": -0.00390396852983544,
+          "n_paired_stocks": 39,
+          "diff_net_pooled": 0.0024302899837493896,
+          "diff_gross_pooled": 0.004930287599563599,
+          "bootstrap": {
+            "n_stocks": 39,
+            "obs_mean_diff": -0.006403967769494132,
+            "n_boot": 2000,
+            "ci95_low": -0.020732765310952878,
+            "ci95_high": 0.007850377319137347,
+            "p_directional_above_gt_below": 0.8065,
+            "p_two_sided": 0.387
+          },
+          "signal_stocks": {
+            "above": 39,
+            "below": 39
+          }
+        }
+      },
+      "oos": {
+        "d20": {
+          "above": {
+            "n": 31900,
+            "mean": 0.004442174918949604,
+            "median": 0.00518080685287714,
+            "win_rate": 0.5325705329153605,
+            "mean_gross": 0.006942173931747675,
+            "mean_net": 0.004442174918949604
+          },
+          "below": {
+            "n": 19560,
+            "mean": 0.011383135803043842,
+            "median": 0.011528648436069489,
+            "win_rate": 0.5568507157464213
+          },
+          "diff_net_stock_ew": -0.013522631958422656,
+          "n_paired_stocks": 38,
+          "diff_net_pooled": -0.006940960884094238,
+          "diff_gross_pooled": -0.004440961871296167,
+          "bootstrap": {
+            "n_stocks": 38,
+            "obs_mean_diff": -0.013522631958422656,
+            "n_boot": 2000,
+            "ci95_low": -0.01902735940601767,
+            "ci95_high": -0.007895182362661122,
+            "p_directional_above_gt_below": 1.0,
+            "p_two_sided": 0.0
+          },
+          "signal_stocks": {
+            "above": 39,
+            "below": 38
+          }
+        },
+        "d60": {
+          "above": {
+            "n": 31013,
+            "mean": 0.021589988842606544,
+            "median": 0.020095782354474068,
+            "win_rate": 0.5717924741237546,
+            "mean_gross": 0.024089988321065903,
+            "mean_net": 0.021589988842606544
+          },
+          "below": {
+            "n": 18887,
+            "mean": 0.023534473031759262,
+            "median": 0.017929522320628166,
+            "win_rate": 0.557896966167205
+          },
+          "diff_net_stock_ew": -0.02263177904808943,
+          "n_paired_stocks": 38,
+          "diff_net_pooled": -0.0019444841891527176,
+          "diff_gross_pooled": 0.0005555152893066406,
+          "bootstrap": {
+            "n_stocks": 38,
+            "obs_mean_diff": -0.02263177904808943,
+            "n_boot": 2000,
+            "ci95_low": -0.04077883156136714,
+            "ci95_high": -0.006335416925024844,
+            "p_directional_above_gt_below": 0.9975,
+            "p_two_sided": 0.005
+          },
+          "signal_stocks": {
+            "above": 39,
+            "below": 38
+          }
+        },
+        "d120": {
+          "above": {
+            "n": 29763,
+            "mean": 0.04180705547332764,
+            "median": 0.03912494704127312,
+            "win_rate": 0.6006450962604576,
+            "mean_gross": 0.04430704936385155,
+            "mean_net": 0.04180705547332764
+          },
+          "below": {
+            "n": 17797,
+            "mean": 0.0473194383084774,
+            "median": 0.030805625021457672,
+            "win_rate": 0.5646457268078889
+          },
+          "diff_net_stock_ew": -0.04714547592754427,
+          "n_paired_stocks": 38,
+          "diff_net_pooled": -0.005512382835149765,
+          "diff_gross_pooled": -0.0030123889446258545,
+          "bootstrap": {
+            "n_stocks": 38,
+            "obs_mean_diff": -0.04714547592754427,
+            "n_boot": 2000,
+            "ci95_low": -0.07545143836545512,
+            "ci95_high": -0.020629846558011596,
+            "p_directional_above_gt_below": 1.0,
+            "p_two_sided": 0.0
+          },
+          "signal_stocks": {
+            "above": 39,
+            "below": 38
+          }
+        }
+      }
+    },
+    "HK": {
+      "market": "HK",
+      "stocks_total": 85,
+      "stocks_processed": 85,
+      "holdings": {
+        "d20": {
+          "above": {
+            "n": 209204,
+            "mean": 0.014176294207572937,
+            "median": 0.004601418040692806,
+            "win_rate": 0.5241677979388539,
+            "mean_gross": 0.016676291823387146,
+            "mean_net": 0.014176294207572937
+          },
+          "below": {
+            "n": 149935,
+            "mean": 0.010146267712116241,
+            "median": 0.005076049827039242,
+            "win_rate": 0.5185647113749291
+          },
+          "diff_net_stock_ew": 0.00036960367929970983,
+          "diff_gross_stock_ew": 0.0028696028094546983,
+          "n_paired_stocks": 85,
+          "diff_net_pooled": 0.0040300264954566956,
+          "diff_gross_pooled": 0.0065300241112709045,
+          "bootstrap": {
+            "n_stocks": 85,
+            "obs_mean_diff": 0.00036960367929970983,
+            "n_boot": 2000,
+            "ci95_low": -0.004870084951208436,
+            "ci95_high": 0.005529054445648986,
+            "p_directional_above_gt_below": 0.461,
+            "p_two_sided": 0.922
+          },
+          "signal_stocks": {
+            "above": 85,
+            "below": 85
+          }
+        },
+        "d60": {
+          "above": {
+            "n": 207514,
+            "mean": 0.05049365758895874,
+            "median": 0.021029401570558548,
+            "win_rate": 0.5600345036961362,
+            "mean_gross": 0.05299365147948265,
+            "mean_net": 0.05049365758895874
+          },
+          "below": {
+            "n": 148225,
+            "mean": 0.03161544352769852,
+            "median": 0.017521902918815613,
+            "win_rate": 0.5442064429077416
+          },
+          "diff_net_stock_ew": 0.010443501454189087,
+          "diff_gross_stock_ew": 0.01294350084499456,
+          "n_paired_stocks": 85,
+          "diff_net_pooled": 0.018878214061260223,
+          "diff_gross_pooled": 0.021378207951784134,
+          "bootstrap": {
+            "n_stocks": 85,
+            "obs_mean_diff": 0.010443501454189087,
+            "n_boot": 2000,
+            "ci95_low": -0.0039105791036854465,
+            "ci95_high": 0.027575897185606126,
+            "p_directional_above_gt_below": 0.0795,
+            "p_two_sided": 0.159
+          },
+          "signal_stocks": {
+            "above": 85,
+            "below": 85
+          }
+        },
+        "d120": {
+          "above": {
+            "n": 204326,
+            "mean": 0.1073138564825058,
+            "median": 0.04692992568016052,
+            "win_rate": 0.5921909106036432,
+            "mean_gross": 0.1098138689994812,
+            "mean_net": 0.1073138564825058
+          },
+          "below": {
+            "n": 146313,
+            "mean": 0.07415413111448288,
+            "median": 0.032967034727334976,
+            "win_rate": 0.5595538332205614
+          },
+          "diff_net_stock_ew": 0.02915654971175606,
+          "diff_gross_stock_ew": 0.03165654613015553,
+          "n_paired_stocks": 84,
+          "diff_net_pooled": 0.03315972536802292,
+          "diff_gross_pooled": 0.03565973788499832,
+          "bootstrap": {
+            "n_stocks": 84,
+            "obs_mean_diff": 0.02915654971175606,
+            "n_boot": 2000,
+            "ci95_low": 0.003585224367201409,
+            "ci95_high": 0.056307984862775926,
+            "p_directional_above_gt_below": 0.0125,
+            "p_two_sided": 0.025
+          },
+          "signal_stocks": {
+            "above": 85,
+            "below": 84
+          }
+        }
+      },
+      "oos": {
+        "d20": {
+          "above": {
+            "n": 41287,
+            "mean": 0.003687256947159767,
+            "median": -0.0012309891171753407,
+            "win_rate": 0.49386005280112383,
+            "mean_gross": 0.006187256425619125,
+            "mean_net": 0.003687256947159767
+          },
+          "below": {
+            "n": 32524,
+            "mean": 0.008770840242505074,
+            "median": 0.0,
+            "win_rate": 0.497294305743451
+          },
+          "diff_net_stock_ew": -0.014937629459339352,
+          "n_paired_stocks": 85,
+          "diff_net_pooled": -0.005083583295345306,
+          "diff_gross_pooled": -0.002583583816885948,
+          "bootstrap": {
+            "n_stocks": 85,
+            "obs_mean_diff": -0.014937629459339352,
+            "n_boot": 2000,
+            "ci95_low": -0.022426526976507696,
+            "ci95_high": -0.006860207237833122,
+            "p_directional_above_gt_below": 1.0,
+            "p_two_sided": 0.0
+          },
+          "signal_stocks": {
+            "above": 85,
+            "below": 85
+          }
+        },
+        "d60": {
+          "above": {
+            "n": 39597,
+            "mean": 0.018892131745815277,
+            "median": 0.005391778890043497,
+            "win_rate": 0.514710710407354,
+            "mean_gross": 0.021392129361629486,
+            "mean_net": 0.018892131745815277
+          },
+          "below": {
+            "n": 30814,
+            "mean": 0.02677856758236885,
+            "median": 0.01065324991941452,
+            "win_rate": 0.528720711364964
+          },
+          "diff_net_stock_ew": -0.034870575096581626,
+          "n_paired_stocks": 83,
+          "diff_net_pooled": -0.007886435836553574,
+          "diff_gross_pooled": -0.005386438220739365,
+          "bootstrap": {
+            "n_stocks": 83,
+            "obs_mean_diff": -0.034870575096581626,
+            "n_boot": 2000,
+            "ci95_low": -0.05304298936214063,
+            "ci95_high": -0.016062589589273563,
+            "p_directional_above_gt_below": 0.9995,
+            "p_two_sided": 0.001
+          },
+          "signal_stocks": {
+            "above": 85,
+            "below": 83
+          }
+        },
+        "d120": {
+          "above": {
+            "n": 36441,
+            "mean": 0.05063633620738983,
+            "median": 0.02855578623712063,
+            "win_rate": 0.5540737081858347,
+            "mean_gross": 0.05313633382320404,
+            "mean_net": 0.05063633620738983
+          },
+          "below": {
+            "n": 28902,
+            "mean": 0.04900194704532623,
+            "median": 0.024740122258663177,
+            "win_rate": 0.5493045463981732
+          },
+          "diff_net_stock_ew": -0.09536964545019791,
+          "n_paired_stocks": 79,
+          "diff_net_pooled": 0.0016343891620635986,
+          "diff_gross_pooled": 0.004134386777877808,
+          "bootstrap": {
+            "n_stocks": 79,
+            "obs_mean_diff": -0.09536964545019791,
+            "n_boot": 2000,
+            "ci95_low": -0.13722151056830212,
+            "ci95_high": -0.05833197180432724,
+            "p_directional_above_gt_below": 1.0,
+            "p_two_sided": 0.0
+          },
+          "signal_stocks": {
+            "above": 84,
+            "below": 79
+          }
+        }
+      }
+    },
+    "IN": {
+      "market": "IN",
+      "stocks_total": 50,
+      "stocks_processed": 50,
+      "holdings": {
+        "d20": {
+          "above": {
+            "n": 191405,
+            "mean": 0.021369390189647675,
+            "median": 0.012404024600982666,
+            "win_rate": 0.5636634361693791,
+            "mean_gross": 0.023869389668107033,
+            "mean_net": 0.021369390189647675
+          },
+          "below": {
+            "n": 96689,
+            "mean": 0.020662255585193634,
+            "median": 0.0143550680950284,
+            "win_rate": 0.5624011004354167
+          },
+          "diff_net_stock_ew": -0.00018320695264265052,
+          "diff_gross_stock_ew": 0.002316792826168236,
+          "n_paired_stocks": 50,
+          "diff_net_pooled": 0.0007071346044540405,
+          "diff_gross_pooled": 0.0032071340829133987,
+          "bootstrap": {
+            "n_stocks": 50,
+            "obs_mean_diff": -0.00018320695264265052,
+            "n_boot": 2000,
+            "ci95_low": -0.00376376249344321,
+            "ci95_high": 0.0036131693422794334,
+            "p_directional_above_gt_below": 0.545,
+            "p_two_sided": 0.91
+          },
+          "signal_stocks": {
+            "above": 50,
+            "below": 50
+          }
+        },
+        "d60": {
+          "above": {
+            "n": 190487,
+            "mean": 0.06975561380386353,
+            "median": 0.04374705255031586,
+            "win_rate": 0.6187771343976229,
+            "mean_gross": 0.07225561141967773,
+            "mean_net": 0.06975561380386353
+          },
+          "below": {
+            "n": 95607,
+            "mean": 0.06177879124879837,
+            "median": 0.040646567940711975,
+            "win_rate": 0.6002175572918301
+          },
+          "diff_net_stock_ew": 0.0025711214821785566,
+          "diff_gross_stock_ew": 0.005071119139902283,
+          "n_paired_stocks": 50,
+          "diff_net_pooled": 0.007976822555065155,
+          "diff_gross_pooled": 0.010476820170879364,
+          "bootstrap": {
+            "n_stocks": 50,
+            "obs_mean_diff": 0.0025711214821785566,
+            "n_boot": 2000,
+            "ci95_low": -0.00863064473052509,
+            "ci95_high": 0.013426402600482097,
+            "p_directional_above_gt_below": 0.314,
+            "p_two_sided": 0.628
+          },
+          "signal_stocks": {
+            "above": 50,
+            "below": 50
+          }
+        },
+        "d120": {
+          "above": {
+            "n": 189134,
+            "mean": 0.14271113276481628,
+            "median": 0.08701515197753906,
+            "win_rate": 0.662006831135597,
+            "mean_gross": 0.1452111303806305,
+            "mean_net": 0.14271113276481628
+          },
+          "below": {
+            "n": 93960,
+            "mean": 0.13672760128974915,
+            "median": 0.0783599391579628,
+            "win_rate": 0.6342486164325245
+          },
+          "diff_net_stock_ew": -0.010717205042019479,
+          "diff_gross_stock_ew": -0.008217206895351409,
+          "n_paired_stocks": 50,
+          "diff_net_pooled": 0.005983531475067139,
+          "diff_gross_pooled": 0.008483529090881348,
+          "bootstrap": {
+            "n_stocks": 50,
+            "obs_mean_diff": -0.010717205042019479,
+            "n_boot": 2000,
+            "ci95_low": -0.034726256297901284,
+            "ci95_high": 0.011528811606578527,
+            "p_directional_above_gt_below": 0.809,
+            "p_two_sided": 0.382
+          },
+          "signal_stocks": {
+            "above": 50,
+            "below": 50
+          }
+        }
+      },
+      "oos": {
+        "d20": {
+          "above": {
+            "n": 41235,
+            "mean": 0.011156235821545124,
+            "median": 0.007455512415617704,
+            "win_rate": 0.5471565417727658,
+            "mean_gross": 0.013656235300004482,
+            "mean_net": 0.011156235821545124
+          },
+          "below": {
+            "n": 17558,
+            "mean": 0.02085067331790924,
+            "median": 0.019008634611964226,
+            "win_rate": 0.6070167445039298
+          },
+          "diff_net_stock_ew": -0.01761999522073893,
+          "n_paired_stocks": 50,
+          "diff_net_pooled": -0.009694437496364117,
+          "diff_gross_pooled": -0.0071944380179047585,
+          "bootstrap": {
+            "n_stocks": 50,
+            "obs_mean_diff": -0.01761999522073893,
+            "n_boot": 2000,
+            "ci95_low": -0.024750654912539177,
+            "ci95_high": -0.01035028568586859,
+            "p_directional_above_gt_below": 1.0,
+            "p_two_sided": 0.0
+          },
+          "signal_stocks": {
+            "above": 50,
+            "below": 50
+          }
+        },
+        "d60": {
+          "above": {
+            "n": 40317,
+            "mean": 0.04051584005355835,
+            "median": 0.02870524302124977,
+            "win_rate": 0.600515911402138,
+            "mean_gross": 0.04301584139466286,
+            "mean_net": 0.04051584005355835
+          },
+          "below": {
+            "n": 16476,
+            "mean": 0.05912262573838234,
+            "median": 0.0522199310362339,
+            "win_rate": 0.6675163874726876
+          },
+          "diff_net_stock_ew": -0.04044678712263703,
+          "n_paired_stocks": 50,
+          "diff_net_pooled": -0.01860678568482399,
+          "diff_gross_pooled": -0.016106784343719482,
+          "bootstrap": {
+            "n_stocks": 50,
+            "obs_mean_diff": -0.04044678712263703,
+            "n_boot": 2000,
+            "ci95_low": -0.058339891606708986,
+            "ci95_high": -0.021877515593660118,
+            "p_directional_above_gt_below": 1.0,
+            "p_two_sided": 0.0
+          },
+          "signal_stocks": {
+            "above": 50,
+            "below": 50
+          }
+        },
+        "d120": {
+          "above": {
+            "n": 38964,
+            "mean": 0.09254972636699677,
+            "median": 0.06364530324935913,
+            "win_rate": 0.6570167333949286,
+            "mean_gross": 0.09504973888397217,
+            "mean_net": 0.09254972636699677
+          },
+          "below": {
+            "n": 14829,
+            "mean": 0.11269864439964294,
+            "median": 0.08966383337974548,
+            "win_rate": 0.736529772742599
+          },
+          "diff_net_stock_ew": -0.05469406448770314,
+          "n_paired_stocks": 50,
+          "diff_net_pooled": -0.02014891803264618,
+          "diff_gross_pooled": -0.017648905515670776,
+          "bootstrap": {
+            "n_stocks": 50,
+            "obs_mean_diff": -0.05469406448770314,
+            "n_boot": 2000,
+            "ci95_low": -0.0874823170703603,
+            "ci95_high": -0.019557536414824467,
+            "p_directional_above_gt_below": 0.999,
+            "p_two_sided": 0.002
+          },
+          "signal_stocks": {
+            "above": 50,
+            "below": 50
+          }
+        }
+      }
+    },
+    "IT": {
+      "market": "IT",
+      "stocks_total": 40,
+      "stocks_processed": 40,
+      "holdings": {
+        "d20": {
+          "above": {
+            "n": 135738,
+            "mean": 0.007682168856263161,
+            "median": 0.007792594376951456,
+            "win_rate": 0.5503838276680075,
+            "mean_gross": 0.010182168334722519,
+            "mean_net": 0.007682168856263161
+          },
+          "below": {
+            "n": 79926,
+            "mean": 0.0054701389744877815,
+            "median": 0.006870691664516926,
+            "win_rate": 0.5293396391662287
+          },
+          "diff_net_stock_ew": -0.002476374394063896,
+          "diff_gross_stock_ew": 2.362512514082586e-05,
+          "n_paired_stocks": 40,
+          "diff_net_pooled": 0.002212029881775379,
+          "diff_gross_pooled": 0.004712029360234737,
+          "bootstrap": {
+            "n_stocks": 40,
+            "obs_mean_diff": -0.002476374394063896,
+            "n_boot": 2000,
+            "ci95_low": -0.009206819695477863,
+            "ci95_high": 0.0036272852933325298,
+            "p_directional_above_gt_below": 0.7715,
+            "p_two_sided": 0.457
+          },
+          "signal_stocks": {
+            "above": 40,
+            "below": 40
+          }
+        },
+        "d60": {
+          "above": {
+            "n": 134632,
+            "mean": 0.027876360341906548,
+            "median": 0.02746252715587616,
+            "win_rate": 0.5944500564501753,
+            "mean_gross": 0.030376357957720757,
+            "mean_net": 0.027876360341906548
+          },
+          "below": {
+            "n": 79432,
+            "mean": 0.01631348580121994,
+            "median": 0.017378143966197968,
+            "win_rate": 0.5462282203645886
+          },
+          "diff_net_stock_ew": -0.00107690305449068,
+          "diff_gross_stock_ew": 0.0014230957371182754,
+          "n_paired_stocks": 40,
+          "diff_net_pooled": 0.011562874540686607,
+          "diff_gross_pooled": 0.014062872156500816,
+          "bootstrap": {
+            "n_stocks": 40,
+            "obs_mean_diff": -0.00107690305449068,
+            "n_boot": 2000,
+            "ci95_low": -0.023419844394666142,
+            "ci95_high": 0.017181361115508473,
+            "p_directional_above_gt_below": 0.52,
+            "p_two_sided": 0.96
+          },
+          "signal_stocks": {
+            "above": 40,
+            "below": 40
+          }
+        },
+        "d120": {
+          "above": {
+            "n": 133006,
+            "mean": 0.06139618903398514,
+            "median": 0.05655984580516815,
+            "win_rate": 0.627986707366585,
+            "mean_gross": 0.06389618664979935,
+            "mean_net": 0.06139618903398514
+          },
+          "below": {
+            "n": 78658,
+            "mean": 0.030338400974869728,
+            "median": 0.029924452304840088,
+            "win_rate": 0.5520608202598591
+          },
+          "diff_net_stock_ew": 0.0150210698509909,
+          "diff_gross_stock_ew": 0.017521069705253467,
+          "n_paired_stocks": 40,
+          "diff_net_pooled": 0.03105778805911541,
+          "diff_gross_pooled": 0.03355778567492962,
+          "bootstrap": {
+            "n_stocks": 40,
+            "obs_mean_diff": 0.0150210698509909,
+            "n_boot": 2000,
+            "ci95_low": -0.025121695154075495,
+            "ci95_high": 0.0514492301096561,
+            "p_directional_above_gt_below": 0.2195,
+            "p_two_sided": 0.439
+          },
+          "signal_stocks": {
+            "above": 40,
+            "below": 40
+          }
+        }
+      },
+      "oos": {
+        "d20": {
+          "above": {
+            "n": 30676,
+            "mean": 0.01756799779832363,
+            "median": 0.014691841788589954,
+            "win_rate": 0.5906245925153214,
+            "mean_gross": 0.02006799541413784,
+            "mean_net": 0.01756799779832363
+          },
+          "below": {
+            "n": 13393,
+            "mean": 0.00945559423416853,
+            "median": 0.009726224467158318,
+            "win_rate": 0.5421488837452401
+          },
+          "diff_net_stock_ew": -0.017708148486358488,
+          "n_paired_stocks": 37,
+          "diff_net_pooled": 0.008112403564155102,
+          "diff_gross_pooled": 0.01061240117996931,
+          "bootstrap": {
+            "n_stocks": 37,
+            "obs_mean_diff": -0.017708148486358488,
+            "n_boot": 2000,
+            "ci95_low": -0.03170064694509288,
+            "ci95_high": -0.005245703297377741,
+            "p_directional_above_gt_below": 0.9975,
+            "p_two_sided": 0.005
+          },
+          "signal_stocks": {
+            "above": 40,
+            "below": 37
+          }
+        },
+        "d60": {
+          "above": {
+            "n": 29570,
+            "mean": 0.061060529202222824,
+            "median": 0.051218073815107346,
+            "win_rate": 0.6701724721001014,
+            "mean_gross": 0.06356052309274673,
+            "mean_net": 0.061060529202222824
+          },
+          "below": {
+            "n": 12899,
+            "mean": 0.02036621980369091,
+            "median": 0.017314333468675613,
+            "win_rate": 0.5437630824094891
+          },
+          "diff_net_stock_ew": -0.027354594282302504,
+          "n_paired_stocks": 37,
+          "diff_net_pooled": 0.040694309398531914,
+          "diff_gross_pooled": 0.043194303289055824,
+          "bootstrap": {
+            "n_stocks": 37,
+            "obs_mean_diff": -0.027354594282302504,
+            "n_boot": 2000,
+            "ci95_low": -0.06157432385607044,
+            "ci95_high": 0.006367853815616967,
+            "p_directional_above_gt_below": 0.946,
+            "p_two_sided": 0.108
+          },
+          "signal_stocks": {
+            "above": 40,
+            "below": 37
+          }
+        },
+        "d120": {
+          "above": {
+            "n": 27944,
+            "mean": 0.12506631016731262,
+            "median": 0.10769079625606537,
+            "win_rate": 0.726882336100773,
+            "mean_gross": 0.12756632268428802,
+            "mean_net": 0.12506631016731262
+          },
+          "below": {
+            "n": 12125,
+            "mean": 0.04596670717000961,
+            "median": 0.037435851991176605,
+            "win_rate": 0.5637113402061855
+          },
+          "diff_net_stock_ew": -0.034678124369949936,
+          "n_paired_stocks": 36,
+          "diff_net_pooled": 0.07909960299730301,
+          "diff_gross_pooled": 0.08159961551427841,
+          "bootstrap": {
+            "n_stocks": 36,
+            "obs_mean_diff": -0.034678124369949936,
+            "n_boot": 2000,
+            "ci95_low": -0.07940806922108296,
+            "ci95_high": 0.014869622914314564,
+            "p_directional_above_gt_below": 0.9225,
+            "p_two_sided": 0.155
+          },
+          "signal_stocks": {
+            "above": 40,
+            "below": 36
+          }
+        }
+      }
+    },
+    "JP": {
+      "market": "JP",
+      "stocks_total": 204,
+      "stocks_processed": 204,
+      "holdings": {
+        "d20": {
+          "above": {
+            "n": 702969,
+            "mean": 0.014187386259436607,
+            "median": 0.005312336143106222,
+            "win_rate": 0.5282195943206599,
+            "mean_gross": 0.016687382012605667,
+            "mean_net": 0.014187386259436607
+          },
+          "below": {
+            "n": 528690,
+            "mean": 0.07907794415950775,
+            "median": 0.008636544458568096,
+            "win_rate": 0.5391893169910533
+          },
+          "diff_net_stock_ew": -0.04618242928441474,
+          "diff_gross_stock_ew": -0.04368242979541594,
+          "n_paired_stocks": 204,
+          "diff_net_pooled": -0.06489055790007114,
+          "diff_gross_pooled": -0.062390562146902084,
+          "bootstrap": {
+            "n_stocks": 204,
+            "obs_mean_diff": -0.04618242928441474,
+            "n_boot": 2000,
+            "ci95_low": -0.15138134279386978,
+            "ci95_high": 0.014098220747755743,
+            "p_directional_above_gt_below": 0.7685,
+            "p_two_sided": 0.463
+          },
+          "signal_stocks": {
+            "above": 204,
+            "below": 204
+          }
+        },
+        "d60": {
+          "above": {
+            "n": 697260,
+            "mean": 0.04982398822903633,
+            "median": 0.01732683554291725,
+            "win_rate": 0.5500243811490693,
+            "mean_gross": 0.05232398957014084,
+            "mean_net": 0.04982398822903633
+          },
+          "below": {
+            "n": 526239,
+            "mean": 0.2419203221797943,
+            "median": 0.020719455555081367,
+            "win_rate": 0.5580430184763957
+          },
+          "diff_net_stock_ew": -0.13544852767453824,
+          "diff_gross_stock_ew": -0.13294852879063876,
+          "n_paired_stocks": 204,
+          "diff_net_pooled": -0.19209633395075798,
+          "diff_gross_pooled": -0.18959633260965347,
+          "bootstrap": {
+            "n_stocks": 204,
+            "obs_mean_diff": -0.13544852767453824,
+            "n_boot": 2000,
+            "ci95_low": -0.46087732416348015,
+            "ci95_high": 0.039755023326155076,
+            "p_directional_above_gt_below": 0.696,
+            "p_two_sided": 0.608
+          },
+          "signal_stocks": {
+            "above": 204,
+            "below": 204
+          }
+        },
+        "d120": {
+          "above": {
+            "n": 687129,
+            "mean": 0.10489799082279205,
+            "median": 0.03507829084992409,
+            "win_rate": 0.5730568786938115,
+            "mean_gross": 0.10739800333976746,
+            "mean_net": 0.10489799082279205
+          },
+          "below": {
+            "n": 524130,
+            "mean": 0.5070165395736694,
+            "median": 0.036713019013404846,
+            "win_rate": 0.5741857936008242
+          },
+          "diff_net_stock_ew": -0.2857313218995057,
+          "diff_gross_stock_ew": -0.2832313182834517,
+          "n_paired_stocks": 204,
+          "diff_net_pooled": -0.4021185487508774,
+          "diff_gross_pooled": -0.399618536233902,
+          "bootstrap": {
+            "n_stocks": 204,
+            "obs_mean_diff": -0.2857313218995057,
+            "n_boot": 2000,
+            "ci95_low": -0.9745300613031349,
+            "ci95_high": 0.08269783758986901,
+            "p_directional_above_gt_below": 0.7245,
+            "p_two_sided": 0.551
+          },
+          "signal_stocks": {
+            "above": 204,
+            "below": 204
+          }
+        }
+      },
+      "oos": {
+        "d20": {
+          "above": {
+            "n": 167698,
+            "mean": 0.014592415653169155,
+            "median": 0.008624047040939331,
+            "win_rate": 0.5472635332562106,
+            "mean_gross": 0.01709241420030594,
+            "mean_net": 0.014592415653169155
+          },
+          "below": {
+            "n": 83375,
+            "mean": 0.016109369695186615,
+            "median": 0.012493753805756569,
+            "win_rate": 0.5733613193403299
+          },
+          "diff_net_stock_ew": -0.012469251126645703,
+          "n_paired_stocks": 202,
+          "diff_net_pooled": -0.0015169540420174599,
+          "diff_gross_pooled": 0.0009830445051193237,
+          "bootstrap": {
+            "n_stocks": 202,
+            "obs_mean_diff": -0.012469251126645703,
+            "n_boot": 2000,
+            "ci95_low": -0.016136988302618067,
+            "ci95_high": -0.008905798546360942,
+            "p_directional_above_gt_below": 1.0,
+            "p_two_sided": 0.0
+          },
+          "signal_stocks": {
+            "above": 204,
+            "below": 202
+          }
+        },
+        "d60": {
+          "above": {
+            "n": 161989,
+            "mean": 0.05256326124072075,
+            "median": 0.031618088483810425,
+            "win_rate": 0.59357116841267,
+            "mean_gross": 0.055063262581825256,
+            "mean_net": 0.05256326124072075
+          },
+          "below": {
+            "n": 80924,
+            "mean": 0.04149442911148071,
+            "median": 0.026252903044223785,
+            "win_rate": 0.5914561811082003
+          },
+          "diff_net_stock_ew": -0.016240420236625697,
+          "n_paired_stocks": 202,
+          "diff_net_pooled": 0.011068832129240036,
+          "diff_gross_pooled": 0.013568833470344543,
+          "bootstrap": {
+            "n_stocks": 202,
+            "obs_mean_diff": -0.016240420236625697,
+            "n_boot": 2000,
+            "ci95_low": -0.02511965296456548,
+            "ci95_high": -0.007610591085500745,
+            "p_directional_above_gt_below": 0.9995,
+            "p_two_sided": 0.001
+          },
+          "signal_stocks": {
+            "above": 204,
+            "below": 202
+          }
+        },
+        "d120": {
+          "above": {
+            "n": 151858,
+            "mean": 0.11053517460823059,
+            "median": 0.06862244755029678,
+            "win_rate": 0.6464262666438383,
+            "mean_gross": 0.1130351722240448,
+            "mean_net": 0.11053517460823059
+          },
+          "below": {
+            "n": 78815,
+            "mean": 0.0920390710234642,
+            "median": 0.05927736684679985,
+            "win_rate": 0.6407663515828206
+          },
+          "diff_net_stock_ew": -0.030975007044581074,
+          "n_paired_stocks": 202,
+          "diff_net_pooled": 0.018496103584766388,
+          "diff_gross_pooled": 0.020996101200580597,
+          "bootstrap": {
+            "n_stocks": 202,
+            "obs_mean_diff": -0.030975007044581074,
+            "n_boot": 2000,
+            "ci95_low": -0.04461435490952817,
+            "ci95_high": -0.01660519798607392,
+            "p_directional_above_gt_below": 0.999,
+            "p_two_sided": 0.002
+          },
+          "signal_stocks": {
+            "above": 204,
+            "below": 202
+          }
+        }
+      }
+    },
+    "KR": {
+      "market": "KR",
+      "stocks_total": 197,
+      "stocks_processed": 196,
+      "holdings": {
+        "d20": {
+          "above": {
+            "n": 501544,
+            "mean": 0.016805047169327736,
+            "median": 0.000889879884198308,
+            "win_rate": 0.5037065541607516,
+            "mean_gross": 0.019305046647787094,
+            "mean_net": 0.016805047169327736
+          },
+          "below": {
+            "n": 415319,
+            "mean": 0.014581979252398014,
+            "median": 0.0038454949390143156,
+            "win_rate": 0.5131742106669813
+          },
+          "diff_net_stock_ew": -0.0019854830264543696,
+          "diff_gross_stock_ew": 0.0005145159376880662,
+          "n_paired_stocks": 195,
+          "diff_net_pooled": 0.002223067916929722,
+          "diff_gross_pooled": 0.00472306739538908,
+          "bootstrap": {
+            "n_stocks": 195,
+            "obs_mean_diff": -0.0019854830264543696,
+            "n_boot": 2000,
+            "ci95_low": -0.008127309563019363,
+            "ci95_high": 0.003167712666842048,
+            "p_directional_above_gt_below": 0.737,
+            "p_two_sided": 0.526
+          },
+          "signal_stocks": {
+            "above": 196,
+            "below": 195
+          }
+        },
+        "d60": {
+          "above": {
+            "n": 496075,
+            "mean": 0.06075408309698105,
+            "median": 0.016668327152729034,
+            "win_rate": 0.5395131784508391,
+            "mean_gross": 0.06325408071279526,
+            "mean_net": 0.06075408309698105
+          },
+          "below": {
+            "n": 412948,
+            "mean": 0.04072226956486702,
+            "median": 0.012799943797290325,
+            "win_rate": 0.531313870027219
+          },
+          "diff_net_stock_ew": 0.01628135664818378,
+          "diff_gross_stock_ew": 0.018781355655608845,
+          "n_paired_stocks": 195,
+          "diff_net_pooled": 0.02003181353211403,
+          "diff_gross_pooled": 0.022531811147928238,
+          "bootstrap": {
+            "n_stocks": 195,
+            "obs_mean_diff": 0.01628135664818378,
+            "n_boot": 2000,
+            "ci95_low": 0.0061284797136128555,
+            "ci95_high": 0.027153088771633617,
+            "p_directional_above_gt_below": 0.001,
+            "p_two_sided": 0.002
+          },
+          "signal_stocks": {
+            "above": 196,
+            "below": 195
+          }
+        },
+        "d120": {
+          "above": {
+            "n": 486927,
+            "mean": 0.12669885158538818,
+            "median": 0.03980107605457306,
+            "win_rate": 0.5637272116764936,
+            "mean_gross": 0.1291988492012024,
+            "mean_net": 0.12669885158538818
+          },
+          "below": {
+            "n": 410375,
+            "mean": 0.08725059777498245,
+            "median": 0.023551715537905693,
+            "win_rate": 0.5422771855010661
+          },
+          "diff_net_stock_ew": 0.03253034409435618,
+          "diff_gross_stock_ew": 0.0350303440099731,
+          "n_paired_stocks": 194,
+          "diff_net_pooled": 0.03944825381040573,
+          "diff_gross_pooled": 0.04194825142621994,
+          "bootstrap": {
+            "n_stocks": 194,
+            "obs_mean_diff": 0.03253034409435618,
+            "n_boot": 2000,
+            "ci95_low": 0.006395841301832901,
+            "ci95_high": 0.05617461149726595,
+            "p_directional_above_gt_below": 0.01,
+            "p_two_sided": 0.02
+          },
+          "signal_stocks": {
+            "above": 195,
+            "below": 194
+          }
+        }
+      },
+      "oos": {
+        "d20": {
+          "above": {
+            "n": 108290,
+            "mean": 0.019751477986574173,
+            "median": -0.0008152558584697545,
+            "win_rate": 0.49615846338535413,
+            "mean_gross": 0.022251475602388382,
+            "mean_net": 0.019751477986574173
+          },
+          "below": {
+            "n": 79637,
+            "mean": 0.01245037093758583,
+            "median": 0.0019512029830366373,
+            "win_rate": 0.5067117043585269
+          },
+          "diff_net_stock_ew": -0.01766225468423082,
+          "n_paired_stocks": 189,
+          "diff_net_pooled": 0.007301107048988342,
+          "diff_gross_pooled": 0.009801104664802551,
+          "bootstrap": {
+            "n_stocks": 189,
+            "obs_mean_diff": -0.01766225468423082,
+            "n_boot": 2000,
+            "ci95_low": -0.026674591425785727,
+            "ci95_high": -0.009128800988245145,
+            "p_directional_above_gt_below": 1.0,
+            "p_two_sided": 0.0
+          },
+          "signal_stocks": {
+            "above": 196,
+            "below": 189
+          }
+        },
+        "d60": {
+          "above": {
+            "n": 102825,
+            "mean": 0.07825776189565659,
+            "median": 0.0226797703653574,
+            "win_rate": 0.5542426452710917,
+            "mean_gross": 0.0807577520608902,
+            "mean_net": 0.07825776189565659
+          },
+          "below": {
+            "n": 77266,
+            "mean": 0.03443770855665207,
+            "median": 0.005302742589265108,
+            "win_rate": 0.5143530142624181
+          },
+          "diff_net_stock_ew": -0.03055759887354996,
+          "n_paired_stocks": 188,
+          "diff_net_pooled": 0.04382005333900452,
+          "diff_gross_pooled": 0.04632004350423813,
+          "bootstrap": {
+            "n_stocks": 188,
+            "obs_mean_diff": -0.03055759887354996,
+            "n_boot": 2000,
+            "ci95_low": -0.05861269588739309,
+            "ci95_high": -0.005168825641454111,
+            "p_directional_above_gt_below": 0.9925,
+            "p_two_sided": 0.015
+          },
+          "signal_stocks": {
+            "above": 194,
+            "below": 189
+          }
+        },
+        "d120": {
+          "above": {
+            "n": 93748,
+            "mean": 0.16343359649181366,
+            "median": 0.05571293830871582,
+            "win_rate": 0.5891752357383624,
+            "mean_gross": 0.16593360900878906,
+            "mean_net": 0.16343359649181366
+          },
+          "below": {
+            "n": 74737,
+            "mean": 0.07760989665985107,
+            "median": 0.017374593764543533,
+            "win_rate": 0.5332298593735365
+          },
+          "diff_net_stock_ew": -0.02768819464694683,
+          "n_paired_stocks": 185,
+          "diff_net_pooled": 0.08582369983196259,
+          "diff_gross_pooled": 0.08832371234893799,
+          "bootstrap": {
+            "n_stocks": 185,
+            "obs_mean_diff": -0.02768819464694683,
+            "n_boot": 2000,
+            "ci95_low": -0.06439282458150883,
+            "ci95_high": 0.007321282976949602,
+            "p_directional_above_gt_below": 0.937,
+            "p_two_sided": 0.126
+          },
+          "signal_stocks": {
+            "above": 191,
+            "below": 185
+          }
+        }
+      }
+    },
+    "NL": {
+      "market": "NL",
+      "stocks_total": 24,
+      "stocks_processed": 24,
+      "holdings": {
+        "d20": {
+          "above": {
+            "n": 78051,
+            "mean": 0.009900085628032684,
+            "median": 0.008226463571190834,
+            "win_rate": 0.550742463261201,
+            "mean_gross": 0.012400085106492043,
+            "mean_net": 0.009900085628032684
+          },
+          "below": {
+            "n": 44287,
+            "mean": 0.010318106040358543,
+            "median": 0.010951327160000801,
+            "win_rate": 0.5522162259805361
+          },
+          "diff_net_stock_ew": -0.002395235369779888,
+          "diff_gross_stock_ew": 0.00010476370183217475,
+          "n_paired_stocks": 24,
+          "diff_net_pooled": -0.00041802041232585907,
+          "diff_gross_pooled": 0.002081979066133499,
+          "bootstrap": {
+            "n_stocks": 24,
+            "obs_mean_diff": -0.002395235369779888,
+            "n_boot": 2000,
+            "ci95_low": -0.008909691523846654,
+            "ci95_high": 0.0043104296502557765,
+            "p_directional_above_gt_below": 0.7625,
+            "p_two_sided": 0.475
+          },
+          "signal_stocks": {
+            "above": 24,
+            "below": 24
+          }
+        },
+        "d60": {
+          "above": {
+            "n": 77527,
+            "mean": 0.035561028867959976,
+            "median": 0.028172144666314125,
+            "win_rate": 0.6008487365691952,
+            "mean_gross": 0.038061026483774185,
+            "mean_net": 0.035561028867959976
+          },
+          "below": {
+            "n": 43851,
+            "mean": 0.027056066319346428,
+            "median": 0.025081822648644447,
+            "win_rate": 0.5666233381222777
+          },
+          "diff_net_stock_ew": 0.00198663272021804,
+          "diff_gross_stock_ew": 0.004486631024822902,
+          "n_paired_stocks": 24,
+          "diff_net_pooled": 0.008504962548613548,
+          "diff_gross_pooled": 0.011004960164427757,
+          "bootstrap": {
+            "n_stocks": 24,
+            "obs_mean_diff": 0.00198663272021804,
+            "n_boot": 2000,
+            "ci95_low": -0.014289340541411847,
+            "ci95_high": 0.017043691573780956,
+            "p_directional_above_gt_below": 0.435,
+            "p_two_sided": 0.87
+          },
+          "signal_stocks": {
+            "above": 24,
+            "below": 24
+          }
+        },
+        "d120": {
+          "above": {
+            "n": 76774,
+            "mean": 0.07422743737697601,
+            "median": 0.05938659608364105,
+            "win_rate": 0.643290697371506,
+            "mean_gross": 0.07672743499279022,
+            "mean_net": 0.07422743737697601
+          },
+          "below": {
+            "n": 43164,
+            "mean": 0.05340680852532387,
+            "median": 0.04150697588920593,
+            "win_rate": 0.5694560281716246
+          },
+          "diff_net_stock_ew": 0.01920370035804808,
+          "diff_gross_stock_ew": 0.021703698943989977,
+          "n_paired_stocks": 24,
+          "diff_net_pooled": 0.020820628851652145,
+          "diff_gross_pooled": 0.023320626467466354,
+          "bootstrap": {
+            "n_stocks": 24,
+            "obs_mean_diff": 0.01920370035804808,
+            "n_boot": 2000,
+            "ci95_low": -0.00588691347511485,
+            "ci95_high": 0.041778959566727274,
+            "p_directional_above_gt_below": 0.058,
+            "p_two_sided": 0.116
+          },
+          "signal_stocks": {
+            "above": 24,
+            "below": 24
+          }
+        }
+      },
+      "oos": {
+        "d20": {
+          "above": {
+            "n": 15990,
+            "mean": 0.010632690973579884,
+            "median": 0.008720314130187035,
+            "win_rate": 0.5561601000625391,
+            "mean_gross": 0.013132689520716667,
+            "mean_net": 0.010632690973579884
+          },
+          "below": {
+            "n": 9043,
+            "mean": 0.014003218151628971,
+            "median": 0.009615398943424225,
+            "win_rate": 0.5497069556563088
+          },
+          "diff_net_stock_ew": -0.014405646205768393,
+          "n_paired_stocks": 23,
+          "diff_net_pooled": -0.0033705271780490875,
+          "diff_gross_pooled": -0.0008705286309123039,
+          "bootstrap": {
+            "n_stocks": 23,
+            "obs_mean_diff": -0.014405646205768393,
+            "n_boot": 2000,
+            "ci95_low": -0.03261174815668948,
+            "ci95_high": 0.003818764422264727,
+            "p_directional_above_gt_below": 0.9415,
+            "p_two_sided": 0.117
+          },
+          "signal_stocks": {
+            "above": 23,
+            "below": 24
+          }
+        },
+        "d60": {
+          "above": {
+            "n": 15466,
+            "mean": 0.03906898945569992,
+            "median": 0.0325637049973011,
+            "win_rate": 0.6212983318246477,
+            "mean_gross": 0.04156898707151413,
+            "mean_net": 0.03906898945569992
+          },
+          "below": {
+            "n": 8607,
+            "mean": 0.028769144788384438,
+            "median": 0.026150520890951157,
+            "win_rate": 0.5668641803183455
+          },
+          "diff_net_stock_ew": -0.03164074046336199,
+          "n_paired_stocks": 22,
+          "diff_net_pooled": 0.010299844667315483,
+          "diff_gross_pooled": 0.012799842283129692,
+          "bootstrap": {
+            "n_stocks": 22,
+            "obs_mean_diff": -0.03164074046336199,
+            "n_boot": 2000,
+            "ci95_low": -0.06453599014553633,
+            "ci95_high": 0.0028289733422835407,
+            "p_directional_above_gt_below": 0.964,
+            "p_two_sided": 0.072
+          },
+          "signal_stocks": {
+            "above": 22,
+            "below": 24
+          }
+        },
+        "d120": {
+          "above": {
+            "n": 14713,
+            "mean": 0.07940459251403809,
+            "median": 0.06588047742843628,
+            "win_rate": 0.6635628355875756,
+            "mean_gross": 0.08190459758043289,
+            "mean_net": 0.07940459251403809
+          },
+          "below": {
+            "n": 7920,
+            "mean": 0.054240625351667404,
+            "median": 0.052040547132492065,
+            "win_rate": 0.5851010101010101
+          },
+          "diff_net_stock_ew": -0.04390782601209745,
+          "n_paired_stocks": 21,
+          "diff_net_pooled": 0.025163967162370682,
+          "diff_gross_pooled": 0.027663972228765488,
+          "bootstrap": {
+            "n_stocks": 21,
+            "obs_mean_diff": -0.04390782601209745,
+            "n_boot": 2000,
+            "ci95_low": -0.10274293337570271,
+            "ci95_high": 0.017306400679193566,
+            "p_directional_above_gt_below": 0.918,
+            "p_two_sided": 0.164
+          },
+          "signal_stocks": {
+            "above": 22,
+            "below": 23
+          }
+        }
+      }
+    },
+    "NZ": {
+      "market": "NZ",
+      "stocks_total": 47,
+      "stocks_processed": 47,
+      "holdings": {
+        "d20": {
+          "above": {
+            "n": 146023,
+            "mean": 0.008849449455738068,
+            "median": 0.0063234050758183,
+            "win_rate": 0.5514816159098225,
+            "mean_gross": 0.011349448934197426,
+            "mean_net": 0.008849449455738068
+          },
+          "below": {
+            "n": 84976,
+            "mean": 0.006893146317452192,
+            "median": 0.002816770225763321,
+            "win_rate": 0.5090613820372811
+          },
+          "diff_net_stock_ew": 0.0010051894412831733,
+          "diff_gross_stock_ew": 0.0035051894349422547,
+          "n_paired_stocks": 47,
+          "diff_net_pooled": 0.0019563031382858753,
+          "diff_gross_pooled": 0.0044563026167452335,
+          "bootstrap": {
+            "n_stocks": 47,
+            "obs_mean_diff": 0.0010051894412831733,
+            "n_boot": 2000,
+            "ci95_low": -0.002920188506980961,
+            "ci95_high": 0.004681281235218887,
+            "p_directional_above_gt_below": 0.3125,
+            "p_two_sided": 0.625
+          },
+          "signal_stocks": {
+            "above": 47,
+            "below": 47
+          }
+        },
+        "d60": {
+          "above": {
+            "n": 145183,
+            "mean": 0.031378865242004395,
+            "median": 0.024897655472159386,
+            "win_rate": 0.6087902853639889,
+            "mean_gross": 0.0338788665831089,
+            "mean_net": 0.031378865242004395
+          },
+          "below": {
+            "n": 83936,
+            "mean": 0.016856806352734566,
+            "median": 0.013333320617675781,
+            "win_rate": 0.5453798131910027
+          },
+          "diff_net_stock_ew": 0.009552088449089887,
+          "diff_gross_stock_ew": 0.012052087342995715,
+          "n_paired_stocks": 47,
+          "diff_net_pooled": 0.014522058889269829,
+          "diff_gross_pooled": 0.017022060230374336,
+          "bootstrap": {
+            "n_stocks": 47,
+            "obs_mean_diff": 0.009552088449089887,
+            "n_boot": 2000,
+            "ci95_low": -0.00092647732490924,
+            "ci95_high": 0.021024907466152327,
+            "p_directional_above_gt_below": 0.039,
+            "p_two_sided": 0.078
+          },
+          "signal_stocks": {
+            "above": 47,
+            "below": 47
+          }
+        },
+        "d120": {
+          "above": {
+            "n": 143726,
+            "mean": 0.06417902559041977,
+            "median": 0.048439763486385345,
+            "win_rate": 0.6470367226528255,
+            "mean_gross": 0.06667902320623398,
+            "mean_net": 0.06417902559041977
+          },
+          "below": {
+            "n": 82573,
+            "mean": 0.04103344306349754,
+            "median": 0.027523823082447052,
+            "win_rate": 0.5659477068775508
+          },
+          "diff_net_stock_ew": 0.013790937595099126,
+          "diff_gross_stock_ew": 0.016290935290174835,
+          "n_paired_stocks": 47,
+          "diff_net_pooled": 0.023145582526922226,
+          "diff_gross_pooled": 0.025645580142736435,
+          "bootstrap": {
+            "n_stocks": 47,
+            "obs_mean_diff": 0.013790937595099126,
+            "n_boot": 2000,
+            "ci95_low": -0.002717612759566842,
+            "ci95_high": 0.03130811054068815,
+            "p_directional_above_gt_below": 0.0545,
+            "p_two_sided": 0.109
+          },
+          "signal_stocks": {
+            "above": 47,
+            "below": 47
+          }
+        }
+      },
+      "oos": {
+        "d20": {
+          "above": {
+            "n": 26600,
+            "mean": 0.0028385131154209375,
+            "median": 0.0006720534292981029,
+            "win_rate": 0.5048872180451128,
+            "mean_gross": 0.005338512826710939,
+            "mean_net": 0.0028385131154209375
+          },
+          "below": {
+            "n": 20701,
+            "mean": 0.001825997605919838,
+            "median": 0.0013568851863965392,
+            "win_rate": 0.5040336215641756
+          },
+          "diff_net_stock_ew": -0.012649616403074975,
+          "n_paired_stocks": 46,
+          "diff_net_pooled": 0.0010125155095010996,
+          "diff_gross_pooled": 0.0035125152207911015,
+          "bootstrap": {
+            "n_stocks": 46,
+            "obs_mean_diff": -0.012649616403074975,
+            "n_boot": 2000,
+            "ci95_low": -0.019168522858324096,
+            "ci95_high": -0.005423962755143615,
+            "p_directional_above_gt_below": 0.999,
+            "p_two_sided": 0.002
+          },
+          "signal_stocks": {
+            "above": 47,
+            "below": 46
+          }
+        },
+        "d60": {
+          "above": {
+            "n": 25760,
+            "mean": 0.012296157889068127,
+            "median": 0.007942530326545238,
+            "win_rate": 0.533307453416149,
+            "mean_gross": 0.014796157367527485,
+            "mean_net": 0.012296157889068127
+          },
+          "below": {
+            "n": 19661,
+            "mean": 0.003761899657547474,
+            "median": 0.0067114029079675674,
+            "win_rate": 0.5222013122425105
+          },
+          "diff_net_stock_ew": -0.03038235524740151,
+          "n_paired_stocks": 46,
+          "diff_net_pooled": 0.008534258231520653,
+          "diff_gross_pooled": 0.011034257709980011,
+          "bootstrap": {
+            "n_stocks": 46,
+            "obs_mean_diff": -0.03038235524740151,
+            "n_boot": 2000,
+            "ci95_low": -0.050600149028911766,
+            "ci95_high": -0.00982127265508652,
+            "p_directional_above_gt_below": 0.998,
+            "p_two_sided": 0.004
+          },
+          "signal_stocks": {
+            "above": 47,
+            "below": 46
+          }
+        },
+        "d120": {
+          "above": {
+            "n": 24303,
+            "mean": 0.03235359489917755,
+            "median": 0.019746966660022736,
+            "win_rate": 0.5591902234292063,
+            "mean_gross": 0.03485359251499176,
+            "mean_net": 0.03235359489917755
+          },
+          "below": {
+            "n": 18298,
+            "mean": 0.006470202002674341,
+            "median": 0.005276130512356758,
+            "win_rate": 0.5148650125696798
+          },
+          "diff_net_stock_ew": -0.04759409817178612,
+          "n_paired_stocks": 46,
+          "diff_net_pooled": 0.02588339289650321,
+          "diff_gross_pooled": 0.02838339051231742,
+          "bootstrap": {
+            "n_stocks": 46,
+            "obs_mean_diff": -0.04759409817178612,
+            "n_boot": 2000,
+            "ci95_low": -0.08743414619938171,
+            "ci95_high": -0.007596542010319176,
+            "p_directional_above_gt_below": 0.988,
+            "p_two_sided": 0.024
+          },
+          "signal_stocks": {
+            "above": 47,
+            "below": 46
+          }
+        }
+      }
+    },
+    "SE": {
+      "market": "SE",
+      "stocks_total": 30,
+      "stocks_processed": 30,
+      "holdings": {
+        "d20": {
+          "above": {
+            "n": 114909,
+            "mean": 0.010403328575193882,
+            "median": 0.010312261059880257,
+            "win_rate": 0.5652472826323438,
+            "mean_gross": 0.01290332805365324,
+            "mean_net": 0.010403328575193882
+          },
+          "below": {
+            "n": 57081,
+            "mean": 0.012800781056284904,
+            "median": 0.01359332911670208,
+            "win_rate": 0.5617455896007428
+          },
+          "diff_net_stock_ew": -0.00405535869843637,
+          "diff_gross_stock_ew": -0.001555359056995562,
+          "n_paired_stocks": 30,
+          "diff_net_pooled": -0.0023974524810910225,
+          "diff_gross_pooled": 0.00010254699736833572,
+          "bootstrap": {
+            "n_stocks": 30,
+            "obs_mean_diff": -0.00405535869843637,
+            "n_boot": 2000,
+            "ci95_low": -0.00824858430433475,
+            "ci95_high": 8.69625833001918e-05,
+            "p_directional_above_gt_below": 0.973,
+            "p_two_sided": 0.054
+          },
+          "signal_stocks": {
+            "above": 30,
+            "below": 30
+          }
+        },
+        "d60": {
+          "above": {
+            "n": 114038,
+            "mean": 0.03701773285865784,
+            "median": 0.03626623749732971,
+            "win_rate": 0.6293866956628492,
+            "mean_gross": 0.039517730474472046,
+            "mean_net": 0.03701773285865784
+          },
+          "below": {
+            "n": 56752,
+            "mean": 0.03663349151611328,
+            "median": 0.03543313592672348,
+            "win_rate": 0.5969305046518184
+          },
+          "diff_net_stock_ew": -0.0031998284005870375,
+          "diff_gross_stock_ew": -0.0006998299776266037,
+          "n_paired_stocks": 30,
+          "diff_net_pooled": 0.00038424134254455566,
+          "diff_gross_pooled": 0.0028842389583587646,
+          "bootstrap": {
+            "n_stocks": 30,
+            "obs_mean_diff": -0.0031998284005870375,
+            "n_boot": 2000,
+            "ci95_low": -0.014039400678981719,
+            "ci95_high": 0.008143972745553257,
+            "p_directional_above_gt_below": 0.7175,
+            "p_two_sided": 0.565
+          },
+          "signal_stocks": {
+            "above": 30,
+            "below": 30
+          }
+        },
+        "d120": {
+          "above": {
+            "n": 112693,
+            "mean": 0.07801900058984756,
+            "median": 0.07130299508571625,
+            "win_rate": 0.6702457118010879,
+            "mean_gross": 0.08051899820566177,
+            "mean_net": 0.07801900058984756
+          },
+          "below": {
+            "n": 56297,
+            "mean": 0.0772184431552887,
+            "median": 0.06617671251296997,
+            "win_rate": 0.6190383146526458
+          },
+          "diff_net_stock_ew": -0.003725300087050215,
+          "diff_gross_stock_ew": -0.0012253038032213198,
+          "n_paired_stocks": 30,
+          "diff_net_pooled": 0.0008005574345588684,
+          "diff_gross_pooled": 0.0033005550503730774,
+          "bootstrap": {
+            "n_stocks": 30,
+            "obs_mean_diff": -0.003725300087050215,
+            "n_boot": 2000,
+            "ci95_low": -0.022181382717244562,
+            "ci95_high": 0.016052850128229074,
+            "p_directional_above_gt_below": 0.6545,
+            "p_two_sided": 0.691
+          },
+          "signal_stocks": {
+            "above": 30,
+            "below": 30
+          }
+        }
+      },
+      "oos": {
+        "d20": {
+          "above": {
+            "n": 23150,
+            "mean": 0.00636943057179451,
+            "median": 0.007135823834687471,
+            "win_rate": 0.543110151187905,
+            "mean_gross": 0.008869430050253868,
+            "mean_net": 0.00636943057179451
+          },
+          "below": {
+            "n": 11941,
+            "mean": 0.016369173303246498,
+            "median": 0.013629944063723087,
+            "win_rate": 0.5686290930407839
+          },
+          "diff_net_stock_ew": -0.019448366384798042,
+          "n_paired_stocks": 30,
+          "diff_net_pooled": -0.009999742731451988,
+          "diff_gross_pooled": -0.00749974325299263,
+          "bootstrap": {
+            "n_stocks": 30,
+            "obs_mean_diff": -0.019448366384798042,
+            "n_boot": 2000,
+            "ci95_low": -0.0273613737214085,
+            "ci95_high": -0.012262332496175078,
+            "p_directional_above_gt_below": 1.0,
+            "p_two_sided": 0.0
+          },
+          "signal_stocks": {
+            "above": 30,
+            "below": 30
+          }
+        },
+        "d60": {
+          "above": {
+            "n": 22279,
+            "mean": 0.027224937453866005,
+            "median": 0.0257217139005661,
+            "win_rate": 0.5869204183311639,
+            "mean_gross": 0.029724936932325363,
+            "mean_net": 0.027224937453866005
+          },
+          "below": {
+            "n": 11612,
+            "mean": 0.041206229478120804,
+            "median": 0.034573476761579514,
+            "win_rate": 0.609714088873579
+          },
+          "diff_net_stock_ew": -0.04186673261768495,
+          "n_paired_stocks": 30,
+          "diff_net_pooled": -0.013981292024254799,
+          "diff_gross_pooled": -0.01148129254579544,
+          "bootstrap": {
+            "n_stocks": 30,
+            "obs_mean_diff": -0.04186673261768495,
+            "n_boot": 2000,
+            "ci95_low": -0.06872218557352124,
+            "ci95_high": -0.01843607766670176,
+            "p_directional_above_gt_below": 1.0,
+            "p_two_sided": 0.0
+          },
+          "signal_stocks": {
+            "above": 30,
+            "below": 30
+          }
+        },
+        "d120": {
+          "above": {
+            "n": 20934,
+            "mean": 0.05821402743458748,
+            "median": 0.04895326495170593,
+            "win_rate": 0.6235310977357409,
+            "mean_gross": 0.06071402132511139,
+            "mean_net": 0.05821402743458748
+          },
+          "below": {
+            "n": 11157,
+            "mean": 0.07973916083574295,
+            "median": 0.07216222584247589,
+            "win_rate": 0.627856950793224
+          },
+          "diff_net_stock_ew": -0.06901069482167561,
+          "n_paired_stocks": 30,
+          "diff_net_pooled": -0.021525133401155472,
+          "diff_gross_pooled": -0.01902513951063156,
+          "bootstrap": {
+            "n_stocks": 30,
+            "obs_mean_diff": -0.06901069482167561,
+            "n_boot": 2000,
+            "ci95_low": -0.11200796062349884,
+            "ci95_high": -0.03103526206560979,
+            "p_directional_above_gt_below": 1.0,
+            "p_two_sided": 0.0
+          },
+          "signal_stocks": {
+            "above": 30,
+            "below": 30
+          }
+        }
+      }
+    },
+    "SG": {
+      "market": "SG",
+      "stocks_total": 30,
+      "stocks_processed": 30,
+      "holdings": {
+        "d20": {
+          "above": {
+            "n": 100894,
+            "mean": 0.01641506887972355,
+            "median": 0.005680247209966183,
+            "win_rate": 0.5449184292425714,
+            "mean_gross": 0.018915068358182907,
+            "mean_net": 0.01641506887972355
+          },
+          "below": {
+            "n": 57309,
+            "mean": 0.009793807752430439,
+            "median": 0.00635611591860652,
+            "win_rate": 0.5329180407963845
+          },
+          "diff_net_stock_ew": -0.0034831439763517366,
+          "diff_gross_stock_ew": -0.0009831445291638395,
+          "n_paired_stocks": 30,
+          "diff_net_pooled": 0.00662126112729311,
+          "diff_gross_pooled": 0.009121260605752468,
+          "bootstrap": {
+            "n_stocks": 30,
+            "obs_mean_diff": -0.0034831439763517366,
+            "n_boot": 2000,
+            "ci95_low": -0.009301692317227436,
+            "ci95_high": 0.0015682545057942791,
+            "p_directional_above_gt_below": 0.8915,
+            "p_two_sided": 0.217
+          },
+          "signal_stocks": {
+            "above": 30,
+            "below": 30
+          }
+        },
+        "d60": {
+          "above": {
+            "n": 100127,
+            "mean": 0.054445333778858185,
+            "median": 0.02229337766766548,
+            "win_rate": 0.5967920740659363,
+            "mean_gross": 0.05694533511996269,
+            "mean_net": 0.054445333778858185
+          },
+          "below": {
+            "n": 56876,
+            "mean": 0.03341330215334892,
+            "median": 0.01739123836159706,
+            "win_rate": 0.5684295660735635
+          },
+          "diff_net_stock_ew": -0.01245375651245316,
+          "diff_gross_stock_ew": -0.00995375475225349,
+          "n_paired_stocks": 30,
+          "diff_net_pooled": 0.021032031625509262,
+          "diff_gross_pooled": 0.02353203296661377,
+          "bootstrap": {
+            "n_stocks": 30,
+            "obs_mean_diff": -0.01245375651245316,
+            "n_boot": 2000,
+            "ci95_low": -0.04066165886858167,
+            "ci95_high": 0.0053171956023046136,
+            "p_directional_above_gt_below": 0.8535,
+            "p_two_sided": 0.293
+          },
+          "signal_stocks": {
+            "above": 30,
+            "below": 30
+          }
+        },
+        "d120": {
+          "above": {
+            "n": 98657,
+            "mean": 0.1292782425880432,
+            "median": 0.047001488506793976,
+            "win_rate": 0.6422554912474533,
+            "mean_gross": 0.13177825510501862,
+            "mean_net": 0.1292782425880432
+          },
+          "below": {
+            "n": 56546,
+            "mean": 0.08804769068956375,
+            "median": 0.036486197263002396,
+            "win_rate": 0.603137268772327
+          },
+          "diff_net_stock_ew": -0.06170711547601969,
+          "diff_gross_stock_ew": -0.05920711320359261,
+          "n_paired_stocks": 30,
+          "diff_net_pooled": 0.04123055189847946,
+          "diff_gross_pooled": 0.043730564415454865,
+          "bootstrap": {
+            "n_stocks": 30,
+            "obs_mean_diff": -0.06170711547601969,
+            "n_boot": 2000,
+            "ci95_low": -0.1782699289432882,
+            "ci95_high": 0.004209484803141085,
+            "p_directional_above_gt_below": 0.935,
+            "p_two_sided": 0.13
+          },
+          "signal_stocks": {
+            "above": 30,
+            "below": 30
+          }
+        }
+      },
+      "oos": {
+        "d20": {
+          "above": {
+            "n": 20906,
+            "mean": 0.008212577551603317,
+            "median": 0.0024828496389091015,
+            "win_rate": 0.5195159284415957,
+            "mean_gross": 0.0107125760987401,
+            "mean_net": 0.008212577551603317
+          },
+          "below": {
+            "n": 11439,
+            "mean": 0.011534647084772587,
+            "median": 0.00934577826410532,
+            "win_rate": 0.5653466212081476
+          },
+          "diff_net_stock_ew": -0.012206435247207994,
+          "n_paired_stocks": 30,
+          "diff_net_pooled": -0.0033220695331692696,
+          "diff_gross_pooled": -0.000822070986032486,
+          "bootstrap": {
+            "n_stocks": 30,
+            "obs_mean_diff": -0.012206435247207994,
+            "n_boot": 2000,
+            "ci95_low": -0.01876126628504911,
+            "ci95_high": -0.005173136332959987,
+            "p_directional_above_gt_below": 0.9995,
+            "p_two_sided": 0.001
+          },
+          "signal_stocks": {
+            "above": 30,
+            "below": 30
+          }
+        },
+        "d60": {
+          "above": {
+            "n": 20139,
+            "mean": 0.0349334180355072,
+            "median": 0.01400168426334858,
+            "win_rate": 0.5610506976513233,
+            "mean_gross": 0.03743341565132141,
+            "mean_net": 0.0349334180355072
+          },
+          "below": {
+            "n": 11006,
+            "mean": 0.026700010523200035,
+            "median": 0.021887563169002533,
+            "win_rate": 0.6013992367799382
+          },
+          "diff_net_stock_ew": -0.01712460659909993,
+          "n_paired_stocks": 30,
+          "diff_net_pooled": 0.008233407512307167,
+          "diff_gross_pooled": 0.010733405128121376,
+          "bootstrap": {
+            "n_stocks": 30,
+            "obs_mean_diff": -0.01712460659909993,
+            "n_boot": 2000,
+            "ci95_low": -0.037937488814156185,
+            "ci95_high": 0.004200293418834915,
+            "p_directional_above_gt_below": 0.9415,
+            "p_two_sided": 0.117
+          },
+          "signal_stocks": {
+            "above": 30,
+            "below": 30
+          }
+        },
+        "d120": {
+          "above": {
+            "n": 18669,
+            "mean": 0.08612177520990372,
+            "median": 0.039438311010599136,
+            "win_rate": 0.6319031549627725,
+            "mean_gross": 0.08862176537513733,
+            "mean_net": 0.08612177520990372
+          },
+          "below": {
+            "n": 10676,
+            "mean": 0.047515396028757095,
+            "median": 0.03314869850873947,
+            "win_rate": 0.6217684526039715
+          },
+          "diff_net_stock_ew": -0.00650391154146443,
+          "n_paired_stocks": 30,
+          "diff_net_pooled": 0.03860637918114662,
+          "diff_gross_pooled": 0.041106369346380234,
+          "bootstrap": {
+            "n_stocks": 30,
+            "obs_mean_diff": -0.00650391154146443,
+            "n_boot": 2000,
+            "ci95_low": -0.050457528235662415,
+            "ci95_high": 0.036796328060251335,
+            "p_directional_above_gt_below": 0.63,
+            "p_two_sided": 0.74
+          },
+          "signal_stocks": {
+            "above": 30,
+            "below": 30
+          }
+        }
+      }
+    },
+    "TW": {
+      "market": "TW",
+      "stocks_total": 50,
+      "stocks_processed": 50,
+      "holdings": {
+        "d20": {
+          "above": {
+            "n": 179938,
+            "mean": 0.01716587319970131,
+            "median": 0.006917556747794151,
+            "win_rate": 0.5481777056541698,
+            "mean_gross": 0.019665870815515518,
+            "mean_net": 0.01716587319970131
+          },
+          "below": {
+            "n": 102824,
+            "mean": 0.014622868038713932,
+            "median": 0.010033458471298218,
+            "win_rate": 0.545290982649965
+          },
+          "diff_net_stock_ew": 0.001842989172900513,
+          "diff_gross_stock_ew": 0.004342988480300625,
+          "n_paired_stocks": 49,
+          "diff_net_pooled": 0.002543005160987377,
+          "diff_gross_pooled": 0.005043002776801586,
+          "bootstrap": {
+            "n_stocks": 49,
+            "obs_mean_diff": 0.001842989172900513,
+            "n_boot": 2000,
+            "ci95_low": -0.0021380720585252033,
+            "ci95_high": 0.005665565152505256,
+            "p_directional_above_gt_below": 0.204,
+            "p_two_sided": 0.408
+          },
+          "signal_stocks": {
+            "above": 50,
+            "below": 49
+          }
+        },
+        "d60": {
+          "above": {
+            "n": 178089,
+            "mean": 0.05877653881907463,
+            "median": 0.02768857032060623,
+            "win_rate": 0.6008119535737749,
+            "mean_gross": 0.06127654016017914,
+            "mean_net": 0.05877653881907463
+          },
+          "below": {
+            "n": 102673,
+            "mean": 0.04606175795197487,
+            "median": 0.02791876532137394,
+            "win_rate": 0.5785260000194793
+          },
+          "diff_net_stock_ew": 0.013602667659217,
+          "diff_gross_stock_ew": 0.016102666320393283,
+          "n_paired_stocks": 49,
+          "diff_net_pooled": 0.012714780867099762,
+          "diff_gross_pooled": 0.01521478220820427,
+          "bootstrap": {
+            "n_stocks": 49,
+            "obs_mean_diff": 0.013602667659217,
+            "n_boot": 2000,
+            "ci95_low": 0.00240766503087872,
+            "ci95_high": 0.02548719307250932,
+            "p_directional_above_gt_below": 0.008,
+            "p_two_sided": 0.016
+          },
+          "signal_stocks": {
+            "above": 50,
+            "below": 49
+          }
+        },
+        "d120": {
+          "above": {
+            "n": 175534,
+            "mean": 0.11589755117893219,
+            "median": 0.05390102043747902,
+            "win_rate": 0.631125593902036,
+            "mean_gross": 0.118397556245327,
+            "mean_net": 0.11589755117893219
+          },
+          "below": {
+            "n": 102228,
+            "mean": 0.1070181354880333,
+            "median": 0.05846279114484787,
+            "win_rate": 0.6178150800172164
+          },
+          "diff_net_stock_ew": 0.012737537456239206,
+          "diff_gross_stock_ew": 0.015237537390856565,
+          "n_paired_stocks": 49,
+          "diff_net_pooled": 0.008879415690898895,
+          "diff_gross_pooled": 0.011379420757293701,
+          "bootstrap": {
+            "n_stocks": 49,
+            "obs_mean_diff": 0.012737537456239206,
+            "n_boot": 2000,
+            "ci95_low": -0.008824462502035401,
+            "ci95_high": 0.03772514318175403,
+            "p_directional_above_gt_below": 0.1625,
+            "p_two_sided": 0.325
+          },
+          "signal_stocks": {
+            "above": 50,
+            "below": 49
+          }
+        }
+      },
+      "oos": {
+        "d20": {
+          "above": {
+            "n": 41360,
+            "mean": 0.03363945707678795,
+            "median": 0.011684372089803219,
+            "win_rate": 0.5756769825918762,
+            "mean_gross": 0.03613945469260216,
+            "mean_net": 0.03363945707678795
+          },
+          "below": {
+            "n": 16353,
+            "mean": 0.022023139521479607,
+            "median": 0.01470592338591814,
+            "win_rate": 0.5826453861676757
+          },
+          "diff_net_stock_ew": 0.0044122079704479525,
+          "n_paired_stocks": 49,
+          "diff_net_pooled": 0.011616317555308342,
+          "diff_gross_pooled": 0.014116315171122551,
+          "bootstrap": {
+            "n_stocks": 49,
+            "obs_mean_diff": 0.0044122079704479525,
+            "n_boot": 2000,
+            "ci95_low": -0.005643691899901138,
+            "ci95_high": 0.015447753203016513,
+            "p_directional_above_gt_below": 0.187,
+            "p_two_sided": 0.374
+          },
+          "signal_stocks": {
+            "above": 50,
+            "below": 49
+          }
+        },
+        "d60": {
+          "above": {
+            "n": 39511,
+            "mean": 0.1133345365524292,
+            "median": 0.04314316809177399,
+            "win_rate": 0.6471362405406089,
+            "mean_gross": 0.1158345565199852,
+            "mean_net": 0.1133345365524292
+          },
+          "below": {
+            "n": 16202,
+            "mean": 0.06476907432079315,
+            "median": 0.04020046442747116,
+            "win_rate": 0.6236884335267251
+          },
+          "diff_net_stock_ew": 0.03000566451715267,
+          "n_paired_stocks": 49,
+          "diff_net_pooled": 0.04856546223163605,
+          "diff_gross_pooled": 0.05106548219919205,
+          "bootstrap": {
+            "n_stocks": 49,
+            "obs_mean_diff": 0.03000566451715267,
+            "n_boot": 2000,
+            "ci95_low": 0.0029832174816187868,
+            "ci95_high": 0.06025556777936539,
+            "p_directional_above_gt_below": 0.016,
+            "p_two_sided": 0.032
+          },
+          "signal_stocks": {
+            "above": 50,
+            "below": 49
+          }
+        },
+        "d120": {
+          "above": {
+            "n": 36993,
+            "mean": 0.21632201969623566,
+            "median": 0.07481826096773148,
+            "win_rate": 0.6842645905982213,
+            "mean_gross": 0.21882201731204987,
+            "mean_net": 0.21632201969623566
+          },
+          "below": {
+            "n": 15757,
+            "mean": 0.17090877890586853,
+            "median": 0.08304092288017273,
+            "win_rate": 0.6814114361870914
+          },
+          "diff_net_stock_ew": 0.011218036677004106,
+          "n_paired_stocks": 49,
+          "diff_net_pooled": 0.045413240790367126,
+          "diff_gross_pooled": 0.047913238406181335,
+          "bootstrap": {
+            "n_stocks": 49,
+            "obs_mean_diff": 0.011218036677004106,
+            "n_boot": 2000,
+            "ci95_low": -0.0498362125363201,
+            "ci95_high": 0.07114607346652793,
+            "p_directional_above_gt_below": 0.3665,
+            "p_two_sided": 0.733
+          },
+          "signal_stocks": {
+            "above": 49,
+            "below": 49
+          }
+        }
+      }
+    },
+    "UK": {
+      "market": "UK",
+      "stocks_total": 96,
+      "stocks_processed": 96,
+      "holdings": {
+        "d20": {
+          "above": {
+            "n": 446671,
+            "mean": 0.008529345504939556,
+            "median": 0.004792472813278437,
+            "win_rate": 0.5325149830635971,
+            "mean_gross": 0.011029345914721489,
+            "mean_net": 0.008529345504939556
+          },
+          "below": {
+            "n": 281453,
+            "mean": 0.020603107288479805,
+            "median": 0.009545001201331615,
+            "win_rate": 0.5475194792736265
+          },
+          "diff_net_stock_ew": -0.008723637408062737,
+          "diff_gross_stock_ew": -0.006223638562914857,
+          "n_paired_stocks": 96,
+          "diff_net_pooled": -0.012073761783540249,
+          "diff_gross_pooled": -0.009573761373758316,
+          "bootstrap": {
+            "n_stocks": 96,
+            "obs_mean_diff": -0.008723637408062737,
+            "n_boot": 2000,
+            "ci95_low": -0.023064379669638885,
+            "ci95_high": 0.004022095410035336,
+            "p_directional_above_gt_below": 0.9065,
+            "p_two_sided": 0.187
+          },
+          "signal_stocks": {
+            "above": 96,
+            "below": 96
+          }
+        },
+        "d60": {
+          "above": {
+            "n": 444314,
+            "mean": 0.032867901027202606,
+            "median": 0.0205729641020298,
+            "win_rate": 0.5768645597482861,
+            "mean_gross": 0.035367902368307114,
+            "mean_net": 0.032867901027202606
+          },
+          "below": {
+            "n": 279986,
+            "mean": 0.041746947914361954,
+            "median": 0.023715443909168243,
+            "win_rate": 0.571117841606366
+          },
+          "diff_net_stock_ew": -0.0031172638602009473,
+          "diff_gross_stock_ew": -0.0006172639722200612,
+          "n_paired_stocks": 95,
+          "diff_net_pooled": -0.008879046887159348,
+          "diff_gross_pooled": -0.00637904554605484,
+          "bootstrap": {
+            "n_stocks": 95,
+            "obs_mean_diff": -0.0031172638602009473,
+            "n_boot": 2000,
+            "ci95_low": -0.028860598724093408,
+            "ci95_high": 0.029967027172918406,
+            "p_directional_above_gt_below": 0.6155,
+            "p_two_sided": 0.769
+          },
+          "signal_stocks": {
+            "above": 95,
+            "below": 95
+          }
+        },
+        "d120": {
+          "above": {
+            "n": 440507,
+            "mean": 0.07400181889533997,
+            "median": 0.041809290647506714,
+            "win_rate": 0.6096384393437562,
+            "mean_gross": 0.07650181651115417,
+            "mean_net": 0.07400181889533997
+          },
+          "below": {
+            "n": 278093,
+            "mean": 0.07064486294984818,
+            "median": 0.04059220850467682,
+            "win_rate": 0.5885333323744215
+          },
+          "diff_net_stock_ew": 0.01517983492169725,
+          "diff_gross_stock_ew": 0.01767983741898972,
+          "n_paired_stocks": 95,
+          "diff_net_pooled": 0.0033569559454917908,
+          "diff_gross_pooled": 0.005856953561306,
+          "bootstrap": {
+            "n_stocks": 95,
+            "obs_mean_diff": 0.01517983492169725,
+            "n_boot": 2000,
+            "ci95_low": -0.03151298066123242,
+            "ci95_high": 0.082771192119996,
+            "p_directional_above_gt_below": 0.3715,
+            "p_two_sided": 0.743
+          },
+          "signal_stocks": {
+            "above": 95,
+            "below": 95
+          }
+        }
+      },
+      "oos": {
+        "d20": {
+          "above": {
+            "n": 87746,
+            "mean": 0.0037997316103428602,
+            "median": 0.005082004703581333,
+            "win_rate": 0.5341554030952977,
+            "mean_gross": 0.006299730855971575,
+            "mean_net": 0.0037997316103428602
+          },
+          "below": {
+            "n": 60126,
+            "mean": 0.013065093196928501,
+            "median": 0.011028783395886421,
+            "win_rate": 0.5574293982636463
+          },
+          "diff_net_stock_ew": -0.015179096683047982,
+          "n_paired_stocks": 95,
+          "diff_net_pooled": -0.009265361586585641,
+          "diff_gross_pooled": -0.006765362340956926,
+          "bootstrap": {
+            "n_stocks": 95,
+            "obs_mean_diff": -0.015179096683047982,
+            "n_boot": 2000,
+            "ci95_low": -0.019047706893604632,
+            "ci95_high": -0.011118339253357833,
+            "p_directional_above_gt_below": 1.0,
+            "p_two_sided": 0.0
+          },
+          "signal_stocks": {
+            "above": 96,
+            "below": 95
+          }
+        },
+        "d60": {
+          "above": {
+            "n": 85389,
+            "mean": 0.02051505260169506,
+            "median": 0.01887715794146061,
+            "win_rate": 0.5682464954502336,
+            "mean_gross": 0.02301505021750927,
+            "mean_net": 0.02051505260169506
+          },
+          "below": {
+            "n": 58659,
+            "mean": 0.03221685811877251,
+            "median": 0.024516766890883446,
+            "win_rate": 0.5772345249663309
+          },
+          "diff_net_stock_ew": -0.027202334835508622,
+          "n_paired_stocks": 94,
+          "diff_net_pooled": -0.011701805517077446,
+          "diff_gross_pooled": -0.009201807901263237,
+          "bootstrap": {
+            "n_stocks": 94,
+            "obs_mean_diff": -0.027202334835508622,
+            "n_boot": 2000,
+            "ci95_low": -0.03743358450573145,
+            "ci95_high": -0.016459913064999405,
+            "p_directional_above_gt_below": 1.0,
+            "p_two_sided": 0.0
+          },
+          "signal_stocks": {
+            "above": 95,
+            "below": 94
+          }
+        },
+        "d120": {
+          "above": {
+            "n": 81582,
+            "mean": 0.04831644892692566,
+            "median": 0.038158975541591644,
+            "win_rate": 0.5935377901988184,
+            "mean_gross": 0.05081645026803017,
+            "mean_net": 0.04831644892692566
+          },
+          "below": {
+            "n": 56766,
+            "mean": 0.05544840171933174,
+            "median": 0.04346198961138725,
+            "win_rate": 0.601081633372089
+          },
+          "diff_net_stock_ew": -0.03088561741126196,
+          "n_paired_stocks": 94,
+          "diff_net_pooled": -0.007131952792406082,
+          "diff_gross_pooled": -0.004631951451301575,
+          "bootstrap": {
+            "n_stocks": 94,
+            "obs_mean_diff": -0.03088561741126196,
+            "n_boot": 2000,
+            "ci95_low": -0.04806732935971825,
+            "ci95_high": -0.011117738844722213,
+            "p_directional_above_gt_below": 0.9975,
+            "p_two_sided": 0.005
+          },
+          "signal_stocks": {
+            "above": 95,
+            "below": 94
+          }
+        }
+      }
+    },
+    "US": {
+      "market": "US",
+      "stocks_total": 484,
+      "stocks_processed": 481,
+      "holdings": {
+        "d20": {
+          "above": {
+            "n": 2722613,
+            "mean": 0.010257215239107609,
+            "median": 0.0092595424503088,
+            "win_rate": 0.5579445187399017,
+            "mean_gross": 0.012757215648889542,
+            "mean_net": 0.010257215239107609
+          },
+          "below": {
+            "n": 1373278,
+            "mean": 0.018381673842668533,
+            "median": 0.01522255688905716,
+            "win_rate": 0.5691695345006619
+          },
+          "diff_net_stock_ew": -0.009006710554437329,
+          "diff_gross_stock_ew": -0.006506711077418003,
+          "n_paired_stocks": 480,
+          "diff_net_pooled": -0.008124458603560925,
+          "diff_gross_pooled": -0.005624458193778992,
+          "bootstrap": {
+            "n_stocks": 480,
+            "obs_mean_diff": -0.009006710554437329,
+            "n_boot": 2000,
+            "ci95_low": -0.011082940873397245,
+            "ci95_high": -0.007204439077854284,
+            "p_directional_above_gt_below": 1.0,
+            "p_two_sided": 0.0
+          },
+          "signal_stocks": {
+            "above": 481,
+            "below": 480
+          }
+        },
+        "d60": {
+          "above": {
+            "n": 2711493,
+            "mean": 0.03707361966371536,
+            "median": 0.03205903619527817,
+            "win_rate": 0.6100993069132025,
+            "mean_gross": 0.03957362100481987,
+            "mean_net": 0.03707361966371536
+          },
+          "below": {
+            "n": 1365158,
+            "mean": 0.05214763805270195,
+            "median": 0.04367007315158844,
+            "win_rate": 0.6175036149661798
+          },
+          "diff_net_stock_ew": -0.016293438810619898,
+          "diff_gross_stock_ew": -0.013793440027499555,
+          "n_paired_stocks": 480,
+          "diff_net_pooled": -0.015074018388986588,
+          "diff_gross_pooled": -0.01257401704788208,
+          "bootstrap": {
+            "n_stocks": 480,
+            "obs_mean_diff": -0.016293438810619898,
+            "n_boot": 2000,
+            "ci95_low": -0.021249598314091907,
+            "ci95_high": -0.011617305637147793,
+            "p_directional_above_gt_below": 1.0,
+            "p_two_sided": 0.0
+          },
+          "signal_stocks": {
+            "above": 481,
+            "below": 480
+          }
+        },
+        "d120": {
+          "above": {
+            "n": 2694505,
+            "mean": 0.08044715225696564,
+            "median": 0.06520701199769974,
+            "win_rate": 0.6524370895581935,
+            "mean_gross": 0.08294714242219925,
+            "mean_net": 0.08044715225696564
+          },
+          "below": {
+            "n": 1353286,
+            "mean": 0.10022953897714615,
+            "median": 0.07746139168739319,
+            "win_rate": 0.6493002957246288
+          },
+          "diff_net_stock_ew": -0.019213749333478816,
+          "diff_gross_stock_ew": -0.016713751191370335,
+          "n_paired_stocks": 480,
+          "diff_net_pooled": -0.01978238672018051,
+          "diff_gross_pooled": -0.0172823965549469,
+          "bootstrap": {
+            "n_stocks": 480,
+            "obs_mean_diff": -0.019213749333478816,
+            "n_boot": 2000,
+            "ci95_low": -0.026763692714497057,
+            "ci95_high": -0.011630397968037873,
+            "p_directional_above_gt_below": 1.0,
+            "p_two_sided": 0.0
+          },
+          "signal_stocks": {
+            "above": 481,
+            "below": 480
+          }
+        }
+      },
+      "oos": {
+        "d20": {
+          "above": {
+            "n": 534501,
+            "mean": 0.007592685986310244,
+            "median": 0.007521882187575102,
+            "win_rate": 0.5467361146190559,
+            "mean_gross": 0.010092685930430889,
+            "mean_net": 0.007592685986310244
+          },
+          "below": {
+            "n": 295914,
+            "mean": 0.017700491473078728,
+            "median": 0.015393337234854698,
+            "win_rate": 0.5771237589299594
+          },
+          "diff_net_stock_ew": -0.01599561587608755,
+          "n_paired_stocks": 478,
+          "diff_net_pooled": -0.010107805486768484,
+          "diff_gross_pooled": -0.007607805542647839,
+          "bootstrap": {
+            "n_stocks": 478,
+            "obs_mean_diff": -0.01599561587608755,
+            "n_boot": 2000,
+            "ci95_low": -0.018393484145145373,
+            "ci95_high": -0.013755376286296792,
+            "p_directional_above_gt_below": 1.0,
+            "p_two_sided": 0.0
+          },
+          "signal_stocks": {
+            "above": 481,
+            "below": 478
+          }
+        },
+        "d60": {
+          "above": {
+            "n": 523381,
+            "mean": 0.030235683545470238,
+            "median": 0.025768818333745003,
+            "win_rate": 0.5886228197049568,
+            "mean_gross": 0.0327356792986393,
+            "mean_net": 0.030235683545470238
+          },
+          "below": {
+            "n": 287794,
+            "mean": 0.0457475520670414,
+            "median": 0.038449808955192566,
+            "win_rate": 0.6102420481316497
+          },
+          "diff_net_stock_ew": -0.0335664699814363,
+          "n_paired_stocks": 478,
+          "diff_net_pooled": -0.01551186852157116,
+          "diff_gross_pooled": -0.0130118727684021,
+          "bootstrap": {
+            "n_stocks": 478,
+            "obs_mean_diff": -0.0335664699814363,
+            "n_boot": 2000,
+            "ci95_low": -0.04035066133166525,
+            "ci95_high": -0.027402947905291086,
+            "p_directional_above_gt_below": 1.0,
+            "p_two_sided": 0.0
+          },
+          "signal_stocks": {
+            "above": 481,
+            "below": 478
+          }
+        },
+        "d120": {
+          "above": {
+            "n": 506452,
+            "mean": 0.06688833236694336,
+            "median": 0.0530010461807251,
+            "win_rate": 0.6277890106071257,
+            "mean_gross": 0.06938833743333817,
+            "mean_net": 0.06688833236694336
+          },
+          "below": {
+            "n": 275922,
+            "mean": 0.08221367746591568,
+            "median": 0.06349852681159973,
+            "win_rate": 0.6342227151151413
+          },
+          "diff_net_stock_ew": -0.04643453728007706,
+          "n_paired_stocks": 471,
+          "diff_net_pooled": -0.01532534509897232,
+          "diff_gross_pooled": -0.012825340032577515,
+          "bootstrap": {
+            "n_stocks": 471,
+            "obs_mean_diff": -0.04643453728007706,
+            "n_boot": 2000,
+            "ci95_low": -0.05758439512522827,
+            "ci95_high": -0.03649676858740448,
+            "p_directional_above_gt_below": 1.0,
+            "p_two_sided": 0.0
+          },
+          "signal_stocks": {
+            "above": 477,
+            "below": 472
+          }
+        }
+      }
+    }
+  },
+  "verdict": {
+    "d20": {
+      "diff_net_pooled_pp": -0.9785,
+      "ci95_low_pp": -1.9285,
+      "ci95_high_pp": -0.2213,
+      "p_directional": 1.0,
+      "p_two_sided": 0.0,
+      "supported_at_95": false,
+      "oos_diff_net_pooled_pp": -0.4098,
+      "oos_same_direction": false
+    },
+    "d60": {
+      "diff_net_pooled_pp": -2.1297,
+      "ci95_low_pp": -4.9641,
+      "ci95_high_pp": 0.4073,
+      "p_directional": 0.8095,
+      "p_two_sided": 0.381,
+      "supported_at_95": false,
+      "oos_diff_net_pooled_pp": 0.0347,
+      "oos_same_direction": true
+    },
+    "d120": {
+      "diff_net_pooled_pp": -4.2278,
+      "ci95_low_pp": -10.0864,
+      "ci95_high_pp": 1.0586,
+      "p_directional": 0.731,
+      "p_two_sided": 0.538,
+      "supported_at_95": false,
+      "oos_diff_net_pooled_pp": 0.723,
+      "oos_same_direction": true
+    }
+  }
+}

@@ -1,0 +1,185 @@
+<div class="page-header">
+  <div class="breadcrumb">决策台 — Prompt 生成器（AI 界面 · 宪法册七）</div>
+  <h2 data-i18n="page.workspace">🎯 决策台</h2>
+  <p style="color:var(--text-muted);font-size:13px;margin-top:6px;">三步闭环：生成 Prompt → 拿给任何外部 AI → 把它的 JSON 贴回来。状态机（fengstate）是唯一的门，网页只管流程和数据。</p>
+</div>
+
+<div class="card">
+  <h3 class="section-title">① 选择标的与层</h3>
+  <div class="detail-grid">
+    <div class="field-row"><label>标的</label><input id="w-ticker" placeholder="如 0700.HK"></div>
+    <div class="field-row"><label>层</label>
+      <select id="w-layer">
+        <option value="01-capability">L0 能力圈（01-capability）</option>
+        <option value="05-qualitative">L2a 定性（05-qualitative）</option>
+        <option value="06-collision">L3 碰撞（06-collision）</option>
+      </select>
+    </div>
+  </div>
+  <button class="btn btn-accent" id="genBtn" onclick="genPrompt()">生成 Prompt</button>
+</div>
+
+<div class="card">
+  <h3 class="section-title">② 复制给外部 AI</h3>
+  <textarea id="w-prompt" rows="10" style="width:100%;font-size:13px;font-family:monospace;border:1px solid var(--border-strong);border-radius:8px;padding:10px;" readonly placeholder="生成的 Prompt 会出现在这里"></textarea>
+  <button class="btn" onclick="copyPrompt()">复制 Prompt</button>
+</div>
+
+<div class="card">
+  <h3 class="section-title">③ 贴回 AI 的 JSON 输出（fengstate complete 真门验证）</h3>
+  <textarea id="w-output" rows="8" style="width:100%;font-size:13px;font-family:monospace;border:1px solid var(--border-strong);border-radius:8px;padding:10px;" placeholder='把外部 AI 输出的 JSON 粘贴到这里'></textarea>
+  <button class="btn btn-primary" id="subBtn" onclick="submitOutput()">提交（结构验证 + 状态机推进）</button>
+  <div id="w-result" style="margin-top:12px;"></div>
+</div>
+
+<div class="card">
+  <h3 class="section-title">研究清单管理（status 调整）</h3>
+  <div class="detail-grid">
+    <div class="field-row"><label>标的</label><input id="rl-ticker" placeholder="0700.HK"></div>
+    <div class="field-row"><label>新状态</label>
+      <select id="rl-status"><option>researching</option><option>candidate</option><option>watching</option><option>holding</option><option>parked</option></select>
+    </div>
+  </div>
+  <button class="btn" id="rlBtn" onclick="rlSet()">更新状态</button>
+  <span id="rl-out" style="margin-left:10px;font-size:13px;"></span>
+</div>
+
+<div class="card">
+  <h3 class="section-title">筛选流水线（fengbatch：公开list→粗筛→精筛→幸存者）</h3>
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+    <select id="scr-list" style="padding:8px 12px;border:1px solid var(--border-strong);border-radius:8px;">
+      <option value="cn_dividend">cn_dividend 中证红利</option>
+      <option value="us_quality">us_quality 美股质量</option>
+      <option value="us_dividend">us_dividend 美股红利</option>
+    </select>
+    <button class="btn btn-accent" id="scrBtn" onclick="runScreen()">跑一批（约9分钟，契约长超时）</button>
+  </div>
+  <div id="scr-out" style="margin-top:12px;"></div>
+  <div class="data-block" data-url="/api/screen/pipeline" data-render="renderBatches" data-empty="尚无批次"></div>
+</div>
+
+<div class="card">
+  <h3 class="section-title">数据一键更新（fengdata fx → 国际日线探测 → A股财报增量，经 safe_batch）</h3>
+  <button class="btn btn-accent" id="updBtn" onclick="startUpdate()">开始更新（后台 job，可回滚）</button>
+  <div id="upd-out" style="margin-top:12px;"></div>
+</div>
+
+<div class="card">
+  <h3 class="section-title">验证论断（fengverify 白话卡）</h3>
+  <div class="field-row"><label>论断编号</label><input id="v-claim" placeholder="如 1、8（#1 年线 / #8 月暴涨）"></div>
+  <button class="btn btn-accent" id="verifyBtn" onclick="runVerify()">复测（可能较慢）</button>
+  <div id="verifyOut" style="margin-top:12px;"></div>
+</div>
+
+<script>
+function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+async function genPrompt() {
+  var t = document.getElementById('w-ticker').value.trim();
+  if (!t) { alert('先填标的'); return; }
+  var btn = document.getElementById('genBtn');
+  btn.disabled = true; btn.textContent = '生成中…';
+  try {
+    var r = await fetch('/api/prompt/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ticker: t, layer: document.getElementById('w-layer').value }) });
+    var d = await r.json();
+    if (!r.ok) { alert((d.error || '失败') + '：' + (d.detail || '')); }
+    else document.getElementById('w-prompt').value = d.prompt;
+  } catch (e) { alert('网络错误: ' + e.message); }
+  btn.disabled = false; btn.textContent = '生成 Prompt';
+}
+function copyPrompt() {
+  var ta = document.getElementById('w-prompt');
+  ta.select(); document.execCommand('copy');
+}
+async function rlSet() {
+  var t = document.getElementById('rl-ticker').value.trim();
+  if (!t) { alert('填标的'); return; }
+  var out = document.getElementById('rl-out');
+  try {
+    var r = await fetch('/api/research-list/' + encodeURIComponent(t) + '/status', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: document.getElementById('rl-status').value }),
+    });
+    var d = await r.json();
+    out.innerHTML = r.ok ? '<span style="color:var(--ok);">✓ ' + d.from + ' → ' + d.to + '</span>' : '<span style="color:var(--danger);">' + (d.error || '失败') + '</span>';
+  } catch (e) { out.textContent = '网络错误'; }
+}
+function renderBatches(d, el) {
+  if (!d.batches || !d.batches.length) return;
+  el.innerHTML = '<div style="margin-top:12px;"><b style="font-size:13px;">历史批次：</b>' + d.batches.map(function(b) {
+    var st = b.survivors ? ('幸存 ' + (b.survivors.length || b.survivors.count || '?')) : (b.meta ? '已建' : '未跑');
+    return '<span class="badge badge-neutral" style="margin:2px;">' + b.batch + ' · ' + st + '</span>';
+  }).join('') + '</div>';
+}
+async function runScreen() {
+  var btn = document.getElementById('scrBtn');
+  btn.disabled = true; btn.textContent = '流水线运行中…（粗筛→精筛）';
+  var el = document.getElementById('scr-out');
+  try {
+    var r = await fetch('/api/screen/pipeline', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ list_name: document.getElementById('scr-list').value }) });
+    var d = await r.json();
+    el.innerHTML = r.ok ? '<div class="alert alert-info">✅ 完成。幸存者与计划已落 research/070-reports/batch/。</div>'
+      : '<div class="alert alert-danger">' + (d.error || '失败') + '：' + (d.detail || '') + '</div>';
+    window.FengData.fetchAll();
+  } catch (e) { el.textContent = '网络错误'; }
+  btn.disabled = false; btn.textContent = '跑一批（约9分钟，契约长超时）';
+}
+async function startUpdate() {
+  var btn = document.getElementById('updBtn');
+  btn.disabled = true; btn.textContent = '任务已提交…';
+  var el = document.getElementById('upd-out');
+  try {
+    var r = await fetch('/api/data/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ scope: 'all' }) });
+    var d = await r.json();
+    if (!r.ok && r.status !== 202) { el.innerHTML = '<div class="alert alert-danger">' + (d.error || '失败') + '</div>'; btn.disabled = false; btn.textContent = '开始更新（后台 job，可回滚）'; return; }
+    el.innerHTML = '<div class="alert alert-info">Job ' + d.job_id + ' 已排队（fx → 国际日线 → 财报，较慢）</div><div id="upd-progress"></div>';
+    var pid = setInterval(async function() {
+      try {
+        var pr = await fetch('/api/data/update/' + d.job_id);
+        var p = await pr.json();
+        var rows = p.steps.map(function(s) {
+          var icon = s.status === 'done' ? '✅' : s.status === 'failed' ? '❌' : s.status === 'running' ? '⏳' : '·';
+          return '<div>' + icon + ' ' + s.tool + ' [' + s.scope + '] ' + s.status + (s.error ? ' — ' + s.error : '') + '</div>';
+        }).join('');
+        var box = document.getElementById('upd-progress');
+        if (box) box.innerHTML = '<div class="card" style="margin:8px 0;font-size:13px;">' + rows + '</div>';
+        if (p.status !== 'running') {
+          clearInterval(pid);
+          btn.disabled = false; btn.textContent = '开始更新（后台 job，可回滚）';
+          if (box) box.insertAdjacentHTML('beforeend', '<div class="alert ' + (p.status === 'done' ? 'alert-info' : 'alert-warning') + '">' + (p.status === 'done' ? '✅ 全部完成' : '⚠ 部分失败（详见上）') + '</div>');
+        }
+      } catch (e) { clearInterval(pid); btn.disabled = false; }
+    }, 4000);
+  } catch (e) { el.textContent = '网络错误: ' + e.message; btn.disabled = false; }
+}
+async function runVerify() {
+  var id = document.getElementById('v-claim').value.trim();
+  if (!id) { alert('填论断编号'); return; }
+  var btn = document.getElementById('verifyBtn');
+  btn.disabled = true; btn.textContent = '复测引擎运行中…';
+  var el = document.getElementById('verifyOut');
+  el.innerHTML = '<div class="alert alert-info">fengverify.py ' + esc(id) + ' 运行中（回测可能几分钟）</div>';
+  try {
+    var r = await fetch('/api/verify/' + encodeURIComponent(id), { method: 'POST' });
+    var d = await r.json();
+    el.innerHTML = r.ok
+      ? '<pre style="font-size:12px;white-space:pre-wrap;background:var(--bg-inset);padding:12px;border-radius:8px;max-height:480px;overflow:auto;">' + esc(typeof d === 'string' ? d : JSON.stringify(d, null, 2).slice(0, 8000)) + '</pre>'
+      : '<div class="alert alert-danger">' + esc(d.error || '失败') + '：' + esc(d.detail || '') + '</div>';
+  } catch (e) { el.textContent = '网络错误: ' + e.message; }
+  btn.disabled = false; btn.textContent = '复测（可能较慢）';
+}
+async function submitOutput() {
+  var out = document.getElementById('w-output').value.trim();
+  if (!out) { alert('先贴回 AI 的输出'); return; }
+  var btn = document.getElementById('subBtn');
+  btn.disabled = true; btn.textContent = '验证中…（fengstate complete）';
+  var el = document.getElementById('w-result');
+  try {
+    var r = await fetch('/api/prompt/submit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ticker: document.getElementById('w-ticker').value.trim(), layer: document.getElementById('w-layer').value, output: out }) });
+    var d = await r.json();
+    el.innerHTML = r.ok
+      ? '<div class="alert alert-info">✅ 结构验证通过，状态机已推进该层。<pre style="font-size:11px;white-space:pre-wrap;margin-top:6px;">' + esc(JSON.stringify(d.state || d, null, 2).slice(0, 1200)) + '</pre></div>'
+      : '<div class="alert alert-danger">' + esc(d.error || '失败') + '：' + esc(d.detail || '') + '</div>';
+  } catch (e) { el.textContent = '网络错误: ' + e.message; }
+  btn.disabled = false; btn.textContent = '提交（结构验证 + 状态机推进）';
+}
+</script>

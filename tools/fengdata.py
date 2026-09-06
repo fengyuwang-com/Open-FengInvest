@@ -7,6 +7,13 @@ Usage:
     python fengdata.py 0700.HK --financials  # financials only
     python fengdata.py 0700.HK --backend futu   # force Futu
     python fengdata.py 0700.HK --backend yfinance  # force yfinance
+    python fengdata.py 600036.SS --sina-financials            # 新浪A股三大报表（PIT: 自带公告日期+审计状态）
+    python fengdata.py 600036.SS --sina-financials --latest 4 # 只保留最近4个报告期
+    python fengdata.py zt-pools                       # 东财涨停池（5 池：涨停/强势/炸板/跌停/昨日涨停）
+    python fengdata.py zt-pools --date 20260901       # 指定日期
+    python fengdata.py zt-pools --pools zt,qs,dt      # 只获取指定池
+    python fengdata.py --fund-nav 160137              # 腾讯基金实时估算净值
+    python fengdata.py --fund-nav 160137 005827       # 多只基金
 
 Backend policy:
     --backend auto (default): try Futu → fallback yfinance
@@ -746,6 +753,46 @@ def _sf(row_or_getter, key, cast=float):
 
 # ─── Holdings batch update ──────────────────────────────────────
 
+def _quote_free(ticker: str):
+    """零依赖实时价回退：A股/港股走腾讯 qt.gtimg.cn，美股走 Yahoo chart。拿不到返回 None。"""
+    import urllib.request
+    t = ticker.upper()
+    try:
+        if t.endswith((".SS", ".SZ")):
+            sym = ("sh" if t.endswith(".SS") else "sz") + t[:6]
+            req = urllib.request.Request(f"https://qt.gtimg.cn/q={sym}", headers={"User-Agent": "Mozilla/5.0"})
+            txt = urllib.request.urlopen(req, timeout=10).read().decode("gbk", "ignore")
+            parts = txt.split("~")
+            return float(parts[3]) if len(parts) > 3 and parts[3] else None
+        if t.endswith(".HK"):
+            sym = "r_hk" + t.split(".")[0].zfill(5)
+            req = urllib.request.Request(f"https://qt.gtimg.cn/q={sym}", headers={"User-Agent": "Mozilla/5.0"})
+            txt = urllib.request.urlopen(req, timeout=10).read().decode("gbk", "ignore")
+            parts = txt.split("~")
+            return float(parts[3]) if len(parts) > 3 and parts[3] else None
+        # 美股：东财 push2 实时（105=纳斯达克/106=纽交所/107=美交所），Yahoo 403 时的主回退
+        import urllib.request, json as _json
+        for mkt in ("105", "106", "107"):
+            try:
+                url = (f"https://push2.eastmoney.com/api/qt/stock/get?secid={mkt}.{t}"
+                       "&fltt=2&invt=2&fields=f43")
+                req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+                j = _json.loads(urllib.request.urlopen(req, timeout=10).read().decode("utf-8", "ignore"))
+                v = ((j.get("data") or {}).get("f43"))
+                if v:
+                    return float(v)
+            except Exception:
+                continue
+        r = _yahoo_chart_http(t, range_str="5d", _tries=2)
+        if r.get("ok"):
+            d = r.get("data") or {}
+            closes = [c for c in (d.get("close") or []) if c]
+            return float(closes[-1]) if closes else None
+    except Exception:
+        return None
+    return None
+
+
 def _update_holdings_prices():
     """Batch-update current_price for all holdings/ via Futu snapshots."""
     holdings_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "holdings")
@@ -762,17 +809,24 @@ def _update_holdings_prices():
         ticker = m.group(1)
         code = _to_futu_code(ticker)
         try:
-            from futu import OpenQuoteContext, RET_OK
-            ctx = OpenQuoteContext(host='127.0.0.1', port=11111)
-            ret, snap = ctx.get_market_snapshot([code])
-            ctx.close()
-            if ret != RET_OK:
-                failed.append({"ticker": ticker, "error": "Futu snapshot failed"})
-                continue
-            row = snap.iloc[0] if hasattr(snap, 'iloc') else snap[0]
-            price = float(row.get('last_price', 0) if hasattr(row, 'get') else getattr(row, 'last_price', 0))
-            if price <= 0:
-                failed.append({"ticker": ticker, "error": "zero price"})
+            price = None
+            src = "futu"
+            try:
+                from futu import OpenQuoteContext, RET_OK
+                ctx = OpenQuoteContext(host='127.0.0.1', port=11111)
+                ret, snap = ctx.get_market_snapshot([code])
+                ctx.close()
+                if ret == RET_OK:
+                    row = snap.iloc[0] if hasattr(snap, 'iloc') else snap[0]
+                    price = float(row.get('last_price', 0) if hasattr(row, 'get') else getattr(row, 'last_price', 0))
+            except Exception:
+                price = None
+            if not price or price <= 0:
+                # 回退：腾讯/Yahoo 免依赖源（2026-09-06 一键更新真跑要求）
+                src = "free"
+                price = _quote_free(ticker)
+            if not price or price <= 0:
+                failed.append({"ticker": ticker, "error": "futu 与免费源均无价"})
                 continue
             # Update the holding file
             fpath = os.path.join(holdings_dir, fname)
@@ -780,11 +834,11 @@ def _update_holdings_prices():
                 h = json.load(fh)
             old_price = h.get("position", {}).get("current_price", 0)
             h.setdefault("position", {})["current_price"] = price
-            h.setdefault("position", {})["market_value"] = price * h["position"].get("shares", 0)
+            h.setdefault("position", {})["market_value"] = price * (h["position"].get("shares") or h["position"].get("units") or 0)
             h.setdefault("meta", {})["updated_at"] = datetime.now().strftime("%Y-%m-%d %H:%M")
             with open(fpath, "w", encoding="utf-8") as fh:
                 json.dump(h, fh, indent=2, ensure_ascii=False)
-            updated.append({"ticker": ticker, "old_price": old_price, "new_price": price,
+            updated.append({"ticker": ticker, "source": src, "old_price": old_price, "new_price": price,
                            "change_pct": round((price / old_price - 1) * 100, 2) if old_price else None})
         except Exception as e:
             failed.append({"ticker": ticker, "error": str(e)[:100]})
@@ -867,6 +921,599 @@ def _cmd_fx():
     print(json.dumps(rates, indent=2, ensure_ascii=False))
 
 
+# ─── Sina A股三大报表（PIT：自带公告日期+审计状态）──────────────
+# 移植自 akshare stock_financial_report_sina（仓库外参考：
+#   ~/_research/akshare\akshare\stock_fundamental\stock_finance_sina.py）
+# 原实现关键点（逐一保留）：
+#   - URL: https://quotes.sina.cn/cn/api/openapi.php/CompanyFinanceService.getFinanceReport2022
+#   - params: paperCode=sh600036 / source=fzb|lrb|llb / type=0 / page=1 / num=1000
+#   - 报告期取自 result.data.report_date[].date_value；科目取自
+#     result.data.report_list[<报告期>].data[].{item_title,item_value}
+#   - 每期附带元信息行（原 akshare 宽表尾部追加）：data_source / is_audit /
+#     publish_date / rCurrency / rType / update_time(时间戳)
+#   - 重复科目（'国内票证结算'/'内部应收款'）保留首个（同 akshare keep='first'）
+
+_PROJ_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+_SINA_FIN_URL = "https://quotes.sina.cn/cn/api/openapi.php/CompanyFinanceService.getFinanceReport2022"
+_SINA_UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+            "(KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36")
+# (输出键, 中文名, 新浪 source 参数)
+_SINA_STATEMENTS = [
+    ("balance", "资产负债表", "fzb"),
+    ("income", "利润表", "lrb"),
+    ("cashflow", "现金流量表", "llb"),
+]
+_SINA_CACHE_TTL = 86400  # 本地缓存 TTL：1 天
+
+
+def _to_sina_code(ticker: str):
+    """A 股 ticker → 新浪代码：600036.SS/600036.SH → sh600036；000001.SZ → sz000001。
+    裸 6 位数字按首位推断（6/9 → 沪，0/3 → 深）。非 A 股返回 None。"""
+    t = (ticker or "").upper().strip()
+    m = re.match(r"^(SH|SZ)\.0*(\d{6})$", t)  # Futu 风格 SH.600036
+    if m:
+        return f"{m.group(1).lower()}{m.group(2)}"
+    m = re.match(r"^(\d{6})\.(SS|SH)$", t)
+    if m:
+        return f"sh{m.group(1)}"
+    m = re.match(r"^(\d{6})\.SZ$", t)
+    if m:
+        return f"sz{m.group(1)}"
+    m = re.match(r"^(\d{6})$", t)
+    if m:
+        d = m.group(1)
+        return f"sh{d}" if d[0] in "69" else f"sz{d}"
+    return None
+
+
+def _sina_num(v):
+    """新浪科目值转 float；'--'/'-'/'None'/空/非数值 → None。"""
+    if v is None:
+        return None
+    if isinstance(v, (int, float)):
+        return float(v) if v == v else None  # NaN 过滤
+    s = str(v).strip().replace(",", "")
+    if not s or s in ("--", "-", "None", "null", "nan", "N/A"):
+        return None
+    try:
+        f = float(s)
+    except ValueError:
+        return None
+    return f if f == f else None
+
+
+def _sina_ts_iso(v):
+    """update_time（unix 秒）→ ISO 字符串；解析失败原样返回。"""
+    if v is None:
+        return None
+    try:
+        ts = float(v)
+        if ts > 0:
+            return datetime.fromtimestamp(ts).isoformat()
+    except (TypeError, ValueError, OverflowError):
+        pass
+    return v
+
+
+def _sina_statement(sina_code: str, source: str, latest=None):
+    """拉取新浪单张报表。返回 (data{报告期:{科目:值}}, meta{报告期:{publish_date,is_audit,...}}, warnings, cache_src)。
+
+    请求走 fengthrottle.cached_get（限流 + TTL 缓存，1 天）。网络失败由 fengthrottle
+    回退陈旧缓存或上抛异常，本函数不做吞错。
+    """
+    if source not in ("fzb", "lrb", "llb"):
+        raise ValueError(f"未知新浪报表 source: {source}")
+    import sys as _sys
+    _sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    # fengthrottle 在导入时读取 FENG_HTTP_UA，须先设置再导入
+    os.environ.setdefault("FENG_HTTP_UA", _SINA_UA)
+    from fengthrottle import cached_get
+
+    params = {"paperCode": sina_code, "source": source, "type": "0", "page": "1", "num": "1000"}
+    data, src = cached_get(_SINA_FIN_URL, params=params, ttl=_SINA_CACHE_TTL, timeout=30)
+
+    try:
+        result = data["result"]["data"]
+    except (KeyError, TypeError):
+        raise ValueError(f"新浪接口返回异常（可能被反爬/限流），前 200 字符: {str(data)[:200]}")
+
+    warnings = []
+    # 报告期列表（按接口顺序去重）
+    periods_raw = [str(x["date_value"]) for x in result.get("report_date", []) if x.get("date_value")]
+    seen = set()
+    periods = [p for p in periods_raw if not (p in seen or seen.add(p))]
+    # 报告期按日期降序（最新在前）；解析不出日期的排末尾
+    def _period_key(p):
+        d = re.sub(r"\D", "", p)
+        if len(d) >= 8:
+            try:
+                return (int(d[:4]), int(d[4:6]), int(d[6:8]))
+            except ValueError:
+                return (9999, 12, 31)
+        return (0, 0, 0)
+    periods.sort(key=_period_key, reverse=True)
+    if latest:
+        periods = periods[:latest]
+
+    report_list = result.get("report_list", {})
+    out, meta = {}, {}
+    dup_names, skip_nonnum = [], 0
+    for p in periods:
+        rl = report_list.get(p) or {}
+        row = {}
+        for it in rl.get("data") or []:
+            title = str(it.get("item_title") or "").strip()
+            if not title:
+                continue
+            if title in row:  # 重复科目保留首个（同 akshare keep='first'）
+                if title not in dup_names:
+                    dup_names.append(title)
+                continue
+            fv = _sina_num(it.get("item_value"))
+            if fv is None:
+                skip_nonnum += 1
+                continue
+            row[title] = fv
+        out[p] = row
+        meta[p] = {  # PIT 关键：公告日期 + 审计状态
+            "publish_date": rl.get("publish_date"),
+            "is_audit": rl.get("is_audit"),
+            "data_source": rl.get("data_source"),
+            "currency": rl.get("rCurrency"),
+            "rType": rl.get("rType"),
+            "update_time": _sina_ts_iso(rl.get("update_time")),
+        }
+    if dup_names:
+        warnings.append(f"重复科目已保留首个: {', '.join(dup_names[:5])}{'…' if len(dup_names) > 5 else ''}")
+    if skip_nonnum:
+        warnings.append(f"跳过非数值科目 {skip_nonnum} 项")
+    if not out:
+        raise ValueError("该报表无数据（新浪无此报表或代码有误）")
+    return out, meta, warnings, src
+
+
+def _apply_latest(payload: dict, latest):
+    """对已生成的 payload 按 --latest 截断各报表期（缓存命中/回退路径同样生效）。
+    报表期在拉取时已按日期降序排列，dict 保序，直接取前 N 个即可。"""
+    if not latest:
+        return payload
+    for stmt in ("balance", "income", "cashflow"):
+        d = payload.get(stmt) or {}
+        if not d:
+            continue
+        keep = list(d.keys())[:latest]
+        payload[stmt] = {k: d[k] for k in keep}
+        m = (payload.get("meta") or {}).get(stmt) or {}
+        if m:
+            payload.setdefault("meta", {})[stmt] = {k: m[k] for k in keep if k in m}
+    return payload
+
+
+def _cmd_sina_financials(ticker: str, latest=None):
+    """--sina-financials 入口：新浪 A 股三大报表 JSON（PIT：公告日期/审计状态）。
+
+    缓存：data/cache/sina_fin_<TICKER>.json（TTL 1 天，gitignored）。
+    网络失败 → {"error": ...} + 提示，不崩溃；有陈旧本地缓存则回退并标注。
+    """
+    sina_code = _to_sina_code(ticker)
+    if not sina_code:
+        print(json.dumps({
+            "error": f"无法把 {ticker} 转换为新浪代码（仅 A 股支持：600036.SS / 000001.SZ / 600036）",
+            "hint": "--sina-financials 仅适用于 A 股；美股/港股请用默认模式",
+        }, indent=2, ensure_ascii=False))
+        sys.exit(1)
+
+    cache_path = os.path.join(_PROJ_ROOT, "data", "cache", f"sina_fin_{ticker}.json")
+
+    # 1) 本地缓存命中（TTL 1 天）
+    if os.path.exists(cache_path):
+        try:
+            with open(cache_path, encoding="utf-8") as fh:
+                cached = json.load(fh)
+            if time.time() - cached.get("fetched_ts", 0) < _SINA_CACHE_TTL:
+                print(json.dumps(_apply_latest(cached["data"], latest), indent=2, ensure_ascii=False))
+                return
+        except Exception:
+            pass
+
+    # 2) 网络拉取（fengthrottle 限流 + TTL 缓存）
+    statements, metas, warnings, failed = {}, {}, [], []
+    for key, label, src_key in _SINA_STATEMENTS:
+        try:
+            data, meta, warns, _src = _sina_statement(sina_code, src_key, latest=latest)
+            statements[key] = data
+            metas[key] = meta
+            warnings.extend(warns)
+        except Exception as e:
+            failed.append(label)
+            warnings.append(f"{label} 获取失败: {str(e)[:200]}")
+
+    if failed:
+        # 3) 网络失败 → 回退陈旧本地缓存；无缓存则明确报错
+        if os.path.exists(cache_path):
+            try:
+                with open(cache_path, encoding="utf-8") as fh:
+                    stale = json.load(fh)
+                stale["data"]["warnings"] = warnings + ["已回退本地陈旧缓存（注意数据时效，非本次实时拉取）"]
+                print(json.dumps(_apply_latest(stale["data"], latest), indent=2, ensure_ascii=False))
+                return
+            except Exception:
+                pass
+        print(json.dumps({
+            "error": f"新浪财务数据获取失败（{'、'.join(failed)}）",
+            "hint": "网络不可达或被新浪反爬。请求已走 fengthrottle 限流+缓存，可稍后重试；"
+                    "亦可用 FENG_HTTP_UA 环境变量自定义 UA 规避风控",
+            "warnings": warnings,
+        }, indent=2, ensure_ascii=False))
+        sys.exit(1)
+
+    payload = {
+        "ticker": ticker,
+        "sina_code": sina_code,
+        "balance": statements.get("balance", {}),
+        "income": statements.get("income", {}),
+        "cashflow": statements.get("cashflow", {}),
+        "meta": {
+            "balance": metas.get("balance", {}),
+            "income": metas.get("income", {}),
+            "cashflow": metas.get("cashflow", {}),
+        },
+        "data_source": "sina_finance — quotes.sina.cn/cn/api/openapi.php/CompanyFinanceService.getFinanceReport2022",
+        "currency": "以各报告期 meta.<报表>.<报告期>.currency(rCurrency) 为准",
+        "fetched_at": datetime.now().isoformat(),
+        "warnings": list(dict.fromkeys(warnings)),
+    }
+    # 写本地缓存
+    try:
+        os.makedirs(os.path.dirname(cache_path), exist_ok=True)
+        with open(cache_path, "w", encoding="utf-8") as fh:
+            json.dump({"fetched_ts": time.time(), "ttl": _SINA_CACHE_TTL, "data": payload},
+                      fh, ensure_ascii=False, indent=2)
+    except Exception as e:
+        payload["warnings"].append(f"缓存写入失败: {e}")
+    print(json.dumps(payload, indent=2, ensure_ascii=False))
+
+
+# ─── 东财涨停池 API（5 池：涨停/强势/炸板/跌停/昨日涨停）────────────
+# 源码参考: RockyZSU-Stock/datahub/dfcf_hot_block.py
+# API 全部走 push2ex.eastmoney.com，ut 参数需从东财 JS 动态获取
+
+import urllib.request as _urllib_req
+
+_ZT_HEADERS = {
+    "Accept": "*/*",
+    "Accept-Language": "zh,en;q=0.9,en-US;q=0.8,zh-CN;q=0.7",
+    "Cache-Control": "no-cache",
+    "Connection": "keep-alive",
+    "Pragma": "no-cache",
+    "Referer": "https://quote.eastmoney.com/ztb/detail",
+    "Sec-Fetch-Dest": "script",
+    "Sec-Fetch-Mode": "no-cors",
+    "Sec-Fetch-Site": "same-site",
+    "User-Agent": ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                   "AppleWebKit/537.36 (KHTML, like Gecko) "
+                   "Chrome/138.0.0.0 Safari/537.36"),
+    "sec-ch-ua": '"Chromium";v="138", "Google Chrome";v="138", "Not=A?Brand";v="8"',
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": '"Windows"',
+}
+
+# 东财 ut token 缓存（进程内有效，避免重复请求）
+_zt_ut_cache = None
+_zt_ut_last_fetch = 0
+
+
+def _zt_get_ut():
+    """获取东财涨停板页面的 ut 参数（动态 JS 里的 token）。
+    缓存 5 分钟避免频繁请求。"""
+    global _zt_ut_cache, _zt_ut_last_fetch
+    now = time.time()
+    if _zt_ut_cache and (now - _zt_ut_last_fetch) < 300:
+        return _zt_ut_cache
+    url = "https://quote.eastmoney.com/ztb/newstatic/build/detail.js"
+    try:
+        req = _urllib_req.Request(url, headers=_ZT_HEADERS)
+        with _urllib_req.urlopen(req, timeout=10) as r:
+            text = r.read().decode("utf-8", errors="ignore")
+        m = re.search(r'\{ut:"(\w+)",', text)
+        if m:
+            _zt_ut_cache = m.group(1)
+            _zt_ut_last_fetch = now
+            return _zt_ut_cache
+    except Exception:
+        pass
+    # 回退：返回 None，API 可能不需要 ut（但数据可能不全）
+    return _zt_ut_cache
+
+
+def _zt_http_get(url, params, timeout=15):
+    """东财涨停池统一 HTTP GET，带限流（每次请求间隔 0.5s）。"""
+    time.sleep(0.5)  # 简易限流：东财 API 有频率限制
+    query = "&".join(f"{k}={v}" for k, v in params.items())
+    full_url = f"{url}?{query}"
+    req = _urllib_req.Request(full_url, headers=_ZT_HEADERS)
+    with _urllib_req.urlopen(req, timeout=timeout) as r:
+        return json.loads(r.read().decode("utf-8"))
+
+
+def _zt_format_time(t):
+    """将封板时间整数（如 93012）格式化为 HH:MM:SS 字符串。"""
+    s = str(int(t)).zfill(6)
+    return f"{s[:2]}:{s[2:4]}:{s[4:6]}"
+
+
+def _zt_parse_ztstats(x):
+    """解析涨停统计字段：{days: N, ct: M} → 'N/M' 格式。"""
+    if not x or not isinstance(x, dict):
+        return "0/0"
+    days = x.get("days", 0)
+    ct = x.get("ct", 0)
+    return f"{days}/{ct}"
+
+
+def _zt_pool_fetch(pool_type, date):
+    """东财涨停池统一获取逻辑。
+    pool_type: zt(涨停) / qs(强势) / zb(炸板) / dt(跌停) / yz(昨日涨停)
+    返回 (pool_list, error_msg)"""
+    ut = _zt_get_ut()
+    # API URL 映射
+    url_map = {
+        "zt": "https://push2ex.eastmoney.com/getTopicZTPool",
+        "qs": "https://push2ex.eastmoney.com/getTopicQSPool",
+        "zb": "https://push2ex.eastmoney.com/getTopicZBPool",
+        "dt": "https://push2ex.eastmoney.com/getTopicDTPool",
+        "yz": "https://push2ex.eastmoney.com/getYesterdayZTPool",
+    }
+    # 参数映射（各池略有差异）
+    params_map = {
+        "zt": {"ut": ut, "dpt": "wz.ztzt", "Pageindex": "0",
+               "pagesize": "10000", "sort": "fbt:asc", "date": date},
+        "qs": {"ut": ut, "dpt": "wz.ztzt", "Pageindex": "0",
+               "pagesize": "5000", "sort": "zdp:desc", "date": date},
+        "zb": {"ut": ut, "dpt": "wz.ztzt", "Pageindex": "0",
+               "pagesize": "5000", "sort": "fbt:asc", "date": date},
+        "dt": {"ut": ut, "dpt": "wz.ztzt", "Pageindex": "0",
+               "pagesize": "10000", "sort": "fund:asc", "date": date},
+        "yz": {"ut": ut, "dpt": "wz.ztzt", "Pageindex": "0",
+               "pagesize": "5000", "sort": "zs:desc", "date": date},
+    }
+    url = url_map.get(pool_type)
+    params = params_map.get(pool_type)
+    if not url or not params:
+        return [], f"未知池类型: {pool_type}"
+    try:
+        data = _zt_http_get(url, params)
+    except Exception as e:
+        return [], f"东财 API 请求失败: {e}"
+    pool = (data.get("data") or {}).get("pool") or []
+    return pool, None
+
+
+def _cmd_zt_pools(date=None, pools=None, output_json=True):
+    """--zt-pools 入口：获取东财涨停池数据。
+
+    参数:
+        date: 交易日 YYYYMMDD，默认今天
+        pools: 要获取的池类型列表，默认全部 [zt,qs,zb,dt,yz]
+        output_json: 是否输出 JSON
+    """
+    if not date:
+        date = datetime.now().strftime("%Y%m%d")
+    if not pools:
+        pools = ["zt", "qs", "zb", "dt", "yz"]
+    pool_names = {
+        "zt": "涨停股池", "qs": "强势股池", "zb": "炸板股池",
+        "dt": "跌停股池", "yz": "昨日涨停股池",
+    }
+    result = {
+        "date": date,
+        "fetched_at": datetime.now().isoformat(),
+        "data_source": "eastmoney push2ex API (via RockyZSU-Stock)",
+        "pools": {},
+    }
+    for p in pools:
+        name = pool_names.get(p, p)
+        pool_data, err = _zt_pool_fetch(p, date)
+        if err:
+            result["pools"][p] = {"name": name, "error": err, "count": 0}
+            continue
+        # 格式化每条记录为可读 dict
+        items = []
+        for item in pool_data:
+            row = {}
+            # 通用字段
+            code = str(item.get("c", "")).zfill(6)  # 代码
+            row["代码"] = code
+            row["名称"] = item.get("n", "")  # 名称
+            price = item.get("p", 0) / 1000  # 最新价（API 返回值除以 1000）
+            row["最新价"] = round(price, 2) if price else None
+            row["涨跌幅"] = round(item.get("zdp", 0) / 100, 2) if item.get("zdp") else None
+            row["成交额"] = item.get("amount", 0)  # 成交额（元）
+            row["流通市值"] = item.get("ltsz", 0)  # 流通市值
+            row["总市值"] = item.get("tshare", 0)  # 总市值
+            row["换手率"] = round(item.get("hs", 0) / 100, 2) if item.get("hs") else None
+            row["所属行业"] = item.get("hybk", "")  # 行业板块
+            row["涨停统计"] = _zt_parse_ztstats(item.get("zttj"))
+            # 涨停股池特有
+            if p == "zt":
+                row["连板数"] = item.get("lbc", 0)
+                fbt = item.get("fbt", 0)
+                row["首次封板时间"] = _zt_format_time(fbt) if fbt else None
+                lbt = item.get("lbt", 0)
+                row["最后封板时间"] = _zt_format_time(lbt) if lbt else None
+                row["封板资金"] = item.get("fund", 0)
+                row["炸板次数"] = item.get("zbc", 0)
+            # 强势股池特有
+            elif p == "qs":
+                row["涨停价"] = round(item.get("lsp", 0) / 1000, 2) if item.get("lsp") else None
+                row["涨速"] = round(item.get("zspeed", 0) / 100, 2) if item.get("zspeed") else None
+                is_new_high = item.get("sinh", 0)
+                row["是否新高"] = "是" if is_new_high == 1 else "否"
+                row["量比"] = round(item.get("lg", 0) / 100, 2) if item.get("lg") else None
+                reason_map = {1: "60日新高", 2: "近期多次涨停", 3: "60日新高且近期多次涨停"}
+                row["入选理由"] = reason_map.get(item.get("sinh"), "未知")
+            # 炸板股池特有
+            elif p == "zb":
+                row["涨停价"] = round(item.get("lsp", 0) / 1000, 2) if item.get("lsp") else None
+                fbt = item.get("fbt", 0)
+                row["首次封板时间"] = _zt_format_time(fbt) if fbt else None
+                row["炸板次数"] = item.get("zbc", 0)
+                row["振幅"] = round(item.get("amp", 0) / 100, 2) if item.get("amp") else None
+                row["涨速"] = round(item.get("zspeed", 0) / 100, 2) if item.get("zspeed") else None
+            # 跌停股池特有
+            elif p == "dt":
+                row["动态市盈率"] = round(item.get("pe", 0) / 100, 2) if item.get("pe") else None
+                row["封单资金"] = item.get("fund", 0)
+                lbt = item.get("lbt", 0)
+                row["最后封板时间"] = _zt_format_time(lbt) if lbt else None
+                row["板上成交额"] = item.get("hsbz", 0)
+                row["连续跌停"] = item.get("lbc", 0)
+                row["开板次数"] = item.get("zbc", 0)
+            # 昨日涨停股池特有
+            elif p == "yz":
+                row["涨停价"] = round(item.get("lsp", 0) / 1000, 2) if item.get("lsp") else None
+                row["涨速"] = round(item.get("zspeed", 0) / 100, 2) if item.get("zspeed") else None
+                row["振幅"] = round(item.get("amp", 0) / 100, 2) if item.get("amp") else None
+                fbt = item.get("fbt", 0)
+                row["昨日封板时间"] = _zt_format_time(fbt) if fbt else None
+                row["昨日连板数"] = item.get("lbc", 0)
+            items.append(row)
+        result["pools"][p] = {"name": name, "count": len(items), "stocks": items}
+    print(json.dumps(result, indent=2, ensure_ascii=False))
+
+
+# ─── 腾讯基金 NAV 估算 API ───────────────────────────────────────
+# 源码参考: RockyZSU-Stock/fund/fund_info_spider.py
+# 主源: qt.gtimg.cn/q=jj{code}（稳定，返回基金名称/净值/涨跌幅）
+# 备源: web.ifzq.gtimg.cn getSsgz（历史净值序列，当前可能离线）
+
+_FUND_NAV_UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/138.0.0.0 Safari/537.36")
+
+
+def _fund_nav_fetch_qt(fund_code):
+    """通过 qt.gtimg.cn 获取基金净值（主源）。
+    返回格式: v_jj{code}="code~name~?~?~?~nav~acc_nav~chg%~date~"
+    字段（~分隔）: 0=代码 1=名称 2-4=占位 5=单位净值 6=累计净值 7=涨跌幅 8=日期
+    """
+    url = f"http://qt.gtimg.cn/q=jj{fund_code}"
+    try:
+        req = _urllib_req.Request(url, headers={"User-Agent": _FUND_NAV_UA})
+        with _urllib_req.urlopen(req, timeout=12) as r:
+            body = r.read().decode("gbk", "ignore")
+    except Exception as e:
+        return {"fund_code": fund_code, "error": f"腾讯 qt.gtimg.cn 请求失败: {e}"}
+    # 解析: v_jj160137="160137~南方中证互联网...~0.0~0.0~~1.79~1.79~-0.4~2026-09-03~";
+    m = re.search(r'="(.+)"', body)
+    if not m:
+        return {"fund_code": fund_code, "error": f"腾讯 qt.gtimg.cn 无匹配数据"}
+    fields = m.group(1).split("~")
+    if len(fields) < 9:
+        return {"fund_code": fund_code, "error": f"腾讯 qt.gtimg.cn 字段不足（{len(fields)}个）"}
+    def _safe_float(v):
+        try:
+            f = float(v)
+            return f if f == f else None  # 过滤 NaN
+        except (ValueError, TypeError):
+            return None
+    return {
+        "fund_code": fields[0],
+        "name": fields[1],
+        "nav_estimate": _safe_float(fields[5]),
+        "nav_accumulated": _safe_float(fields[6]),
+        "change_pct": _safe_float(fields[7]),
+        "nav_date": fields[8] if fields[8] else None,
+        "source": "qt.gtimg.cn (腾讯基金)",
+    }
+
+
+def _fund_nav_fetch_ssgz(fund_code):
+    """通过 getSsgz 获取基金历史净值序列（备源，当前可能离线）。
+    返回格式: data.data 是 [[日期, 净值], ...] 列表。
+    """
+    url = f"http://web.ifzq.gtimg.cn/fund/newfund/fundSsgz/getSsgz?app=web&symbol=jj{fund_code}"
+    try:
+        req = _urllib_req.Request(url, headers={"User-Agent": _FUND_NAV_UA})
+        with _urllib_req.urlopen(req, timeout=12) as r:
+            data = json.loads(r.read().decode("utf-8"))
+    except Exception as e:
+        return {"fund_code": fund_code, "error": f"腾讯 getSsgz 请求失败: {e}"}
+    if data.get("code") != 0 or not data.get("data"):
+        return {"fund_code": fund_code, "error": f"getSsgz 接口离线或无数据（code={data.get('code')}）"}
+    fund_data = data["data"]
+    # 历史净值: fund_data.data 是 [[日期str, 净值float], ...]
+    history = None
+    if isinstance(fund_data, list):
+        history = fund_data
+    elif isinstance(fund_data, dict):
+        inner = fund_data.get("data")
+        history = inner if isinstance(inner, list) else None
+    if not history:
+        return {"fund_code": fund_code, "error": "getSsgz 无法解析净值历史"}
+    last = history[-1]
+    return {
+        "fund_code": fund_code,
+        "nav_estimate": float(last[1]) if len(last) > 1 and last[1] else None,
+        "nav_date": last[0] if len(last) > 0 else None,
+        "history_count": len(history),
+        "recent_nav": [{"date": h[0], "nav": float(h[1]) if h[1] else None}
+                       for h in (history[-5:] if len(history) >= 5 else history)
+                       if len(h) > 1],
+        "source": "web.ifzq.gtimg.cn getSsgz (备源)",
+    }
+
+
+def _fund_nav_fetch(fund_code):
+    """获取单只基金的实时估算净值。主源 qt.gtimg.cn，备源 getSsgz。
+
+    返回 dict: {fund_code, name, nav_estimate, nav_date, ...}
+    """
+    if not fund_code or not fund_code.isdigit():
+        return {"fund_code": fund_code, "error": f"基金代码格式错误: {fund_code}"}
+    # 主源: qt.gtimg.cn
+    result = _fund_nav_fetch_qt(fund_code)
+    if "error" not in result:
+        result["updated_at"] = datetime.now().isoformat()
+        return result
+    # 备源: getSsgz
+    fallback = _fund_nav_fetch_ssgz(fund_code)
+    fallback["updated_at"] = datetime.now().isoformat()
+    if "error" not in fallback:
+        fallback["_fallback"] = True
+        return fallback
+    # 两个源都失败
+    return {
+        "fund_code": fund_code,
+        "error": f"主源和备源均失败: {result.get('error')} / {fallback.get('error')}",
+        "updated_at": datetime.now().isoformat(),
+    }
+
+
+def _cmd_fund_nav(fund_codes, output_json=True):
+    """--fund-nav 入口：获取腾讯基金实时估算净值。
+
+    参数:
+        fund_codes: 基金代码列表（如 160137 005827）
+    """
+    if not fund_codes:
+        print(json.dumps({"error": "用法: fengdata.py --fund-nav CODE1 [CODE2 ...]"}, indent=2))
+        sys.exit(1)
+    results = []
+    for code in fund_codes:
+        # 去除可能的前缀（如 jj160137）
+        clean = re.sub(r"^(jj|JJ)", "", code.strip())
+        info = _fund_nav_fetch(clean)
+        results.append(info)
+        time.sleep(0.3)  # 简易限流
+    payload = {
+        "count": len(results),
+        "fetched_at": datetime.now().isoformat(),
+        "funds": results,
+    }
+    print(json.dumps(payload, indent=2, ensure_ascii=False))
+
+
 # ─── Mode dispatch & main ───────────────────────────────────────
 
 # All available modes
@@ -893,8 +1540,81 @@ def main():
                                ("--mode" in sys.argv and "fx" in [a.lower() for a in sys.argv])):
         return _cmd_fx()
 
+    # Sina A股三大报表（PIT：公告日期+审计状态）—— 独立入口，不影响既有模式
+    if "--sina-financials" in sys.argv:
+        if len(sys.argv) < 2 or sys.argv[1].startswith("-"):
+            print(json.dumps({"error": "用法: fengdata.py <TICKER> --sina-financials [--latest N]"
+                                      "（TICKER 如 600036.SS / 000001.SZ）"}, indent=2, ensure_ascii=False))
+            sys.exit(1)
+        ticker = sys.argv[1].upper()
+        latest = None
+        rest = sys.argv[2:]
+        for i, a in enumerate(rest):
+            if a == "--latest":
+                if i + 1 < len(rest):
+                    try:
+                        latest = int(rest[i + 1])
+                    except ValueError:
+                        print(json.dumps({"error": f"--latest 需要整数，收到: {rest[i+1]}"},
+                                          indent=2, ensure_ascii=False))
+                        sys.exit(1)
+            elif a.startswith("--latest="):
+                try:
+                    latest = int(a.split("=", 1)[1])
+                except ValueError:
+                    print(json.dumps({"error": f"--latest 需要整数，收到: {a}"},
+                                      indent=2, ensure_ascii=False))
+                    sys.exit(1)
+        if latest is not None and latest <= 0:
+            print(json.dumps({"error": f"--latest 需为正整数: {latest}"}, indent=2, ensure_ascii=False))
+            sys.exit(1)
+        return _cmd_sina_financials(ticker, latest)
+
+    # 东财涨停池（5 池：涨停/强势/炸板/跌停/昨日涨停）
+    if "--zt-pools" in sys.argv or (len(sys.argv) > 1 and sys.argv[1].lower() == "zt-pools"):
+        zt_date = None
+        zt_pools = None
+        rest = sys.argv[2:] if sys.argv[1].lower() == "zt-pools" else sys.argv[1:]
+        # 过滤掉 --zt-pools 本身
+        rest = [a for a in rest if a != "--zt-pools"]
+        i = 0
+        while i < len(rest):
+            a = rest[i]
+            if a == "--date" and i + 1 < len(rest):
+                zt_date = rest[i + 1]
+                i += 2
+            elif a.startswith("--date="):
+                zt_date = a.split("=", 1)[1]
+                i += 1
+            elif a == "--pools" and i + 1 < len(rest):
+                zt_pools = rest[i + 1].split(",")
+                i += 2
+            elif a.startswith("--pools="):
+                zt_pools = a.split("=", 1)[1].split(",")
+                i += 1
+            else:
+                i += 1
+        return _cmd_zt_pools(date=zt_date, pools=zt_pools)
+
+    # 腾讯基金实时估算净值
+    if "--fund-nav" in sys.argv:
+        nav_codes = []
+        rest = sys.argv[1:]
+        i = 0
+        while i < len(rest):
+            a = rest[i]
+            if a == "--fund-nav":
+                i += 1
+                # 收集后面所有非参数值作为基金代码
+                while i < len(rest) and not rest[i].startswith("-"):
+                    nav_codes.append(rest[i])
+                    i += 1
+            else:
+                i += 1
+        return _cmd_fund_nav(nav_codes)
+
     if len(sys.argv) < 2:
-        print(json.dumps({"error": "Usage: fengdata.py TICKER [--mode MODE] [--backend auto|futu|yfinance]; OR fengdata.py fx [--mode fx]"}, indent=2))
+        print(json.dumps({"error": "Usage: fengdata.py TICKER [--mode MODE] [--backend auto|futu|yfinance]; OR fengdata.py fx; OR fengdata.py zt-pools [--date YYYYMMDD] [--pools zt,qs,zb,dt,yz]; OR fengdata.py --fund-nav CODE1 [CODE2 ...]"}, indent=2))
         sys.exit(1)
 
     ticker = sys.argv[1].upper()

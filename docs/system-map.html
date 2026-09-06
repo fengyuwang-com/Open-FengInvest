@@ -25,7 +25,7 @@
 <body>
 <div id="toolbar">
   <h1>FengInvest 系统关系图</h1>
-  <span class="hint">源: tools/system-map/system-map.yaml · 更新 2026-08-05 · 双击拖动/滚轮缩放/点节点看详情</span>
+  <span class="hint">源: tools/system-map/system-map.yaml · 更新 2026-08-15 · 双击拖动/滚轮缩放/点节点看详情</span>
   <input id="search" type="text" placeholder="搜索节点…">
   <div id="legend"></div>
 </div>
@@ -51,6 +51,14 @@ const nodes = new vis.DataSet([
     "title": "中央行情库：indices 2126、daily_data 1300万行、cn_financials 35.7万行、stkcd_map 5828",
     "desc": "中央行情库：indices 2126、daily_data 1300万行、cn_financials 35.7万行、stkcd_map 5828",
     "path": "data/market_data.db"
+  },
+  {
+    "id": "sina",
+    "label": "新浪财经 A股三表",
+    "group": "data",
+    "title": "A股财务三表数据源：含公告日期 publish_date 与是否审计标记，供 fengdata --sina-financials 拉取",
+    "desc": "A股财务三表数据源：含公告日期 publish_date 与是否审计标记，供 fengdata --sina-financials 拉取",
+    "path": ""
   },
   {
     "id": "importer",
@@ -88,8 +96,8 @@ const nodes = new vis.DataSet([
     "id": "portfolio_tools",
     "label": "组合工具 fengportfolio",
     "group": "tools",
-    "title": "fengportfolio / fengview：组合构建、收益视图",
-    "desc": "fengportfolio / fengview：组合构建、收益视图",
+    "title": "fengportfolio / fengholding：组合三轴盘面与持仓域入口（登记分析/校验/查询）",
+    "desc": "fengportfolio / fengholding：组合三轴盘面与持仓域入口（登记分析/校验/查询）",
     "path": "tools/fengportfolio.py"
   },
   {
@@ -104,16 +112,56 @@ const nodes = new vis.DataSet([
     "id": "watch",
     "label": "行情监控 fengmarket",
     "group": "tools",
-    "title": "fengmarket / fengwatch：行情获取与盯盘",
-    "desc": "fengmarket / fengwatch：行情获取与盯盘",
+    "title": "fengmarket / fengwatch：行情获取与持仓监控（退出规则/卖出闭环）",
+    "desc": "fengmarket / fengwatch：行情获取与持仓监控（退出规则/卖出闭环）",
     "path": "tools/fengmarket.py"
+  },
+  {
+    "id": "fengdata",
+    "label": "行情采集 fengdata",
+    "group": "tools",
+    "title": "行情采集 + fx 实时汇率（USDCNY/HKDCNY/USDHKD，失败回退快照）；--sina-financials 新浪A股三表（公告日期 publish_date + 是否审计）",
+    "desc": "行情采集 + fx 实时汇率（USDCNY/HKDCNY/USDHKD，失败回退快照）；--sina-financials 新浪A股三表（公告日期 publish_date + 是否审计）",
+    "path": "tools/fengdata.py"
+  },
+  {
+    "id": "fengsec",
+    "label": "SEC 一手资料 fengsec",
+    "group": "tools",
+    "title": "facts（PIT 双轴）/filings/financials（XBRL 三表）/ownership（Form 3/4/5 内部人 + insider-buys）/13f；数据层为 edgartools 5.48.0",
+    "desc": "facts（PIT 双轴）/filings/financials（XBRL 三表）/ownership（Form 3/4/5 内部人 + insider-buys）/13f；数据层为 edgartools 5.48.0",
+    "path": "tools/fengsec.py"
+  },
+  {
+    "id": "fengpit",
+    "label": "PIT 双轴 fengpit",
+    "group": "tools",
+    "title": "PIT 双轴可见性：us（SEC companyfacts filed=得知日 / period_end=财报期）、cn（cn_financials declare_date）；asof 单值查询 + verify 对拍",
+    "desc": "PIT 双轴可见性：us（SEC companyfacts filed=得知日 / period_end=财报期）、cn（cn_financials declare_date）；asof 单值查询 + verify 对拍",
+    "path": "tools/fengpit.py"
+  },
+  {
+    "id": "fengvaluation",
+    "label": "多方法估值 fengvaluation",
+    "group": "tools",
+    "title": "预期法（逆向 DCF 移植，四模式回退不编造数字）/ 两阶段 DCF / 敏感性网格 / 多方法综合；数据复用 fengpit 的 companyfacts 解析",
+    "desc": "预期法（逆向 DCF 移植，四模式回退不编造数字）/ 两阶段 DCF / 敏感性网格 / 多方法综合；数据复用 fengpit 的 companyfacts 解析",
+    "path": "tools/fengvaluation.py"
+  },
+  {
+    "id": "fengfactor",
+    "label": "因子验证 fengfactor",
+    "group": "tools",
+    "title": "Spearman IC / 分位收益 / 换手率 三件套 + 小样本护栏（截面 n<50 告警）；价格取 market_data.db daily_data",
+    "desc": "Spearman IC / 分位收益 / 换手率 三件套 + 小样本护栏（截面 n<50 告警）；价格取 market_data.db daily_data",
+    "path": "tools/fengfactor.py"
   },
   {
     "id": "verification",
     "label": "110-strategy-verification",
     "group": "research",
-    "title": "52 条可证伪论断，36 条已测、3 条已复核（#1/#4/#33）；每条含 verify 脚本 + README + results.json + audit.md",
-    "desc": "52 条可证伪论断，36 条已测、3 条已复核（#1/#4/#33）；每条含 verify 脚本 + README + results.json + audit.md",
+    "title": "52 条可证伪论断，34 条已测、34 条已复核；每条含 verify 脚本 + README + results.json + audit.md",
+    "desc": "52 条可证伪论断，34 条已测、34 条已复核；每条含 verify 脚本 + README + results.json + audit.md",
     "path": "research/110-strategy-verification"
   },
   {
@@ -173,6 +221,14 @@ const nodes = new vis.DataSet([
     "path": "portfolio"
   },
   {
+    "id": "outcome",
+    "label": "复盘 outcome 闭环",
+    "group": "board",
+    "title": "fengwatch outcome 子命令：统计 holdings 各假设 hypotheses[].outcome 状态（hit/falsified/partial/pending），预测-结果追踪闭环",
+    "desc": "fengwatch outcome 子命令：统计 holdings 各假设 hypotheses[].outcome 状态（hit/falsified/partial/pending），预测-结果追踪闭环",
+    "path": "holdings/SCHEMA.md"
+  },
+  {
     "id": "fengweb",
     "label": "fengweb/",
     "group": "board",
@@ -226,6 +282,14 @@ const nodes = new vis.DataSet([
     "group": "external",
     "title": "本地全文/文件名检索（需 1.5 + content 索引）",
     "desc": "本地全文/文件名检索（需 1.5 + content 索引）",
+    "path": ""
+  },
+  {
+    "id": "edgartools",
+    "label": "edgartools 5.48.0",
+    "group": "external",
+    "title": "SEC EDGAR 客户端库（pip 可选依赖）：companyfacts / XBRL 三表 / 13F / 内部人持仓，fengsec 新命令数据层",
+    "desc": "SEC EDGAR 客户端库（pip 可选依赖）：companyfacts / XBRL 三表 / 13F / 内部人持仓，fengsec 新命令数据层",
     "path": ""
   },
   {
@@ -322,6 +386,55 @@ const edges = new vis.DataSet([
     "from": "market_data_db",
     "to": "research_other",
     "label": "研究读取",
+    "arrows": "to",
+    "color": "#9aa0a6"
+  },
+  {
+    "from": "market_data_db",
+    "to": "fengfactor",
+    "label": "价格读取",
+    "arrows": "to",
+    "color": "#9aa0a6"
+  },
+  {
+    "from": "market_data_db",
+    "to": "fengpit",
+    "label": "cn_financials PIT",
+    "arrows": "to",
+    "color": "#9aa0a6"
+  },
+  {
+    "from": "sina",
+    "to": "fengdata",
+    "label": "A股三表",
+    "arrows": "to",
+    "color": "#9aa0a6"
+  },
+  {
+    "from": "edgartools",
+    "to": "fengsec",
+    "label": "XBRL/companyfacts 数据",
+    "arrows": "to",
+    "color": "#9aa0a6"
+  },
+  {
+    "from": "fengsec",
+    "to": "fengpit",
+    "label": "companyfacts 双轴同源",
+    "arrows": "to",
+    "color": "#9aa0a6"
+  },
+  {
+    "from": "fengpit",
+    "to": "fengvaluation",
+    "label": "PIT 数据供估值",
+    "arrows": "to",
+    "color": "#9aa0a6"
+  },
+  {
+    "from": "watch",
+    "to": "portfolio_ledger",
+    "label": "outcome 统计",
     "arrows": "to",
     "color": "#9aa0a6"
   },

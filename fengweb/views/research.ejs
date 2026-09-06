@@ -1,40 +1,91 @@
 <div class="page-header">
-  <h2>🔬 研究</h2>
-  <div class="breadcrumb"><a href="/">系统总览</a> / 研究</div>
+  <h2 data-i18n="page.research">🔬 研究</h2>
+  <div class="breadcrumb"><span data-i18n="crumb.research">研究清单（data/config/research_list.json）+ 已完成层进度</span></div>
 </div>
 
-<% if (meta.length > 0) { %>
+<% var statusMeta = { researching: '已研究', candidate: '候选', watching: '观察', holding: '持仓', parked: '停靠' }; %>
+<div class="filter-tabs">
+  <button class="btn btn-sm tab-active" data-status="all">全部 (<%= list.length %>)</button>
+  <% Object.keys(statusMeta).forEach(function(s) { %>
+    <% var n = list.filter(function(c){ return c.status === s; }).length; %>
+    <button class="btn btn-sm" data-status="<%= s %>"><%= statusMeta[s] %> (<%= n %>)</button>
+  <% }) %>
+</div>
+
 <div class="card">
-  <table class="data-table">
+  <input id="rl-search" placeholder="搜索标的/名称…" style="width:100%;max-width:320px;padding:8px 12px;margin-bottom:12px;background:var(--bg-inset);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;">
+  <table class="data-table" id="research-table">
     <thead>
       <tr>
         <th>标的</th>
         <th>名称</th>
+        <th>状态</th>
         <th>完成层</th>
+        <th>备注</th>
         <th>操作</th>
       </tr>
     </thead>
     <tbody>
-      <% meta.forEach(function(item) { %>
-      <tr>
-        <td><a href="/research/<%= item.ticker %>"><%= item.ticker %></a></td>
-        <td><%= item.name !== item.ticker ? item.name.replace(item.ticker + '-', '') : '—' %></td>
+      <% var merged = list.slice(); meta.forEach(function(m) { if (!merged.find(function(c){ return c.ticker === m.ticker; })) merged.push({ ticker: m.ticker, name: m.name, status: 'researching', note: '' }); }); %>
+      <% merged.forEach(function(item) { %>
+      <tr data-status="<%= item.status %>">
         <td>
-          <% ['l0','m','l1','l2b','l2a','l3','l4'].forEach(function(l) { %>
-            <% var found = item.layers.find(function(x) { return x.layer === l; }); %>
-            <span class="badge badge-<%= found ? 'green' : 'neutral' %>"><%= l.toUpperCase() %></span>
-          <% }) %>
+          <a href="/research/<%= item.ticker %>" class="num"><%= item.ticker %></a>
+          <% if (domains && domains[item.ticker]) { %><span class="badge badge-primary" title="关注领域（knowledge/关注领域.md）——决定研究谁，不决定何时买"><%= domains[item.ticker] %></span><% } %>
         </td>
-        <td><a href="/research/<%= item.ticker %>" class="btn btn-primary">查看</a></td>
+        <td><%= item.name !== item.ticker ? item.name : '—' %></td>
+        <td>
+          <span class="badge badge-<%= item.status === 'researching' ? 'primary' : item.status === 'candidate' ? 'yellow' : item.status === 'holding' ? 'green' : 'neutral' %>"><%= statusMeta[item.status] || item.status %></span>
+        </td>
+        <td>
+          <% var m2 = meta.find(function(x){ return x.ticker === item.ticker; }); %>
+          <% if (m2) { ['l0','m','l1','l2b','l2a','l3','l4'].forEach(function(l) { %>
+            <% var found = m2.layers.find(function(x) { return x.layer === l; }); %>
+            <span class="badge badge-<%= found ? 'green' : 'neutral' %>"><%= l.toUpperCase() %></span>
+          <% }) } else { %><span style="color:var(--text-faint);">未开工</span><% } %>
+        </td>
+        <td style="max-width:280px;font-size:12px;color:var(--text-muted);"><%= item.note || '' %></td>
+        <td>
+          <a href="/research/<%= item.ticker %>" class="btn btn-sm">详情</a>
+          <a href="/reports/<%= item.ticker %>" class="btn btn-sm">报告</a>
+        </td>
       </tr>
       <% }) %>
     </tbody>
   </table>
-  <p style="margin-top:12px;color:var(--text-muted);font-size:13px;">共 <%= meta.length %> 个标的</p>
+  <p style="margin-top:12px;color:var(--text-muted);font-size:13px;">共 <%= merged.length %> 个标的（清单内标的 + 已分析未入清单自动补为「已研究」）· 领域徽章 = 关注领域（垄断性收费/资源型/成长引擎，编辑 data/config/attention-domains.json）</p>
 </div>
-<% } else { %>
-<div class="empty-state">
-  <h3>暂无研究数据</h3>
-  <p>运行 fenginvest CLI 工具进行分析</p>
-</div>
-<% } %>
+
+<script>
+(function() {
+  function setActive(btn) {
+    document.querySelectorAll('.filter-tabs [data-status]').forEach(function(x) {
+      x.classList.remove('tab-active');
+      x.style.background = 'var(--bg-inset)'; x.style.color = 'var(--text)';
+    });
+    btn.classList.add('tab-active');
+    btn.style.background = 'var(--primary)'; btn.style.color = 'var(--bg-card)';
+  }
+  var cur = 'all';
+  document.getElementById('rl-search').addEventListener('input', function() {
+    var kw = this.value.trim().toLowerCase();
+    document.querySelectorAll('#research-table tbody tr').forEach(function(tr) {
+      var okStatus = (cur === 'all' || tr.dataset.status === cur);
+      var okKw = !kw || tr.textContent.toLowerCase().indexOf(kw) >= 0;
+      tr.style.display = (okStatus && okKw) ? '' : 'none';
+    });
+  });
+  var first = document.querySelector('.filter-tabs [data-status="all"]');
+  if (first) setActive(first);
+  document.querySelectorAll('.filter-tabs [data-status]').forEach(function(b) {
+    b.addEventListener('click', function() {
+      setActive(b);
+      cur = b.dataset.status;
+      var s = b.dataset.status;
+      document.querySelectorAll('#research-table tbody tr').forEach(function(tr) {
+        tr.style.display = (s === 'all' || tr.dataset.status === s) ? '' : 'none';
+      });
+    });
+  });
+})();
+</script>

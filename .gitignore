@@ -23,16 +23,19 @@ holdings/
 logs/
 reviews/
 research/060-companies/
+research/speculative/
 portfolio/
 knowledge/personal/
 research/070-reports/current-gitee-repos.md
 fengmem.md
 FENGMEM.md
+todo.md
 
 # ── 个人配置 ──
 .claude/
 .agents/
 .zcode/
+.workbuddy/
 .vscode/
 .idea/
 *.code-workspace
@@ -49,6 +52,9 @@ settings.local.json
 credentials.json
 token*
 secret*
+# 例外：设计系统的 CSS 变量文件（这是设计 token，不是密钥凭据）
+!design/prototype/tokens.css
+!fengweb/public/css/tokens.css
 
 # ── 数据库（过大，不入git） ──
 data/*.db
@@ -58,6 +64,16 @@ data/*.db-wal
 *.sqlite
 *.sqlite3
 *.duckdb
+data/changesets/
+data/*.snap_*
+
+# ── 数据缓存 / 个人数据 ──
+data/cache/
+data/sec/
+data/watchlist.json
+data/pit/
+data/reports/
+data/test_*
 
 # ── 系统文件 ──
 .DS_Store
@@ -78,7 +94,14 @@ logs/checkpoint_*.txt
 skills-lock.json
 research/temp_*
 research/state/
+Temp/
 
 # ── 已知废弃/旧目录 ──
 tools/alpha-skills/
 research/080-state/
+# 开源项目评估时 clone 的源码仓库（不提交）
+research/opensource-eval/RockyZSU-Stock/
+research/opensource-eval/pwb-toolbox/
+research/opensource-eval/qlib/
+research/opensource-eval/quant-mind/
+data/config/llm_config.json

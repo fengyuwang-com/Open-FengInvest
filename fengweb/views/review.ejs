@@ -1,0 +1,81 @@
+<div class="page-header">
+  <div class="breadcrumb"><a href="/holdings">持仓</a> / <a href="/holdings/<%= holding.ticker %>"><%= holding.name || holding.ticker %></a> / 复盘</div>
+  <h2>🔁 复盘 · <%= holding.name || holding.ticker %></h2>
+</div>
+
+<div class="card step-wizard">
+  <h3>四态假设判定（thesis 是否仍成立）</h3>
+  <% var hyps = ['valid|验证 ✓ — 论文仍然成立', 'uncertain|存疑 — 有新证据但未定论', 'falsified|失效 ✗ — 论文被证伪', 'unknown|无法判断 — 数据不足']; %>
+  <% hyps.forEach(function(hs, i) { %>
+    <label style="display:block;padding:8px 12px;border:1px solid var(--border);border-radius:8px;margin-bottom:6px;cursor:pointer;">
+      <input type="radio" name="hyp" value="<%= hs.split('|')[0] %>" <%= i === 0 ? 'checked' : '' %>> <b><%= hs.split('|')[1] %></b>
+    </label>
+  <% }) %>
+
+  <% var redlines = (holding.thesis && holding.thesis.redlines) || []; %>
+  <% if (redlines.length > 0) { %>
+  <h3 style="margin-top:16px;">红线检查（原文对照，逐条判 ✓/✗）</h3>
+  <% redlines.forEach(function(r, i) { %>
+    <div style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;margin-bottom:6px;">
+      <div style="font-size:13px;color:var(--text-muted);">红线 <%= i + 1 %>：<%= r %></div>
+      <label style="margin-right:16px;cursor:pointer;"><input type="radio" name="rl<%= i %>" value="ok" checked> ✓ 未触发</label>
+      <label style="cursor:pointer;"><input type="radio" name="rl<%= i %>" value="hit"> ✗ 已触发</label>
+    </div>
+  <% }) %>
+  <% } else { %>
+  <div class="alert alert-warning" style="margin-top:16px;">本持仓没有登记红线（thesis.redlines 为空）——新登记的持仓必有红线，旧仓补登记。</div>
+  <% } %>
+
+  <div class="detail-grid" style="margin-top:16px;">
+    <div class="field-row"><label>健康度评分（0-100，自评）</label><input id="rv-score" type="number" min="0" max="100"></div>
+    <div class="field-row"><label>下次回顾日期 *</label><input id="rv-next" type="date" required></div>
+  </div>
+  <div class="field-row"><label>备注（这次复盘发现了什么）</label><textarea id="rv-notes" rows="3"></textarea></div>
+
+  <button class="btn btn-primary" id="rvBtn" onclick="submitReview()">提交复盘（写回 reviews + 推进回顾日 + fengwatch review）</button>
+  <div id="rv-out" style="margin-top:12px;"></div>
+</div>
+
+<% if ((holding.reviews || []).length > 0) { %>
+<div class="card">
+  <h3 class="section-title">历史复盘时间线（<%= holding.reviews.length %>）</h3>
+  <% holding.reviews.forEach(function(r) { %>
+    <div class="journal-entry">
+      <div class="journal-date"><%= r.date %></div>
+      <div class="journal-ticker"><span class="badge badge-<%= r.hypothesis_status === 'valid' ? 'green' : r.hypothesis_status === 'falsified' ? 'red' : 'yellow' %>"><%= ({valid:'验证✓',falsified:'失效✗',uncertain:'存疑',unknown:'未知'})[r.hypothesis_status] || r.hypothesis_status %></span></div>
+      <div class="journal-body"><%= r.notes || '' %> <%= r.health_score != null ? '（健康度 ' + r.health_score + '）' : '' %></div>
+    </div>
+  <% }) %>
+</div>
+<% } %>
+
+<script>
+async function submitReview() {
+  var btn = document.getElementById('rvBtn');
+  btn.disabled = true; btn.textContent = '提交中…';
+  var hyp = document.querySelector('input[name=hyp]:checked').value;
+  var rls = [];
+  var i = 0;
+  while (document.querySelector('input[name=rl' + i + ']')) {
+    rls.push({ index: i, hit: document.querySelector('input[name=rl' + i + ']:checked').value === 'hit' });
+    i++;
+  }
+  try {
+    var r = await fetch('/api/review/<%= holding.ticker %>', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        hypothesis_status: hyp,
+        redline_results: rls,
+        health_score: parseInt(document.getElementById('rv-score').value) || null,
+        next_review_date: document.getElementById('rv-next').value,
+        notes: document.getElementById('rv-notes').value,
+      }),
+    });
+    var d = await r.json();
+    document.getElementById('rv-out').innerHTML = r.ok
+      ? '<div class="alert alert-info">✅ 复盘已写回。' + (d.fengwatch || '') + ' <a href="/holdings/<%= holding.ticker %>">返回持仓详情 →</a></div>'
+      : '<div class="alert alert-danger">' + (d.error || '失败') + '：' + (d.detail || '') + '</div>';
+  } catch (e) { document.getElementById('rv-out').textContent = '网络错误: ' + e.message; }
+  btn.disabled = false; btn.textContent = '提交复盘（写回 reviews + 推进回顾日 + fengwatch review）';
+}
+</script>

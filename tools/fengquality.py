@@ -21,6 +21,7 @@ EXCHANGE_MAP = {
     "HK": "hkg",
     "SS": "shs",
     "SZ": "shs",
+    "US": "stocks",
 }
 
 HEADERS = {
@@ -39,7 +40,9 @@ def _resolve_exchange(ticker: str) -> str:
         return "shs"
     if ".SZ" in ticker.upper():
         return "shs"
-    return "hkg"  # 默认 fallback
+    if ".US" in ticker.upper():
+        return "stocks"
+    return "stocks"  # 默认 fallback：无后缀视为美股（A/H 股一律带后缀）
 
 
 def _ticker_slug(ticker: str) -> str:
@@ -51,7 +54,10 @@ def fetch_stockanalysis(ticker: str) -> dict:
     """从 stockanalysis.com 获取关键财务指标。"""
     exchange = _resolve_exchange(ticker)
     slug = _ticker_slug(ticker)
-    url = STOCKANALYSIS_URL.format(exchange=exchange, ticker=slug)
+    if exchange == "stocks":
+        url = f"https://stockanalysis.com/stocks/{slug}/"
+    else:
+        url = STOCKANALYSIS_URL.format(exchange=exchange, ticker=slug)
 
     import requests
     r = requests.get(url, headers=HEADERS, timeout=15)

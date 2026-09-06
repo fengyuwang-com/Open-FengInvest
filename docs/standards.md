@@ -68,18 +68,21 @@ research/060-companies/<TICKER>-<中文名>/<YYYY-MM-DD>/
 
 ## §5 Skill 路径正确
 
-本项目的 FengInvest 7 层框架依赖 AI Skill 文件（`.agents/skills/fenginvest/`，ZCode 工作区）。这些 Skill 中包含硬编码路径，必须与实际项目结构一致：
+本项目的 AI Skill 文件统一放 `.agents/skills/<skill>/`（ZCode 工作区为唯一真相源，不再维护 `.claude/skills` 副本）。Skill 五件套：`fengscreen`（去劣筛选）/ `fenginvest`（买入前七层）/ `fengholding`（持有期）/ `fengexit`（卖出）/ `fengreview`（复盘）。Skill 中硬编码路径必须与实际项目结构一致：
 
-| Skill 文件 | 关注路径 |
+| Skill | 关注路径 |
 |:----------|---------|
-| 所有 fenginvest Skill | `research/060-companies/`（非 `companies/`） |
-| L2a (05) + L3 (06) | `research/040-people/named/`（非 `people/named/`） |
+| fengscreen | `research/060-companies/`（输出）、`research/050-strategies/`（行业扫描）、`tools/financial_rigor.py`（验算） |
+| fenginvest | `research/060-companies/`（非 `companies/`）、`research/040-people/named/`、`portfolio/current.md`（P 层输出走 `$BASE/08-portfolio.json`） |
+| fengholding | `holdings/`、`holdings/SCHEMA.md`、`research/060-companies/`（thesis 联动） |
+| fengexit | `holdings/`（sell 闭环）、`docs/08-exit.md` |
+| fengreview | `holdings/`（reviews 写回）、`reviews/`、`research/060-companies/<T>-*/thesis.md` |
 | 所有 Skill | `tools/feng*.py`、`knowledge/`、`docs/` |
 
 **规则：**
 - Skill 中的路径必须始终指向带编号的完整路径
 - 每次目录结构调整后必须同步更新所有相关 Skill
-- `.claude/skills/fenginvest` 与 `.agents/skills/fenginvest` 保持内容一致（工作区迁移时同步）
+- 新增 Skill 只建 `.agents/skills/<skill>/SKILL.md`，不建 `.claude` 副本
 
 ## §6 内部自洽
 

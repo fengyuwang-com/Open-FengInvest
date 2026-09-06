@@ -1,279 +1,125 @@
+<% var ticker = holding.ticker || holding.id; %>
+<% var px = holding.position.current_price || holding.position.nav; %>
+<% var pnl = px && holding.position.avg_cost ? (px / holding.position.avg_cost - 1) * 100 : null; %>
+
 <div class="page-header">
-  <h2>💼 <%= holding.ticker %></h2>
-  <div class="breadcrumb"><a href="/holdings">持仓</a> / <%= holding.ticker %></div>
+  <div class="breadcrumb"><a href="/holdings">持仓</a> / <%= holding.name || ticker %></div>
+  <h2><%= holding.name || ticker %> <span class="num" style="font-size:16px;color:var(--text-muted);font-weight:500;"><%= ticker %></span></h2>
+  <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
+    <a class="btn btn-danger" href="/watch/sell/<%= ticker %>">📤 卖出决策</a>
+    <a class="btn btn-accent" href="/holdings/<%= ticker %>/review">🔁 复盘</a>
+    <a class="btn" href="/research/<%= ticker %>">🔬 关联研究</a>
+    <a class="btn" href="/rollover">🔄 滚存工具</a>
+  </div>
 </div>
 
-<% var pnl = holding.position.current_price ? ((holding.position.current_price / holding.position.avg_cost - 1) * 100).toFixed(1) : 0; %>
-<% var pnlClass = pnl > 0 ? 'positive' : (pnl < 0 ? 'negative' : ''); %>
-
-<!-- Summary Bar -->
 <div class="dashboard-grid">
-  <div class="stat-card">
-    <div class="stat-label">成本价</div>
-    <div class="stat-value" style="font-size:22px;"><%= holding.position.avg_cost.toFixed(2) %></div>
+  <div class="stat-card"><div class="stat-label">成本 → 现价</div><div class="stat-value num" style="font-size:20px;"><%= holding.position.avg_cost != null ? Number(holding.position.avg_cost).toFixed(2) : '—' %> → <%= px != null ? Number(px).toFixed(2) : '—' %></div></div>
+  <div class="stat-card"><div class="stat-label">持仓回报</div>
+    <div class="stat-value <%= pnl != null ? (pnl >= 0 ? 'positive' : 'negative') : '' %>" style="font-size:22px;"><%= pnl != null ? (pnl >= 0 ? '+' : '') + pnl.toFixed(1) + '%' + (pnl >= 0 ? '▲' : '▼') : '—' %></div>
   </div>
-  <div class="stat-card">
-    <div class="stat-label">当前价</div>
-    <div class="stat-value" style="font-size:22px;"><%= holding.position.current_price ? holding.position.current_price.toFixed(2) : '—' %></div>
+  <div class="stat-card"><div class="stat-label">股数 / 钱包</div><div class="stat-value" style="font-size:20px;"><%= holding.position.shares || holding.position.units || '—' %></div>
+    <div style="font-size:11px;color:var(--text-muted);margin-top:4px;"><%= holding.account_type === 'TRADING' ? '投机钱包 ⚠' : '投资钱包' %></div>
   </div>
-  <div class="stat-card">
-    <div class="stat-label">市值</div>
-    <div class="stat-value" style="font-size:22px;">¥<%= (holding.position.market_value || 0).toLocaleString() %></div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-label">盈亏</div>
-    <div class="stat-value <%= pnlClass %>" style="font-size:22px;"><%= pnl %>%</div>
-  </div>
+  <div class="stat-card"><div class="stat-label">下次回顾</div><div class="stat-value" style="font-size:20px;color:var(--<%= holding.triggers && holding.triggers.next_review_date && new Date(holding.triggers.next_review_date) < new Date() ? 'danger' : 'text' %>);"><%= (holding.triggers && holding.triggers.next_review_date) || '—' %></div></div>
 </div>
 
-<div class="detail-grid">
-  <!-- Holdings Info -->
-  <div class="card">
-    <h3>持仓信息</h3>
-    <table class="data-table">
-      <tr><td>账户类型</td><td><span class="badge badge-<%= holding.account_type === 'INVESTMENT' ? 'primary' : 'neutral' %>"><%= holding.account_type %></span></td></tr>
-      <tr><td>生命周期</td><td><span class="badge badge-<%= holding.lifecycle_phase === 'holding' ? 'green' : 'yellow' %>"><%= holding.lifecycle_phase %></span></td></tr>
-      <tr><td>股数</td><td><%= holding.position.shares %></td></tr>
-      <tr><td>总投入</td><td>¥<%= holding.capital_rollover.total_invested.toLocaleString() %></td></tr>
-    </table>
-  </div>
-
-  <!-- Capital Rollover -->
-  <div class="card">
-    <h3>🔄 钱仓滚存</h3>
-    <table class="data-table">
-      <tr><td>总投入</td><td>¥<%= holding.capital_rollover.total_invested.toLocaleString() %></td></tr>
-      <tr><td>已回收</td><td>¥<%= (holding.capital_rollover.recovered || 0).toLocaleString() %></td></tr>
-      <tr><td>阶段</td><td><%= holding.capital_rollover.phase === 'capital_at_risk' ? '⚠️ 风险资本' : '🟢 已回收' %></td></tr>
-      <% if (holding.capital_rollover.zero_cost_shares != null) { %>
-      <tr><td>零成本筹码</td><td><%= holding.capital_rollover.zero_cost_shares %> 股</td></tr>
-      <% } %>
-      <tr><td>可回收价</td><td><%= holding.capital_rollover.recoverable_at_price ? '¥' + holding.capital_rollover.recoverable_at_price : '—' %></td></tr>
-    </table>
-    <button class="btn btn-primary" onclick="toggleRolloverCalc()" style="margin-top:10px;">🧮 试试滚存计算</button>
-    <div id="rollover-calc" style="display:none;margin-top:12px;padding:12px;background:#f9fafb;border-radius:var(--radius);">
-      <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <div style="flex:1;min-width:100px;">
-          <label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;">当前价</label>
-          <input id="calc-price" type="number" step="0.01" value="<%= holding.position.current_price || holding.position.avg_cost %>" style="width:100%;padding:6px 10px;border:1px solid var(--border);border-radius:4px;font-size:14px;">
-        </div>
-        <div style="flex:1;min-width:100px;">
-          <label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;">股数</label>
-          <input id="calc-shares" type="number" value="<%= holding.position.shares %>" style="width:100%;padding:6px 10px;border:1px solid var(--border);border-radius:4px;font-size:14px;">
-        </div>
-        <div style="flex:1;min-width:100px;">
-          <label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;">成本价</label>
-          <input id="calc-cost" type="number" step="0.01" value="<%= holding.position.avg_cost %>" style="width:100%;padding:6px 10px;border:1px solid var(--border);border-radius:4px;font-size:14px;">
-        </div>
-        <div style="display:flex;align-items:flex-end;">
-          <button class="btn btn-primary" onclick="calcRollover()" style="padding:6px 16px;">计算</button>
-        </div>
-      </div>
-      <div id="rollover-result" style="margin-top:10px;display:none;">
-        <div class="result-row"><span class="label">市值</span><span class="value" id="ro-mv"></span></div>
-        <div class="result-row"><span class="label">盈亏</span><span class="value" id="ro-pnl"></span></div>
-        <div class="result-row"><span class="label">可回收本金</span><span class="value" id="ro-recover"></span></div>
-        <div class="result-row"><span class="label">需卖股数</span><span class="value" id="ro-sell"></span></div>
-        <div class="result-row"><span class="label">剩余零成本</span><span class="value" id="ro-keep"></span></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Thesis -->
 <div class="card">
-  <h3>📋 投资逻辑 (Thesis)</h3>
-  <div style="padding:12px;background:#f9fafb;border-radius:var(--radius);margin-bottom:12px;">
-    <p style="font-size:15px;line-height:1.7;"><%= holding.thesis.original %></p>
+  <h3 class="section-title">持仓档案</h3>
+  <div class="detail-grid">
+    <div class="field-row"><label>市场 / 板块</label><span><%= holding.market || '—' %> · <%= holding.segment || '—' %></span></div>
+    <div class="field-row"><label>资金域</label><span><%= holding.capital_zone || '—' %></span></div>
+    <div class="field-row"><label>买入日 / 券商</label><span><%= (holding.meta && holding.meta.buy_date) || '—' %> · <%= holding.broker || '—' %></span></div>
+    <div class="field-row"><label>滚存阶段</label><span><%= holding.capital_rollover && holding.capital_rollover.phase === 'recovered' ? '本金已回收 ✓（可考虑滚存）' : '风险资本在市' %></span></div>
   </div>
-  <table class="data-table">
-    <tr><td style="width:120px;">对标基准</td><td><%= holding.thesis.benchmark || '—' %></td></tr>
-    <tr><td>预期收益</td><td><%= holding.thesis.expected_return != null ? (holding.thesis.expected_return * 100) + '%' : '—' %></td></tr>
-    <tr><td>持有期限</td><td><%= holding.thesis.time_horizon_months || '—' %> 个月</td></tr>
-    <tr><td>原则依据</td><td>
-      <% (holding.thesis.principles || []).forEach(function(p) { %>
-        <span class="badge badge-green"><%= p %></span>
-      <% }) %>
-    </td></tr>
-  </table>
-  <h4 style="margin-top:12px;">退出条件</h4>
-  <ul style="margin-top:6px;">
-    <% (holding.thesis.exit_conditions || []).forEach(function(c) { %>
-    <li style="margin:4px 0;font-size:14px;">• <%= c %></li>
-    <% }) %>
-  </ul>
 </div>
 
-<!-- Triggers + Review -->
-<div class="detail-grid">
-  <div class="card">
-    <h3>⚡ 触发条件</h3>
-    <table class="data-table">
-      <tr><td>止盈提醒</td><td>浮盈 &gt; <%= (holding.triggers.price_up_alert * 100).toFixed(0) %>%</td></tr>
-      <tr><td>止损提醒</td><td>浮亏 &gt; <%= Math.abs(holding.triggers.price_down_alert * 100).toFixed(0) %>%</td></tr>
-      <tr><td>下次回顾</td><td><span class="badge badge-<%= new Date(holding.triggers.next_review_date) < new Date() ? 'red' : 'green' %>"><%= holding.triggers.next_review_date || '—' %></span></td></tr>
-      <tr><td>Thesis 失效</td><td><%= holding.triggers.thesis_invalidation ? '🔴 可能失效' : '🟢 仍有效' %></td></tr>
-    </table>
+<% var reviewDate = holding.triggers && holding.triggers.next_review_date;
+   var reviewDays = reviewDate ? Math.round((new Date(reviewDate) - new Date()) / 86400000) : null;
+   var isTrading = holding.account_type === 'TRADING'; %>
+<% if (holding.thesis) { %>
+<div class="card" style="border-left:3px solid var(--accent);">
+  <h3 class="section-title">📜 买入论文<%= isTrading ? '（投机钱包·机械止损 -20%）' : '（投资钱包·论文止损）' %></h3>
+  <% if (holding.thesis.summary) { %>
+    <p style="font-size:17px;font-weight:600;line-height:1.5;margin:0 0 12px 0;"><%= holding.thesis.summary %></p>
+  <% } %>
+  <div class="md-content" style="font-size:14px;line-height:1.8;">
+    <% if (holding.thesis.original) { %><p style="color:var(--text-secondary);"><%= holding.thesis.original %></p><% } %>
+    <% if (holding.thesis.mirror_test) { %>
+      <details><summary style="cursor:pointer;font-size:13px;color:var(--text-muted);">照镜子测试（买入时的自己）</summary><p style="font-size:13px;color:var(--text-muted);"><%= holding.thesis.mirror_test %></p></details>
+    <% } %>
   </div>
-
-  <div class="card">
-    <h3>📝 回顾 & 日志</h3>
-    <div style="margin-bottom:10px;">
-      <button class="btn btn-primary" onclick="addReview()">✏️ 记录回顾</button>
-    </div>
-    <div id="review-form" style="display:none;">
-      <textarea id="review-notes" placeholder="写下回顾内容..." style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius);font-size:14px;min-height:80px;margin-bottom:8px;"></textarea>
-      <div style="display:flex;gap:8px;">
-        <select id="review-type" style="padding:6px 10px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;">
-          <option value="monthly">月度回顾</option>
-          <option value="trigger">触发回顾</option>
-          <option value="exit">退出回顾</option>
-        </select>
-        <button class="btn btn-primary" onclick="submitReview('<%= holding.ticker %>')">保存</button>
-        <button class="btn" style="background:#f3f4f6;" onclick="document.getElementById('review-form').style.display='none'">取消</button>
+  <% var reds = holding.thesis.redlines || holding.thesis.exit_conditions || []; %>
+  <% if (reds.length) { %>
+    <div style="margin-top:16px;">
+      <h4 style="font-size:13px;color:var(--danger);margin:0 0 8px 0;">🚨 论文证伪条件（redlines）——碰到任何一条就是卖出信号，与价格无关</h4>
+      <div class="alert-list">
+        <% reds.forEach(function(r, i) { %>
+          <div class="alert-item danger"><span class="num" style="color:var(--text-muted);"><%= i + 1 %></span><span><%= typeof r === 'string' ? r : (r.statement || r.text || JSON.stringify(r)) %></span></div>
+        <% }) %>
       </div>
     </div>
-    <div id="review-msg" style="font-size:13px;color:var(--text-muted);margin-top:8px;"></div>
-  </div>
-</div>
-
-<!-- Reviews History -->
-<div class="card">
-  <h3>📅 回顾记录</h3>
-  <% if (holding.reviews && holding.reviews.length > 0) { %>
-  <table class="data-table">
-    <thead><tr><th>日期</th><th>类型</th><th>Thesis 有效?</th><th>笔记</th></tr></thead>
-    <tbody>
-      <% holding.reviews.slice().reverse().forEach(function(r) { %>
-      <tr>
-        <td><%= r.date %></td>
-        <td><span class="badge badge-primary"><%= r.type %></span></td>
-        <td><%= r.thesis_valid ? '🟢 有效' : '🔴 失效' %></td>
-        <td style="font-size:13px;"><%= r.notes %></td>
-      </tr>
-      <% }) %>
-    </tbody>
-  </table>
-  <% } else { %>
-  <p style="color:var(--text-muted);font-size:14px;">暂无回顾记录</p>
+  <% } %>
+  <% if ((holding.thesis.hypotheses || []).length) { %>
+    <div style="margin-top:16px;">
+      <h4 style="font-size:13px;color:var(--text-muted);margin:0 0 8px 0;">🧪 假设验证进度</h4>
+      <table class="holdings-table">
+        <thead><tr><th>假设</th><th>验证方式</th><th>频率</th><th>状态</th></tr></thead>
+        <tbody>
+        <% holding.thesis.hypotheses.forEach(function(hp) {
+             var st = hp.status || '?';
+             var cls = st === 'valid' ? 'green' : st === 'invalid' || st === 'falsified' ? 'red' : 'yellow';
+             var cn = st === 'valid' ? '成立' : st === 'invalid' || st === 'falsified' ? '证伪' : st;
+        %>
+          <tr><td><%= hp.statement || hp.id %></td><td><%= hp.verify || '—' %></td><td><%= hp.freq || '—' %></td><td><span class="badge badge-<%= cls %>"><%= cn %></span></td></tr>
+        <% }) %>
+        </tbody>
+      </table>
+    </div>
   <% } %>
 </div>
-
-<!-- DK 取舍原则评估 -->
-<div class="card">
-  <h3>⚖️ DK 取舍原则审计</h3>
-  <div class="detail-grid">
-    <div class="result-row">
-      <span class="label">总投入</span>
-      <span class="value">¥<%= (holding.capital_rollover.total_invested || 0).toLocaleString() %></span>
-    </div>
-    <div class="result-row">
-      <span class="label">机会成本</span>
-      <span class="value">¥<%= ((holding.capital_rollover.total_invested || 0) * 0.03).toLocaleString() %>/年 (按3%无风险)</span>
-    </div>
-    <div class="result-row">
-      <span class="label">当前盈亏</span>
-      <span class="value"><span class="<%= pnl > 0 ? 'positive' : (pnl < 0 ? 'negative' : '') %>"><%= pnl %>%</span></span>
-    </div>
-    <div class="result-row">
-      <span class="label">取舍判断</span>
-      <span class="value">
-        <% if (holding.thesis.thesis_invalidated) { %>
-          <span class="badge badge-red">🔴 退出 — Thesis 失效</span>
-        <% } else if (pnl > 30) { %>
-          <span class="badge badge-yellow">🟡 考虑减仓 — 浮盈已高，思考机会成本</span>
-        <% } else if (pnl < -20) { %>
-          <span class="badge badge-red">🔴 止损审视 — 是否触发了退出条件？</span>
-        <% } else { %>
-          <span class="badge badge-green">🟢 持有 — 无更优替代前不动</span>
-        <% } %>
-      </span>
-    </div>
-  </div>
-  <h4 style="font-size:13px;color:#f57f17;margin:12px 0 6px;">🔄 机会成本自问</h4>
-  <ul style="font-size:13px;line-height:1.8;">
-    <li>• 如果现在没持有，我会以当前价格买入吗？</li>
-    <li>• 这笔钱放在其他地方（其他标的/指数/现金），3年内会更好吗？</li>
-    <li>• 我的 thesis 还成立吗？有什么新信息改变了判断？</li>
-  </ul>
+<% } else { %>
+<div class="alert-item warning">
+  <span>⚠️ 这笔持仓<b>没有登记论文</b>——无 thesis.original + redlines 的持仓 = 黄灯（fengwatch check_thesis_missing）。亏损持有无论文支撑即散户处置效应（Odean 1998）。<a href="/holdings/<%= ticker %>/review">补建论文 →</a></span>
 </div>
-
-<!-- Research Layers -->
-<% if (layers && layers.length > 0) { %>
-<div class="card">
-  <h3>🔬 分析层</h3>
-  <table class="data-table">
-    <thead><tr><th>层</th><th>状态</th><th>结果</th></tr></thead>
-    <tbody>
-      <% var layerNames = {l0:'L0 能力圈',m:'M 市场',l1:'L1 纪律',l2a:'L2a 定性',l2b:'L2b 量化',l3:'L3 碰撞',l4:'L4 报告',l4n:'L4 叙事'}; %>
-      <% layers.forEach(function(l) { %>
-      <tr>
-        <td><a href="/research/<%= holding.ticker %>"><%= layerNames[l.layer] || l.layer.toUpperCase() %></a></td>
-        <td><span class="badge badge-green"><%= l.status %></span></td>
-        <td>
-          <% if (l.data && l.data.overall_light) { %>
-            <span class="badge badge-<%= l.data.overall_light === 'GREEN' ? 'green' : l.data.overall_light === 'RED' ? 'red' : 'yellow' %>"><%= l.data.overall_light %></span>
-          <% } else if (l.data && l.data.m_layer) { %>
-            <% var lights = Object.values(l.data.m_layer).filter(v => typeof v === 'object' && v.light).map(v => v.light); %>
-            <% if (lights.length > 0) { %>
-              <span class="badge badge-<%= lights.every(l => l === '🟢') ? 'green' : 'yellow' %>"><%= lights.join(' ') %></span>
-            <% } %>
-          <% } else { %>
-            <span style="font-size:12px;color:var(--text-muted);">数据可用</span>
-          <% } %>
-        </td>
-      </tr>
-      <% }) %>
-    </tbody>
-  </table>
+<% } %>
+<% if (!isTrading && pnl != null && pnl < 0 && holding.thesis) { %>
+<div class="alert-item warning">
+  <span>🪞 当前浮亏 <%= pnl.toFixed(1) %>%。<b>投资账户不因价格卖出</b>——因论文卖（双账户规则 2026-08-16）。检查上面的证伪条件：基本面未变 = 继续持有；基本面同步恶化 = 走 <a href="/watch/sell/<%= ticker %>">卖出决策流程</a>。因亏损而卖 = 散户思维。</span>
+</div>
+<% } %>
+<% if (reviewDays != null && reviewDays < 0) { %>
+<div class="alert-item danger">
+  <span>🔴 回顾日已过期 <%= -reviewDays %> 天（<%= reviewDate %>）——定期复盘是强迫执行的一部分。<a href="/holdings/<%= ticker %>/review">去复盘 →</a></span>
 </div>
 <% } %>
 
+<div class="card">
+  <h3 class="section-title">检查卡（fengwatch check 十规则）</h3>
+  <button class="btn btn-accent" id="chkBtn" onclick="runCheck()">跑单只检查</button>
+  <div id="check-out" style="margin-top:12px;"></div>
+</div>
+
 <script>
-function toggleRolloverCalc() {
-  const el = document.getElementById('rollover-calc');
-  el.style.display = el.style.display === 'none' ? 'block' : 'none';
-}
-function calcRollover() {
-  const price = parseFloat(document.getElementById('calc-price').value);
-  const shares = parseInt(document.getElementById('calc-shares').value);
-  const cost = parseFloat(document.getElementById('calc-cost').value);
-  if (!price || !shares || !cost) return;
-  const total = cost * shares;
-  const mv = price * shares;
-  const pnl = ((price / cost) - 1) * 100;
-  const canRecover = mv >= total;
-  const sellShares = canRecover ? Math.ceil(total / price) : 0;
-  const keepZero = canRecover ? shares - sellShares : 0;
-  document.getElementById('ro-mv').textContent = '¥' + mv.toLocaleString();
-  document.getElementById('ro-pnl').textContent = pnl.toFixed(1) + '%';
-  document.getElementById('ro-recover').textContent = canRecover ? '✅ 可回收 ¥' + total.toLocaleString() : '❌ 不足以回收';
-  document.getElementById('ro-sell').textContent = canRecover ? sellShares + ' 股' : '—';
-  document.getElementById('ro-keep').textContent = canRecover ? keepZero + ' 股 (零成本)' : '—';
-  document.getElementById('rollover-result').style.display = 'block';
-}
-function addReview() {
-  document.getElementById('review-form').style.display = 'block';
-}
-function submitReview(ticker) {
-  const type = document.getElementById('review-type').value;
-  const notes = document.getElementById('review-notes').value.trim();
-  if (!notes) { alert('请填写回顾内容'); return; }
-  fetch('/api/journal', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      ticker: ticker,
-      action: 'review',
-      message: `[${type}] ${notes}`
-    })
-  })
-  .then(r => r.json())
-  .then(() => {
-    document.getElementById('review-msg').textContent = '✅ 回顾已记录';
-    document.getElementById('review-notes').value = '';
-    document.getElementById('review-form').style.display = 'none';
-  })
-  .catch(e => alert('保存失败: ' + e.message));
+async function runCheck() {
+  var btn = document.getElementById('chkBtn');
+  btn.disabled = true; btn.textContent = '检查中…（fengwatch.py check）';
+  var el = document.getElementById('check-out');
+  try {
+    var r = await fetch('/api/watch/check/<%= ticker %>');
+    var d = await r.json();
+    if (!r.ok) { el.innerHTML = '<div class="alert alert-danger">' + (d.error || '失败') + '</div>'; }
+    else {
+      var rules = d.rules || d.checks || [];
+      el.innerHTML = Array.isArray(rules) && rules.length
+        ? '<table class="data-table"><thead><tr><th>规则</th><th>状态</th><th>说明</th></tr></thead><tbody>' +
+          rules.map(function(x) {
+            return '<tr><td>' + (x.rule || x.name || '?') + '</td><td><span class="badge badge-' +
+              (String(x.status || x.triggered).match(/(ok|false|pass)/i) ? 'green' : 'red') + '">' + (x.status || (x.triggered ? '触发' : '未触发')) + '</span></td><td style="font-size:12px;color:var(--text-muted);">' + (x.message || x.detail || x.note || '') + '</td></tr>';
+          }).join('') + '</tbody></table>'
+        : '<pre style="font-size:12px;white-space:pre-wrap;background:var(--bg-inset);padding:12px;border-radius:8px;max-height:360px;overflow:auto;">' + JSON.stringify(d, null, 2).slice(0, 3000) + '</pre>';
+    }
+  } catch (e) { el.textContent = '网络错误: ' + e.message; }
+  btn.disabled = false; btn.textContent = '跑单只检查';
 }
 </script>

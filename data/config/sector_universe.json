@@ -1,0 +1,52 @@
+{
+  "global_test": {
+    "accepted": [
+      {
+        "ticker": "IXN",
+        "name": "全球科技"
+      },
+      {
+        "ticker": "IXJ",
+        "name": "全球医疗保健"
+      },
+      {
+        "ticker": "IXG",
+        "name": "全球金融"
+      },
+      {
+        "ticker": "EXI",
+        "name": "全球工业"
+      },
+      {
+        "ticker": "KXI",
+        "name": "全球必需消费"
+      },
+      {
+        "ticker": "MXI",
+        "name": "全球材料"
+      },
+      {
+        "ticker": "RXI",
+        "name": "全球可选消费"
+      },
+      {
+        "ticker": "JXI",
+        "name": "全球公用事业"
+      }
+    ],
+    "rejected": [],
+    "benchmark": "ACWI",
+    "benchmark_probe": {
+      "ticker": "ACWI",
+      "ok": true,
+      "rows": 2514,
+      "start": "2016-08-22",
+      "end": "2026-08-21",
+      "years": 10.0,
+      "valid_ohlc": true,
+      "accepted": true,
+      "reason": ""
+    },
+    "benchmark_proxy": false
+  }
+}

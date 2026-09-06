@@ -1,5 +1,5 @@
 <div class="page-header">
-  <h2>📚 知识库</h2>
+  <h2 data-i18n="page.knowledge">📚 知识库</h2>
   <div class="breadcrumb">知识库 — <%= tree.reduce(function(s, c) { return s + c.entries.length; }, 0) %> 条目</div>
 </div>
 
@@ -31,9 +31,9 @@
       <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px;"><%= entry.frontmatter.representative %></div>
       <% } %>
       <% if (entry.frontmatter && entry.frontmatter.school) { %>
-      <span style="display:inline-block;padding:1px 8px;background:#e8f5e9;color:#2e7d32;border-radius:10px;font-size:11px;margin-bottom:6px;"><%= entry.frontmatter.school %></span>
+      <span style="display:inline-block;padding:1px 8px;background:var(--ok-bg);color:var(--ok);border-radius:10px;font-size:11px;margin-bottom:6px;"><%= entry.frontmatter.school %></span>
       <% } %>
-      <div class="entry-preview" style="font-size:12px;color:#888;line-height:1.5;overflow:hidden;max-height:36px;"><%= entry.preview.slice(0, 100) %></div>
+      <div class="entry-preview" style="font-size:12px;color:var(--text-muted);line-height:1.5;overflow:hidden;max-height:36px;"><%= entry.preview.slice(0, 100) %></div>
     </a>
     <% }) %>
   </div>

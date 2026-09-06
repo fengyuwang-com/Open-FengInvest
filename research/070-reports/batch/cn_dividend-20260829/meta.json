@@ -1,0 +1,7 @@
+{
+  "batch": "cn_dividend-20260829",
+  "created_at": "2026-08-29T17:35:50.247738",
+  "source": "list:cn_dividend (akshare 中证指数接口)",
+  "pool_size": 100,
+  "n_survivors": 24
+}

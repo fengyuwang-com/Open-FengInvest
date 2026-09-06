@@ -1,6 +1,44 @@
 <div class="page-header">
-  <h2>🔬 <%= ticker %> 研究详情</h2>
-  <div class="breadcrumb"><a href="/research">研究</a> / <%= ticker %> <% if (name !== ticker) { %>— <%= name.replace(ticker + '-', '') %><% } %></div>
+  <div class="breadcrumb"><a href="/research">研究</a> / <%= name.replace(ticker + '-', '') %></div>
+  <h2><%= name.replace(ticker + '-', '') %> <span class="num" style="font-size:16px;color:var(--text-muted);font-weight:500;"><%= ticker %></span></h2>
+  <% var l1 = (layers || []).find(function(x){ return x.layer === 'l1'; });
+     var principle = l1 && l1.data && l1.data.overall_light;
+     var dispName = name.replace(ticker + '-', ''); %>
+  <div style="margin-top:6px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+    <span class="badge badge-<%= principle === 'GREEN' ? 'green' : principle === 'RED' ? 'red' : 'neutral' %>" title="L1 硬纪律四灯总评">
+      原则符合度 <%= principle === 'GREEN' ? '✓' : principle === 'RED' ? '✗' : '待验' %>
+    </span>
+    <a class="btn btn-accent" href="/reports/<%= ticker %>">📚 报告书架（<%= reports.reports.length %>）</a>
+    <a class="btn" href="/holdings/<%= ticker %>">💼 持仓详情</a>
+  </div>
+  <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:12px;" id="layer-nav">
+    <% var order = ['l0','m','l1','l2b','l2a','l3','l4','l4n']; %>
+    <% order.forEach(function(id) { %>
+      <% var done = (layers || []).find(function(x){ return x.layer === id; }); %>
+      <span class="badge <%= done ? 'badge-green' : 'badge-neutral' %>" style="opacity:<%= done ? 1 : 0.55 %>;"><%= layerLabels[id] || id %><%= done ? ' ✓' : ' ·' %></span>
+    <% }) %>
+  </div>
+</div>
+
+<% if (principle === 'RED') { %>
+<div class="card" style="border-left:3px solid var(--danger);">
+  <h3 class="section-title">🚪 L1 红灯 ≠ 公司完了——深度价值路径核对单（docs/03-discipline.md）</h3>
+  <p style="font-size:13px;color:var(--text-secondary);margin:0 0 12px 0;">
+    红灯拦截买入，<b>不拦截研究继续</b>。四条全过 → 可走深度价值路径（DCA，仓位上限 30-50%）；任一不满足 → PASS。逐条核对：
+  </p>
+  <div class="alert-list">
+    <div class="alert-item info"><span class="num" style="font-weight:600;">A</span><span><b>好生意 🟢</b>：ROE &gt; 10% 或护城河未坏（去 L2a 层核对护城河灯）</span></div>
+    <div class="alert-item info"><span class="num" style="font-weight:600;">B</span><span><b>极端低估</b>：PE &lt; 15 或 PB &lt; 1 或净现金 &gt; 30% 市值（对照上方估值速览）</span></div>
+    <div class="alert-item info"><span class="num" style="font-weight:600;">C</span><span><b>非价值陷阱</b>：FCF 为负必须有合理解释（周期性/一次性投入/账期）</span></div>
+    <div class="alert-item info"><span class="num" style="font-weight:600;">D</span><span><b>回归催化剂</b>：存在让估值回归的具体事件或时点</span></div>
+  </div>
+  <p style="font-size:12px;color:var(--text-muted);margin:12px 0 0 0;">⚠️ 红灯可以往上推翻（L2a 定性核心推翻 L1），不能往下忽略。结论必须落档进 L3 碰撞层。</p>
+</div>
+<% } %>
+
+<div class="card" id="valuation-card">
+  <h3 class="section-title">💰 估值速览</h3>
+  <div id="valuation-body" style="color:var(--text-muted);font-size:13px;">加载中…</div>
 </div>
 
 <% if (layers && layers.length > 0) { %>
@@ -40,7 +78,7 @@
           <% }) %>
 
           <% if (dkOnly.length > 0) { %>
-          <h4 style="font-size:13px;color:#f57f17;margin:10px 0 6px;">DK 纪律规则</h4>
+          <h4 style="font-size:13px;color:var(--warn);margin:10px 0 6px;">DK 纪律规则</h4>
           <% dkOnly.forEach(function(r) { %>
             <div class="result-row">
               <span class="label"><%= r.check === 'no_2638' ? '2638法则/大盘' : r.check === 'no_chasing' ? '年线追高' : r.check === 'no_first_mover' ? '后发制人' : r.check === 'divergence_or_consensus' ? '分歧共识' : r.check %></span>
@@ -91,7 +129,7 @@
 
           <!-- DK Assessment if available -->
           <% if (layer.data.dk_assessment) { %>
-          <h4 style="font-size:13px;color:#f57f17;margin:14px 0 8px;">DK 原则审计</h4>
+          <h4 style="font-size:13px;color:var(--warn);margin:14px 0 8px;">DK 原则审计</h4>
           <div class="detail-grid">
             <div class="result-row">
               <span class="label">坐标原则</span>
@@ -120,7 +158,7 @@
 
           <!-- Conflicts if any -->
           <% if (layer.data.conflicts && layer.data.conflicts.length > 0) { %>
-          <h4 style="font-size:13px;color:#d32f2f;margin:14px 0 8px;">冲突记录</h4>
+          <h4 style="font-size:13px;color:var(--danger);margin:14px 0 8px;">冲突记录</h4>
           <% layer.data.conflicts.forEach(function(c) { %>
             <div class="result-row">
               <span class="label"><%= c.source || '' %></span>
@@ -130,7 +168,7 @@
           <% } %>
         <% } else { %>
           <!-- Generic JSON data -->
-          <pre style="font-size:12px;background:#f9fafb;padding:12px;border-radius:4px;overflow-x:auto;max-height:400px;"><%= JSON.stringify(layer.data, null, 2) %></pre>
+          <pre style="font-size:12px;background:var(--bg-inset);padding:12px;border-radius:4px;overflow-x:auto;max-height:400px;"><%= JSON.stringify(layer.data, null, 2) %></pre>
         <% } %>
       <% } else if (layer.output_path) { %>
         <p style="color:var(--text-muted);font-size:13px;">📄 输出文件: <%= path.basename(layer.output_path) %></p>
@@ -143,3 +181,25 @@
   <p>运行 CLI 分析工具后再查看</p>
 </div>
 <% } %>
+
+<script>
+(function() {
+  var el = document.getElementById('valuation-body');
+  fetch('/api/company/<%= ticker %>').then(function(r) { return r.json().then(function(j) { return { ok: r.ok, j: j }; }); }).then(function(res) {
+    if (!res.ok) { el.textContent = '取数失败：' + (res.j.error || '未知'); return; }
+    var d = res.j;
+    function pct(p) { if (p == null) return '<span style="color:var(--text-faint);">无分位</span>'; return (p * 100).toFixed(0) + '%'; }
+    var pctPe = d.pe_percentile && d.pe_percentile.pe != null ? (d.pe_percentile.pe * 100).toFixed(0) + '%（' + (d.pe_percentile.window || '') + '）' : '—';
+    var pctPb = d.pe_percentile && d.pe_percentile.pb != null ? (d.pe_percentile.pb * 100).toFixed(0) + '%' : '—';
+    var staleBadge = d.stale ? '<span class="badge badge-yellow">⚠ 快照/陈旧数据</span>' : '<span class="badge badge-green">实时</span>';
+    el.innerHTML =
+      '<div style="display:flex;gap:24px;flex-wrap:wrap;align-items:baseline;">' +
+      '<div><div style="font-size:12px;color:var(--text-muted);">现价</div><div class="num" style="font-size:20px;font-weight:600;">' + (d.price != null ? d.price : '—') + (d.currency ? ' <span style="font-size:12px;">' + d.currency + '</span>' : '') + '</div></div>' +
+      '<div><div style="font-size:12px;color:var(--text-muted);">PE(TTM)</div><div class="num" style="font-size:20px;font-weight:600;">' + (d.pe_ttm != null ? d.pe_ttm : '—') + '</div><div style="font-size:11px;color:var(--text-muted);">历史分位 ' + pctPe + '</div></div>' +
+      '<div><div style="font-size:12px;color:var(--text-muted);">PB</div><div class="num" style="font-size:20px;font-weight:600;">' + (d.pb != null ? d.pb : '—') + '</div><div style="font-size:11px;color:var(--text-muted);">历史分位 ' + pctPb + '</div></div>' +
+      '<div>' + staleBadge + '</div>' +
+      '</div>' +
+      '<div style="margin-top:8px;font-size:11px;color:var(--text-faint);">来源：' + (d.source || '—') + ' · ' + (d.as_of || '') + '</div>';
+  }).catch(function(e) { el.textContent = '取数失败：' + e; });
+})();
+</script>

@@ -18,7 +18,7 @@
 
 | 来源 | 贡献 | 许可证 | 集成位置 |
 |------|------|--------|---------|
-| **Finance_Toolkit**（本地私有项目） | 9 种投资流派的策略描述 | MIT | `research/050-strategies/`（9 个文件） |
+| **Finance_Toolkit**（本地私有项目） | 10 种投资流派的策略描述 | MIT | `research/050-strategies/`（10 个文件） |
 
 ## 市场与宏观参考
 
@@ -37,6 +37,18 @@
 
 | 工具 | 用途 | 来源 |
 |------|------|------|
-| **Search-King** | AI 各层执行时的联网搜索（最新数据、新闻、财报） | 本地工具 |
+| **opencli** | AI 各层执行时的联网搜索/读网页（opencli-browser / opencli-usage skill 驱动） | 本地工具 |
 | **open-webSearch** | 备选搜索引擎（Exa/DDG/Baidu/Sogou） | 本地工具（MCP 服务器） |
 | **Agent Reach** | 社交平台（小红书/Reddit/B站/Twitter）数据收集 | 本地工具 |
+
+## 数据工具链
+
+| 工具 | 用途 | 来源 |
+|------|------|------|
+| **apsw** | SQLite session 扩展绑定：changeset 增量捕获 + invert 回滚；统一入口 `tools/fengdb.py`（safe_batch 自动产变更集 + undo/snapshot/status，临时副本回滚演练 PASS；规范见 [DATA-MANAGEMENT.md](DATA-MANAGEMENT.md)） | PyPI 清华镜像（内置 SQLite 公有领域内核） |
+| **fuyao API**（同花顺） | A股财报增量源（34 原始科目 → 24 映射字段入 cn_financials；X-api-key 鉴权，key 存仓库外 credentials.env）；全市场 5,828 只回填已完成（tools/fengfuyao.py） | 商业服务（现用免费额度） |
+| **a-stock-data**（[simonlin1212/a-stock-data](https://github.com/simonlin1212/a-stock-data)） | A股按需取数后端：12 端点整合为 `tools/fengastock.py`（实时估值/估值史/上市退市日/申万行业变迁/复权因子/社融 PMI/龙虎榜/涨停池/解禁/两融/资金流），SKILL 存档 `research/070-reports/vendor/` | Apache-2.0 |
+| **baostock** | A股日线 / PE·PB 估值历史源（单 socket 无锁，必须串行使用） | 开源（PyPI） |
+| **FinMind** | 台湾日线数据源（TW 市场补数路径） | 开源（PyPI） |
+| **BaiduPCS-Go** | 百度网盘 CLI：changeset 增量上传/回滚取回（方案调整为本地双备份 + 定时复制至网盘同步目录，见 [todo.md](todo.md) K 条） | 开源（接入中） |
+| **CSMAR** | A股全历史财务冷数据（含退市股，35 年三表+衍生因子） | 本地私有数据 |

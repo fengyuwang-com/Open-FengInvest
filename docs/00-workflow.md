@@ -12,7 +12,7 @@
 ```
 FengInvest/
 ├── docs/                    ← 分层文档 (01-philosophy ~ 09-portfolio)
-├── tools/                   ← Python 工具 (44 feng*.py)
+├── tools/                   ← Python 工具 (52 个)
 ├── knowledge/               ← DK 知识库 (principles + discipline + methodology)
 ├── research/                ← 分析产出 + 参考知识库
 │   ├── 010-macro/           ← 宏观分析参考
@@ -24,7 +24,7 @@ FengInvest/
 │   ├── 070-reports/         ← 行业深度报告
 │   ├── 090-portfolio-management/ ← 组合管理
 │   ├── 100-learning-investment/  ← 学习路径
-│   └── 110-strategy-verification/ ← 52条论断回测
+│   └── 110-strategy-verification/ ← 论断验证（配方 000-claims-def + 协议 000-PROTOCOL + 白话卡模板）/ 52 条论断回测
 ├── holdings/                ← 持仓数据（本地 gitignored，SCHEMA 见 holdings/SCHEMA.md）
 ├── alerts/                  ← 触发引擎输出（本地）
 ├── logs/                    ← 决策日志（本地）
@@ -48,14 +48,27 @@ tools/fengrule.py        # L1纪律检查
 tools/fengquant.py       # L2b量化因子
 tools/fengcollision.py   # L3碰撞引擎
 tools/fengscreen.py      # 多因子全市场筛选
+tools/fengvaluation.py   # 多方法估值（预期法逆向 DCF + 两阶段 + 敏感性）
+tools/fengfactor.py      # 因子验证（IC/分位收益/换手率）
+tools/fengpit.py         # PIT 双轴可见性（as-of 查询防前视）
+tools/financial_rigor.py # 数据严谨性验算（禁止心算）
+tools/report_audit.py    # 报告质量：准出抽检 + check/sources/csvdetect 三件套
 tools/fengwatch.py       # 持仓监控（daily/check/review/sell/history）
-tools/fengportfolio.py   # 组合三轴正交盘面 + 买入预算
+tools/fengportfolio.py   # 组合三轴正交盘面 + 买入预算 + optimize 再平衡 + risk 下行贡献 + hrp 层次风险平价
 tools/fengcost.py        # 全球交易规费计算
 tools/fengdbrefine.py    # 数据库回填（unadj_close + 分红）
 tools/fenginvest.py      # 单命令编排
 tools/fengview.py        # 速查工具
 tools/leftright.py       # 左侧 vs 右侧买入回测引擎
 tools/fix_hk_nodata.py   # AKShare 补爬缺失港股数据
+tools/fengbacktest.py    # 信号驱动组合回测（vnpy 范式 + 基准对比 + 成本模型）
+tools/fengcache.py       # 决策缓存（内容指纹一致 → 跳过重复验证）
+tools/fengthrottle.py    # 限流 + TTL 缓存取数（OpenBB fred 范式，防 API 封禁）
+tools/fengsec.py         # SEC EDGAR 一手资料：旧路径限流缓存 + edgartools 数据层（facts PIT 双轴/financials/ownership/13f）
+tools/backtest_core.py   # 自建共享回测引擎内核（算数层，供 fengverify 调用）
+tools/fengverify.py      # 论断复测引擎：claims-def 配方 → 回测 → results.json + 12 项协议红绿灯
+tools/fengtick.py        # tickflow 投机侧车：T0 候选 / T2 防线位 / T4 监控（只供数据，纪律卖出归 /fengexit）
+tools/fengbench.py       # FinEval 知识门禁基准（待数据集）
 ```
 
 ---
@@ -105,7 +118,7 @@ tools/fix_hk_nodata.py   # AKShare 补爬缺失港股数据
 # 运行数据采集
 python tools/fengdata.py <TICKER> --years 20
 
-# 搜索交叉验证（Search-King 或等价搜索工具）
+# 搜索交叉验证（opencli / 等价搜索工具）
 python <搜索工具>/scraper.py --search "<标的> 行业 宏观 2026"
 python <搜索工具>/scraper.py --search "<标的> PE 估值 历史分位"
 python <搜索工具>/scraper.py --search "<标的> 2026 新闻 财报"
@@ -123,6 +136,8 @@ python <搜索工具>/scraper.py --search "<标的> 2026 新闻 财报"
 | 周期定位 | 货币/工业利润/用电量 | DK扩展 / 搜索 |
 
 **铁律**：无来源 = 不存在。每个判断必须有来源 URL。
+
+**噪音过滤**：搜索只采"基本面/行业/财报/宏观/估值"类信息；股民评论、涨停榜、话题热度、短期涨幅排行等对内在价值判断零增量的信号一律不采、不参考（见 docs/01-philosophy.md 信条 3）。
 
 ### Step 3: L1 硬纪律
 
@@ -228,6 +243,16 @@ DK 碰撞规则:
 8. 催化剂日历 + 建仓策略 + 退出条件
 9. 行为偏误检查
 
+### 数据纪律（PIT 点及时 · 防前视偏差）
+
+> 移植自 ai-hedge-fund 的 PIT（point-in-time）纪律：**任何分析只能使用决策时点已公开的数据**，禁止用事后才知道的数据为当时的判断辩护。
+
+1. **财务数据必须带时点**：报告中引用任何财务数字（营收/利润/ROE/FCF），一律标注「数据取自 YYYY 财报（披露日 YYYY-MM-DD）」。无时点的数字视为无来源。
+2. **禁止回溯倒推**：复盘/回测时，不得用当前最新财报验证半年前的判断；当时用的是哪一期数据，复盘就只对照那一期（+ 事后数据只能用来更新「当前判断」，不能改写「当时判断」）。
+3. **时点登记**：买入登记持仓时，`holdings/hold_<TICKER>.json` 的 `thesis.financials_asof` 记录分析所依据的最新财报期（如 `2025Q4`），复盘时先核对当前财报期是否已推进。
+4. **季度财报推进**：`/fengreview` 复盘时若 `financials_asof` 落后当前最新财报 ≥2 期 → 强制更新数据再评估（防止用过期数据长期持有）。
+5. **美股一手资料**：US 市场公司财报优先 SEC EDGAR 原始文件（`python tools/fengsec.py filings/fetch`，10-K/10-Q/13F 带 filingDate 天然符合 PIT）；yfinance 等二手源只降级使用。
+
 ---
 
 ## 三、交易执行
@@ -253,7 +278,21 @@ DK 碰撞规则:
 python tools/fengportfolio.py check   # 写入后重跑组合盘面验证集中度
 ```
 
+### 双钱包：两条独立的买入轨道
+
+买入分两种，账户、规则、止损互不混用：
+
+| 轨道 | 对应入口 | 买什么 | 止损 | 仓位纪律 |
+|:-----|:---------|:------|:-----|:---------|
+| 价值买 INVESTMENT | 七层框架（/fenginvest） | 看得懂的优质公司 | 论文止损（理论被推翻） | 参考 L4 报告仓位 |
+| 交易买 TRADING | `/fengspec`（右侧突破 / 事件驱动） | 投机性标的 | -20% 机械止损 | 试盘 ≤3% / 单票 ≤10% / 总仓 ≤30% |
+
+- 交易买入用轻量纪律捆 `trade_entry`（entry_trigger / stop_line / time_window / 证伪 trigger / 滚存线）记录，字段已进 `holdings/SCHEMA.md`；经 `/fengholding` 登记 TRADING 持仓时，skill 会给出补齐 `trade_entry` 的提示。
+- 交易轨数据辅助走 `tools/fengtick.py`（T0 候选 / T2 防线位 / T4 监控，幽灵原则：只供数据，纪律卖出留在 `/fengexit`；纯本地零依赖）。
+
 ### 持有期监控
+
+> 持有期管理走 `/fengholding` skill（登记新持仓 / 单只检查 / 后管理）。
 
 **每日提醒（Web UI 自动）：**
 
@@ -294,24 +333,28 @@ python tools/fengdata.py fx           # 实时汇率（USDCNY/HKDCNY/USDHKD）
 python tools/fengwatch.py sell <TICKER> --price X --shares Y --reason "原因"
 ```
 
-自动完成：
-- 计算盈亏
+自动完成（卖出闭环）：
+- 计算盈亏，累计入 `capital.realized_pl`
+- `trades` 追加卖出记录；清仓 → `lifecycle_phase=closed` 并归档为 `hold_<TICKER>_closed_<DATE>.json`
+- 部分卖出（滚存/减仓）→ 更新余仓 + `capital_rollover`（recovered/zero_cost_shares/phase），不归档
 - 写入决策日志（logs/journal.jsonl）
-- 归档持仓文件为 hold_<TICKER>_closed_<DATE>.json
+- 卖出决策流程走 `/fengexit` skill
 
-### 钱仓滚存
-
-当浮盈 > 30% 时：
+### 钱仓滚存（浮盈 15% 关注 / 30% 建议）
 
 ```bash
-python tools/fengwatch.py check <TICKER>  # 查看滚存建议
+python tools/fengwatch.py check <TICKER>   # 滚存检测：SOON(≥15% 关注) / OPPORTUNITY(≥30% 建议)
+python tools/fengwatch.py sell <TICKER> --shares <N> --reason "滚存回收本金"  # 部分卖出=回收本金留零成本筹码
 ```
 
-回收本金，剩余零成本筹码继续持有。
+- 浮盈 ≥30% 且市值 ≥ 投入×1.3 → 强烈建议执行（回收股数 ceil 取整，与 Web 计算器一致）
+- 执行后 `phase=capital_recovered` → 零成本持有，涨跌都不怕
 
 ---
 
 ## 四、复盘与回顾
+
+> 复盘走 `/fengreview` skill（读 thesis → 对照 060-companies 分析 → 评估 thesis_valid → 写回 reviews）。
 
 ### 定期复盘
 
@@ -393,6 +436,8 @@ Web UI 路径：`/journal` — 查看完整决策日志。
 | 07-narrative.md | L4：贫嘴版报告风格 |
 | 08-exit.md | 退出纪律 |
 | 09-portfolio.md | 组合管理：三轴正交 + 资金池 + 买入预算 |
+| 10-discussion.md | 辩论档案（改哲学先辩论）：已归档判据错位 / 回测路线 / 双钱包终态 3 场讨论 |
+| 11-speculation-track.md | 投机 / 交易轨（TRADING，/fengspec）独立钱包 |
 
 ### 参考知识库（`research/`）
 
@@ -404,5 +449,22 @@ Web UI 路径：`/journal` — 查看完整决策日志。
 | 040-people/named/ | 43位大师框架 |
 | 050-strategies/ | 10种投资策略（含左侧vs右侧） |
 | 090-portfolio-management/ | 仓位/卖出/再平衡/体制映射 |
-| 110-strategy-verification/ | 52条论断回测 |
+| 110-strategy-verification/ | 论断验证（配方/协议/白话卡）+ 52 条论断回测 |
 | 000-QUICK-REFERENCE.md | 速查总表：所有关键阈值一页看完 |
+
+---
+
+## 七、论断验证（回测机制）
+
+> 系统里每条投资论断（`research/110-strategy-verification/000-52-claims.md`，52 条）都能被复测、被质疑。机制 = 自建共享引擎 + 论断配方 + 可信协议 + 白话论断卡；**0 个开源回测仓库入库**（只借鉴 tickflow 的样本外 / 网格与 pwb 指标思想）。
+
+| 环节 | 位置 | 干什么 |
+|:-----|:-----|:-------|
+| 引擎（算数） | `tools/backtest_core.py` | 跑回测，出机器可读结果 |
+| 配方（定义） | `research/110-strategy-verification/000-claims-def.md` | 每个论断的定义（判据 / 数据范围 / 持有期 / 主判据 verdict_metric） |
+| 协议（验收） | `research/110-strategy-verification/000-PROTOCOL.md` | 12 项红绿灯验收：判据对齐 / 复权 / 成本 / 显著性 / 样本外 / 幸存者 / 文献对标 / A股制度…… |
+| 白话卡（给人看） | `research/110-strategy-verification/000-FORMAT-SAMPLE-白话卡.md` | 给不读代码的人：5 秒扫红绿灯 ✅🟡❌❓、30 秒看懂方法、想抠细节看证据链 |
+
+**入口**：聊天喊 `/fengverify 验证 N 号论断`——自动跑引擎 → 按 12 项协议打标 → 出一张 0 代码的白话论断卡。程序负责算数（引擎），技能负责说人话（卡）。
+
+**数据纪律（判据必须与论断承诺的量一致）**：验证一条论断，只能用这条论断自己承诺的度量去判，否则就是判据错位（#1 教训：原「年线上买更赚」按「7/7 支持」口径看似成立，复测改按承诺度量后 ❌ 不成立）。白话卡数字必须与 results.json 逐位一致——已复核改判：#4 纠正 2.12x、#7 ❌、#33/#40 🟡、#42 ❓，全部回写 `research/110-strategy-verification/000-CONCLUSIONS.md`。

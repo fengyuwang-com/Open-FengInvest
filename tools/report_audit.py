@@ -23,6 +23,18 @@ Requires Python >= 3.7.
 
   一步完成（仅提取+打印抽检清单，不做网络验证）：
     python3 tools/report_audit.py extract --report reports/xxx.md --dry-run
+
+报告质量三件套（--report 支持文件或目录，目录 → 逐个 .md 文件）：
+  check      结构校验（必填章节/关键字段/章节最少条目数）：
+    python3 tools/report_audit.py check --report reports/xxx.md \
+      --required "第一章" --required "投资结论" \
+      --min-items 5 --section "持股名单"
+
+  sources    来源标注检查（含数字/断言但无 URL 或「来源：」的段落 + 整节无来源）：
+    python3 tools/report_audit.py sources --report reports/xxx.md --require-per-section
+
+  csvdetect  CSV 乱入检测（表列数错位/未加引号逗号数字/裸 CSV 文本块）：
+    python3 tools/report_audit.py csvdetect --report reports/xxx.md
 """
 
 import argparse
@@ -103,14 +115,14 @@ def _is_valid_label(label: str) -> bool:
 
 # 两列表格行：| 标签 | 数值 unit |（专为财务报告的 KV 表设计）
 _KV_TABLE_RE = re.compile(
-    r'^\|\s*(?P<label>[^|*\n]{2,40}?)\s*\|\s*[~约]?\$?(?P<num>[\d,，\.]+)\s*'
+    r'^\|\s*(?P<label>[^|*\n]{2,40}?)\s*\|\s*[~约]?\$?(?P<num>-?[\d,，\.]+)\s*'
     r'(?P<unit>亿[元美港]?元?|万亿|[xX倍]|%|[BMT亿])?\s*[\|（\(]'
 )
 
 # 带标签的 KV 行：标签：数值 单位
 _KV_LABEL_RE = re.compile(
     r'(?P<label>[\u4e00-\u9fa5A-Za-z][^\|\n：:*]{1,30})[：:]\s*[~约]?\$?'
-    r'(?P<num>[\d,，\.]+)\s*(?P<unit>亿[元美港]?元?|万亿|[xX倍]|%|[BMT])?'
+    r'(?P<num>-?[\d,，\.]+)\s*(?P<unit>亿[元美港]?元?|万亿|[xX倍]|%|[BMT])?'
 )
 
 
@@ -140,9 +152,9 @@ def _parse_md_tables(lines: list) -> list:
                     row_label = cells[0]
                     for col_idx, cell in enumerate(cells[1:], start=1):
                         col_header = headers_raw[col_idx] if col_idx < len(headers_raw) else f'列{col_idx}'
-                        # 提取 cell 中的数字+单位
+                        # 提取 cell 中的数字+单位（含负号，2026-08-16 修复：原正则漏 - 导致 -1.28 → 1.28）
                         m = re.search(
-                            r'[~约]?\$?([\d,，\.]+)\s*(亿[元美港]?元?|万亿|[xX倍]|%|[BMT])?',
+                            r'[~约]?\$?(-?[\d,，\.]+)\s*(亿[元美港]?元?|万亿|[xX倍]|%|[BMT])?',
                             cell
                         )
                         if m:
@@ -403,6 +415,313 @@ def render_verdict(results: list, report_name: str = "") -> dict:
 
 
 # ---------------------------------------------------------------------------
+# 报告质量三件套：check / sources / csvdetect
+# ---------------------------------------------------------------------------
+
+_HEADING_RE = re.compile(r'^(#{1,6})\s+(.+?)\s*$')
+_SEP_RE = re.compile(r'^\|?[\s\-:|]+\|?$')          # markdown 表格分隔行
+_URL_RE = re.compile(r'https?://\S+')
+_SOURCE_MARK_RE = re.compile(r'(来源[:：]|数据来源[:：]|参考[:：]|source[:：])', re.IGNORECASE)
+_NUM_CLAIM_RE = re.compile(r'\d[\d,，\.]*\s*(亿|万|%|％|元|美元|港元|x|X|倍|亿港元|亿美元)')
+_CLAIM_RE = re.compile(
+    r'(结论|预计|认为|表明|判断|大概率|目标价|评级|推荐|建议|应该|必须|龙头|领先|风险|盈利|亏损)')
+_LIST_ITEM_RE = re.compile(r'^\s*([-*+]|\d+[.、)])\s')
+
+
+def _resolve_report(path):
+    """--report 支持文件或目录；目录 → 递归收集 *.md / *.markdown。"""
+    if os.path.isdir(path):
+        out = []
+        for root, _dirs, files in os.walk(path):
+            for f in sorted(files):
+                if f.lower().endswith(('.md', '.markdown')):
+                    out.append(os.path.join(root, f))
+        return sorted(out)
+    if os.path.isfile(path):
+        return [path]
+    return []
+
+
+def _read_text(path):
+    with open(path, 'r', encoding='utf-8', errors='replace') as f:
+        return f.read()
+
+
+def _collect_sections(lines):
+    """返回章节列表 [{level, title, line(标题行号,1起), end_line(独占)}]，
+    按文档出现顺序；end_line 为下一标题行号-1 或文件尾。"""
+    heads = []
+    for i, ln in enumerate(lines):
+        m = _HEADING_RE.match(ln.strip())
+        if m:
+            heads.append((len(m.group(1)), m.group(2).strip(), i + 1))
+    out = []
+    for idx, (lv, title, ln) in enumerate(heads):
+        end = heads[idx + 1][2] - 1 if idx + 1 < len(heads) else len(lines)
+        out.append({'level': lv, 'title': title, 'line': ln, 'end_line': end})
+    return out
+
+
+def _section_of(sections, lineno):
+    for s in sections:
+        if s['line'] <= lineno <= s['end_line']:
+            return s['title']
+    return ''
+
+
+def _count_items(body_lines):
+    """统计章节内条目数：表格数据行（排除表头/分隔行）+ 列表项。"""
+    n = 0
+    for idx, ln in enumerate(body_lines):
+        s = ln.strip()
+        if not s or s.startswith('#'):
+            continue
+        if s.startswith('|'):
+            if _SEP_RE.match(s):
+                continue
+            nxt = body_lines[idx + 1].strip() if idx + 1 < len(body_lines) else ''
+            if nxt.startswith('|') and _SEP_RE.match(nxt):
+                continue  # 表头行不计
+            n += 1
+        elif _LIST_ITEM_RE.match(s):
+            n += 1
+    return n
+
+
+# ─── check：结构校验 ──────────────────────────────────────────
+
+_DEFAULT_KEY_FIELDS = [
+    ('日期', r'报告日期|日期|date|20\d{2}[-/年]\d{1,2}'),
+    ('ticker/代码', r'ticker|股票代码|证券代码|代码'),
+    ('结论', r'结论|投资结论|综合判断|建议|verdict'),
+]
+
+
+def _check_one(path, required, key_fields, min_items):
+    text = _read_text(path)
+    lines = text.splitlines()
+    sections = _collect_sections(lines)
+
+    missing_sections = []
+    for req in required:
+        if not any(req in s['title'] for s in sections):
+            missing_sections.append(req)
+
+    missing_fields = []
+    for name, pat in key_fields:
+        try:
+            found = re.search(pat, text, re.IGNORECASE)
+        except re.error:
+            found = re.search(re.escape(pat), text, re.IGNORECASE)
+        if not found:
+            missing_fields.append(name)
+
+    min_fails = []
+    for sec_name, n_min in min_items:
+        sec = next((s for s in sections if sec_name in s['title']), None)
+        if sec is None:
+            min_fails.append({'section': sec_name, 'expected': n_min, 'found': 0,
+                              'reason': 'section_not_found'})
+            continue
+        body = lines[sec['line']:sec['end_line']]
+        found_n = _count_items(body)
+        if found_n < n_min:
+            min_fails.append({'section': sec_name, 'expected': n_min, 'found': found_n})
+
+    return {
+        'file': path,
+        'passed': not missing_sections and not missing_fields and not min_fails,
+        'missing_sections': missing_sections,
+        'missing_key_fields': missing_fields,
+        'min_items_failures': min_fails,
+        'sections_found': [s['title'] for s in sections],
+    }
+
+
+def cmd_check(args):
+    files = _resolve_report(args.report)
+    if not files:
+        return {'error': f'未找到 Markdown 文件: {args.report}'}
+    required = list(args.required or []) + list(args.required_section or [])
+    min_items = list(zip(args.section or [], args.min_items or []))
+    if len(args.section or []) != len(args.min_items or []):
+        return {'error': '--min-items 与 --section 必须成对出现（数量不一致）'}
+    key_fields = list(_DEFAULT_KEY_FIELDS)
+    for kf in (args.key_field or []):
+        if '=' in kf:
+            name, _, pat = kf.partition('=')
+        elif ':' in kf:
+            name, _, pat = kf.partition(':')
+        else:
+            name, pat = kf, re.escape(kf)
+        key_fields.append((name.strip(), pat))
+    return [_check_one(p, required, key_fields, min_items) for p in files]
+
+
+# ─── sources：来源标注检查 ────────────────────────────────────
+
+def _sources_one(path, require_per_section):
+    text = _read_text(path)
+    lines = text.splitlines()
+    sections = _collect_sections(lines)
+
+    # 逐段扫描：段落 = 连续非空正文行；跳过标题/表格行/分隔行/引用/代码块
+    unsourced = []
+    para_lines = []   # [(lineno, text)]
+    para_start = 0
+    in_code = False
+
+    def flush():
+        nonlocal para_lines
+        if not para_lines:
+            return
+        joined = '\n'.join(t for _, t in para_lines)
+        has_src = any(_URL_RE.search(t) or _SOURCE_MARK_RE.search(t) for _, t in para_lines)
+        has_num = any((not _LIST_ITEM_RE.match(t)) and _NUM_CLAIM_RE.search(t) for _, t in para_lines)
+        has_claim = any(_CLAIM_RE.search(t) for _, t in para_lines)
+        if (has_num or has_claim) and not has_src:
+            unsourced.append({
+                'line': para_start,
+                'section': _section_of(sections, para_start),
+                'reason': 'number_without_source' if has_num else 'claim_without_source',
+                'snippet': joined[:120],
+            })
+        para_lines = []
+
+    for idx, ln in enumerate(lines, 1):
+        s = ln.strip()
+        if s.startswith('```'):
+            flush()
+            in_code = not in_code
+            continue
+        if in_code:
+            continue
+        if not s:
+            flush()
+            continue
+        if _HEADING_RE.match(s) or s.startswith('|') or _SEP_RE.match(s) or s.startswith('>'):
+            flush()
+            continue
+        if not para_lines:
+            para_start = idx
+        para_lines.append((idx, s))
+    flush()
+
+    # 整节无来源（--require-per-section 时记录）
+    section_unsourced = []
+    sections_with_src = 0
+    for sec in sections:
+        body = lines[sec['line']:sec['end_line']]
+        has = any(_URL_RE.search(ln) or _SOURCE_MARK_RE.search(ln) for ln in body)
+        if has:
+            sections_with_src += 1
+        elif require_per_section:
+            section_unsourced.append({'section': sec['title'], 'line': sec['line']})
+
+    return {
+        'file': path,
+        'unsourced_count': len(unsourced),
+        'unsourced': unsourced,
+        'require_per_section': require_per_section,
+        'section_unsourced': section_unsourced,
+        'sections_total': len(sections),
+        'sections_with_source': sections_with_src,
+    }
+
+
+def cmd_sources(args):
+    files = _resolve_report(args.report)
+    if not files:
+        return {'error': f'未找到 Markdown 文件: {args.report}'}
+    return [_sources_one(p, args.require_per_section) for p in files]
+
+
+# ─── csvdetect：CSV 乱入检测 ──────────────────────────────────
+
+def _cols(line):
+    """行按 | 拆列：去掉首尾空单元格。"""
+    cells = [c.strip() for c in line.split('|')]
+    if cells and cells[0] == '':
+        cells = cells[1:]
+    if cells and cells[-1] == '':
+        cells = cells[:-1]
+    return cells
+
+
+def _csv_one(path):
+    text = _read_text(path)
+    lines = text.splitlines()
+    issues = []
+    n = len(lines)
+
+    # 表格块扫描：表头 + 分隔行 + 数据行；校验列数一致性
+    i = 0
+    in_code = False
+    while i < n:
+        s = lines[i].strip()
+        if s.startswith('```'):
+            in_code = not in_code
+            i += 1
+            continue
+        if in_code:
+            i += 1
+            continue
+        if '|' in s and not _SEP_RE.match(s) and i + 1 < n and _SEP_RE.match(lines[i + 1].strip()):
+            hdr_cols = _cols(s)
+            sep_cols = _cols(lines[i + 1].strip())
+            if len(sep_cols) != len(hdr_cols):
+                issues.append({'type': 'header_separator_mismatch', 'line': i + 2,
+                               'table_start_line': i + 1, 'expected_cols': len(hdr_cols),
+                               'actual_cols': len(sep_cols), 'snippet': lines[i + 1].strip()[:80]})
+            j = i + 2
+            while j < n and '|' in lines[j] and not _SEP_RE.match(lines[j].strip()):
+                row_cols = _cols(lines[j])
+                if len(row_cols) != len(hdr_cols):
+                    if re.search(r'\d\s*,\s*-?\d', lines[j]):
+                        itype = 'comma_cell_misalignment'   # 单元格逗号数字未加引号致错位
+                    else:
+                        itype = 'column_count_mismatch'     # 表头与数据列数不符
+                    issues.append({'type': itype, 'line': j + 1, 'table_start_line': i + 1,
+                                   'expected_cols': len(hdr_cols), 'actual_cols': len(row_cols),
+                                   'snippet': lines[j].strip()[:80]})
+                j += 1
+            i = j
+            continue
+        i += 1
+
+    # 原始 CSV 文本块：连续 ≥2 行、每行 ≥2 个 ASCII 逗号、无 |、非标题/非代码
+    run = []
+    in_code2 = False
+    for idx, ln in enumerate(lines, 1):
+        s = ln.strip()
+        if s.startswith('```'):
+            in_code2 = not in_code2
+            continue
+        is_csv = (not in_code2) and s and '|' not in s and not s.startswith('#') \
+                 and not _HEADING_RE.match(s) and s.count(',') >= 2
+        if is_csv:
+            run.append(idx)
+        else:
+            if len(run) >= 2:
+                issues.append({'type': 'raw_csv_block', 'line_start': run[0], 'line_end': run[-1],
+                               'lines': len(run), 'snippet': lines[run[0] - 1].strip()[:80]})
+            run = []
+    if len(run) >= 2:
+        issues.append({'type': 'raw_csv_block', 'line_start': run[0], 'line_end': run[-1],
+                       'lines': len(run), 'snippet': lines[run[0] - 1].strip()[:80]})
+
+    issues.sort(key=lambda x: (x.get('line') or x.get('line_start') or 0))
+    return {'file': path, 'issue_count': len(issues), 'issues': issues}
+
+
+def cmd_csvdetect(args):
+    files = _resolve_report(args.report)
+    if not files:
+        return {'error': f'未找到 Markdown 文件: {args.report}'}
+    return [_csv_one(p) for p in files]
+
+
+# ---------------------------------------------------------------------------
 # CLI Entry Point
 # ---------------------------------------------------------------------------
 
@@ -433,6 +752,19 @@ def main():
 
   固定随机种子（复现同一批样本）：
     python3 tools/report_audit.py extract --report reports/xxx.md --seed 42
+
+报告质量三件套（--report 支持文件或目录；输出 JSON 到 stdout，摘要到 stderr）：
+
+  check — 结构校验：
+    python3 tools/report_audit.py check --report reports/xxx.md \\
+        --required "第一章" --required "投资结论" \\
+        --min-items 5 --section "持股名单"          # 持股名单至少 5 行
+
+  sources — 来源标注检查：
+    python3 tools/report_audit.py sources --report reports/xxx.md --require-per-section
+
+  csvdetect — CSV 乱入检测：
+    python3 tools/report_audit.py csvdetect --report reports/xxx.md
         """)
 
     sub = parser.add_subparsers(dest='command')
@@ -449,6 +781,30 @@ def main():
     vrd.add_argument('--results', required=True, help='JSON 数组，含 fetched_value 等字段')
     vrd.add_argument('--report', default='', help='报告名称（可选，用于显示）')
     vrd.add_argument('--output-json', action='store_true', help='将判决结果以 JSON 输出到 stdout')
+
+    # check — 结构校验
+    chk = sub.add_parser('check', help='结构校验：必填章节/关键字段/章节最少条目数')
+    chk.add_argument('--report', required=True, help='报告文件或目录（Markdown）')
+    chk.add_argument('--required', action='append', default=None,
+                     help='必填章节名（可重复传，如 --required "第一章"）')
+    chk.add_argument('--required-section', action='append', default=None,
+                     help='必填章节名别名（与 --required 等价，可重复传）')
+    chk.add_argument('--key-field', action='append', default=None,
+                     help='附加关键字段，格式 name=regex 或纯文本（可重复传；默认检查日期/ticker/结论）')
+    chk.add_argument('--min-items', type=int, action='append', default=None,
+                     help='章节最少条目数（需与 --section 成对，可重复）')
+    chk.add_argument('--section', action='append', default=None,
+                     help='--min-items 对应的章节名（可重复）')
+
+    # sources — 来源标注检查
+    src = sub.add_parser('sources', help='来源标注检查：无来源的含数/断言段落 + 整节无来源')
+    src.add_argument('--report', required=True, help='报告文件或目录（Markdown）')
+    src.add_argument('--require-per-section', action='store_true',
+                     help='整节无任何来源标注（URL 或「来源：」）时记入 section_unsourced')
+
+    # csvdetect — CSV 乱入检测
+    csvp = sub.add_parser('csvdetect', help='CSV 乱入检测：表列数错位/未加引号逗号数字/裸 CSV 文本块')
+    csvp.add_argument('--report', required=True, help='报告文件或目录（Markdown）')
 
     args = parser.parse_args()
 
@@ -517,6 +873,52 @@ def main():
 
         # 非零退出码表示打回，方便 CI/脚本判断
         sys.exit(0 if outcome['verdict'] == 'PASS' else 1)
+
+    elif args.command == 'check':
+        res = cmd_check(args)
+        if isinstance(res, dict) and 'error' in res:
+            print(json.dumps(res, ensure_ascii=False, indent=2), file=sys.stderr)
+            sys.exit(1)
+        passed = all(r['passed'] for r in res)
+        for r in res:
+            parts = []
+            if r['missing_sections']:
+                parts.append('缺章节:' + ','.join(r['missing_sections']))
+            if r['missing_key_fields']:
+                parts.append('缺字段:' + ','.join(r['missing_key_fields']))
+            if r['min_items_failures']:
+                parts.append(f"条目不足:{len(r['min_items_failures'])}处")
+            line = f"[CHECK] {'通过' if r['passed'] else '不通过'} {r['file']}"
+            if parts:
+                line += ' — ' + '; '.join(parts)
+            print(line, file=sys.stderr)
+        out = res[0] if len(res) == 1 else {'files': res, 'passed': passed}
+        print(json.dumps(out, ensure_ascii=False, indent=2))
+        sys.exit(0 if passed else 1)
+
+    elif args.command == 'sources':
+        res = cmd_sources(args)
+        if isinstance(res, dict) and 'error' in res:
+            print(json.dumps(res, ensure_ascii=False, indent=2), file=sys.stderr)
+            sys.exit(1)
+        for r in res:
+            print(f"[SOURCES] {r['file']} — 无来源段落:{r['unsourced_count']}"
+                  f" 整节无来源:{len(r['section_unsourced'])}"
+                  f" (共{r['sections_total']}节, {r['sections_with_source']}节有来源)", file=sys.stderr)
+        out = res[0] if len(res) == 1 else {'files': res}
+        print(json.dumps(out, ensure_ascii=False, indent=2))
+        sys.exit(0)
+
+    elif args.command == 'csvdetect':
+        res = cmd_csvdetect(args)
+        if isinstance(res, dict) and 'error' in res:
+            print(json.dumps(res, ensure_ascii=False, indent=2), file=sys.stderr)
+            sys.exit(1)
+        for r in res:
+            print(f"[CSVDETECT] {r['file']} — 可疑 {r['issue_count']} 处", file=sys.stderr)
+        out = res[0] if len(res) == 1 else {'files': res}
+        print(json.dumps(out, ensure_ascii=False, indent=2))
+        sys.exit(0)
 
     else:
         parser.print_help()

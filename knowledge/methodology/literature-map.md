@@ -14,14 +14,14 @@
 | 论断 | 文献 | 作者 | 出处 | DOI / 链接 |
 |:-----|:-----|:-----|:-----|:----|
 | #1 年线上方买入 | *Simple Technical Trading Rules and the Stochastic Properties of Stock Returns* | Brock, Lakonishok, LeBaron | J. Finance, 1992, 47(5), 1731–1764 | 10.1111/j.1540-6261.1992.tb04681.x |
-| #1/#2/#3/#6 均线横截面 | *A New Anomaly: The Cross-Sectional Profitability of Technical Analysis* | Han, Yang, Zhou | JFQA, 2013, 48(5), 1433–1461 | Search King: [RePEc](https://ideas.repec.org/a/cup/jfinqa/v48y2013i05p1433-1461_00.html) |
+| #1/#2/#3/#6 均线横截面 | *A New Anomaly: The Cross-Sectional Profitability of Technical Analysis* | Han, Yang, Zhou | JFQA, 2013, 48(5), 1433–1461 | 10.1017/s0022109013000586（2026-08-16 补 DOI；[RePEc](https://ideas.repec.org/a/cup/jfinqa/v48y2013i05p1433-1461_00.html)） |
 | #9/#10 技术形态 | *Foundations of Technical Analysis* | Lo, Mamaysky, Wang | J. Finance, 2000, 55(4), 1705–1765 | 10.1111/0022-1082.00265（[NBER w7613](https://www.nber.org/papers/w7613)） |
 | #7/#8 动量/反转 | *Returns to Buying Winners and Selling Losers* | Jegadeesh, Titman | J. Finance, 1993, 48(1), 65–91 | 10.1111/j.1540-6261.1993.tb04702.x |
 | #8 暴涨后反转 | *Does the Stock Market Overreact?* | De Bondt, Thaler | J. Finance, 1985, 40(3), 793–805 | 10.1111/j.1540-6261.1985.tb05004.x |
-| #22/#40 趋势择时 | *Time Series Momentum* | Moskowitz, Ooi, Pedersen | JFE, 2012, 104(2), 228–250 | 10.1016/j.jfineco.2011.10.001 |
+| #22/#40 趋势择时 | *Time Series Momentum* | Moskowitz, Ooi, Pedersen | JFE, 2012, 104(2), 228–250 | 10.1016/j.jfineco.2011.11.003（勘误 2026-08-16：原 10.1016/j.jfineco.2011.10.001 解析为 Arora 等 CDS 论文，弃用） |
 | #23/#24/#38 波动率管理 | *Volatility-Managed Portfolios* | Moreira, Muir | J. Finance, 2017, 72(4), 1611–1644 | 10.1111/jofi.12513（[NBER w22208](https://www.nber.org/papers/w22208)） |
-| #11/#12 VIX 恐慌 | *The Investor Fear Gauge* | Whaley | JPM, 2000, 26(3), 12–17 | Search King: [pm-research](https://jpm.pm-research.com/content/26/3/12) |
-| #27/#28 止损 | *When Do Stop-Loss Rules Stop Losses?* | Kaminski, Lo | J. Financial Markets, 2014, 18, 234–254 | Search King: [ScienceDirect](https://www.sciencedirect.com/science/article/abs/pii/S138641811300030X) |
+| #11/#12 VIX 恐慌 | *The Investor Fear Gauge* | Whaley | JPM, 2000, 26(3), 12–17 | 10.3905/jpm.2000.319728（2026-08-16 补 DOI；[pm-research](https://jpm.pm-research.com/content/26/3/12)） |
+| #27/#28 止损 | *When Do Stop-Loss Rules Stop Losses?* | Kaminski, Lo | J. Financial Markets, 2014, 18, 234–254 | 10.1016/j.finmar.2013.07.001（勘误 2026-08-16：原引 ScienceDirect 页 PII 一致，补正式 DOI；摘要已取得见 papers/01-trend-timing.md） |
 
 ### 价值 / 质量 / 估值类（8 篇）
 
@@ -30,7 +30,7 @@
 | #33 质量 | *The Other Side of Value: The Gross Profitability Premium* | Novy-Marx | JFE, 2013, 108(1), 1–28 | 10.1016/j.jfineco.2013.01.003 |
 | #33/#34 价值因子 | *Common Risk Factors in the Returns on Stocks and Bonds* | Fama, French | JFE, 1993, 33(1), 3–56 | 10.1016/0304-405x(93)90023-5 |
 | #33 质量（巴菲特） | *Buffett's Alpha* | Frazzini, Kabiller, Pedersen | NBER WP #19681 (2013) | 10.3386/w19681 |
-| #31/#39 安全边际 | *Value Investing: The Use of Historical Financial Statement Information* | Piotroski | JAR, 2000, 38(supp), 1–41 | Search King: [SSRN 249510](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=249510) |
+| #31/#39 安全边际 | *Value Investing: The Use of Historical Financial Statement Information to Separate Winners from Losers* | Piotroski | JAR, 2000, 38(supp), 1–41 | 10.2307/2672906（勘误 2026-08-16：原引 SSRN 249510 实为 Guay 讨论稿，弃用；见 papers/02-value-quality.md §4） |
 | #32 股息率 | *Dividend Yields and Expected Stock Returns* | Fama, French | JFE, 1988, 22(1), 3–25 | 10.1016/0304-405X(88)90020-7 |
 | #29/#30 PE 分位/清仓 | *Valuation Ratios and the Long-Run Stock Market Outlook: An Update* | Campbell, Shiller | NBER WP #8221 (2001)；JPM 1998 | [NBER w8221](https://www.nber.org/papers/w8221) |
 | #34 PB<1 银行股 | *Size Anomalies in US Bank Stock Returns* | Gandhi, Lustig | J. Finance, 2015, 70(2), 733–768 | 10.1111/jofi.12235（[NBER w16553](https://www.nber.org/papers/w16553)） |
@@ -76,7 +76,7 @@
 |:-----|:-----|:-----|:-----|:----|
 | #48 宏观状态 | *Business Conditions and Expected Returns on Stocks and Bonds* | Fama, French | JFE, 1989, 25(1), 23–49 | 10.1016/0304-405x(89)90095-0 |
 | #49 信用利差 | *Credit Spreads and Business Cycle Fluctuations* | Gilchrist, Zakrajšek | American Economic Review, 2012, 102(4), 1692–1720 | 10.1257/aer.102.4.1692 |
-| #50 CPI/通胀 | *Common Stock Returns, Real Activity, Money, and Inflation: Some International Evidence* | Mandelker, Tandon | J. International Money and Finance, 1985, 4(3), 337–353 | 10.1016/0261-5606(85)90048-8 |
+| #50 CPI/通胀 | *Common Stock Returns, Real Activity, Money, and Inflation: Some International Evidence* | Mandelker, Tandon | J. International Money and Finance, 1985, 4(2), 267–286（勘误 2026-08-16：原记 4(3):337-353 有误，四渠道核实为 4(2)） | 10.1016/0261-5606(85)90048-8 |
 | #51 NBER 衰退 | *A New Approach to the Economic Analysis of Nonstationary Time Series and the Business Cycle* | Hamilton | Econometrica, 1989, 57(2), 357–384 | 10.2307/1912559 |
 | #52 政策周期 | *The Presidential Puzzle: Political Cycles and the Stock Market* | Santa-Clara, Valkanov | J. Finance, 2003, 58(5), 1841–1872 | 10.1111/1540-6261.00590 |
 

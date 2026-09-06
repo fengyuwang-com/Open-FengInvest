@@ -352,10 +352,36 @@ def verify_output(step: str, output_file: str) -> bool:
         return True
 
 
-def cmd_complete(ticker, step, output_file=None, verify=True):
+# 双格式闸门：JSON 层必须同目录有同名可读 .md（SKILL「产出文档规范」2026-08-15 定稿）
+# 机制层强制——complete/accept 在 JSON 合规之外，再校验可读 MD 是否存在，缺则拒绝。
+_JSON_LAYERS_NEED_MD = {
+    "02-market", "03-discipline", "04-quantitative",
+    "06-collision", "08-portfolio",
+}
+
+
+def _check_dual_format(step, output_file):
+    """双格式闸门：JSON 层（02/03/04/06/08）必须同目录存在同名可读 .md。
+
+    返回 True=合规或不适用（非 JSON 层 / 非 JSON 后缀）；False=缺可读 MD。
+    """
+    if not output_file or step.lower() not in _JSON_LAYERS_NEED_MD:
+        return True
+    if not output_file.lower().endswith(".json"):
+        return True
+    sibling = output_file[:-5] + ".md"
+    if os.path.exists(sibling):
+        return True
+    print(f"  [DUAL-FORMAT] 缺可读 MD（双格式规范）: 期望 {sibling}")
+    return False
+
+
+def cmd_complete(ticker, step, output_file=None, verify=True, force=False):
     """标记某层完成，更新状态，显示下一步。
 
     verify=True（默认）: 对输出文件做结构化验证，失败 → return 1。
+    force=True: 该层已标记完成时仍重新验证 + 覆盖记录（产物修正后重跑入口，
+                2026-08-16 新增——配合 SKILL「产物修正纪律」）。
     """
     path = _sp(ticker)
     if not os.path.exists(path):
@@ -368,20 +394,43 @@ def cmd_complete(ticker, step, output_file=None, verify=True):
 
     step = step.lower()
     if step in state.get("completed", {}):
-        print("[WARN] " + step.upper() + " 已标记完成，跳过。")
-        return 0
+        if not force:
+            print("[WARN] " + step.upper() + " 已标记完成，跳过。")
+            print("      产物被修正过？用 --force 重新验证并覆盖记录。")
+            return 0
+        print("[FORCE] " + step.upper() + " 已标记完成，重新验证并覆盖记录。")
 
-    if state.get("status") != "active":
+    if state.get("status") != "active" and not force:
         print(f"ERROR: 分析已 {state['status']}。")
         _log_event(ticker, "complete_fail", step, "error", f"status={state['status']}")
         return 1
 
     # 出站验证：在标记完成前校验输出文件
+    # 内容与已验证版本逐字节一致（决策缓存命中）→ 跳过重复验证（ai-hedge-fund 移植）
+    cache_hit = None
     if verify and output_file:
-        if not verify_output(step, output_file):
+        try:
+            import fengcache
+            cache_hit = fengcache.get(ticker, step, output_file)
+        except Exception:
+            cache_hit = None
+        if cache_hit and cache_hit.get("verify_ok"):
+            print(f"  [CACHE] 内容与已验证版本一致（{cache_hit.get('cached_at')}），跳过重复验证")
+        elif not verify_output(step, output_file):
             print(f"  [BLOCKED] 层 {step.upper()} 的输出验证未通过，拒绝标记完成")
             _log_event(ticker, "complete_fail", step, "verify_fail", output_file)
             return 1
+        else:
+            try:
+                fengcache.put(ticker, step, output_file, verify_ok=True)
+            except Exception:
+                pass  # 缓存写入失败不影响主流程
+
+            # 双格式闸门：JSON 层缺同名可读 .md 直接拒绝标记完成
+            if not _check_dual_format(step, output_file):
+                print(f"  [BLOCKED] 层 {step.upper()} 缺可读 MD（双格式规范），拒绝标记完成")
+                _log_event(ticker, "complete_fail", step, "doc_format_fail", output_file)
+                return 1
 
     state.setdefault("completed", {})[step] = {
         "timestamp": datetime.now(timezone.utc).isoformat(),
@@ -407,6 +456,14 @@ def cmd_complete(ticker, step, output_file=None, verify=True):
 
     # 执行日志
     _log_event(ticker, "complete", step, "ok", output_file or "")
+
+    # 跨层一致性检查（C2：warning 不阻断；--no-verify 逃生门一并跳过）
+    if verify:
+        cw = _cross_layer_consistency(state, ticker)
+        if cw:
+            print(f"--- {len(cw)} 个一致性警告（不阻断，见上方 ⚠️，建议核对来源文件）---")
+        else:
+            print("--- 无一致性警告 ---")
 
     # 显示下一步
     print("[OK] " + step.upper() + " 完成 " + ("(" + output_file + ")" if output_file else ""))
@@ -454,6 +511,9 @@ def cmd_accept(ticker, step):
         print(f"ERROR: 输出文件不存在: {output}")
         return 1
     ok = verify_output(step, output)
+    if ok and not _check_dual_format(step, output):
+        print(f"[REJECT] {step.upper()} 验收未通过：缺可读 MD（双格式规范）")
+        return 1
     if ok:
         print(f"[ACCEPT] {step.upper()} 验收通过")
     else:
@@ -682,8 +742,9 @@ if __name__ == "__main__":
         print("  fengstate.py init <TICKER>          - Create new state file (reject if exists)")
         print("  fengstate.py renew <TICKER>          - Archive old state + create new")
         print("  fengstate.py check <TICKER> <layer>  - Check prerequisites (exit 1 = fail)")
-        print("  fengstate.py complete <TICKER> <layer> <output> [--no-verify] - Mark layer done")
+        print("  fengstate.py complete <TICKER> <layer> <output> [--no-verify] [--force] - Mark layer done")
         print("    --no-verify: 跳过输出结构验证（仅用于调试/手动修复）")
+        print("    --force:     已标记完成时重新验证并覆盖记录（产物修正后重跑入口）")
         print("  fengstate.py status <TICKER>         - Show progress")
         print("  fengstate.py accept <TICKER> <layer>  - 独立验收检查（仅验证输出，不修改状态）")
         print("  fengstate.py verify <TICKER>          - 全量验证所有已完成层的输出")
@@ -709,8 +770,9 @@ if __name__ == "__main__":
 
     step = sys.argv[3] if len(sys.argv) > 3 else None
     output = sys.argv[4] if len(sys.argv) > 4 else None
-    # 解析 optional --no-verify 标志
+    # 解析 optional --no-verify / --force 标志
     no_verify = "--no-verify" in sys.argv
+    force = "--force" in sys.argv
 
     fn = commands[cmd]
     if cmd in ("init", "reset", "status", "renew", "verify", "skip"):
@@ -718,4 +780,4 @@ if __name__ == "__main__":
     elif cmd in ("check", "accept"):
         sys.exit(fn(ticker, step))
     elif cmd == "complete":
-        sys.exit(fn(ticker, step, output, verify=not no_verify))
+        sys.exit(fn(ticker, step, output, verify=not no_verify, force=force))

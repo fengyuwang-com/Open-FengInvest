@@ -30,7 +30,12 @@ research/
 │       ├── druckenmiller.md      德鲁肯米勒 · 宏观交易
 │       ├── howard-marks.md       霍华德·马克斯 · 周期/风险
 │       ├── cathie-wood.md        Cathie Wood · 颠覆式创新
-│       ├── livermore.md          利弗莫尔 · 趋势交易
+│       ├── livermore.md          利弗莫尔 · 趋势交易（+奇衡解读附录）
+│       ├── sperandeo.md          维克多·斯波朗迪 · 投机/趋势交易（道氏/2B/鳄鱼法则）
+│       ├── larry-williams.md     拉里·威廉姆斯 · 短线/资金管理（试盘/仓位/起爆点）
+│       ├── elder.md              亚历山大·艾尔德 · 三重滤网/交易心理
+│       ├── edward-thorpe.md      爱德华·索普 · 量化/概率优势（凯利/错位）
+│       ├── nassim-taleb.md       纳西姆·塔勒布 · 非对称/反脆弱（永不爆仓）
 │       ├── serenity.md           白毛股神 · 技术分析
 │       ├── liyien.md             李一恩 · ???（待确认）
 │       ├── (26 more master30 profiles...)
@@ -140,7 +145,7 @@ research/
 | 这个行业怎么赚钱？ | — | **搜索**（实时获取行业信息）|
 | 这家公司怎么赚钱？ | — | **搜索**（实时获取公司财报/资料）|
 | 竞争格局如何？ | — | **搜索**（实时获取竞争数据）|
-| 大师怎么判断？ | `040-people/named/`（43 位大师的判断方法论）| 按需读取特定大师文档 |
+| 大师怎么判断？ | `040-people/named/`（48 位大师的判断方法论，含投机/交易系:斯波朗迪/威廉姆斯/艾尔德/利弗莫尔/索普/塔勒布）| 按需读取特定大师文档 |
 | 快速排除非一流公司 | `ai-berkshire: quality-screen`（7条硬指标：ROE/FCF/毛利率等） | 见 `docs/ai-berkshire-integration.md` §2.1 |
 | 行业漏斗筛选 | `ai-berkshire: industry-funnel`（全市场→行业→3家） | 见 `docs/ai-berkshire-integration.md` §2.1 |
 
@@ -243,7 +248,7 @@ research/
     gold ────────────── inflation, monetary-policy
          │
          ▼
-   040-people/named/ (43 master frameworks)
+   040-people/named/ (48 master frameworks)
          │
          ▼
    050-strategies/ (9 strategy types)

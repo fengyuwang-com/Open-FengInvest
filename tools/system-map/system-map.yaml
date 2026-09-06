@@ -10,12 +10,12 @@
 #   nodes:  id(英文短名) label(显示名) group(分组) desc(说明, 互动图点击显示)
 #           path(可选, 脚本会检查该路径存在性, 防止手误)
 #   edges:  from/to 引用节点 id, label 为关系词
-# 更新日期: 2026-08-05
+# 更新日期: 2026-08-15
 # ============================================================
 
 meta:
   title: FengInvest 系统关系图
-  updated: "2026-08-05"
+  updated: "2026-08-15"
 
 groups:
   data:      { label: "数据层",   color: "#2c7fb8" }
@@ -37,6 +37,10 @@ nodes:
     group: data
     desc: "中央行情库：indices 2126、daily_data 1300万行、cn_financials 35.7万行、stkcd_map 5828"
     path: "data/market_data.db"
+  - id: sina
+    label: "新浪财经 A股三表"
+    group: data
+    desc: "A股财务三表数据源：含公告日期 publish_date 与是否审计标记，供 fengdata --sina-financials 拉取"
 
   # ---- 工具层 ----
   - id: importer
@@ -62,7 +66,7 @@ nodes:
   - id: portfolio_tools
     label: "组合工具 fengportfolio"
     group: tools
-    desc: "fengportfolio / fengview：组合构建、收益视图"
+    desc: "fengportfolio / fengholding：组合三轴盘面与持仓域入口（登记分析/校验/查询）"
     path: "tools/fengportfolio.py"
   - id: audit_tools
     label: "质量审计 fenghealth 族"
@@ -72,14 +76,39 @@ nodes:
   - id: watch
     label: "行情监控 fengmarket"
     group: tools
-    desc: "fengmarket / fengwatch：行情获取与盯盘"
+    desc: "fengmarket / fengwatch：行情获取与持仓监控（退出规则/卖出闭环）"
     path: "tools/fengmarket.py"
+  - id: fengdata
+    label: "行情采集 fengdata"
+    group: tools
+    desc: "行情采集 + fx 实时汇率（USDCNY/HKDCNY/USDHKD，失败回退快照）；--sina-financials 新浪A股三表（公告日期 publish_date + 是否审计）"
+    path: "tools/fengdata.py"
+  - id: fengsec
+    label: "SEC 一手资料 fengsec"
+    group: tools
+    desc: "facts（PIT 双轴）/filings/financials（XBRL 三表）/ownership（Form 3/4/5 内部人 + insider-buys）/13f；数据层为 edgartools 5.48.0"
+    path: "tools/fengsec.py"
+  - id: fengpit
+    label: "PIT 双轴 fengpit"
+    group: tools
+    desc: "PIT 双轴可见性：us（SEC companyfacts filed=得知日 / period_end=财报期）、cn（cn_financials declare_date）；asof 单值查询 + verify 对拍"
+    path: "tools/fengpit.py"
+  - id: fengvaluation
+    label: "多方法估值 fengvaluation"
+    group: tools
+    desc: "预期法（逆向 DCF 移植，四模式回退不编造数字）/ 两阶段 DCF / 敏感性网格 / 多方法综合；数据复用 fengpit 的 companyfacts 解析"
+    path: "tools/fengvaluation.py"
+  - id: fengfactor
+    label: "因子验证 fengfactor"
+    group: tools
+    desc: "Spearman IC / 分位收益 / 换手率 三件套 + 小样本护栏（截面 n<50 告警）；价格取 market_data.db daily_data"
+    path: "tools/fengfactor.py"
 
   # ---- 研究层 ----
   - id: verification
     label: "110-strategy-verification"
     group: research
-    desc: "52 条可证伪论断，36 条已测、3 条已复核（#1/#4/#33）；每条含 verify 脚本 + README + results.json + audit.md"
+    desc: "52 条可证伪论断，34 条已测、34 条已复核；每条含 verify 脚本 + README + results.json + audit.md"
     path: "research/110-strategy-verification"
   - id: research_other
     label: "research 010-100"
@@ -120,6 +149,11 @@ nodes:
     group: board
     desc: "组合账本与持仓记录"
     path: "portfolio"
+  - id: outcome
+    label: "复盘 outcome 闭环"
+    group: board
+    desc: "fengwatch outcome 子命令：统计 holdings 各假设 hypotheses[].outcome 状态（hit/falsified/partial/pending），预测-结果追踪闭环"
+    path: "holdings/SCHEMA.md"
   - id: fengweb
     label: "fengweb/"
     group: board
@@ -152,6 +186,10 @@ nodes:
     label: "Everything es.exe"
     group: external
     desc: "本地全文/文件名检索（需 1.5 + content 索引）"
+  - id: edgartools
+    label: "edgartools 5.48.0"
+    group: external
+    desc: "SEC EDGAR 客户端库（pip 可选依赖）：companyfacts / XBRL 三表 / 13F / 内部人持仓，fengsec 新命令数据层"
 
   # ---- 同步层 ----
   - id: github
@@ -183,6 +221,14 @@ edges:
   - { from: market_data_db,   to: portfolio_tools, label: "组合读取" }
   - { from: market_data_db,   to: watch,           label: "监控读取" }
   - { from: market_data_db,   to: research_other,  label: "研究读取" }
+  - { from: market_data_db,   to: fengfactor,      label: "价格读取" }
+  - { from: market_data_db,   to: fengpit,         label: "cn_financials PIT" }
+  # 数据源新增（2026-08 第三批开源吸收）
+  - { from: sina,             to: fengdata,        label: "A股三表" }
+  - { from: edgartools,       to: fengsec,         label: "XBRL/companyfacts 数据" }
+  - { from: fengsec,          to: fengpit,         label: "companyfacts 双轴同源" }
+  - { from: fengpit,          to: fengvaluation,   label: "PIT 数据供估值" }
+  - { from: watch,            to: portfolio_ledger, label: "outcome 统计" }
   # 研究 ↔ 方法
   - { from: verification,     to: methodology,     label: "方法对照" }
   - { from: methodology,      to: verification,    label: "准入/复核规则" }

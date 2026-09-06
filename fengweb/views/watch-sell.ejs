@@ -1,131 +1,128 @@
 <div class="page-header">
   <h2>📤 卖出 <%= holding.ticker %></h2>
-  <div class="breadcrumb"><a href="/">系统总览</a> / <a href="/watch">持仓监控</a> / <a href="/watch/history">历史</a> / 卖出</div>
+  <div class="breadcrumb"><a href="/holdings">持仓</a> / <a href="/watch">监控</a> / 卖出决策（四步，②③未完④不可点）</div>
 </div>
 
-<div class="card">
-  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
-    <div>
-      <strong style="font-size:20px;"><%= holding.ticker %></strong>
-      <span style="font-size:13px;color:var(--text-muted);margin-left:8px;"><%= holding.thesis?.benchmark || holding.ticker %></span>
-    </div>
-    <div style="text-align:right;">
-      <div style="font-size:14px;color:var(--text-muted);">当前持仓</div>
-      <div style="font-size:18px;font-weight:600;"><%= holding.position?.shares || 0 %> 股</div>
-    </div>
+<div class="card step-wizard">
+  <div class="step-indicator">
+    <div class="step-dot current" id="dot0"></div>
+    <div class="step-dot" id="dot1"></div>
+    <div class="step-dot" id="dot2"></div>
+    <div class="step-dot" id="dot3"></div>
   </div>
-</div>
 
-<div class="calc-grid">
-  <!-- Form -->
-  <div class="card">
-    <div class="section-title">卖出信息</div>
-    <div class="calc-form">
-      <label>卖出价格 (¥)</label>
-      <input id="sell-price" type="number" step="0.01" value="<%= holding.position?.current_price || holding.position?.avg_cost || '' %>">
-
-      <label>卖出数量 (股)</label>
-      <input id="sell-shares" type="number" step="1" value="<%= holding.position?.shares || 0 %>">
-      <div style="font-size:12px;color:var(--text-muted);">全部卖出: <%= holding.position?.shares || 0 %> 股</div>
-
-      <label>卖出理由</label>
-      <select id="sell-reason" style="padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius);font-size:14px;">
-        <option value="">请选择...</option>
-        <option value="价格止损">价格止损 (-20%)</option>
-        <option value="趋势反转">趋势反转 (MA50<MA200)</option>
-        <option value="论文失效">论文失效</option>
-        <option value="估值泡沫">估值泡沫</option>
-        <option value="基本面恶化">基本面恶化</option>
-        <option value="钱仓滚存">钱仓滚存</option>
-        <option value="目标达成">目标达成</option>
-        <option value="更好的机会">更好的机会</option>
-        <option value="需要现金">需要现金</option>
-        <option value="其他">其他</option>
+  <!-- 第1步 触发源（fengwatch check 十规则实测） -->
+  <div class="step-panel active" id="panel0">
+    <h3>① 触发源识别（fengwatch check 十规则结果）</h3>
+    <div id="trigger-check" style="margin-bottom:12px;color:var(--text-muted);font-size:13px;">加载规则检查中…</div>
+    <div class="field-row">
+      <select id="t-trigger" style="padding:8px 12px;border:1px solid var(--border-strong);border-radius:8px;">
+        <option value="">选择触发源…</option>
+        <option>机械规则触发（见上方检查结果）</option>
+        <option>红线触发（thesis.redlines 命中）</option>
+        <option>卖出条件触发（exit_conditions 命中）</option>
+        <option>钱仓滚存检测（回收本金机会）</option>
+        <option>无机械触发，是主动决策</option>
       </select>
-      <input id="sell-reason-custom" type="text" placeholder="或自定义理由..." style="margin-top:4px;">
-
-      <button class="btn btn-primary" onclick="confirmSell()" style="margin-top:8px;">确认卖出</button>
     </div>
+    <div class="field-row"><label>触发详情</label><textarea id="t-detail" rows="2" placeholder="具体是什么数据/事件"></textarea></div>
+    <div class="step-nav"><span></span><button class="btn btn-primary" onclick="wizGo(1)">下一步 →</button></div>
   </div>
 
-  <!-- Preview -->
-  <div class="card">
-    <div class="section-title">卖出预览</div>
-    <div class="calc-result" id="preview">
-      <div class="result-row"><span class="label">买入均价</span><span class="value"><%= holding.position?.avg_cost?.toFixed(2) || '—' %></span></div>
-      <div class="result-row"><span class="label">卖出价格</span><span class="value" id="preview-price">—</span></div>
-      <div class="result-row"><span class="label">卖出数量</span><span class="value" id="preview-shares">—</span></div>
-      <div class="result-row" style="border-top:1px solid var(--border);padding-top:8px;margin-top:8px;">
-        <span class="label">盈亏</span>
-        <span class="value" id="preview-pnl">—</span>
-      </div>
-      <div class="result-row"><span class="label">盈亏金额</span><span class="value" id="preview-amount">—</span></div>
-    </div>
+  <!-- 第2步 六类理由 -->
+  <div class="step-panel" id="panel1">
+    <h3>② 理由分类（六选一）</h3>
+    <% var reasons = [ ['thesis_broken','论文坏了——买入逻辑被证伪'], ['valuation_target','估值达标——达到目标价/价差收敛'], ['better_opportunity','更好机会——机会成本切换'], ['need_cash','需要现金——生活/配置需求'], ['risk_control','风控止损/减仓'], ['rollover','钱仓滚存——回收本金'] ]; %>
+    <% reasons.forEach(function(r) { %>
+      <label style="display:block;padding:8px 12px;border:1px solid var(--border);border-radius:8px;margin-bottom:6px;cursor:pointer;">
+        <input type="radio" name="reason_class" value="<%= r[0] %>"> <b><%= r[1] %></b>
+      </label>
+    <% }) %>
+    <div class="field-row" style="margin-top:8px;"><label>补充说明</label><textarea id="s-reason" rows="2"></textarea></div>
+    <div class="step-nav"><button class="btn" onclick="wizGo(0)">← 上一步</button><button class="btn btn-primary" onclick="wizGo(2)">下一步 →</button></div>
+  </div>
 
-    <div id="sell-alert" style="display:none;margin-top:12px;padding:10px 14px;border-radius:var(--radius);background:var(--red-bg);border:1px solid #fecaca;font-size:14px;color:var(--red);"></div>
+  <!-- 第3步 偏误自查 -->
+  <div class="step-panel" id="panel2">
+    <h3>③ 行为偏误自查（逐条打勾，至少 3 项）</h3>
+    <% var biases = [ ['sunk_cost','沉没成本：我不是因为"已经亏了不甘心"而做决定'], ['loss_aversion','损失厌恶：我不是因为怕继续跌而恐慌卖出'], ['confirmation','确认偏误：我看过反方观点，不只看了支持卖出的信息'], ['anchoring','锚定：我不是因为股价回到我的成本价附近而卖'], ['disposition','处置效应：我不是因为"涨了想落袋"而卖掉赢家'], ['recency','近因效应：我不是只被最近几天走势影响'] ]; %>
+    <% biases.forEach(function(b) { %>
+      <label style="display:block;padding:8px 12px;border:1px solid var(--border);border-radius:8px;margin-bottom:6px;cursor:pointer;">
+        <input type="checkbox" class="bias-check" value="<%= b[0] %>"> <%= b[1] %>
+      </label>
+    <% }) %>
+    <div class="step-nav"><button class="btn" onclick="wizGo(1)">← 上一步</button><button class="btn btn-primary" id="btnGoExec" disabled onclick="wizGo(3)">下一步 →（勾满 3 项解锁）</button></div>
+  </div>
+
+  <!-- 第4步 执行 -->
+  <div class="step-panel" id="panel3">
+    <h3>④ 执行卖出</h3>
+    <div class="detail-grid">
+      <div class="field-row"><label>卖出价格</label><input id="s-price" type="number" step="0.0001"></div>
+      <div class="field-row"><label>卖出股数（留空=全部）</label><input id="s-shares" type="number" min="0"></div>
+    </div>
+    <button class="btn btn-danger" id="execBtn" onclick="execSell()">确认执行卖出（fengwatch sell 闭环）</button>
+    <div id="sell-result" style="margin-top:12px;"></div>
+    <div class="step-nav"><button class="btn" onclick="wizGo(2)">← 上一步</button><span></span></div>
   </div>
 </div>
 
 <script>
-function updatePreview() {
-  const price = parseFloat(document.getElementById('sell-price').value) || 0;
-  const shares = parseFloat(document.getElementById('sell-shares').value) || 0;
-  const avgCost = <%= holding.position?.avg_cost || 0 %>;
-  const totalShares = <%= holding.position?.shares || 0 %>;
-
-  document.getElementById('preview-price').textContent = price.toFixed(2);
-  document.getElementById('preview-shares').textContent = shares + ' / ' + totalShares;
-
-  if (price > 0 && shares > 0 && avgCost > 0) {
-    const pnl = (price - avgCost) / avgCost * 100;
-    const amount = (price - avgCost) * shares;
-    const pnlEl = document.getElementById('preview-pnl');
-    pnlEl.textContent = (pnl >= 0 ? '+' : '') + pnl.toFixed(1) + '%';
-    pnlEl.style.color = pnl >= 0 ? 'var(--green)' : 'var(--red)';
-    const amtEl = document.getElementById('preview-amount');
-    amtEl.textContent = (amount >= 0 ? '+' : '') + amount.toFixed(0);
-    amtEl.style.color = amount >= 0 ? 'var(--green)' : 'var(--red)';
-  }
-}
-
-document.getElementById('sell-price').addEventListener('input', updatePreview);
-document.getElementById('sell-shares').addEventListener('input', updatePreview);
-updatePreview();
-
-async function confirmSell() {
-  const price = document.getElementById('sell-price').value;
-  const shares = document.getElementById('sell-shares').value;
-  const reasonSel = document.getElementById('sell-reason').value;
-  const reasonCustom = document.getElementById('sell-reason-custom').value;
-  const reason = reasonCustom || reasonSel;
-
-  if (!price || !shares) {
-    alert('请输入价格和数量');
-    return;
-  }
-
-  if (!reason) {
-    alert('请选择或输入卖出理由');
-    return;
-  }
-
-  if (!confirm('确认卖出 <%= holding.ticker %> ' + shares + '股 @ ' + price + '?\n理由: ' + reason)) return;
-
+var cur = 0, reasonClass = null, biasAck = [];
+(async function loadTriggers() {
+  var el = document.getElementById('trigger-check');
   try {
-    const res = await fetch('/api/watch/sell/<%= holding.ticker %>', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ price: parseFloat(price), shares: parseFloat(shares), reason }),
-    });
-    const data = await res.json();
-    if (data.success) {
-      alert('✅ 卖出已记录！');
-      window.location.href = '/watch/history';
-    } else {
-      alert('❌ 卖出失败: ' + (data.message || data.error));
-    }
-  } catch (e) {
-    alert('❌ 卖出失败: ' + e.message);
+    var r = await fetch('/api/watch/check/<%= holding.ticker %>');
+    var d = await r.json();
+    if (!r.ok) { el.innerHTML = '<span style="color:var(--warn);">⚠ 规则检查不可用（' + (d.error || '') + '）——你仍可做主动决策。</span>'; return; }
+    var rules = d.rules || d.checks || [];
+    el.innerHTML = Array.isArray(rules) && rules.length
+      ? rules.map(function(x) {
+          var bad = !String(x.status || x.triggered).match(/(ok|false|pass|未触发)/i);
+          return '<div style="padding:4px 0;"><span class="badge badge-' + (bad ? 'red' : 'green') + '">' + (x.status || (x.triggered ? '触发' : '未触发')) + '</span> ' + (x.rule || x.name || '') + ' <span style="color:var(--text-muted);">' + (x.message || x.note || '') + '</span></div>';
+        }).join('')
+      : '检查完成（无逐条规则输出，详见控制台数据）';
+  } catch (e) { el.textContent = '规则检查网络错误——你仍可做主动决策。'; }
+})();
+function wizGo(n) {
+  if (n === 1 && !document.getElementById('t-trigger').value) { alert('先选触发源'); return; }
+  if (n === 2) {
+    var sel = document.querySelector('input[name=reason_class]:checked');
+    if (!sel) { alert('六类理由必选'); return; }
+    reasonClass = sel.value;
   }
+  document.getElementById('panel' + cur).classList.remove('active');
+  document.getElementById('dot' + cur).className = 'step-dot' + (n > cur ? ' done' : '');
+  cur = n;
+  document.getElementById('panel' + cur).classList.add('active');
+  document.getElementById('dot' + cur).className = 'step-dot current';
+}
+document.querySelectorAll('.bias-check').forEach(function(c) {
+  c.addEventListener('change', function() {
+    biasAck = Array.from(document.querySelectorAll('.bias-check:checked')).map(function(x) { return x.value; });
+    document.getElementById('btnGoExec').disabled = biasAck.length < 3;
+  });
+});
+async function execSell() {
+  var btn = document.getElementById('execBtn');
+  btn.disabled = true; btn.textContent = '执行中…';
+  try {
+    var r = await fetch('/api/sell/execute/<%= holding.ticker %>', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        price: parseFloat(document.getElementById('s-price').value) || null,
+        shares: parseFloat(document.getElementById('s-shares').value) || null,
+        reason: document.getElementById('t-trigger').value + ' | ' + document.getElementById('s-reason').value,
+        reason_class: reasonClass, bias_ack: biasAck,
+      }),
+    });
+    var d = await r.json();
+    var el = document.getElementById('sell-result');
+    if (!r.ok) el.innerHTML = '<div class="alert alert-danger">' + (d.error || '失败') + '：' + (d.detail || '') + '</div>';
+    else el.innerHTML = '<div class="alert alert-info">✅ ' + (d.message || '已保存') + '。<a href="/watch/history">查看历史 →</a></div>';
+  } catch (e) {
+    document.getElementById('sell-result').textContent = '网络错误: ' + e.message;
+  }
+  btn.disabled = false; btn.textContent = '确认执行卖出（fengwatch sell 闭环）';
 }
 </script>
