@@ -1,11 +1,13 @@
 <div class="page-header">
-  <div class="breadcrumb"><a href="/research">研究</a> / <a href="/reports/<%= ticker %>"><%= name %></a> / <%= doc.rel %></div>
+  <div class="breadcrumb"><a href="/research" data-i18n="report.crumbResearch">研究</a> / <a href="/reports/<%= ticker %>"><%= name %></a> / <%= doc.rel %></div>
   <h2><%= doc.title %></h2>
   <div style="margin-top:6px;">
     <% if (doc.source === 'community') { %>
-      <span class="source-tag community">📥 外来资料 — 社区/书籍收录，非本人产出</span>
+      <span class="source-tag community" data-i18n="report.tagCommunity">📥 外来资料 — 社区/书籍收录，非本人产出</span>
+    <% } else if (doc.kind === 'note') { %>
+      <span class="source-tag own" data-i18n="report.tagNote">📝 研究笔记</span>
     <% } else { %>
-      <span class="source-tag own">✍️ 自有研究</span>
+      <span class="source-tag own" data-i18n="report.tagOwn">✍️ 自有研究</span>
     <% } %>
   </div>
 </div>
@@ -15,22 +17,22 @@
      var objection = rt.find(a => (a.q || '').includes('亏钱')) || rt[0] || null;
      var invalidation = rt.find(a => (a.q || '').includes('下跌') || (a.q || '').includes('会错') || (a.q || '').includes('卖')) || rt[1] || null; %>
   <div class="red-team-bar">
-    <div class="rt-title">⚔️ 红队检验<%= doc.redteam.completed ? '' : ' · 未完成' %></div>
-    <% if (doc.conclusion) { %><div class="rt-row"><span class="rt-label">① 结论段</span><br><%= doc.conclusion %></div><% } %>
-    <% if (objection) { %><div class="rt-row"><span class="rt-label">② 最强反方论点（<%= objection.q %>）</span><br><%= objection.answer %></div><% } %>
-    <% if (invalidation && invalidation !== objection) { %><div class="rt-row"><span class="rt-label">③ 何时会错（<%= invalidation.q %>）</span><br><%= invalidation.answer %></div><% } %>
-    <% if (!objection) { %><div class="rt-row">反方检验数据为空。</div><% } %>
+    <div class="rt-title"><span data-i18n="report.rtTitle">⚔️ 红队检验</span><% if (!doc.redteam.completed) { %> · <span data-i18n="report.rtIncomplete">未完成</span><% } %></div>
+    <% if (doc.conclusion) { %><div class="rt-row"><span class="rt-label" data-i18n="report.rtConclusion">① 结论段</span><br><%= doc.conclusion %></div><% } %>
+    <% if (objection) { %><div class="rt-row"><span class="rt-label"><span data-i18n="report.rtObjection">② 最强反方论点（</span><%= objection.q %>）</span><br><%= objection.answer %></div><% } %>
+    <% if (invalidation && invalidation !== objection) { %><div class="rt-row"><span class="rt-label"><span data-i18n="report.rtInvalidation">③ 何时会错（</span><%= invalidation.q %>）</span><br><%= invalidation.answer %></div><% } %>
+    <% if (!objection) { %><div class="rt-row" data-i18n="report.rtEmpty">反方检验数据为空。</div><% } %>
   </div>
 <% } else if (doc.source === 'own') { %>
   <div class="red-team-bar missing">
-    <div class="rt-title">⚠️ 反方检验未执行</div>
-    <div class="rt-row">本报告所属批次没有 adversarial_check.json。没有最强反方意见的报告，只算半个报告。</div>
+    <div class="rt-title" data-i18n="report.rtMissingTitle">⚠️ 反方检验未执行</div>
+    <div class="rt-row" data-i18n="report.rtMissingText">本报告所属批次没有 adversarial_check.json。没有最强反方意见的报告，只算半个报告。</div>
   </div>
 <% } %>
 
 <% if (toc.length > 2) { %>
   <details class="card" style="margin-bottom:16px;">
-    <summary style="cursor:pointer;font-weight:600;">📑 目录（<%= toc.length %> 节）</summary>
+    <summary style="cursor:pointer;font-weight:600;"><span data-i18n="report.toc">📑 目录</span>（<%= toc.length %> <span data-i18n="report.tocUnit">节</span>）</summary>
     <div style="margin-top:8px;">
       <% for (const t of toc) { %>
         <a href="#<%= t.id %>" style="display:block;padding:3px 0;font-size:14px;<%= t.level === 3 ? 'padding-left:20px;color:var(--text-muted);' : '' %>"><%= t.text %></a>

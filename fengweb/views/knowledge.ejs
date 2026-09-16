@@ -1,6 +1,6 @@
 <div class="page-header">
   <h2 data-i18n="page.knowledge">📚 知识库</h2>
-  <div class="breadcrumb">知识库 — <%= tree.reduce(function(s, c) { return s + c.entries.length; }, 0) %> 条目</div>
+  <div class="breadcrumb"><span data-i18n="knowledge.crumbPre">知识库 — </span><%= tree.reduce(function(s, c) { return s + c.entries.length; }, 0) %><span data-i18n="knowledge.crumbPost"> 条目</span></div>
 </div>
 
 <div class="kb-stats" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:24px;">
@@ -42,7 +42,7 @@
 
 <% if (tree.length === 0) { %>
 <div class="empty-state">
-  <h3>知识库为空</h3>
-  <p>在 knowledge/ 目录下添加 Markdown 文档</p>
+  <h3 data-i18n="knowledge.emptyTitle">知识库为空</h3>
+  <p data-i18n="knowledge.emptyHint">在 knowledge/ 目录下添加 Markdown 文档</p>
 </div>
 <% } %>

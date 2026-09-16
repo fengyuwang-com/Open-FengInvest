@@ -1,35 +1,35 @@
 <div class="page-header">
-  <h2>🔄 钱仓滚存计算器</h2>
+  <h2 data-i18n="rollover.title">🔄 钱仓滚存计算器</h2>
 </div>
 
 <div class="card">
   <div class="calc-grid">
     <div class="calc-form">
-      <label>持仓成本 (每股)</label>
+      <label data-i18n="rollover.avgCost">持仓成本 (每股)</label>
       <input type="number" id="avgCost" step="any" placeholder="e.g. 380" value="380">
-      <label>持仓股数</label>
+      <label data-i18n="rollover.sharesLabel">持仓股数</label>
       <input type="number" id="shares" step="any" placeholder="e.g. 1000" value="1000">
-      <label>当前价格</label>
+      <label data-i18n="rollover.currentPriceLabel">当前价格</label>
       <input type="number" id="currentPrice" step="any" placeholder="e.g. 420" value="420">
-      <button class="btn btn-primary" onclick="calc()">计算</button>
+      <button class="btn btn-primary" onclick="calc()" data-i18n="rollover.calc">计算</button>
     </div>
     <div>
       <div id="results" class="calc-result">
-        <div class="result-row"><span class="label">总投入</span><span class="value" id="rInvested">380,000</span></div>
-        <div class="result-row"><span class="label">当前市值</span><span class="value" id="rMarketValue">420,000</span></div>
-        <div class="result-row"><span class="label">浮动盈亏</span><span class="value" id="rPnL">+10.5%</span></div>
-        <div class="result-row"><span class="label">可回收条件</span><span class="value" id="rCanRecover">✅ 可回收本金</span></div>
+        <div class="result-row"><span class="label" data-i18n="rollover.totalInvested">总投入</span><span class="value" id="rInvested">380,000</span></div>
+        <div class="result-row"><span class="label" data-i18n="rollover.marketValue">当前市值</span><span class="value" id="rMarketValue">420,000</span></div>
+        <div class="result-row"><span class="label" data-i18n="rollover.pnl">浮动盈亏</span><span class="value" id="rPnL">+10.5%</span></div>
+        <div class="result-row"><span class="label" data-i18n="rollover.canRecover">可回收条件</span><span class="value" id="rCanRecover" data-i18n="rollover.recoverable">✅ 可回收本金</span></div>
         <div class="result-row" style="border-top:2px solid var(--border);margin-top:8px;padding-top:12px;">
-          <span class="label"><strong>建议卖出</strong></span>
-          <span class="value" id="rSellShares">905 股</span>
+          <span class="label"><strong data-i18n="rollover.suggestSell">建议卖出</strong></span>
+          <span class="value" id="rSellShares">905<span data-i18n="rollover.unitShares"> 股</span></span>
         </div>
         <div class="result-row">
-          <span class="label">回收金额</span>
+          <span class="label" data-i18n="rollover.recoverAmount">回收金额</span>
           <span class="value" id="rRecoverAmount">380,100</span>
         </div>
         <div class="result-row">
-          <span class="label">剩余零成本筹码</span>
-          <span class="value positive" id="rZeroCost">95 股</span>
+          <span class="label" data-i18n="rollover.zeroCost">剩余零成本筹码</span>
+          <span class="value positive" id="rZeroCost">95<span data-i18n="rollover.unitShares"> 股</span></span>
         </div>
       </div>
     </div>
@@ -52,12 +52,12 @@ function calc() {
     document.getElementById('rInvested').textContent = d.total_invested.toLocaleString();
     document.getElementById('rMarketValue').textContent = d.market_value.toLocaleString();
     document.getElementById('rPnL').textContent = (d.profit_pct >= 0 ? '+' : '') + d.profit_pct + '%';
-    document.getElementById('rPnL').style.color = d.profit_pct >= 0 ? 'var(--green)' : 'var(--red)';
-    document.getElementById('rCanRecover').textContent = d.can_recover ? '✅ 可回收本金' : '⏳ 未到回收条件';
+    document.getElementById('rPnL').style.color = d.profit_pct >= 0 ? 'var(--ok)' : 'var(--danger)';
+    document.getElementById('rCanRecover').textContent = d.can_recover ? FengI18n.t('rollover.recoverable','✅ 可回收本金') : FengI18n.t('rollover.notRecoverable','⏳ 未到回收条件');
     if (d.recovery_suggestion) {
-      document.getElementById('rSellShares').textContent = d.recovery_suggestion.sell_shares + ' 股';
+      document.getElementById('rSellShares').textContent = d.recovery_suggestion.sell_shares + FengI18n.t('rollover.unitShares',' 股');
       document.getElementById('rRecoverAmount').textContent = d.recovery_suggestion.recover_amount.toLocaleString();
-      document.getElementById('rZeroCost').textContent = d.recovery_suggestion.keep_zero_cost + ' 股';
+      document.getElementById('rZeroCost').textContent = d.recovery_suggestion.keep_zero_cost + FengI18n.t('rollover.unitShares',' 股');
     } else {
       document.getElementById('rSellShares').textContent = '—';
       document.getElementById('rRecoverAmount').textContent = '—';

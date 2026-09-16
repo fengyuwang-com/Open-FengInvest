@@ -4869,12 +4869,15 @@
   "zh": "中国广核"
  },
  "0239.HK": {
+  "en": "PAK FAH YEOW",
   "zh": "白花油"
  },
  "0700.HK": {
+  "en": "TENCENT",
   "zh": "腾讯控股"
  },
  "0728.HK": {
+  "en": "CHINA TELECOM",
   "zh": "中国电信"
  },
  "159766.SZ": {
@@ -4884,6 +4887,7 @@
   "zh": "保险主题LOF"
  },
  "1810.HK": {
+  "en": "XIAOMI-W",
   "zh": "小米集团-W"
  },
  "200002.SZ": {
@@ -16578,6 +16582,7 @@
   "zh": "九号公司"
  },
  "6896.HK": {
+  "en": "GOLDEN THROAT",
   "zh": "金嗓子"
  },
  "830779.BJ": {
@@ -17505,27 +17510,35 @@
   "zh": "颖泰生物"
  },
  "9988.HK": {
+  "en": "BABA-W",
   "zh": "阿里巴巴"
  },
  "9992.HK": {
+  "en": "POP MART",
   "zh": "泡泡玛特"
  },
  "AAPL": {
+  "en": "Apple Inc.",
   "zh": "苹果"
  },
  "KWEB": {
+  "en": "KraneShares CSI China Internet ",
   "zh": "中概互联网ETF"
  },
  "LVHI": {
+  "en": "Franklin International Low Vola",
   "zh": "富兰克林国际低波高股息ETF"
  },
  "MSFT": {
+  "en": "Microsoft Corporation",
   "zh": "微软"
  },
  "NVDA": {
+  "en": "NVIDIA Corporation",
   "zh": "英伟达"
  },
  "PDD": {
+  "en": "PDD Holdings Inc.",
   "zh": "拼多多"
  }
 }

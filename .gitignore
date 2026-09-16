@@ -105,3 +105,14 @@ research/opensource-eval/pwb-toolbox/
 research/opensource-eval/qlib/
 research/opensource-eval/quant-mind/
 data/config/llm_config.json
+
+# ── 临时草稿 ──
+sys_tmp.html
+
+# ── 工具附带产物（本地，不提交）──
+reports/webcheck_*.json
+research/market/
+
+# data 盘点报告（T4 产物，本地保留）
+data/inventory_report.md
+reports/BLOCKED-*.md

@@ -10,6 +10,9 @@
     python tools/fengdbrefine.py --verify     # 随机抽检一致性
     python tools/fengdbrefine.py --retry      # 只重试失败的
 """
+# 豁免 safe_batch：长周期全市场回填（US/CN/HK 逐只 UPDATE+INSERT、逐只 commit、检查点断点续传；
+# 包大事务会长锁库）。日期 2026-09-09，见 docs/DATA-MANAGEMENT.md §八。
+import datetime
 import json, os, random, sqlite3, sys, time
 from datetime import datetime
 
@@ -119,7 +122,7 @@ def download_one(ticker):
     return unadj, divs
 
 # ── 处理一只股票 ──
-def process_one(conn, idx_id, ticker, name, market, progress):
+def process_one(conn, idx_id, ticker, name, market, progress, refresh=False):
     row_count = stock_row_count(conn, idx_id)
     if row_count == 0:
         progress["no_data"] += 1
@@ -132,7 +135,7 @@ def process_one(conn, idx_id, ticker, name, market, progress):
     has_divs = conn.execute(
         "SELECT COUNT(*) FROM dividends WHERE index_id=?", (idx_id,)
     ).fetchone()[0] > 0
-    if already and has_divs:
+    if already and has_divs and not refresh:
         progress["skipped"] += 1
         return "skipped"
 
@@ -200,8 +203,23 @@ def main():
         progress = cp.get("progress", progress)
         log(f"从检查点恢复: 完成={len(done_set)} 失败={len(failed_set)} 无数据={len(nodata_set)}")
 
-    all_done = done_set | failed_set | nodata_set
-    pending = [s for s in stocks if s[1] not in all_done]
+    refresh_mode = "--refresh" in sys.argv
+    if refresh_mode:
+        # 增量刷新模式：重拉分红停滞股（MAX(ex_date) 落后 120 天以上或从未有分红），
+        # 绕过"有数据即永久跳过"的一次性引导逻辑；不读写检查点，避免污染原引导状态
+        from datetime import date as _date, timedelta as _td
+        cutoff = (_date.today() - _td(days=120)).isoformat()
+        stale = set(r[0] for r in conn.execute(
+            "SELECT i.ticker FROM indices i WHERE i.category='stock' AND i.market IN ('US','CN','HK') "
+            "AND (NOT EXISTS (SELECT 1 FROM dividends d WHERE d.index_id=i.id) "
+            "OR COALESCE((SELECT MAX(d.ex_date) FROM dividends d WHERE d.index_id=i.id),'') < ?)",
+            (cutoff,)))
+        pending = [st for st in stocks if st[1] in stale]
+        done_set = set(); failed_set = set(); nodata_set = set()
+        log(f"刷新模式: 分红停滞(>120天)或无分红 {len(pending)} 只 (cutoff={cutoff})")
+    else:
+        all_done = done_set | failed_set | nodata_set
+        pending = [s for s in stocks if s[1] not in all_done]
     retry_failed = [s for s in stocks if s[1] in failed_set]
     if retry_failed and "--retry" in sys.argv:
         pending = retry_failed + pending
@@ -217,7 +235,7 @@ def main():
     current_delay = REQ_DELAY
 
     for i, (idx_id, ticker, name, market) in enumerate(pending):
-        result = process_one(conn, idx_id, ticker, name, market, progress)
+        result = process_one(conn, idx_id, ticker, name, market, progress, refresh=refresh_mode)
 
         if result == "no_data":
             nodata_set.add(ticker)
@@ -243,12 +261,13 @@ def main():
                 current_delay = min(current_delay * 1.5, 30.0)
                 log(f"  ⚠️  连续 {consecutive_fails} 次失败, 延迟提高到 {current_delay:.0f}s")
 
-        # 每 5 只写 checkpoint 并打印进度
+        # 每 5 只写 checkpoint 并打印进度（刷新模式不落盘，保护原引导检查点）
         if (i + 1) % 5 == 0 or i == len(pending) - 1 or status == "FAIL":
-            cp = {"done": list(done_set), "failed": list(failed_set),
-                  "nodata": list(nodata_set), "progress": progress}
-            with open(CHECKPOINT, "w", encoding="utf-8") as f:
-                json.dump(cp, f)
+            if not refresh_mode:
+                cp = {"done": list(done_set), "failed": list(failed_set),
+                      "nodata": list(nodata_set), "progress": progress}
+                with open(CHECKPOINT, "w", encoding="utf-8") as f:
+                    json.dump(cp, f)
             processed = len(done_set) + len(failed_set) + len(nodata_set)
             pct = processed / total * 100 if total else 0
             log(f"[{processed}/{total} {pct:.0f}%] {ticker:16s} | {name[:20]:20s} | {market:2s} | {status:7s} | "
@@ -257,9 +276,10 @@ def main():
         # 限流延迟（自适应）
         time.sleep(current_delay + random.uniform(0, 1.0))
 
-    with open(CHECKPOINT, "w", encoding="utf-8") as f:
-        json.dump({"done": list(done_set), "failed": list(failed_set),
-                   "nodata": list(nodata_set), "progress": progress}, f)
+    if not refresh_mode:
+        with open(CHECKPOINT, "w", encoding="utf-8") as f:
+            json.dump({"done": list(done_set), "failed": list(failed_set),
+                       "nodata": list(nodata_set), "progress": progress}, f)
 
     log(f"\n完成!")
     log(f"  成功: {len(done_set)} / 失败: {len(failed_set)} / 无数据: {len(nodata_set)} / 跳过: {progress['skipped']}")

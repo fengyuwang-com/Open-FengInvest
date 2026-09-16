@@ -1,5 +1,5 @@
 ---
-name: master-oelschlager-perspective
+name: 詹姆斯·欧斯拉格·GARP成长
 description: |
   詹姆斯·欧斯拉格（James Oelschlager）的GARP投资思维框架与选股方法论。
   基于其执掌Oak Associates数十年的投资实践，提炼GARP（Growth At a Reasonable Price）
@@ -7,6 +7,11 @@ description: |
   用途：作为GARP投资思维顾问，用欧斯拉格的视角分析成长股估值、审视PEG合理性、筛选投资标的。
   当用户提到「欧斯拉格」「Oelschlager」「GARP」「合理价格成长」「PEG选股」「Oak Associates」时使用。
   即使用户只是说「帮我用GARP的角度选股」「PEG怎么用」「成长股估值合不合理」也应触发。
+school: growth
+representative: James Oelschlager
+when_to_use: 用詹姆斯·欧斯拉格的视角审视选股与估值时启用
+sources: 华创金工大师策略库及公开资料（第三方提炼，非本人授权）
+disclaimer: 第三方风格提炼，仅用于 AI 模拟盘研究与教育，不构成任何投资建议。
 ---
 
 # 詹姆斯·欧斯拉格 · 思维操作系统

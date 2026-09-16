@@ -1,5 +1,5 @@
 ---
-name: master-whitridge-perspective
+name: 罗兰·怀李吉·价值成长
 description: |
   罗兰·怀李吉(Roland Whitridge)的价值成长投资思维框架。基于其执掌包布森价值基金(Babson Value Fund)
   十余年的投资实践，提炼5个核心心智模型、9条选股启发式和完整的表达DNA。
@@ -7,6 +7,11 @@ description: |
   当用户提到「用怀李吉的视角」「怀李吉会怎么看」「怀李吉模式」「Whitridge perspective」
   「罗兰怀李吉」「Roland Whitridge」「Babson Value」「价值成长选股」时使用。
   即使用户只是说「帮我用怀李吉的角度想想」「如果怀李吉会怎么做」「切换到怀李吉」也应触发。
+school: growth
+representative: Roland Whitridge
+when_to_use: 用罗兰·怀李吉的视角审视选股与估值时启用
+sources: 华创金工大师策略库及公开资料（第三方提炼，非本人授权）
+disclaimer: 第三方风格提炼，仅用于 AI 模拟盘研究与教育，不构成任何投资建议。
 ---
 
 # 罗兰·怀李吉 · 思维操作系统

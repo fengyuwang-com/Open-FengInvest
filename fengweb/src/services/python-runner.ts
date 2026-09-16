@@ -3,8 +3,8 @@ import { existsSync } from 'fs';
 
 /**
  * 候选解释器，按优先级排列。
- * 本机 PATH 上的 `python` 解析到 workbuddy 的 3.13.12，只装了 pip，
- * 没有任何项目依赖；真正的依赖装在 C:\Python314\python.exe。
+ * 有些机器上 PATH 里的 `python` 是个没装项目依赖的精简解释器，
+ * 所以按绝对路径优先探测，避免跑起来才发现缺库。
  */
 const PYTHON_CANDIDATES: string[] = [
   'C:\\Python314\\python.exe',
@@ -121,27 +121,22 @@ export class PythonRunner {
   }
 
   /**
-   * Run a specific analysis layer.
+   * 执行一段内联 Python 代码（base64 传递，避免 Windows shell 引号地狱）。
+   * 代码通过 print() 输出结果；非零退出 = 失败。
    */
-  async runAnalysis(ticker: string, layer: string): Promise<PythonResult> {
-    const toolMap: Record<string, string> = {
-      'm': 'fengdata.py',
-      'l1': 'fengrule.py',
-      'l2b': 'fengquant.py',
-      'l3': 'fengcollision.py',
-    };
-    const tool = toolMap[layer];
-    if (!tool) {
-      return { success: false, error: `Unknown layer: ${layer}. Supported: ${Object.keys(toolMap).join(', ')}` };
+  async runCode(code: string, timeoutMs: number = 60000): Promise<PythonResult> {
+    const b64 = Buffer.from(code, 'utf-8').toString('base64');
+    const cmd = `"${this.pythonCmd}" -c "import base64;exec(base64.b64decode('${b64}').decode('utf-8'))"`;
+    try {
+      const result = await this._exec(cmd, timeoutMs);
+      if (result.code !== 0) {
+        const tail = result.stderr.trim().split('\n').slice(-5).join(' | ');
+        return { success: false, error: tail || `exit code ${result.code}`, stdout: result.stdout, stderr: result.stderr };
+      }
+      return { success: true, data: { raw: result.stdout }, stdout: result.stdout };
+    } catch (err: any) {
+      return { success: false, error: err.message };
     }
-    return this.runTool(tool, [ticker]);
-  }
-
-  /**
-   * Run state machine check.
-   */
-  async runStateCheck(ticker: string, layer: string): Promise<PythonResult> {
-    return this.runTool('fengstate.py', ['check', ticker, layer]);
   }
 
   /**

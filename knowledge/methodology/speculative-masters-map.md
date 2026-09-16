@@ -16,7 +16,7 @@
 | 杰西·利弗莫尔 | trend | `livermore.md`（+§13 奇衡附录） | 关键点跟庄、最小阻力线（一价定律补丁）、只做 C/D 点、分笔金字塔重仓 | 奇衡《解读操盘术》10 课 + 回忆录联动 |
 | 爱德华·索普 | quant | `edward-thorpe.md` | 概率优势 P 最大、分数凯利 κ≤1/2、破产/续航控制、跨市场错位 | 奇衡 AM2025（索普篇） |
 | 纳西姆·塔勒布 | contrarian | `nassim-taleb.md` | 非对称/杠铃、永不爆仓倒推单点上限、保护费优先、禁令杠杆赌尾部 | 奇衡 AM2025（塔勒布篇） |
-| 奇衡（总纲） | —— | `~/Qiheng/docs\research\奇衡论投机性买入-研究文档.md` | 投机=买机会/投波动、试盘 3%、总资金 30% 上限、单票 5-10%/单行业<20%、只做 C/D 点、反对心理止损用条件单、杠杆只做右侧 | 奇衡 B 站+雪球（已逐字验证） |
+| 奇衡（总纲） | —— | `~/Qiheng/docs/research/奇衡论投机性买入-研究文档.md` | 投机=买机会/投波动、试盘 3%、总资金 30% 上限、单票 5-10%/单行业<20%、只做 C/D 点、反对心理止损用条件单、杠杆只做右侧 | 奇衡 B 站+雪球（已逐字验证） |
 
 > 未覆盖（待补录）：威科夫、斯坦利·克罗、杰拉尔德·勒布、欧奈尔(CANSLIM)、海龟、幽灵的礼物、Minervini、Darvas、艾略特——奇衡库当前无解读来源，按"无来源=不存在"暂不入库。
 
@@ -76,14 +76,14 @@
 ## 3. 十二大师"胜率 P 最大值"串讲（AM2025 第二课）
 
 奇衡在 AM2025 第二课把十二位大师的"胜率 P 来源"做了串讲（江恩、利弗莫尔、格雷厄姆、巴菲特/芒格、斯波朗迪、拉里·威廉姆斯、埃尔德、聂夫、马尔基尔、西蒙斯、索罗斯、塔勒布）——已备份要点于 `research/040-people/named/edward-thorpe.md` 与 `nassim-taleb.md` 相关章节。原始逐字内容见：
-`~/Qiheng/output_bilibili\合集·奇衡DK的AM2025\BV1dnR4Y1EhW_如何在必输的游戏里取胜？【AM2025第二课】_corrected.md`
+`~/Qiheng/output_bilibili/合集·奇衡DK的AM2025/BV1dnR4Y1EhW_如何在必输的游戏里取胜？【AM2025第二课】_corrected.md`
 
 > 用法提示：fengspec 每笔决策以"事件/结构"为触发，不以"大师背书"为触发；大师思想用于**纪律与判据抽取**，不用于替 AI 做预测。
 
 ## 4. 数据来源与维护
 
 - 人物档目录：`research/040-people/named/`（`sperandeo.md`、`larry-williams.md`、`elder.md`、`livermore.md`、`edward-thorpe.md`、`nassim-taleb.md`）。
-- 奇衡总纲：`~/Qiheng/docs\research\奇衡论投机性买入-研究文档.md`（46 引文 0 失配、73 链接 0 死链）。
+- 奇衡总纲：`~/Qiheng/docs/research/奇衡论投机性买入-研究文档.md`（46 引文 0 失配、73 链接 0 死链）。
 - 卖出纪律：`knowledge/discipline/奇衡卖出艺术.md`。
 - 概念定稿：`docs/11-speculation-track.md`。
 - 新增大师：先补奇衡来源（无来源不入库），再建人物档（§1–§12 模板）并同步本表与 JSON manifest。

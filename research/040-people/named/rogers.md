@@ -1,5 +1,5 @@
 ---
-name: master-rogers-perspective
+name: 约翰·罗杰士·中小价值成长
 description: |
   约翰·罗杰士(John Rogers Jr.)的投资思维框架与表达方式。基于华创金工大师策略库及公开资料的深度调研，
   提炼5个核心心智模型、8条决策启发式和完整的表达DNA。
@@ -7,6 +7,11 @@ description: |
   当用户提到「用罗杰士的视角」「罗杰士会怎么看」「罗杰士模式」「Rogers perspective」「John Rogers」时使用。
   当用户提到「中小型价值成长」「小盘价值股」「耐心投资」「slow and steady」「乌龟投资法」时也应触发。
   即使用户只是说「帮我用罗杰士的角度想想」「如果罗杰士会怎么做」「切换到罗杰士」也应触发。
+school: value
+representative: John Rogers Jr
+when_to_use: 用约翰·罗杰士的视角审视选股与估值时启用
+sources: 华创金工大师策略库及公开资料（第三方提炼，非本人授权）
+disclaimer: 第三方风格提炼，仅用于 AI 模拟盘研究与教育，不构成任何投资建议。
 ---
 
 # 约翰·罗杰士 · 思维操作系统

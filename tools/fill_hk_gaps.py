@@ -9,16 +9,15 @@
     python tools/fill_hk_gaps.py            # 全量回填
     python tools/fill_hk_gaps.py --status   # 查看进度
 """
+# 豁免 safe_batch：一次性回填（12 只 HK close→unadj_close UPDATE + dividends INSERT OR IGNORE）。
+# 日期 2026-09-09，见 docs/DATA-MANAGEMENT.md §八。
 import sqlite3, os, sys, json
 from datetime import datetime
 
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DB_PATH = os.path.join(BASE, "data", "market_data.db")
-# AKShare 装在 venv-numpy2（默认取当前用户 AppData；可用 AK_PYTHON 环境变量覆盖）
-AK_PYTHON = os.environ.get(
-    "AK_PYTHON",
-    os.path.join(os.path.expanduser("~"), "AppData", "Local", "com.fincept.terminal", "venv-numpy2", "Scripts", "python.exe"),
-)
+# AKShare 子解释器：默认用当前解释器（akshare 已随主环境安装）；可用 AK_PYTHON 环境变量覆盖
+AK_PYTHON = os.environ.get("AK_PYTHON", sys.executable)
 
 HK_TICKERS = ["0700.HK","0388.HK","0941.HK","1299.HK","1810.HK",
               "0981.HK","1876.HK","2269.HK","0285.HK","2319.HK",

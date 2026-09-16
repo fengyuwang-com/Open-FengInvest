@@ -1,5 +1,5 @@
 ---
-name: master-oshaughnessy-perspective
+name: 詹姆斯·奥肖内西·量化价值
 description: |
   詹姆斯·奥肖内西（James O'Shaughnessy）的量化价值投资思维框架。
   基于《What Works on Wall Street》及华创金工大师策略的深度调研，
@@ -9,6 +9,11 @@ description: |
   「What Works on Wall Street」「机械化选股」「量化选股大师」时使用。
   即使用户只是说「帮我用奥肖内西的角度选股」「如果O'Shaughnessy会怎么看这只股票」
   「切换到量化价值模式」也应触发。
+school: quant
+representative: James O Shaughnessy
+when_to_use: 用詹姆斯·奥肖内西的视角审视选股与估值时启用
+sources: 华创金工大师策略库及公开资料（第三方提炼，非本人授权）
+disclaimer: 第三方风格提炼，仅用于 AI 模拟盘研究与教育，不构成任何投资建议。
 ---
 
 # 詹姆斯·奥肖内西 · 思维操作系统

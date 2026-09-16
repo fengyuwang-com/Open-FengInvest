@@ -1,7 +1,7 @@
 # 数据抽查报告 DATA-SPOTCHECK-20260824
 
 - 抽查日期：2026-08-24
-- 被检库：`data/market_data.db`（只读连接 `file:...?mode=ro`，全程未写库）
+- 被检库：`~/FengInvest/data/market_data.db`（只读连接 `file:...?mode=ro`，全程未写库）
 - 抽样规模：价格类 10 只（覆盖 CN/US/HK/JP/KR/UK/DE/IN）+ A 股财报 5 笔，共 15 笔
 - 容差：±0.5%（价格注意 GBX/KRW 单位对齐；财报先核对量纲，库内为"元"）
 - 结论口径：每笔 PASS / FAIL / 无法判定 三态

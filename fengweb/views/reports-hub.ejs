@@ -1,11 +1,11 @@
 <div class="page-header">
-  <div class="breadcrumb"><a href="/">首页</a> / 报告</div>
-  <h2>📚 报告中心</h2>
-  <p style="color:var(--text-muted);font-size:14px;">所有公司的报告书架。✍️ 自有 = 七层分析产出（日期目录）；📥 外来 = 书籍摘要、社区文章等非本人产出。</p>
+  <div class="breadcrumb"><a href="/" data-i18n="reportshub.crumbHome">首页</a> / <span data-i18n="reportshub.crumbReports">报告</span></div>
+  <h2 data-i18n="reportshub.title">📚 报告中心</h2>
+  <p style="color:var(--text-muted);font-size:14px;" data-i18n="reportshub.desc">所有公司的报告书架。✍️ 正式 = 七层结论（日期目录 07-report/narrative）；📝 笔记 = own/ 过程稿；📥 外来 = 社区/书籍。</p>
 </div>
 
 <% if (shelves.length === 0) { %>
-  <div class="empty-state"><p>暂无公司报告。</p></div>
+  <div class="empty-state"><p data-i18n="reportshub.empty">暂无公司报告。</p></div>
 <% } else { %>
   <div class="entry-list">
     <% for (const s of shelves) { %>
@@ -13,12 +13,16 @@
         <div>
           <div class="entry-title"><%= s.name %> <span style="color:var(--text-muted);font-weight:400;font-size:13px;"><%= s.ticker %></span> <% if (domains && domains[s.ticker]) { %><span class="badge badge-primary"><%= domains[s.ticker] %></span><% } %></div>
           <% if (s.latestDate) { %>
-            <div style="font-size:12px;color:var(--text-muted);">最近分析 <%= s.latestDate %><%= s.hasRedteam ? ' · ✓ 红队检验' : '' %></div>
+            <div style="font-size:12px;color:var(--text-muted);"><span data-i18n="reportshub.lastAnalyzed">最近分析</span> <%= s.latestDate %><% if (s.hasRedteam) { %> · <span data-i18n="reportshub.redteamOk">✓ 红队检验</span><% } %><% if (s.stale) { %> <span class="badge badge-yellow"><span data-i18n="reportshub.stalePre">⚠️ 报告过期</span> <%= s.staleDays %> <span data-i18n="reportshub.staleDaysUnit">天</span></span><% } %></div>
+          <% } else if (s.stale) { %>
+            <div style="font-size:12px;color:var(--text-muted);"><span class="badge badge-yellow"><span data-i18n="reportshub.stalePre">⚠️ 报告过期</span> <%= s.staleDays %> <span data-i18n="reportshub.staleDaysUnit">天</span></span></div>
           <% } %>
         </div>
-        <div style="white-space:nowrap;font-size:13px;">
-          <span class="source-tag own">✍️ 自有 <%= s.own %></span>
-          <span class="source-tag community">📥 外来 <%= s.community %></span>
+        <div style="white-space:nowrap;font-size:13px;display:flex;align-items:center;gap:12px;">
+          <% if (s.formalLatestRel) { %><span data-latest="/reports/<%= s.ticker %>/<%= s.formalLatestRel %>" style="cursor:pointer;color:var(--accent,#2B5DD7);font-weight:600;" onclick="event.stopPropagation();event.preventDefault();location.href=this.getAttribute('data-latest');"><span data-i18n="reportshub.readLatest">最近一篇 →</span></span><% } %>
+          <span class="source-tag own"><span data-i18n="reportshub.formal">正式</span> <%= s.formal %></span>
+          <span class="source-tag own"><span data-i18n="reportshub.notes">笔记</span> <%= s.notes %></span>
+          <span class="source-tag community"><span data-i18n="reportshub.external">📥 外来</span> <%= s.community %></span>
         </div>
       </a>
     <% } %>

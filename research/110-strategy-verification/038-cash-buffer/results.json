@@ -1,0 +1,174 @@
+{
+  "verdict": {
+    "claim_type": "quantitative",
+    "window_days": 756,
+    "cash": 0.15,
+    "trigger_dd": 0.2,
+    "n_windows": 584,
+    "p_full_beats_cash": 0.4948630136986301,
+    "p_ci": [
+      0.4230769230769231,
+      0.5716783216783217
+    ],
+    "threshold": 0.6,
+    "oos_p": 0.46808510638297873,
+    "mean_diff_cagr": 0.003094419748364525,
+    "oos_mean_diff": 0.0015981281865235877,
+    "per_market": {
+      "US": {
+        "n_windows": 191,
+        "a_beats_b_pct": 57.06806282722513,
+        "diff_cagr_med": 0.004022279210761148,
+        "trigger_pct": 53.92670157068062
+      },
+      "CN": {
+        "n_windows": 51,
+        "a_beats_b_pct": 39.21568627450981,
+        "diff_cagr_med": -0.005388959061780885,
+        "trigger_pct": 96.07843137254902
+      },
+      "JP": {
+        "n_windows": 115,
+        "a_beats_b_pct": 53.91304347826087,
+        "diff_cagr_med": 0.0025626180406557175,
+        "trigger_pct": 73.91304347826086
+      },
+      "HK": {
+        "n_windows": 72,
+        "a_beats_b_pct": 41.66666666666667,
+        "diff_cagr_med": -0.0031076452005361476,
+        "trigger_pct": 94.44444444444444
+      },
+      "KR": {
+        "n_windows": 53,
+        "a_beats_b_pct": 37.735849056603776,
+        "diff_cagr_med": -0.0027970345925558,
+        "trigger_pct": 83.01886792452831
+      },
+      "TW": {
+        "n_windows": 51,
+        "a_beats_b_pct": 39.21568627450981,
+        "diff_cagr_med": -0.0041550379620546585,
+        "trigger_pct": 88.23529411764706
+      },
+      "IN": {
+        "n_windows": 51,
+        "a_beats_b_pct": 54.90196078431373,
+        "diff_cagr_med": 0.0030291418042612817,
+        "trigger_pct": 74.50980392156863
+      },
+      "AU": {
+        "error": "no usable index"
+      },
+      "CA": {
+        "error": "no usable index"
+      },
+      "DE": {
+        "error": "no usable index"
+      },
+      "ES": {
+        "error": "no usable index"
+      },
+      "FR": {
+        "error": "no usable index"
+      },
+      "IT": {
+        "error": "no usable index"
+      },
+      "NZ": {
+        "error": "no usable index"
+      },
+      "SE": {
+        "error": "no usable index"
+      },
+      "SG": {
+        "error": "no usable index"
+      },
+      "UK": {
+        "error": "no usable index"
+      }
+    },
+    "supported": true
+  },
+  "per_market": {
+    "US": {
+      "n_windows": 191,
+      "a_beats_b_pct": 57.06806282722513,
+      "diff_cagr_med": 0.004022279210761148,
+      "trigger_pct": 53.92670157068062
+    },
+    "CN": {
+      "n_windows": 51,
+      "a_beats_b_pct": 39.21568627450981,
+      "diff_cagr_med": -0.005388959061780885,
+      "trigger_pct": 96.07843137254902
+    },
+    "JP": {
+      "n_windows": 115,
+      "a_beats_b_pct": 53.91304347826087,
+      "diff_cagr_med": 0.0025626180406557175,
+      "trigger_pct": 73.91304347826086
+    },
+    "HK": {
+      "n_windows": 72,
+      "a_beats_b_pct": 41.66666666666667,
+      "diff_cagr_med": -0.0031076452005361476,
+      "trigger_pct": 94.44444444444444
+    },
+    "KR": {
+      "n_windows": 53,
+      "a_beats_b_pct": 37.735849056603776,
+      "diff_cagr_med": -0.0027970345925558,
+      "trigger_pct": 83.01886792452831
+    },
+    "TW": {
+      "n_windows": 51,
+      "a_beats_b_pct": 39.21568627450981,
+      "diff_cagr_med": -0.0041550379620546585,
+      "trigger_pct": 88.23529411764706
+    },
+    "IN": {
+      "n_windows": 51,
+      "a_beats_b_pct": 54.90196078431373,
+      "diff_cagr_med": 0.0030291418042612817,
+      "trigger_pct": 74.50980392156863
+    },
+    "AU": {
+      "error": "no usable index"
+    },
+    "CA": {
+      "error": "no usable index"
+    },
+    "DE": {
+      "error": "no usable index"
+    },
+    "ES": {
+      "error": "no usable index"
+    },
+    "FR": {
+      "error": "no usable index"
+    },
+    "IT": {
+      "error": "no usable index"
+    },
+    "NZ": {
+      "error": "no usable index"
+    },
+    "SE": {
+      "error": "no usable index"
+    },
+    "SG": {
+      "error": "no usable index"
+    },
+    "UK": {
+      "error": "no usable index"
+    }
+  },
+  "protocol_lights": {
+    "primary_metric_is_claim_quantity": true,
+    "all_in_scope_markets": true,
+    "oos": true,
+    "no_lookahead": true,
+    "survivorship_note": "指数口径无幸存者问题；现金收益按 0 计，未计利息"
+  }
+}

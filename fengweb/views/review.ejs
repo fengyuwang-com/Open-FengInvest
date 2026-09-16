@@ -1,49 +1,49 @@
 <div class="page-header">
-  <div class="breadcrumb"><a href="/holdings">持仓</a> / <a href="/holdings/<%= holding.ticker %>"><%= holding.name || holding.ticker %></a> / 复盘</div>
-  <h2>🔁 复盘 · <%= holding.name || holding.ticker %></h2>
+  <div class="breadcrumb"><a href="/holdings" data-i18n="review.crumbHoldings">持仓</a> / <a href="/holdings/<%= holding.ticker %>"><%= holding.name || holding.ticker %></a> / <span data-i18n="review.crumbReview">复盘</span></div>
+  <h2><span data-i18n="review.title">🔁 复盘</span> · <%= holding.name || holding.ticker %></h2>
 </div>
 
 <div class="card step-wizard">
-  <h3>四态假设判定（thesis 是否仍成立）</h3>
+  <h3 data-i18n="review.hypothesisTitle">四态假设判定（thesis 是否仍成立）</h3>
   <% var hyps = ['valid|验证 ✓ — 论文仍然成立', 'uncertain|存疑 — 有新证据但未定论', 'falsified|失效 ✗ — 论文被证伪', 'unknown|无法判断 — 数据不足']; %>
   <% hyps.forEach(function(hs, i) { %>
     <label style="display:block;padding:8px 12px;border:1px solid var(--border);border-radius:8px;margin-bottom:6px;cursor:pointer;">
-      <input type="radio" name="hyp" value="<%= hs.split('|')[0] %>" <%= i === 0 ? 'checked' : '' %>> <b><%= hs.split('|')[1] %></b>
+      <input type="radio" name="hyp" value="<%= hs.split('|')[0] %>" <%= i === 0 ? 'checked' : '' %>> <b data-i18n="review.hyp.<%= hs.split('|')[0] %>"><%= hs.split('|')[1] %></b>
     </label>
   <% }) %>
 
   <% var redlines = (holding.thesis && holding.thesis.redlines) || []; %>
   <% if (redlines.length > 0) { %>
-  <h3 style="margin-top:16px;">红线检查（原文对照，逐条判 ✓/✗）</h3>
+  <h3 style="margin-top:16px;" data-i18n="review.redlinesTitle">红线检查（原文对照，逐条判 ✓/✗）</h3>
   <% redlines.forEach(function(r, i) { %>
     <div style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;margin-bottom:6px;">
-      <div style="font-size:13px;color:var(--text-muted);">红线 <%= i + 1 %>：<%= r %></div>
-      <label style="margin-right:16px;cursor:pointer;"><input type="radio" name="rl<%= i %>" value="ok" checked> ✓ 未触发</label>
-      <label style="cursor:pointer;"><input type="radio" name="rl<%= i %>" value="hit"> ✗ 已触发</label>
+      <div style="font-size:13px;color:var(--text-muted);"><span data-i18n="review.redline">红线</span> <%= i + 1 %>：<%= typeof r === 'string' ? r : ((r.statement || r.trigger || r.text || '') + (r.action ? ' → ' + r.action : '') || JSON.stringify(r)) %></div>
+      <label style="margin-right:16px;cursor:pointer;"><input type="radio" name="rl<%= i %>" value="ok" checked> <span data-i18n="review.notTriggered">✓ 未触发</span></label>
+      <label style="cursor:pointer;"><input type="radio" name="rl<%= i %>" value="hit"> <span data-i18n="review.triggered">✗ 已触发</span></label>
     </div>
   <% }) %>
   <% } else { %>
-  <div class="alert alert-warning" style="margin-top:16px;">本持仓没有登记红线（thesis.redlines 为空）——新登记的持仓必有红线，旧仓补登记。</div>
+  <div class="alert alert-warning" style="margin-top:16px;" data-i18n="review.noRedlines">本持仓没有登记红线（thesis.redlines 为空）——新登记的持仓必有红线，旧仓补登记。</div>
   <% } %>
 
   <div class="detail-grid" style="margin-top:16px;">
-    <div class="field-row"><label>健康度评分（0-100，自评）</label><input id="rv-score" type="number" min="0" max="100"></div>
-    <div class="field-row"><label>下次回顾日期 *</label><input id="rv-next" type="date" required></div>
+    <div class="field-row"><label data-i18n="review.healthScore">健康度评分（0-100，自评）</label><input id="rv-score" type="number" min="0" max="100"></div>
+    <div class="field-row"><label data-i18n="review.nextReview">下次回顾日期 *</label><input id="rv-next" type="date" required></div>
   </div>
-  <div class="field-row"><label>备注（这次复盘发现了什么）</label><textarea id="rv-notes" rows="3"></textarea></div>
+  <div class="field-row"><label data-i18n="review.notes">备注（这次复盘发现了什么）</label><textarea id="rv-notes" rows="3"></textarea></div>
 
-  <button class="btn btn-primary" id="rvBtn" onclick="submitReview()">提交复盘（写回 reviews + 推进回顾日 + fengwatch review）</button>
+  <button class="btn btn-primary" id="rvBtn" onclick="submitReview()" data-i18n="review.submit">提交复盘（写回 reviews + 推进回顾日 + fengwatch review）</button>
   <div id="rv-out" style="margin-top:12px;"></div>
 </div>
 
 <% if ((holding.reviews || []).length > 0) { %>
 <div class="card">
-  <h3 class="section-title">历史复盘时间线（<%= holding.reviews.length %>）</h3>
+  <h3 class="section-title"><span data-i18n="review.timeline">历史复盘时间线</span>（<%= holding.reviews.length %>）</h3>
   <% holding.reviews.forEach(function(r) { %>
     <div class="journal-entry">
       <div class="journal-date"><%= r.date %></div>
-      <div class="journal-ticker"><span class="badge badge-<%= r.hypothesis_status === 'valid' ? 'green' : r.hypothesis_status === 'falsified' ? 'red' : 'yellow' %>"><%= ({valid:'验证✓',falsified:'失效✗',uncertain:'存疑',unknown:'未知'})[r.hypothesis_status] || r.hypothesis_status %></span></div>
-      <div class="journal-body"><%= r.notes || '' %> <%= r.health_score != null ? '（健康度 ' + r.health_score + '）' : '' %></div>
+      <div class="journal-ticker"><span class="badge badge-<%= r.hypothesis_status === 'valid' ? 'green' : r.hypothesis_status === 'falsified' ? 'red' : 'yellow' %>" data-i18n="review.hypShort.<%= r.hypothesis_status %>"><%= ({valid:'验证✓',falsified:'失效✗',uncertain:'存疑',unknown:'未知'})[r.hypothesis_status] || r.hypothesis_status %></span></div>
+      <div class="journal-body"><%= r.notes || '' %> <% if (r.health_score != null) { %>（<span data-i18n="review.healthShort">健康度</span> <%= r.health_score %>）<% } %></div>
     </div>
   <% }) %>
 </div>
@@ -52,7 +52,7 @@
 <script>
 async function submitReview() {
   var btn = document.getElementById('rvBtn');
-  btn.disabled = true; btn.textContent = '提交中…';
+  btn.disabled = true; btn.textContent = FengI18n.t('review.submitting', '提交中…');
   var hyp = document.querySelector('input[name=hyp]:checked').value;
   var rls = [];
   var i = 0;
@@ -73,9 +73,9 @@ async function submitReview() {
     });
     var d = await r.json();
     document.getElementById('rv-out').innerHTML = r.ok
-      ? '<div class="alert alert-info">✅ 复盘已写回。' + (d.fengwatch || '') + ' <a href="/holdings/<%= holding.ticker %>">返回持仓详情 →</a></div>'
-      : '<div class="alert alert-danger">' + (d.error || '失败') + '：' + (d.detail || '') + '</div>';
-  } catch (e) { document.getElementById('rv-out').textContent = '网络错误: ' + e.message; }
-  btn.disabled = false; btn.textContent = '提交复盘（写回 reviews + 推进回顾日 + fengwatch review）';
+      ? '<div class="alert alert-info">✅ ' + FengI18n.t('review.done', '复盘已写回。') + (d.fengwatch || '') + ' <a href="/holdings/<%= holding.ticker %>">' + FengI18n.t('review.backToHolding', '返回持仓详情 →') + '</a></div>'
+      : '<div class="alert alert-danger">' + (d.error || FengI18n.t('review.failed', '失败')) + FengI18n.t('review.colon', '：') + (d.detail || '') + '</div>';
+  } catch (e) { document.getElementById('rv-out').textContent = FengI18n.t('review.networkError', '网络错误: ') + e.message; }
+  btn.disabled = false; btn.textContent = FengI18n.t('review.submit', '提交复盘（写回 reviews + 推进回顾日 + fengwatch review）');
 }
 </script>

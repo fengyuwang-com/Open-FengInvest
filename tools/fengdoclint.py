@@ -14,13 +14,15 @@
 
 用法：
   python tools/fengdoclint.py                  # 扫描整库 research/060-companies/*
-  python tools/fengdoclint.py 1810.HK         # 扫某 ticker 下所有日期目录
+  python tools/fengdoclint.py LVHI             # 按 TICKER 解析 <TICKER>-* 公司目录，取最新日期目录
+  python tools/fengdoclint.py 1810.HK-小米     # 精确公司目录名：扫该 ticker 下所有日期目录
   python tools/fengdoclint.py <分析日期目录>   # 扫单个目录(绝对/相对路径)
   python tools/fengdoclint.py --strict         # 任不合规则 exit 1（可作 CI 闸门）
 
 输出：每层 ✅/❌ 表 + 汇总；不合规返回非零退出码（--strict 时）。
 """
 import os
+import re
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -82,13 +84,24 @@ def lint_dir(path):
     return (len(issues) == 0), issues, warns
 
 
+def _latest_date_dir(company_dir):
+    """公司目录下最新的分析日期目录（优先 YYYY-MM-DD 命名，字典序最大即最新）。"""
+    dirs = [n for n in sorted(os.listdir(company_dir))
+            if n not in SKIP_DIRS
+            and os.path.isdir(os.path.join(company_dir, n))
+            and _is_analysis_dir(os.path.join(company_dir, n))]
+    dated = [n for n in dirs if re.match(r"^\d{4}[-.]\d{2}[-.]\d{2}$", n)]
+    pick = (dated or dirs)
+    return os.path.join(company_dir, pick[-1]) if pick else None
+
+
 def _collect_targets(arg):
     targets = []
     if arg:
         if os.path.isdir(arg):
             targets.append(arg)
             return targets
-        # 当作 ticker：扫 research/060-companies/<TICKER>/*（日期目录）
+        # 精确目录名：扫 research/060-companies/<arg>/*（日期目录）
         cand = os.path.join(COMPANIES, arg)
         if os.path.isdir(cand):
             for name in sorted(os.listdir(cand)):
@@ -96,6 +109,17 @@ def _collect_targets(arg):
                 if os.path.isdir(p) and name not in SKIP_DIRS and _is_analysis_dir(p):
                     targets.append(p)
             return targets
+        # 纯 TICKER（无中文后缀）：解析 <TICKER>-* 公司目录，各取最新日期目录
+        # （2026-09-13 LVHI 复盘修复：fengcheck Gate 2 支持直接传 TICKER）
+        if os.path.isdir(COMPANIES):
+            prefix = arg.upper() + "-"
+            for name in sorted(os.listdir(COMPANIES)):
+                if name.upper().startswith(prefix):
+                    p = _latest_date_dir(os.path.join(COMPANIES, name))
+                    if p:
+                        targets.append(p)
+            if targets:
+                return targets
         print(f"[WARN] 无法解析参数: {arg}", file=sys.stderr)
         return []
     # 整库

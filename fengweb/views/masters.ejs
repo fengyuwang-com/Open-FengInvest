@@ -1,15 +1,15 @@
 <div class="page-header">
-  <h2>🧠 投资家列传</h2>
-  <div class="breadcrumb">投资家 — <%= people.length %> 位大师的智慧</div>
+  <h2 data-i18n="masters.title">🧠 投资家列传</h2>
+  <div class="breadcrumb"><span data-i18n="masters.crumbPre">投资家 — </span><%= people.length %><span data-i18n="masters.crumbPost"> 位大师的智慧</span></div>
 </div>
 
 <!-- School filter tabs -->
 <div class="filter-tabs">
-  <button class="chip active" data-filter="all" type="button">全部</button>
+  <button class="chip active" data-filter="all" type="button" data-i18n="masters.all">全部</button>
   <% var schools = {}; people.forEach(function(p) { schools[p.school] = (schools[p.school] || 0) + 1; }); %>
   <% var schoolLabels = {value:'价值投资',deep_value:'深度价值',value_longterm:'长期价值',quality:'品质投资',growth:'成长投资',tech_growth:'科技成长',quant:'量化投资',macro:'宏观交易',allweather:'全天候',trend:'趋势交易',momentum:'动量投资',contrarian:'逆向投资',chokepoint:'地缘政治',semiconductor:'半导体',unknown:'其他流派'}; %>
   <% Object.keys(schools).sort().forEach(function(s) { %>
-  <button class="chip" data-filter="<%= s %>" type="button"><%= schoolLabels[s] || s %> (<%= schools[s] %>)</button>
+  <button class="chip" data-filter="<%= s %>" type="button"><span data-i18n="masters.school.<%= s %>"><%= schoolLabels[s] || s %></span> (<%= schools[s] %>)</button>
   <% }) %>
 </div>
 
@@ -22,7 +22,7 @@
       <div style="flex:1;min-width:0;">
         <div style="font-size:16px;font-weight:600;margin-bottom:2px;"><%= p.name %></div>
         <div style="font-size:12px;color:var(--text-muted);margin-bottom:6px;"><%= p.representative %></div>
-        <span class="badge badge-primary" style="background:var(--ok-bg);color:var(--ok);padding:2px 10px;border-radius:12px;font-size:11px;"><%= schoolLabels[p.school] || p.school %></span>
+        <span class="badge badge-primary" style="background:var(--ok-bg);color:var(--ok);padding:2px 10px;border-radius:12px;font-size:11px;" data-i18n="masters.school.<%= p.school %>"><%= schoolLabels[p.school] || p.school %></span>
         <% if (p.when_to_use) { %>
         <p style="font-size:12px;color:var(--text-muted);margin:8px 0 0;line-height:1.5;"><%= p.when_to_use.slice(0, 80) %></p>
         <% } %>

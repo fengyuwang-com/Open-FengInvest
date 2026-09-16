@@ -1,45 +1,45 @@
 <div class="page-header">
   <h2>🧠 <%= person.name %></h2>
-  <div class="breadcrumb"><a href="/masters">投资家</a> / <%= person.name %></div>
+  <div class="breadcrumb"><a href="/masters" data-i18n="masters.masters">投资家</a> / <%= person.name %></div>
 </div>
 
-<div class="detail-grid" style="display:grid;grid-template-columns:2fr 1fr;gap:20px;">
+<div class="detail-grid">
   <!-- Main content -->
-  <div class="card">
-    <h3>投资哲学</h3>
-    <div style="line-height:1.8;font-size:14px;color:var(--text);overflow-x:auto;">
-      <%- person.content.replace(/^# .+\n/, '').replace(/```/g, '') %>
+  <div class="card report-reader">
+    <h3 data-i18n="masters.philosophy">投资哲学</h3>
+    <div class="md-content">
+      <%- person.contentHtml %>
     </div>
   </div>
 
   <!-- Sidebar info -->
   <div>
     <div class="card" style="margin-bottom:16px;">
-      <h3>基本信息</h3>
+      <h3 data-i18n="masters.basicInfo">基本信息</h3>
       <table class="data-table">
-        <tr><td>流派</td><td><span class="badge badge-primary"><%= person.school %></span></td></tr>
-        <tr><td>代表</td><td><%= person.representative %></td></tr>
-        <% if (person.distilled_at) { %><tr><td>提炼日期</td><td><%= person.distilled_at %></td><% } %>
+        <tr><td data-i18n="masters.fieldSchool">流派</td><td><span class="badge badge-primary"><%= person.school %></span></td></tr>
+        <tr><td data-i18n="masters.fieldRep">代表</td><td><%= person.representative %></td></tr>
+        <% if (person.distilled_at) { %><tr><td data-i18n="masters.fieldDistilled">提炼日期</td><td><%= person.distilled_at %></td><% } %>
       </table>
     </div>
 
     <% if (person.when_to_use) { %>
     <div class="card" style="margin-bottom:16px;">
-      <h3>启用时机</h3>
+      <h3 data-i18n="masters.whenToUse">启用时机</h3>
       <p style="font-size:13px;line-height:1.7;color:var(--text-secondary);"><%= person.when_to_use %></p>
     </div>
     <% } %>
 
     <% if (person.sources) { %>
     <div class="card" style="margin-bottom:16px;">
-      <h3>信息来源</h3>
+      <h3 data-i18n="masters.sources">信息来源</h3>
       <p style="font-size:13px;color:var(--text-muted);"><%= person.sources %></p>
     </div>
     <% } %>
 
     <% if (person.disclaimer) { %>
     <div class="card" style="background:var(--warn-bg);border-color:var(--warn);">
-      <h3 style="color:var(--warn);">⚠️ 免责</h3>
+      <h3 style="color:var(--warn);" data-i18n="masters.disclaimer">⚠️ 免责</h3>
       <p style="font-size:12px;color:var(--text-muted);"><%= person.disclaimer %></p>
     </div>
     <% } %>

@@ -619,7 +619,14 @@ def fetch_one(ticker: str, market: str | None = None,
     stooq 已判死：不再发网络请求，直接记 dead_source。"""
     mk, base = parse_ticker(ticker, market)
     results = {}
+    # 有声失败（2026-09-13）：单只走全源链时可静默重试 2 分钟+（push2his 掐断 python 栈
+    # 后 requests 3×25s + curl 3×25s 深退避），操作者只见空白。每源向 stderr 打心跳；
+    # stdout 的 JSON 结果结构不变。FENG_INTL_QUIET=1 可关（体检探针批量跑时用）。
+    _beat = os.environ.get("FENG_INTL_QUIET", "") != "1"
     for src in sources_for(mk, ticker):
+        _t0 = time.time()
+        if _beat:
+            print(f"[{ticker}] 源={src} 请求中…", file=sys.stderr, flush=True)
         if src == "yfinance":
             r = yfinance_fetch(ticker, mk, start, end)
         elif src == "tencent":
@@ -637,6 +644,10 @@ def fetch_one(ticker: str, market: str | None = None,
         if not keep_data:
             r = {k: v for k, v in r.items() if k != "data"}
         results[src] = r
+        if _beat:
+            print(f"[{ticker}] 源={src} {'HIT' if r['hist_ok'] else 'miss'} "
+                  f"用时{time.time() - _t0:.0f}s rows={r['rows']} note={str(r['note'])[:60]}",
+                  file=sys.stderr, flush=True)
         if r["hist_ok"]:
             break
     chosen = next(({"source": s, **results[s]} for s in results if results[s]["hist_ok"]), None)

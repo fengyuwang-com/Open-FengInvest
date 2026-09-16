@@ -32,6 +32,7 @@ Rules applied (from docs/08-exit.md):
 """
 
 import json, math, os, re, sys, time
+import sqlite3
 import urllib.request
 import urllib.parse
 from datetime import datetime, date, timezone, timedelta
@@ -51,7 +52,7 @@ os.environ.pop("https_proxy", None)
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TOOLS = os.path.join(BASE, "tools")
 
-# Defer yfinance import — use fengdata.py (Futu primary) when possible
+# Defer yfinance import — use fengdata.py (腾讯/Yahoo 多源) when possible
 HOLDINGS_DIR = os.path.join(BASE, "holdings")
 ALERTS_DIR = os.path.join(BASE, "alerts")
 LOGS_DIR = os.path.join(BASE, "logs")
@@ -76,10 +77,20 @@ FUND_SHARE_WARN_PCT = 5.0
 FUND_SHARE_TIMEOUT = 15
 
 
+# fail-loud（2026-09-13 有声失败审计 P2）：份额取数的 HTTP 失败不再与
+# "正常翻页结束"混淆——逐次记入模块级列表并打到 stderr，由 fund-share 输出透出。
+_FUND_FETCH_ERRORS = []
+
+
+def fund_fetch_errors():
+    """返回本进程内份额取数的失败明细（copy）。"""
+    return list(_FUND_FETCH_ERRORS)
+
+
 def _fund_http_get(url, headers=None, timeout=FUND_SHARE_TIMEOUT):
     """通用 HTTP GET 请求，带超时和错误处理。
 
-    交易所 API 不稳定，失败时返回 None 而非抛异常。
+    交易所 API 不稳定，失败时返回 None 而非抛异常（有声：记明细+stderr）。
     """
     if headers is None:
         headers = {
@@ -92,6 +103,9 @@ def _fund_http_get(url, headers=None, timeout=FUND_SHARE_TIMEOUT):
         with urllib.request.urlopen(req, timeout=timeout) as resp:
             return resp.read().decode("utf-8", errors="replace")
     except Exception as e:
+        msg = "%s: %s" % (url[:90], str(e)[:80])
+        _FUND_FETCH_ERRORS.append(msg)
+        print("[fengwatch][fund-fetch] 请求失败: %s" % msg, file=sys.stderr)
         return None
 
 
@@ -343,25 +357,29 @@ def fetch_all_fund_shares(codes=None, exchanges=None):
         list[dict]: 合并后的份额数据
     """
     all_data = []
+    _FUND_FETCH_ERRORS.clear()  # 本轮聚合开始，失败明细重新计（fail-loud）
 
     # 上交所 ETF
     if exchanges is None or "SSE" in exchanges:
         try:
             all_data.extend(fetch_sse_etf_shares())
-        except Exception:
-            pass
+        except Exception as e:
+            _FUND_FETCH_ERRORS.append("SSE-ETF 整源失败: %s" % str(e)[:90])
+            print("[fengwatch][fund-fetch] SSE-ETF 整源失败: %s" % str(e)[:90], file=sys.stderr)
         # 上交所 LOF
         try:
             all_data.extend(fetch_sse_lof_shares())
-        except Exception:
-            pass
+        except Exception as e:
+            _FUND_FETCH_ERRORS.append("SSE-LOF 整源失败: %s" % str(e)[:90])
+            print("[fengwatch][fund-fetch] SSE-LOF 整源失败: %s" % str(e)[:90], file=sys.stderr)
 
     # 深交所
     if exchanges is None or "SZSE" in exchanges:
         try:
             all_data.extend(fetch_szse_fund_shares())
-        except Exception:
-            pass
+        except Exception as e:
+            _FUND_FETCH_ERRORS.append("SZSE 整源失败: %s" % str(e)[:90])
+            print("[fengwatch][fund-fetch] SZSE 整源失败: %s" % str(e)[:90], file=sys.stderr)
 
     # 按代码过滤
     if codes:
@@ -513,7 +531,7 @@ _PRICE_CACHE_TTL = 60
 
 
 def fetch_price_data(ticker, holding=None):
-    """Fetch current price + MA data via fengdata.py (Futu primary, yfinance fallback).
+    """Fetch current price + MA data via fengdata.py (腾讯/Yahoo 多源).
 
     - Quick-path: serve 60s module cache to make daily check fast.
     - Fallback: if live fetch fails/times out, use the holding's stored current_price
@@ -577,7 +595,7 @@ def fetch_price_data(ticker, holding=None):
 
 
 def fetch_financials(ticker):
-    """Fetch key financial data via fengdata.py (Futu primary, yfinance fallback)."""
+    """Fetch key financial data via fengdata.py (yfinance/腾讯)."""
     try:
         result = subprocess.run(
             [sys.executable, os.path.join(TOOLS, "fengdata.py"), ticker, "--mode", "financials", "--backend=auto"],
@@ -961,6 +979,8 @@ def analyze_holding(ticker, h=None):
 def append_journal(entry):
     """Append an entry to the decision journal (JSONL format)."""
     entry["timestamp"] = entry.get("timestamp", datetime.now(timezone.utc).isoformat())
+    entry.setdefault("message", entry.get("summary", ""))
+    entry.setdefault("action", entry.get("type", ""))
     with open(JOURNAL_FILE, "a", encoding="utf-8") as f:
         f.write(json.dumps(entry, ensure_ascii=False) + "\n")
 
@@ -980,6 +1000,38 @@ def read_journal(limit=50):
 
 
 # ─── Commands ─────────────────────────────────────────────────────
+
+# ─── FX 在岸/离岸价差警戒（fengfx 后续；数据源 = fengfx.py 入库的本地库，纯本地零网络）───
+# 语义：USDCNH（离岸）相对 USDCNY（在岸）价差绝对值 > 阈值 → 提醒。
+# 离岸显著贵/贱于在岸均代表跨市场资金压力或预期分化，值得关注但非卖出信号。
+FX_SPREAD_WARN_PCT = 0.5
+
+
+def check_fx_spread():
+    """读本地库 fx 收盘，计算 USDCNH−USDCNY 价差；缺数据返回 None（不猜数）。"""
+    db = os.path.join(BASE, "data", "market_data.db")
+    if not os.path.exists(db):
+        return None
+    con = sqlite3.connect(db)
+    try:
+        out = {}
+        for tk in ("USDCNY", "USDCNH"):
+            row = con.execute(
+                """SELECT d.date, d.close FROM indices i JOIN daily_data d ON d.index_id=i.id
+                   WHERE i.ticker=? AND i.category='fx' ORDER BY d.date DESC LIMIT 1""", (tk,)
+            ).fetchone()
+            if not row:
+                return None
+            out[tk] = row
+    finally:
+        con.close()
+    cny_date, cny = out["USDCNY"]
+    cnh_date, cnh = out["USDCNH"]
+    spread_pct = (cnh - cny) / cny * 100.0
+    return {"usdcny": cny, "usdcny_date": cny_date, "usdcnh": cnh, "usdcnh_date": cnh_date,
+            "spread_pct": spread_pct, "threshold_pct": FX_SPREAD_WARN_PCT,
+            "warn": abs(spread_pct) > FX_SPREAD_WARN_PCT}
+
 
 def cmd_daily(json_output=False):
     """一键每日分析: 检查所有持仓, 生成提醒, 写日志."""
@@ -1031,6 +1083,18 @@ def cmd_daily(json_output=False):
                 "ticker": r["ticker"], "type": "WARN", "severity": "warning",
                 "message": "需关注: " + "; ".join(labels), "date": today,
             })
+    # FX 在岸/离岸价差警戒（纯本地，缺数据静默跳过不告警）
+    fx = check_fx_spread()
+    fx_warn = None
+    if fx and fx["warn"]:
+        direction = "离岸贵于在岸" if fx["spread_pct"] > 0 else "离岸贱于在岸"
+        fx_warn = ("汇率价差警戒: USDCNH−USDCNY 价差 %.2f%% 超过 %.1f%%（%s，"
+                   "在岸%s / 离岸%s）" % (fx["spread_pct"], fx["threshold_pct"], direction,
+                                          fx["usdcny_date"], fx["usdcnh_date"]))
+        alerts["alerts"].append({
+            "ticker": "FX", "type": "WARN", "severity": "warning",
+            "message": fx_warn, "date": today,
+        })
     with open(os.path.join(ALERTS_DIR, "today.json"), "w", encoding="utf-8") as f:
         json.dump(alerts, f, indent=2, ensure_ascii=False)
 
@@ -1080,6 +1144,8 @@ def cmd_daily(json_output=False):
                     print(f"     {r['ticker']} — {t}")
     if red_count == 0 and yellow_count == 0:
         print("  ✅ 一切正常，无待处理事项")
+    if fx_warn:
+        print(f"  ⚠️  {fx_warn}")
     print(f"{'='*60}\n")
     print(f"  [记录] alerts/today.json 已更新")
     print(f"  [日志] 已追加到 logs/journal.jsonl")
@@ -1881,7 +1947,8 @@ def cmd_fund_share(args):
 
     if not raw_data:
         if json_output:
-            print(json.dumps({"error": "未获取到份额数据", "hint": "交易所 API 可能未更新或非交易日"}))
+            print(json.dumps({"error": "未获取到份额数据", "hint": "交易所 API 可能未更新或非交易日",
+                              "fetch_errors": fund_fetch_errors()}))
         else:
             print("未获取到份额数据。可能原因：交易所 API 未更新（非交易日/数据延迟）。")
         return 1
@@ -1916,6 +1983,9 @@ def cmd_fund_share(args):
         },
         "items": results,
     }
+    # fail-loud：某源 HTTP 失败导致结果截断时，把明细透出——有数据≠全拿到了
+    if _FUND_FETCH_ERRORS:
+        output["fetch_errors"] = fund_fetch_errors()
 
     if json_output:
         print(json.dumps(output, indent=2, ensure_ascii=False))

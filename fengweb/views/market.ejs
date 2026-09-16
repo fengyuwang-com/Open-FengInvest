@@ -4,57 +4,62 @@
 </div>
 
 <!-- Loading indicator -->
-<div id="market-loading" class="card" style="text-align:center;padding:40px;">
-  <div style="font-size:20px;margin-bottom:8px;">⏳</div>
-  <p>正在加载市场数据（Futu）...</p>
+<div id="market-loading" class="card mkt-loading">
+  <div class="mkt-emoji">⏳</div>
+  <p data-i18n="market.loading">正在加载市场数据（Futu）...</p>
 </div>
 
 <!-- Dashboard content (hidden until loaded) -->
-<div id="market-dashboard" style="display:none;">
+<div id="market-dashboard" class="mkt-hidden">
 
   <div class="card">
-    <div style="display:flex;justify-content:space-between;align-items:center;">
-      <h3 class="section-title">📡 大盘指数</h3>
-      <div style="display:flex;gap:8px;align-items:center;">
-        <span id="market-updated" style="font-size:11px;color:var(--text-muted);"></span>
-        <button class="btn btn-sm btn-outline" onclick="loadComprehensive()" type="button">刷新</button>
+    <div class="mkt-hdr-row">
+      <h3 class="section-title" data-i18n="market.indices">📡 大盘指数</h3>
+      <div class="mkt-flex-gap">
+        <span id="market-updated" class="mkt-muted-xs"></span>
+        <button class="btn btn-sm btn-outline" onclick="loadComprehensive()" type="button" data-i18n="market.refresh">刷新</button>
       </div>
     </div>
     <div class="dashboard-grid" id="index-cards"></div>
   </div>
 
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;">
+  <div class="mkt-two-col">
     <div class="card" id="val-card">
-      <h3 class="section-title">📐 恒指估值（5年分位）</h3>
-      <div id="val-content"><p style="color:var(--text-muted);font-size:13px;">加载中...</p></div>
+      <h3 class="section-title" data-i18n="market.valuationHSI">📐 恒指估值（5年分位）</h3>
+      <div id="val-content"><p class="mkt-muted" data-i18n="market.loadingShort">加载中...</p></div>
     </div>
     <div class="card" id="fed-card">
-      <h3 class="section-title">🏛️ FedWatch 利率</h3>
-      <div id="fed-content"><p style="color:var(--text-muted);font-size:13px;">加载中...</p></div>
+      <h3 class="section-title" data-i18n="market.fedwatch">🏛️ FedWatch 利率</h3>
+      <div id="fed-content"><p class="mkt-muted" data-i18n="market.loadingShort">加载中...</p></div>
     </div>
   </div>
 
-  <div class="card" style="margin-top:12px;">
-    <h3 class="section-title">🔇 噪音防火墙（信条 3）</h3>
-    <p style="font-size:14px;line-height:var(--lh-body);color:var(--text-secondary);margin:0;">
-      本页不提供涨幅榜、涨停榜、热点概念、日内分时——这些对"公司长期价值"零增量的信息属于<b>噪音</b>，不看、不采、不讨论（信条 3）。
-      判别标准只有一条：<b>这条信息会不会改变我对公司长期价值的判断？不会 = 噪音。</b>
+  <div class="card">
+    <h3 class="section-title" data-i18n="market.fx">💱 汇率（R29：汇率是价格资产）</h3>
+    <div id="fx-content"><p class="mkt-muted" data-i18n="market.loadingShort">加载中...</p></div>
+  </div>
+
+  <div class="card">
+    <h3 class="section-title" data-i18n="market.noiseFirewall">🔇 噪音防火墙（信条 3）</h3>
+    <p class="mkt-noise-p">
+      <span data-i18n="market.noiseDesc">本页不提供涨幅榜、涨停榜、热点概念、日内分时——这些对"公司长期价值"零增量的信息属于</span><b data-i18n="market.noiseWord">噪音</b><span data-i18n="market.noiseRule">，不看、不采、不讨论（信条 3）。
+      判别标准只有一条：</span><b data-i18n="market.noiseTest">这条信息会不会改变我对公司长期价值的判断？不会 = 噪音。</b>
     </p>
   </div>
 
-  <div class="card" style="margin-top:12px;">
-    <h3 class="section-title">📅 经济事件</h3>
-    <div id="econ-content"><p style="color:var(--text-muted);font-size:13px;">加载中...</p></div>
+  <div class="card">
+    <h3 class="section-title" data-i18n="market.econCalendar">📅 经济事件</h3>
+    <div id="econ-content"><p class="mkt-muted" data-i18n="market.loadingShort">加载中...</p></div>
   </div>
 
-  <div id="market-warnings" class="card" style="margin-top:12px;display:none;background:var(--warn-bg);border-color:var(--warn);">
-    <h3 style="font-size:14px;margin:0;">⚠️ 数据说明</h3>
-    <div id="warnings-content" style="font-size:12px;margin-top:4px;color:var(--warn);"></div>
+  <div id="market-warnings" class="card mkt-warn-banner">
+    <h3 class="mkt-notes-title" data-i18n="market.dataNotes">⚠️ 数据说明</h3>
+    <div id="warnings-content" class="mkt-warn-note"></div>
   </div>
 
-  <div class="card" style="margin-top:12px;background:var(--ok-bg);border:1px solid var(--ok);">
-    <p style="font-size:15px;line-height:1.7;margin:0;">
-      下面按类别整理了最权威的公开数据源，点击直达。
+  <div class="card mkt-ok-banner">
+    <p class="mkt-sources-intro">
+      <span data-i18n="market.sourcesIntro">下面按类别整理了最权威的公开数据源，点击直达。</span>
     </p>
   </div>
 
@@ -62,347 +67,347 @@
 
 <!-- External Data Sources -->
 <div class="card">
-  <h3 class="section-title">🌐 价值投资数据来源</h3>
-  <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;">点击链接直达数据源。标注"免费"的可直接使用，标注"有限免费"的需注册。</p>
+  <h3 class="section-title" data-i18n="market.sourcesTitle">🌐 价值投资数据来源</h3>
+  <p class="mkt-hint"><span data-i18n="market.sourcesHint">点击链接直达数据源。标注"免费"的可直接使用，标注"有限免费"的需注册。</span></p>
 
   <!-- Macro / Market Temperature -->
-  <div class="source-section" style="margin-bottom:20px;">
-    <h4 style="font-size:15px;font-weight:600;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid var(--border);">📈 宏观 & 市场温度</h4>
-    <div class="source-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;">
-      <a href="https://cfgi.io/" target="_blank" rel="noopener" class="source-card" style="display:block;padding:12px 14px;border:1px solid var(--border);border-radius:8px;text-decoration:none;color:inherit;transition:box-shadow 0.15s;">
-        <div style="font-weight:600;font-size:14px;">CFGI 恐贪指数</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">CNN Fear & Greed 实时数据，完整历史图表</div>
-        <div style="font-size:11px;color:var(--ok);margin-top:4px;">免费</div>
+  <div class="source-section">
+    <h4 data-i18n="market.secMacro" class="source-title">📈 宏观 & 市场温度</h4>
+    <div class="source-grid">
+      <a href="https://cfgi.io/" target="_blank" rel="noopener" class="source-card">
+        <div data-i18n="market.srcCFGI">CFGI 恐贪指数</div>
+        <div data-i18n="market.descCFGI">CNN Fear & Greed 实时数据，完整历史图表</div>
+        <div data-i18n="market.tagFree" class="sc-tag green">免费</div>
       </a>
-      <a href="https://www.currentmarketvaluation.com/" target="_blank" rel="noopener" class="source-card" style="display:block;padding:12px 14px;border:1px solid var(--border);border-radius:8px;text-decoration:none;color:inherit;transition:box-shadow 0.15s;">
-        <div style="font-weight:600;font-size:14px;">Current Market Valuation</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">综合市场估值面板：CAPE、Tobin's Q、Buffett 指标</div>
-        <div style="font-size:11px;color:var(--ok);margin-top:4px;">免费</div>
+      <a href="https://www.currentmarketvaluation.com/" target="_blank" rel="noopener" class="source-card">
+        <div>Current Market Valuation</div>
+        <div data-i18n="market.descCMV">综合市场估值面板：CAPE、Tobin's Q、Buffett 指标</div>
+        <div data-i18n="market.tagFree" class="sc-tag green">免费</div>
       </a>
-      <a href="https://www.multpl.com/" target="_blank" rel="noopener" class="source-card" style="display:block;padding:12px 14px;border:1px solid var(--border);border-radius:8px;text-decoration:none;color:inherit;transition:box-shadow 0.15s;">
-        <div style="font-weight:600;font-size:14px;">Multpl</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">Shiller PE / CAPE 历史数据，S&P 真实收益</div>
-        <div style="font-size:11px;color:var(--ok);margin-top:4px;">免费</div>
+      <a href="https://www.multpl.com/" target="_blank" rel="noopener" class="source-card">
+        <div>Multpl</div>
+        <div data-i18n="market.descMultpl">Shiller PE / CAPE 历史数据，S&P 真实收益</div>
+        <div data-i18n="market.tagFree" class="sc-tag green">免费</div>
       </a>
-      <a href="https://www.thebuffettindicator.com/" target="_blank" rel="noopener" class="source-card" style="display:block;padding:12px 14px;border:1px solid var(--border);border-radius:8px;text-decoration:none;color:inherit;transition:box-shadow 0.15s;">
-        <div style="font-weight:600;font-size:14px;">Buffett Indicator</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">总市值/GNP 的巴菲特指标，全球对比</div>
-        <div style="font-size:11px;color:var(--ok);margin-top:4px;">免费</div>
+      <a href="https://www.thebuffettindicator.com/" target="_blank" rel="noopener" class="source-card">
+        <div>Buffett Indicator</div>
+        <div data-i18n="market.descBuffett">总市值/GNP 的巴菲特指标，全球对比</div>
+        <div data-i18n="market.tagFree" class="sc-tag green">免费</div>
       </a>
-      <a href="https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value=2026" target="_blank" rel="noopener" class="source-card" style="display:block;padding:12px 14px;border:1px solid var(--border);border-radius:8px;text-decoration:none;color:inherit;transition:box-shadow 0.15s;">
-        <div style="font-weight:600;font-size:14px;">美国国债收益率</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">官方 Treasury 收益率曲线，期限利差</div>
-        <div style="font-size:11px;color:var(--ok);margin-top:4px;">免费 · 官方</div>
+      <a href="https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value=2026" target="_blank" rel="noopener" class="source-card">
+        <div data-i18n="market.srcUSTY">美国国债收益率</div>
+        <div data-i18n="market.descUSTY">官方 Treasury 收益率曲线，期限利差</div>
+        <div data-i18n="market.tagFreeOfficial" class="sc-tag green">免费 · 官方</div>
       </a>
-      <a href="https://www.officialdata.org/" target="_blank" rel="noopener" class="source-card" style="display:block;padding:12px 14px;border:1px solid var(--border);border-radius:8px;text-decoration:none;color:inherit;transition:box-shadow 0.15s;">
-        <div style="font-weight:600;font-size:14px;">通胀计算器</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">CPI 通胀数据，美元购买力历史变化</div>
-        <div style="font-size:11px;color:var(--ok);margin-top:4px;">免费</div>
+      <a href="https://www.officialdata.org/" target="_blank" rel="noopener" class="source-card">
+        <div data-i18n="market.srcInflation">通胀计算器</div>
+        <div data-i18n="market.descInflation">CPI 通胀数据，美元购买力历史变化</div>
+        <div data-i18n="market.tagFree" class="sc-tag green">免费</div>
       </a>
     </div>
   </div>
 
   <!-- Company Fundamentals -->
-  <div class="source-section" style="margin-bottom:20px;">
-    <h4 style="font-size:15px;font-weight:600;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid var(--border);">🏢 公司基本面 & 财报</h4>
-    <div class="source-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;">
-      <a href="https://www.macrotrends.net/stocks/charts" target="_blank" rel="noopener" class="source-card" style="display:block;padding:12px 14px;border:1px solid var(--border);border-radius:8px;text-decoration:none;color:inherit;transition:box-shadow 0.15s;">
-        <div style="font-weight:600;font-size:14px;">MacroTrends ⭐</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">历史财务数据：营收、利润、FCF、ROE、PE 20+年图表</div>
-        <div style="font-size:11px;color:var(--ok);margin-top:4px;">免费 · 价值投资第一数据源</div>
+  <div class="source-section">
+    <h4 data-i18n="market.secFundamentals" class="source-title">🏢 公司基本面 & 财报</h4>
+    <div class="source-grid">
+      <a href="https://www.macrotrends.net/stocks/charts" target="_blank" rel="noopener" class="source-card">
+        <div>MacroTrends ⭐</div>
+        <div data-i18n="market.descMacroTrends">历史财务数据：营收、利润、FCF、ROE、PE 20+年图表</div>
+        <div data-i18n="market.tagFreeVI1" class="sc-tag green">免费 · 价值投资第一数据源</div>
       </a>
-      <a href="https://www.simplywall.st/" target="_blank" rel="noopener" class="source-card" style="display:block;padding:12px 14px;border:1px solid var(--border);border-radius:8px;text-decoration:none;color:inherit;transition:box-shadow 0.15s;">
-        <div style="font-weight:600;font-size:14px;">SimplyWallSt</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">可视化财务分析，内在价值估算，同业对比</div>
-        <div style="font-size:11px;color:var(--warn);margin-top:4px;">有限免费</div>
+      <a href="https://www.simplywall.st/" target="_blank" rel="noopener" class="source-card">
+        <div>SimplyWallSt</div>
+        <div data-i18n="market.descSWS">可视化财务分析，内在价值估算，同业对比</div>
+        <div data-i18n="market.tagFreemium" class="sc-tag yellow">有限免费</div>
       </a>
-      <a href="https://stockanalysis.com/" target="_blank" rel="noopener" class="source-card" style="display:block;padding:12px 14px;border:1px solid var(--border);border-radius:8px;text-decoration:none;color:inherit;transition:box-shadow 0.15s;">
-        <div style="font-weight:600;font-size:14px;">Stock Analysis</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">财报图表、估值指标、增长趋势、分红历史</div>
-        <div style="font-size:11px;color:var(--ok);margin-top:4px;">免费</div>
+      <a href="https://stockanalysis.com/" target="_blank" rel="noopener" class="source-card">
+        <div>Stock Analysis</div>
+        <div data-i18n="market.descStockAnalysis">财报图表、估值指标、增长趋势、分红历史</div>
+        <div data-i18n="market.tagFree" class="sc-tag green">免费</div>
       </a>
-      <a href="https://www.gurufocus.com/" target="_blank" rel="noopener" class="source-card" style="display:block;padding:12px 14px;border:1px solid var(--border);border-radius:8px;text-decoration:none;color:inherit;transition:box-shadow 0.15s;">
-        <div style="font-weight:600;font-size:14px;">GuruFocus ⭐</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">估值仪表盘、大师持仓跟踪、内在价值计算</div>
-        <div style="font-size:11px;color:var(--warn);margin-top:4px;">有限免费 · 大师持仓功能强大</div>
+      <a href="https://www.gurufocus.com/" target="_blank" rel="noopener" class="source-card">
+        <div>GuruFocus ⭐</div>
+        <div data-i18n="market.descGuruFocus">估值仪表盘、大师持仓跟踪、内在价值计算</div>
+        <div data-i18n="market.tagFreemiumMasters" class="sc-tag yellow">有限免费 · 大师持仓功能强大</div>
       </a>
-      <a href="https://www.tikr.com/" target="_blank" rel="noopener" class="source-card" style="display:block;padding:12px 14px;border:1px solid var(--border);border-radius:8px;text-decoration:none;color:inherit;transition:box-shadow 0.15s;">
-        <div style="font-weight:600;font-size:14px;">Tikr ⭐</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">一站式财报数据：20+年财务、估值、增长、回报率</div>
-        <div style="font-size:11px;color:var(--warn);margin-top:4px;">有限免费 · 数据最全之一</div>
+      <a href="https://www.tikr.com/" target="_blank" rel="noopener" class="source-card">
+        <div>Tikr ⭐</div>
+        <div data-i18n="market.descTikr">一站式财报数据：20+年财务、估值、增长、回报率</div>
+        <div data-i18n="market.tagFreemiumFull" class="sc-tag yellow">有限免费 · 数据最全之一</div>
       </a>
-      <a href="https://finance.yahoo.com/" target="_blank" rel="noopener" class="source-card" style="display:block;padding:12px 14px;border:1px solid var(--border);border-radius:8px;text-decoration:none;color:inherit;transition:box-shadow 0.15s;">
-        <div style="font-weight:600;font-size:14px;">Yahoo Finance</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">行情、财报摘要、分析预测、持仓数据</div>
-        <div style="font-size:11px;color:var(--ok);margin-top:4px;">免费</div>
+      <a href="https://finance.yahoo.com/" target="_blank" rel="noopener" class="source-card">
+        <div>Yahoo Finance</div>
+        <div data-i18n="market.descYahoo">行情、财报摘要、分析预测、持仓数据</div>
+        <div data-i18n="market.tagFree" class="sc-tag green">免费</div>
       </a>
-      <a href="https://finviz.com/" target="_blank" rel="noopener" class="source-card" style="display:block;padding:12px 14px;border:1px solid var(--border);border-radius:8px;text-decoration:none;color:inherit;transition:box-shadow 0.15s;">
-        <div style="font-weight:600;font-size:14px;">Finviz</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">股票筛选器、Screener、可视化热图、内幕交易</div>
-        <div style="font-size:11px;color:var(--ok);margin-top:4px;">免费</div>
+      <a href="https://finviz.com/" target="_blank" rel="noopener" class="source-card">
+        <div>Finviz</div>
+        <div data-i18n="market.descFinviz">股票筛选器、Screener、可视化热图、内幕交易</div>
+        <div data-i18n="market.tagFree" class="sc-tag green">免费</div>
       </a>
-      <a href="https://www.sec.gov/edgar" target="_blank" rel="noopener" class="source-card" style="display:block;padding:12px 14px;border:1px solid var(--border);border-radius:8px;text-decoration:none;color:inherit;transition:box-shadow 0.15s;">
-        <div style="font-weight:600;font-size:14px;">SEC EDGAR</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">官方财报（10-K/10-Q），最原始可信的数据源</div>
-        <div style="font-size:11px;color:var(--ok);margin-top:4px;">免费 · 官方</div>
+      <a href="https://www.sec.gov/edgar" target="_blank" rel="noopener" class="source-card">
+        <div>SEC EDGAR</div>
+        <div data-i18n="market.descSEC">官方财报（10-K/10-Q），最原始可信的数据源</div>
+        <div data-i18n="market.tagFreeOfficial" class="sc-tag green">免费 · 官方</div>
       </a>
     </div>
   </div>
 
   <!-- Valuation & Multiples -->
-  <div class="source-section" style="margin-bottom:20px;">
-    <h4 style="font-size:15px;font-weight:600;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid var(--border);">💰 估值 & 大师持仓</h4>
-    <div class="source-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;">
-      <a href="https://www.ycharts.com/" target="_blank" rel="noopener" class="source-card" style="display:block;padding:12px 14px;border:1px solid var(--border);border-radius:8px;text-decoration:none;color:inherit;transition:box-shadow 0.15s;">
-        <div style="font-weight:600;font-size:14px;">YCharts</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">专业级数据：估值倍数、收益率曲线、因子回报</div>
-        <div style="font-size:11px;color:var(--danger);margin-top:4px;">付费 · 试用可用</div>
+  <div class="source-section">
+    <h4 data-i18n="market.secValuation" class="source-title">💰 估值 & 大师持仓</h4>
+    <div class="source-grid">
+      <a href="https://www.ycharts.com/" target="_blank" rel="noopener" class="source-card">
+        <div>YCharts</div>
+        <div data-i18n="market.descYCharts">专业级数据：估值倍数、收益率曲线、因子回报</div>
+        <div data-i18n="market.tagPaidTrial" class="sc-tag red">付费 · 试用可用</div>
       </a>
-      <a href="https://www.wisesheets.io/" target="_blank" rel="noopener" class="source-card" style="display:block;padding:12px 14px;border:1px solid var(--border);border-radius:8px;text-decoration:none;color:inherit;transition:box-shadow 0.15s;">
-        <div style="font-weight:600;font-size:14px;">Wisesheets</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">Excel/Google Sheets 财务数据插件，自动拉取</div>
-        <div style="font-size:11px;color:var(--warn);margin-top:4px;">有限免费</div>
+      <a href="https://www.wisesheets.io/" target="_blank" rel="noopener" class="source-card">
+        <div>Wisesheets</div>
+        <div data-i18n="market.descWisesheets">Excel/Google Sheets 财务数据插件，自动拉取</div>
+        <div data-i18n="market.tagFreemium" class="sc-tag yellow">有限免费</div>
       </a>
-      <a href="https://dataroma.com/" target="_blank" rel="noopener" class="source-card" style="display:block;padding:12px 14px;border:1px solid var(--border);border-radius:8px;text-decoration:none;color:inherit;transition:box-shadow 0.15s;">
-        <div style="font-weight:600;font-size:14px;">Dataroma ⭐</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">大师 13F 持仓聚合，巴菲特/芒格/段永平等持仓变化</div>
-        <div style="font-size:11px;color:var(--ok);margin-top:4px;">免费 · 价值投资必看</div>
+      <a href="https://dataroma.com/" target="_blank" rel="noopener" class="source-card">
+        <div>Dataroma ⭐</div>
+        <div data-i18n="market.descDataroma">大师 13F 持仓聚合，巴菲特/芒格/段永平等持仓变化</div>
+        <div data-i18n="market.tagFreeMustSee" class="sc-tag green">免费 · 价值投资必看</div>
       </a>
-      <a href="https://whalewisdom.com/" target="_blank" rel="noopener" class="source-card" style="display:block;padding:12px 14px;border:1px solid var(--border);border-radius:8px;text-decoration:none;color:inherit;transition:box-shadow 0.15s;">
-        <div style="font-weight:600;font-size:14px;">WhaleWisdom</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">13F 持仓追踪，对冲基金仓位变化，大师操作</div>
-        <div style="font-size:11px;color:var(--ok);margin-top:4px;">免费</div>
+      <a href="https://whalewisdom.com/" target="_blank" rel="noopener" class="source-card">
+        <div>WhaleWisdom</div>
+        <div data-i18n="market.descWhaleWisdom">13F 持仓追踪，对冲基金仓位变化，大师操作</div>
+        <div data-i18n="market.tagFree" class="sc-tag green">免费</div>
       </a>
-      <a href="https://openinsider.com/" target="_blank" rel="noopener" class="source-card" style="display:block;padding:12px 14px;border:1px solid var(--border);border-radius:8px;text-decoration:none;color:inherit;transition:box-shadow 0.15s;">
-        <div style="font-weight:600;font-size:14px;">OpenInsider</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">内幕交易数据，高管买卖实时跟踪</div>
-        <div style="font-size:11px;color:var(--ok);margin-top:4px;">免费</div>
+      <a href="https://openinsider.com/" target="_blank" rel="noopener" class="source-card">
+        <div>OpenInsider</div>
+        <div data-i18n="market.descOpenInsider">内幕交易数据，高管买卖实时跟踪</div>
+        <div data-i18n="market.tagFree" class="sc-tag green">免费</div>
       </a>
-      <a href="https://www.morningstar.com/" target="_blank" rel="noopener" class="source-card" style="display:block;padding:12px 14px;border:1px solid var(--border);border-radius:8px;text-decoration:none;color:inherit;transition:box-shadow 0.15s;">
-        <div style="font-weight:600;font-size:14px;">Morningstar</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">股票研究评级、公允估值、护城河评级</div>
-        <div style="font-size:11px;color:var(--warn);margin-top:4px;">有限免费 · 评级权威</div>
+      <a href="https://www.morningstar.com/" target="_blank" rel="noopener" class="source-card">
+        <div>Morningstar</div>
+        <div data-i18n="market.descMorningstar">股票研究评级、公允估值、护城河评级</div>
+        <div data-i18n="market.tagFreeRatings" class="sc-tag yellow">有限免费 · 评级权威</div>
       </a>
     </div>
   </div>
 
   <!-- Dividend / Buyback -->
-  <div class="source-section" style="margin-bottom:20px;">
-    <h4 style="font-size:15px;font-weight:600;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid var(--border);">💵 分红 & 回购</h4>
-    <div class="source-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;">
-      <a href="https://www.dividend.com/" target="_blank" rel="noopener" class="source-card" style="display:block;padding:12px 14px;border:1px solid var(--border);border-radius:8px;text-decoration:none;color:inherit;transition:box-shadow 0.15s;">
-        <div style="font-weight:600;font-size:14px;">Dividend.com</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">分红率、派息率、增长历史、分红评级</div>
-        <div style="font-size:11px;color:var(--ok);margin-top:4px;">免费</div>
+  <div class="source-section">
+    <h4 data-i18n="market.secDividends" class="source-title">💵 分红 & 回购</h4>
+    <div class="source-grid">
+      <a href="https://www.dividend.com/" target="_blank" rel="noopener" class="source-card">
+        <div>Dividend.com</div>
+        <div data-i18n="market.descDividendCom">分红率、派息率、增长历史、分红评级</div>
+        <div data-i18n="market.tagFree" class="sc-tag green">免费</div>
       </a>
-      <a href="https://www.dividendhistory.org/" target="_blank" rel="noopener" class="source-card" style="display:block;padding:12px 14px;border:1px solid var(--border);border-radius:8px;text-decoration:none;color:inherit;transition:box-shadow 0.15s;">
-        <div style="font-weight:600;font-size:14px;">Dividend History</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">个股完整分红历史，除息日/派息日一览</div>
-        <div style="font-size:11px;color:var(--ok);margin-top:4px;">免费</div>
+      <a href="https://www.dividendhistory.org/" target="_blank" rel="noopener" class="source-card">
+        <div>Dividend History</div>
+        <div data-i18n="market.descDivHistory">个股完整分红历史，除息日/派息日一览</div>
+        <div data-i18n="market.tagFree" class="sc-tag green">免费</div>
       </a>
-      <a href="https://www.nasdaq.com/market-activity/dividend-history" target="_blank" rel="noopener" class="source-card" style="display:block;padding:12px 14px;border:1px solid var(--border);border-radius:8px;text-decoration:none;color:inherit;transition:box-shadow 0.15s;">
-        <div style="font-weight:600;font-size:14px;">Nasdaq 分红</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">纳斯达克官方分红日历和历史数据</div>
-        <div style="font-size:11px;color:var(--ok);margin-top:4px;">免费 · 官方</div>
+      <a href="https://www.nasdaq.com/market-activity/dividend-history" target="_blank" rel="noopener" class="source-card">
+        <div data-i18n="market.srcNasdaqDiv">Nasdaq 分红</div>
+        <div data-i18n="market.descNasdaqDiv">纳斯达克官方分红日历和历史数据</div>
+        <div data-i18n="market.tagFreeOfficial" class="sc-tag green">免费 · 官方</div>
       </a>
     </div>
   </div>
 
   <!-- Global Valuations -->
-  <div class="source-section" style="margin-bottom:20px;">
-    <h4 style="font-size:15px;font-weight:600;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid var(--border);">🌍 全球估值对比</h4>
-    <div class="source-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;">
-      <a href="https://worldperatio.com/" target="_blank" rel="noopener" class="source-card" style="display:block;padding:12px 14px;border:1px solid var(--border);border-radius:8px;text-decoration:none;color:inherit;transition:box-shadow 0.15s;">
-        <div style="font-weight:600;font-size:14px;">World PE Ratio ⭐</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">全球各国 P/E 地图，vs 5Y/10Y/20Y 平均对比，一眼识别贵贱</div>
-        <div style="font-size:11px;color:var(--ok);margin-top:4px;">免费 · 全球估值一目了然</div>
+  <div class="source-section">
+    <h4 data-i18n="market.secGlobal" class="source-title">🌍 全球估值对比</h4>
+    <div class="source-grid">
+      <a href="https://worldperatio.com/" target="_blank" rel="noopener" class="source-card">
+        <div>World PE Ratio ⭐</div>
+        <div data-i18n="market.descWorldPE">全球各国 P/E 地图，vs 5Y/10Y/20Y 平均对比，一眼识别贵贱</div>
+        <div data-i18n="market.tagFreeGlobal" class="sc-tag green">免费 · 全球估值一目了然</div>
       </a>
-      <a href="https://countryetftracker.com/GlobalValuations" target="_blank" rel="noopener" class="source-card" style="display:block;padding:12px 14px;border:1px solid var(--border);border-radius:8px;text-decoration:none;color:inherit;transition:box-shadow 0.15s;">
-        <div style="font-weight:600;font-size:14px;">Country ETF Tracker</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">MSCI 60+ 国 forward P/E 排名，最便宜/最贵市场一目了然</div>
-        <div style="font-size:11px;color:var(--ok);margin-top:4px;">免费 · 每日更新</div>
+      <a href="https://countryetftracker.com/GlobalValuations" target="_blank" rel="noopener" class="source-card">
+        <div>Country ETF Tracker</div>
+        <div data-i18n="market.descCountryETF">MSCI 60+ 国 forward P/E 排名，最便宜/最贵市场一目了然</div>
+        <div data-i18n="market.tagFreeDaily" class="sc-tag green">免费 · 每日更新</div>
       </a>
-      <a href="https://siblisresearch.com/data/cape-ratios-by-country/" target="_blank" rel="noopener" class="source-card" style="display:block;padding:12px 14px;border:1px solid var(--border);border-radius:8px;text-decoration:none;color:inherit;transition:box-shadow 0.15s;">
-        <div style="font-weight:600;font-size:14px;">Siblis Research — CAPE 各国对比</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">各国 Shiller PE (CAPE) 历史数据，长期估值对比权威来源</div>
-        <div style="font-size:11px;color:var(--ok);margin-top:4px;">免费 · 部分数据需付费</div>
+      <a href="https://siblisresearch.com/data/cape-ratios-by-country/" target="_blank" rel="noopener" class="source-card">
+        <div data-i18n="market.srcSiblisCAPE">Siblis Research — CAPE 各国对比</div>
+        <div data-i18n="market.descSiblisCAPE">各国 Shiller PE (CAPE) 历史数据，长期估值对比权威来源</div>
+        <div data-i18n="market.tagFreePartialPaid" class="sc-tag green">免费 · 部分数据需付费</div>
       </a>
-      <a href="https://siblisresearch.com/data/pe-ratios-by-country/" target="_blank" rel="noopener" class="source-card" style="display:block;padding:12px 14px;border:1px solid var(--border);border-radius:8px;text-decoration:none;color:inherit;transition:box-shadow 0.15s;">
-        <div style="font-weight:600;font-size:14px;">Siblis Research — P/E 各国对比</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">各国 trailing P/E 数据，历史分位对比</div>
-        <div style="font-size:11px;color:var(--ok);margin-top:4px;">免费 · 部分数据需付费</div>
+      <a href="https://siblisresearch.com/data/pe-ratios-by-country/" target="_blank" rel="noopener" class="source-card">
+        <div data-i18n="market.srcSiblisPE">Siblis Research — P/E 各国对比</div>
+        <div data-i18n="market.descSiblisPE">各国 trailing P/E 数据，历史分位对比</div>
+        <div data-i18n="market.tagFreePartialPaid" class="sc-tag green">免费 · 部分数据需付费</div>
       </a>
     </div>
   </div>
 
   <!-- 另类指标 / 开源工具 -->
-  <div class="source-section" style="margin-bottom:20px;">
-    <h4 style="font-size:15px;font-weight:600;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid var(--border);">🔬 另类指标 & 开源工具</h4>
-    <div class="source-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;">
+  <div class="source-section">
+    <h4 data-i18n="market.secAlt" class="source-title">🔬 另类指标 & 开源工具</h4>
+    <div class="source-grid">
       <a href="https://riderz797.github.io/market-indicators/index.html" target="_blank" rel="noopener" class="source-card">
-        <div><strong>Acumen 宏观仪表盘</strong> ⭐</div>
-        <div class="sc-desc">宏观周期、全球流动性指数、商业周期、财政主导风险、美元贬值追踪</div>
-        <div class="sc-tag green">免费 · GitHub Pages · 券商看不到的独有指标</div>
+        <div><strong data-i18n="market.srcAcumen" Acumen 宏观仪表盘</strong> ⭐</div>
+        <div data-i18n="market.descAcumen" class="sc-desc">宏观周期、全球流动性指数、商业周期、财政主导风险、美元贬值追踪</div>
+        <div data-i18n="market.tagFreeAcumen" class="sc-tag green">免费 · GitHub Pages · 券商看不到的独有指标</div>
       </a>
       <a href="https://snehaldutta.github.io/ARTHADashboard/" target="_blank" rel="noopener" class="source-card">
         <div><strong>ARTHA Dashboard</strong></div>
-        <div class="sc-desc">开源股票数据分析面板，yfinance + Gradio，搜索任意股票</div>
-        <div class="sc-tag green">免费 · 开源 (GitHub)</div>
+        <div data-i18n="market.descArtha" class="sc-desc">开源股票数据分析面板，yfinance + Gradio，搜索任意股票</div>
+        <div data-i18n="market.tagFreeOSS" class="sc-tag green">免费 · 开源 (GitHub)</div>
       </a>
       <a href="https://arbergmann.github.io/value_stock_screener/" target="_blank" rel="noopener" class="source-card">
         <div><strong>Value Stock Screener</strong></div>
-        <div class="sc-desc">开源价值筛选器，市净率/市盈率/股息率多维度扫描</div>
-        <div class="sc-tag green">免费 · 开源 (GitHub Pages)</div>
+        <div data-i18n="market.descVSS" class="sc-desc">开源价值筛选器，市净率/市盈率/股息率多维度扫描</div>
+        <div data-i18n="market.tagFreeOSSPages" class="sc-tag green">免费 · 开源 (GitHub Pages)</div>
       </a>
       <a href="https://www.alpha-sense.com/solutions/alternative-data/" target="_blank" rel="noopener" class="source-card">
         <div><strong>AlphaSense</strong></div>
-        <div class="sc-desc">另类数据聚合平台：新闻情绪、供应链、专利、招聘等信号</div>
-        <div class="sc-tag yellow">有限免费 · 企业级数据</div>
+        <div data-i18n="market.descAlphaSense" class="sc-desc">另类数据聚合平台：新闻情绪、供应链、专利、招聘等信号</div>
+        <div data-i18n="market.tagFreemiumEnt" class="sc-tag yellow">有限免费 · 企业级数据</div>
       </a>
       <a href="https://www.gdeltproject.org/" target="_blank" rel="noopener" class="source-card">
-        <div><strong>GDELT 全球新闻事件</strong></div>
-        <div class="sc-desc">全球新闻事件与实体数据库，每15分钟更新，可追溯数十年</div>
-        <div class="sc-tag green">免费 · 另类情绪指标</div>
+        <div><strong data-i18n="market.srcGDELT" GDELT 全球新闻事件</strong></div>
+        <div data-i18n="market.descGDELT" class="sc-desc">全球新闻事件与实体数据库，每15分钟更新，可追溯数十年</div>
+        <div data-i18n="market.tagFreeAltSentiment" class="sc-tag green">免费 · 另类情绪指标</div>
       </a>
     </div>
   </div>
 
   <!-- 美联储 & 宏观经济 -->
-  <div class="source-section" style="margin-bottom:20px;">
-    <h4 style="font-size:15px;font-weight:600;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid var(--border);">🏛️ 美联储 & 宏观经济</h4>
-    <div class="source-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;">
+  <div class="source-section">
+    <h4 data-i18n="market.secFed" class="source-title">🏛️ 美联储 & 宏观经济</h4>
+    <div class="source-grid">
       <a href="https://fred.stlouisfed.org/" target="_blank" rel="noopener" class="source-card">
-        <div><strong>FRED 经济数据</strong> ⭐</div>
-        <div class="sc-desc">圣路易斯联储 840,000+ 条宏观时间序列，API 免费调用</div>
-        <div class="sc-tag green">免费 · 宏观第一数据源</div>
+        <div><strong data-i18n="market.srcFRED" FRED 经济数据</strong> ⭐</div>
+        <div data-i18n="market.descFRED" class="sc-desc">圣路易斯联储 840,000+ 条宏观时间序列，API 免费调用</div>
+        <div data-i18n="market.tagFreeMacro1" class="sc-tag green">免费 · 宏观第一数据源</div>
       </a>
       <a href="https://data.worldbank.org/" target="_blank" rel="noopener" class="source-card">
-        <div><strong>World Bank 开放数据</strong></div>
-        <div class="sc-desc">全球发展指标，200+ 经济体，CSV/JSON 下载</div>
-        <div class="sc-tag green">免费</div>
+        <div><strong data-i18n="market.srcWorldBank" World Bank 开放数据</strong></div>
+        <div data-i18n="market.descWorldBank" class="sc-desc">全球发展指标，200+ 经济体，CSV/JSON 下载</div>
+        <div data-i18n="market.tagFree" class="sc-tag green">免费</div>
       </a>
       <a href="https://www.imf.org/en/Data" target="_blank" rel="noopener" class="source-card">
-        <div><strong>IMF 数据</strong></div>
-        <div class="sc-desc">WEO、BOP、FSI、IFS 等国际金融统计数据库</div>
-        <div class="sc-tag green">免费 · 官方</div>
+        <div><strong data-i18n="market.srcIMF" IMF 数据</strong></div>
+        <div data-i18n="market.descIMF" class="sc-desc">WEO、BOP、FSI、IFS 等国际金融统计数据库</div>
+        <div data-i18n="market.tagFreeOfficial" class="sc-tag green">免费 · 官方</div>
       </a>
       <a href="https://sdw.ecb.europa.eu/" target="_blank" rel="noopener" class="source-card">
-        <div><strong>ECB 统计数据仓库</strong></div>
-        <div class="sc-desc">欧元区货币、银行、金融稳定指标数据库</div>
-        <div class="sc-tag green">免费</div>
+        <div><strong data-i18n="market.srcECB" ECB 统计数据仓库</strong></div>
+        <div data-i18n="market.descECB" class="sc-desc">欧元区货币、银行、金融稳定指标数据库</div>
+        <div data-i18n="market.tagFree" class="sc-tag green">免费</div>
       </a>
       <a href="https://www.eia.gov/opendata/" target="_blank" rel="noopener" class="source-card">
-        <div><strong>US EIA 能源数据</strong></div>
-        <div class="sc-desc">能源价格、产量、库存、电网数据，JSON API 调用</div>
-        <div class="sc-tag green">免费（需API密钥）</div>
+        <div><strong data-i18n="market.srcEIA" US EIA 能源数据</strong></div>
+        <div data-i18n="market.descEIA" class="sc-desc">能源价格、产量、库存、电网数据，JSON API 调用</div>
+        <div data-i18n="market.tagFreeAPIKey" class="sc-tag green">免费（需API密钥）</div>
       </a>
       <a href="https://www.officialdata.org/" target="_blank" rel="noopener" class="source-card">
-        <div><strong>通胀计算器</strong></div>
-        <div class="sc-desc">CPI 通胀数据，美元购买力历史变化，历史通胀率</div>
-        <div class="sc-tag green">免费</div>
+        <div><strong data-i18n="market.srcInflation" 通胀计算器</strong></div>
+        <div data-i18n="market.descInflation2" class="sc-desc">CPI 通胀数据，美元购买力历史变化，历史通胀率</div>
+        <div data-i18n="market.tagFree" class="sc-tag green">免费</div>
       </a>
     </div>
   </div>
 
   <!-- 量化数据 & API -->
-  <div class="source-section" style="margin-bottom:20px;">
-    <h4 style="font-size:15px;font-weight:600;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid var(--border);">📊 量化数据 & API</h4>
-    <div class="source-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;">
+  <div class="source-section">
+    <h4 data-i18n="market.secQuant" class="source-title">📊 量化数据 & API</h4>
+    <div class="source-grid">
       <a href="https://polygon.io/pricing" target="_blank" rel="noopener" class="source-card">
         <div><strong>Polygon.io</strong></div>
-        <div class="sc-desc">美国股票 EOD 数据、2年历史、公司行为数据</div>
-        <div class="sc-tag green">免费层可用</div>
+        <div data-i18n="market.descPolygon" class="sc-desc">美国股票 EOD 数据、2年历史、公司行为数据</div>
+        <div data-i18n="market.tagFreeTier" class="sc-tag green">免费层可用</div>
       </a>
       <a href="https://www.tiingo.com/pricing" target="_blank" rel="noopener" class="source-card">
         <div><strong>Tiingo</strong></div>
-        <div class="sc-desc">高质量 EOD 股票数据、基本面数据、IEX 实时行情</div>
-        <div class="sc-tag green">免费层可用</div>
+        <div data-i18n="market.descTiingo" class="sc-desc">高质量 EOD 股票数据、基本面数据、IEX 实时行情</div>
+        <div data-i18n="market.tagFreeTier" class="sc-tag green">免费层可用</div>
       </a>
       <a href="https://www.alphavantage.co/" target="_blank" rel="noopener" class="source-card">
         <div><strong>Alpha Vantage</strong></div>
-        <div class="sc-desc">全球股票/FX/加密货币，50+ 技术指标，基本面数据</div>
-        <div class="sc-tag green">免费(25次/天)</div>
+        <div data-i18n="market.descAlphaVantage" class="sc-desc">全球股票/FX/加密货币，50+ 技术指标，基本面数据</div>
+        <div data-i18n="market.tagFree25" class="sc-tag green">免费(25次/天)</div>
       </a>
       <a href="https://databento.com/signup" target="_blank" rel="noopener" class="source-card">
         <div><strong>Databento</strong></div>
-        <div class="sc-desc">机构级 US 股票/期权/期货 L0-L3 数据，$125 送新用户</div>
-        <div class="sc-tag yellow">有限免费</div>
+        <div data-i18n="market.descDatabento" class="sc-desc">机构级 US 股票/期权/期货 L0-L3 数据，$125 送新用户</div>
+        <div data-i18n="market.tagFreemium" class="sc-tag yellow">有限免费</div>
       </a>
     </div>
   </div>
 
   <!-- 投资组合 & 回测 -->
-  <div class="source-section" style="margin-bottom:20px;">
-    <h4 style="font-size:15px;font-weight:600;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid var(--border);">📉 投资组合 & 回测</h4>
-    <div class="source-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;">
+  <div class="source-section">
+    <h4 data-i18n="market.secPortfolio" class="source-title">📉 投资组合 & 回测</h4>
+    <div class="source-grid">
       <a href="https://www.portfoliovisualizer.com/" target="_blank" rel="noopener" class="source-card">
         <div><strong>Portfolio Visualizer</strong> ⭐</div>
-        <div class="sc-desc">投资组合回测、资产配置优化、因子归因分析、蒙特卡洛模拟</div>
-        <div class="sc-tag green">免费 · 回测神器</div>
+        <div data-i18n="market.descPV" class="sc-desc">投资组合回测、资产配置优化、因子归因分析、蒙特卡洛模拟</div>
+        <div data-i18n="market.tagFreeBacktest" class="sc-tag green">免费 · 回测神器</div>
       </a>
       <a href="https://www.tradingview.com/" target="_blank" rel="noopener" class="source-card">
         <div><strong>TradingView</strong></div>
-        <div class="sc-desc">400+ 技术指标、股票筛选器、社交网络、策略回测</div>
-        <div class="sc-tag green">免费层可用</div>
+        <div data-i18n="market.descTradingView" class="sc-desc">400+ 技术指标、股票筛选器、社交网络、策略回测</div>
+        <div data-i18n="market.tagFreeTier" class="sc-tag green">免费层可用</div>
       </a>
       <a href="https://www.koyfin.com/" target="_blank" rel="noopener" class="source-card">
         <div><strong>Koyfin</strong></div>
-        <div class="sc-desc">综合财务分析平台：估值、增长、回报率、同业对比仪表盘</div>
-        <div class="sc-tag green">免费层可用 · Bloomberg 替代品</div>
+        <div data-i18n="market.descKoyfin" class="sc-desc">综合财务分析平台：估值、增长、回报率、同业对比仪表盘</div>
+        <div data-i18n="market.tagFreeTierBloomberg" class="sc-tag green">免费层可用 · Bloomberg 替代品</div>
       </a>
     </div>
   </div>
 
   <!-- 另类交易数据 -->
-  <div class="source-section" style="margin-bottom:20px;">
-    <h4 style="font-size:15px;font-weight:600;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid var(--border);">🏛️ 国会 & 监管数据</h4>
-    <div class="source-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;">
+  <div class="source-section">
+    <h4 data-i18n="market.secCongress" class="source-title">🏛️ 国会 & 监管数据</h4>
+    <div class="source-grid">
       <a href="https://www.quiverquant.com/congresstrading/" target="_blank" rel="noopener" class="source-card">
         <div><strong>Quiver Quantitative</strong> ⭐</div>
-        <div class="sc-desc">国会交易追踪、游说数据、政府合同、内幕交易</div>
-        <div class="sc-tag yellow">有限免费 · 独有数据</div>
+        <div data-i18n="market.descQuiver" class="sc-desc">国会交易追踪、游说数据、政府合同、内幕交易</div>
+        <div data-i18n="market.tagFreemiumUnique" class="sc-tag yellow">有限免费 · 独有数据</div>
       </a>
       <a href="https://openinsider.com/" target="_blank" rel="noopener" class="source-card">
         <div><strong>OpenInsider</strong></div>
-        <div class="sc-desc">内幕交易数据，高管买卖实时跟踪，所有交易所覆盖</div>
-        <div class="sc-tag green">免费</div>
+        <div data-i18n="market.descOpenInsider2" class="sc-desc">内幕交易数据，高管买卖实时跟踪，所有交易所覆盖</div>
+        <div data-i18n="market.tagFree" class="sc-tag green">免费</div>
       </a>
       <a href="https://www.usaspending.gov/" target="_blank" rel="noopener" class="source-card">
         <div><strong>USAspending</strong></div>
-        <div class="sc-desc">联邦合同/拨款数据，金额、接收方、机构明细</div>
-        <div class="sc-tag green">免费 · 官方</div>
+        <div data-i18n="market.descUSAspending" class="sc-desc">联邦合同/拨款数据，金额、接收方、机构明细</div>
+        <div data-i18n="market.tagFreeOfficial" class="sc-tag green">免费 · 官方</div>
       </a>
       <a href="https://data.uspto.gov/" target="_blank" rel="noopener" class="source-card">
-        <div><strong>USPTO 专利数据</strong></div>
-        <div class="sc-desc">专利授权/申请/转让数据，创新活动衡量指标</div>
-        <div class="sc-tag green">免费 · 官方</div>
+        <div><strong data-i18n="market.srcUSPTO" USPTO 专利数据</strong></div>
+        <div data-i18n="market.descUSPTO" class="sc-desc">专利授权/申请/转让数据，创新活动衡量指标</div>
+        <div data-i18n="market.tagFreeOfficial" class="sc-tag green">免费 · 官方</div>
       </a>
     </div>
   </div>
 
   <!-- 港股 / A股 -->
-  <div class="source-section" style="margin-bottom:0;">
-    <h4 style="font-size:15px;font-weight:600;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid var(--border);">🌏 港股 / A股 数据</h4>
-    <div class="source-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;">
-      <a href="https://www.aastocks.com/" target="_blank" rel="noopener" class="source-card" style="display:block;padding:12px 14px;border:1px solid var(--border);border-radius:8px;text-decoration:none;color:inherit;transition:box-shadow 0.15s;">
-        <div style="font-weight:600;font-size:14px;">AASTOCKS</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">港股行情、财务数据、资金流向、窝轮牛熊</div>
-        <div style="font-size:11px;color:var(--ok);margin-top:4px;">免费</div>
+  <div class="source-section mkt-mb0">
+    <h4 data-i18n="market.secHKCN" class="source-title">🌏 港股 / A股 数据</h4>
+    <div class="source-grid">
+      <a href="https://www.aastocks.com/" target="_blank" rel="noopener" class="source-card">
+        <div>AASTOCKS</div>
+        <div data-i18n="market.descAASTOCKS">港股行情、财务数据、资金流向、窝轮牛熊</div>
+        <div data-i18n="market.tagFree" class="sc-tag green">免费</div>
       </a>
-      <a href="https://finance.eastmoney.com/" target="_blank" rel="noopener" class="source-card" style="display:block;padding:12px 14px;border:1px solid var(--border);border-radius:8px;text-decoration:none;color:inherit;transition:box-shadow 0.15s;">
-        <div style="font-weight:600;font-size:14px;">东方财富</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">A股行情、F10 资料、财报数据、资金流向</div>
-        <div style="font-size:11px;color:var(--ok);margin-top:4px;">免费</div>
+      <a href="https://finance.eastmoney.com/" target="_blank" rel="noopener" class="source-card">
+        <div data-i18n="market.srcEM">东方财富</div>
+        <div data-i18n="market.descEM">A股行情、F10 资料、财报数据、资金流向</div>
+        <div data-i18n="market.tagFree" class="sc-tag green">免费</div>
       </a>
-      <a href="https://xueqiu.com/" target="_blank" rel="noopener" class="source-card" style="display:block;padding:12px 14px;border:1px solid var(--border);border-radius:8px;text-decoration:none;color:inherit;transition:box-shadow 0.15s;">
-        <div style="font-weight:600;font-size:14px;">雪球</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">投资者社区、个股讨论、财报分析、组合跟踪</div>
-        <div style="font-size:11px;color:var(--ok);margin-top:4px;">免费</div>
+      <a href="https://xueqiu.com/" target="_blank" rel="noopener" class="source-card">
+        <div data-i18n="market.srcXueqiu">雪球</div>
+        <div data-i18n="market.descXueqiu">投资者社区、个股讨论、财报分析、组合跟踪</div>
+        <div data-i18n="market.tagFree" class="sc-tag green">免费</div>
       </a>
-      <a href="https://www.hkexnews.hk/" target="_blank" rel="noopener" class="source-card" style="display:block;padding:12px 14px;border:1px solid var(--border);border-radius:8px;text-decoration:none;color:inherit;transition:box-shadow 0.15s;">
-        <div style="font-weight:600;font-size:14px;">港交所披露易</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">港股官方公告、年报、权益披露</div>
-        <div style="font-size:11px;color:var(--ok);margin-top:4px;">免费 · 官方</div>
+      <a href="https://www.hkexnews.hk/" target="_blank" rel="noopener" class="source-card">
+        <div data-i18n="market.srcHKEX">港交所披露易</div>
+        <div data-i18n="market.descHKEX">港股官方公告、年报、权益披露</div>
+        <div data-i18n="market.tagFreeOfficial" class="sc-tag green">免费 · 官方</div>
       </a>
     </div>
   </div>
@@ -430,7 +435,7 @@ async function loadComprehensive() {
     }
     if (d._stale) {
       banner.style.display = 'block';
-      banner.innerHTML = '<div class="rt-title">⏳ 数据陈旧提示</div><div class="rt-row">市场快照已超过 24 小时未更新' + (d._age_hours != null ? '（' + d._age_hours + ' 小时前）' : '（本地无快照时间）') + '。数字仅作参考，决策前请到决策台跑一次「数据一键更新」。</div>';
+      banner.innerHTML = '<div class="rt-title">' + FengI18n.t('market.staleTitle','⏳ 数据陈旧提示') + '</div><div class="rt-row">' + FengI18n.t('market.staleBody','市场快照已超过 24 小时未更新') + (d._age_hours != null ? FengI18n.t('market.staleHoursPre','（') + d._age_hours + FengI18n.t('market.staleHoursPost',' 小时前）') : FengI18n.t('market.staleNoTime','（本地无快照时间）')) + FengI18n.t('market.staleAdvice','。数字仅作参考，决策前请到决策台跑一次「数据一键更新」。') + '</div>';
     } else { banner.style.display = 'none'; }
 
     // Indices
@@ -441,7 +446,7 @@ async function loadComprehensive() {
       const chg = idx.change_pct;
       const cls = chg > 0 ? 'positive' : (chg < 0 ? 'negative' : '');
       const arrow = chg > 0 ? '&#9650;' : (chg < 0 ? '&#9660;' : '&mdash;');
-      idxC.innerHTML += '<div class="stat-card"><div class="stat-label">' + idx.name + '</div><div class="stat-value ' + cls + '" style="font-size:22px;">' + (idx.price != null ? Number(idx.price).toLocaleString(undefined, {maximumFractionDigits:2}) : '&mdash;') + '</div><div style="font-size:12px;' + (cls ? 'color:var(--' + cls + ');' : '') + '">' + arrow + ' ' + (chg != null ? chg.toFixed(2) + '%' : '&mdash;') + '</div></div>';
+      idxC.innerHTML += '<div class="stat-card"><div class="stat-label">' + idx.name + '</div><div class="stat-value ' + cls + ' mkt-val-plain">' + (idx.price != null ? Number(idx.price).toLocaleString(undefined, {maximumFractionDigits:2}) : '&mdash;') + '</div><div style="font-size:12px;' + (cls ? 'color:var(--' + cls + ');' : '') + '">' + arrow + ' ' + (chg != null ? chg.toFixed(2) + '%' : '&mdash;') + '</div></div>';
     }
 
     // Valuation
@@ -452,26 +457,28 @@ async function loadComprehensive() {
         if (cur == null) return '';
         const p = pct != null ? pct : 50;
         const c = pct < 30 ? 'var(--ok)' : pct < 70 ? 'var(--warn)' : 'var(--danger)';
-        return '<div style="margin:4px 0;"><div style="display:flex;justify-content:space-between;font-size:13px;"><span><b>' + l + '</b> ' + Number(cur).toFixed(1) + '</span><span style="color:' + c + ';">' + (pct != null ? Number(pct).toFixed(1) + '% 分位' : '') + '</span></div><div style="height:8px;background:var(--border);border-radius:4px;"><div style="width:' + Math.min(p, 100) + '%;height:8px;background:' + c + ';border-radius:4px;"></div></div></div>';
+        return '<div class="mkt-m4"><div class="mkt-flex-between"><span><b>' + l + '</b> ' + Number(cur).toFixed(1) + '</span><span style="color:' + c + ';">' + (pct != null ? Number(pct).toFixed(1) + FengI18n.t('market.pctile','% 分位') : '') + '</span></div><div class="mkt-bar-track"><div style="width:' + Math.min(p, 100) + '%;height:8px;background:' + c + ';border-radius:4px;"></div></div></div>';
       }
       vd.innerHTML = bar('PE', val.hsi_pe_current, val.hsi_pe_percentile) + bar('PB', val.hsi_pb_current, val.hsi_pb_percentile) + bar('PS', val.hsi_ps_current, val.hsi_ps_percentile);
-    } else vd.innerHTML = '<p style="color:var(--text-muted);font-size:13px;">暂无</p>';
+    } else vd.innerHTML = '<p class="mkt-muted">' + FengI18n.t('market.none','暂无') + '</p>';
 
     // FedWatch
     const fed = d.fedwatch || {};
     const fd = document.getElementById('fed-content');
     if (fed.probability != null) {
-      fd.innerHTML = '<div style="display:flex;gap:16px;"><div style="flex:1;text-align:center;padding:12px;background:var(--bg-inset);border-radius:8px;"><div style="font-size:28px;font-weight:700;color:var(--ok);">' + Number(fed.probability).toFixed(1) + '%</div><div style="font-size:12px;color:var(--text-muted);">维持不变概率</div></div></div>';
-    } else fd.innerHTML = '<p style="color:var(--text-muted);font-size:13px;">暂无</p>';
+      fd.innerHTML = '<div class="mkt-flex"><div class="mkt-inset-c"><div class="mkt-val-lg">' + Number(fed.probability).toFixed(1) + '%</div><div class="mkt-muted-sm">' + FengI18n.t('market.holdProb','维持不变概率') + '</div></div></div>';
+    } else fd.innerHTML = '<p class="mkt-muted">' + FengI18n.t('market.none','暂无') + '</p>';
+
+    loadFx();
 
     // Economic calendar
     const ec = d.economic_calendar || [];
     const ecd = document.getElementById('econ-content');
     if (ec.length > 0) {
-      let h = '<table style="width:100%;font-size:13px;"><tr><th>日期</th><th>事件</th><th>地区</th></tr>';
+      let h = '<table class="mkt-table"><tr><th>' + FengI18n.t('market.thDate','日期') + '</th><th>' + FengI18n.t('market.thEvent','事件') + '</th><th>' + FengI18n.t('market.thRegion','地区') + '</th></tr>';
       for (const e of ec) h += '<tr><td>' + (e.date || '') + '</td><td>' + (e.event || '') + '</td><td>' + (e.country || e.importance || '') + '</td></tr>';
       h += '</table>'; ecd.innerHTML = h;
-    } else ecd.innerHTML = '<p style="color:var(--text-muted);font-size:13px;">暂无</p>';
+    } else ecd.innerHTML = '<p class="mkt-muted">' + FengI18n.t('market.none','暂无') + '</p>';
 
     // Warnings
     const w = d._warnings || [];
@@ -480,9 +487,38 @@ async function loadComprehensive() {
       document.getElementById('warnings-content').innerHTML = w.join('<br>');
     }
 
-    document.getElementById('market-updated').textContent = '更新 ' + (d.fetched_at || '').slice(0, 16);
+    document.getElementById('market-updated').textContent = FengI18n.t('market.updatedPrefix','更新 ') + (d.fetched_at || '').slice(0, 16);
   } catch (e) {
-    document.getElementById('market-loading').innerHTML = '<p style="color:var(--text-muted);">加载失败: ' + e.message + '</p><button class="btn btn-primary" onclick="loadComprehensive()" type="button" style="margin-top:8px;">重试</button>';
+    document.getElementById('market-loading').innerHTML = '<p class="mkt-muted-xs">' + FengI18n.t('market.loadFailed','加载失败: ') + e.message + '</p><button class="btn btn-primary" onclick="loadComprehensive()" type="button" class="mkt-mt8">' + FengI18n.t('market.retry','重试') + '</button>';
+  }
+}
+
+// FX 汇率卡片：fengfx.py latest（纯本地库，独立于 comprehensive 缓存）
+async function loadFx() {
+  const el = document.getElementById('fx-content');
+  try {
+    const res = await fetch('/api/fx/latest');
+    const fx = await res.json();
+    if (!fx.pairs || fx.pairs.length === 0) throw new Error('no data');
+    let h = '<div class="mkt-fx-grid">';
+    for (const p of fx.pairs) {
+      h += '<div class="mkt-inset">'
+        + '<div class="mkt-muted-sm">' + p.ticker + ' · ' + p.name + '</div>'
+        + '<div class="mkt-val">' + Number(p.close).toFixed(4) + '</div>'
+        + '<div class="mkt-muted-xs">' + (p.date || '') + '</div>'
+        + '</div>';
+    }
+    h += '</div>';
+    if (fx.spread) {
+      const s = fx.spread;
+      const color = s.warn ? 'var(--warn)' : 'var(--text-muted)';
+      h += '<p style="font-size:12px;margin:10px 0 0;color:' + color + ';">'
+        + FengI18n.t('market.fxSpread','在岸/离岸价差') + ': <b>' + (s.spread_pct > 0 ? '+' : '') + s.spread_pct.toFixed(3) + '%</b>'
+        + (s.warn ? ' · ⚠️ ' + FengI18n.t('market.fxSpreadWarn','超 0.5% 警戒线') : '');
+    }
+    el.innerHTML = h;
+  } catch (e) {
+    el.innerHTML = '<p class="mkt-muted">' + FengI18n.t('market.none','暂无') + '</p>';
   }
 }
 loadComprehensive();

@@ -13,61 +13,61 @@
 
   <!-- 第1步 基础信息 -->
   <div class="step-panel active" id="panel0">
-    <h3>① 基础信息</h3>
+    <h3 data-i18n="buyregister.step1">① 基础信息</h3>
     <div class="detail-grid">
-      <div class="field-row"><label>TICKER *</label><input id="f-ticker" placeholder="如 0700.HK / AAPL"></div>
-      <div class="field-row"><label>名称 *</label><input id="f-name" placeholder="腾讯控股"></div>
-      <div class="field-row"><label>币种 *</label>
+      <div class="field-row"><label>TICKER *</label><input id="f-ticker" placeholder="如 0700.HK / AAPL" data-i18n-ph="buyregister.phTicker"></div>
+      <div class="field-row"><label data-i18n="buyregister.lblName">名称 *</label><input id="f-name" placeholder="腾讯控股" data-i18n-ph="buyregister.phName"></div>
+      <div class="field-row"><label data-i18n="buyregister.lblCurrency">币种 *</label>
         <select id="f-currency"><option>HKD</option><option>CNY</option><option>USD</option></select>
       </div>
-      <div class="field-row"><label>资金域 *</label>
-        <select id="f-zone"><option value="CN_IN">境内 CN_IN</option><option value="OVERSEAS">境外 OVERSEAS</option></select>
+      <div class="field-row"><label data-i18n="buyregister.lblCapitalZone">资金域 *</label>
+        <select id="f-zone"><option value="CN_IN" data-i18n="buyregister.optZoneCn">境内 CN_IN</option><option value="OVERSEAS" data-i18n="buyregister.optZoneOverseas">境外 OVERSEAS</option></select>
       </div>
-      <div class="field-row"><label>市场 *</label>
-        <select id="f-market"><option value="CN_A">A股</option><option value="CN_HK">港股通</option><option value="CN_OVS">中概境外</option><option value="US">美股</option><option value="GLOBAL">全球</option></select>
+      <div class="field-row"><label data-i18n="buyregister.lblMarket">市场 *</label>
+        <select id="f-market"><option value="CN_A" data-i18n="buyregister.optMktA">A股</option><option value="CN_HK" data-i18n="buyregister.optMktHk">港股通</option><option value="CN_OVS" data-i18n="buyregister.optMktOvs">中概境外</option><option value="US" data-i18n="buyregister.optMktUs">美股</option><option value="GLOBAL" data-i18n="buyregister.optMktGlobal">全球</option></select>
       </div>
-      <div class="field-row"><label>细分板块 *</label><input id="f-segment" placeholder="互联网 / 白酒 / AI算力（需能区分风险驱动）"></div>
-      <div class="field-row"><label>股数 *</label><input id="f-shares" type="number" min="0"></div>
-      <div class="field-row"><label>均价 *</label><input id="f-avgcost" type="number" step="0.0001" min="0"></div>
+      <div class="field-row"><label data-i18n="buyregister.lblSegment">细分板块 *</label><input id="f-segment" placeholder="互联网 / 白酒 / AI算力（需能区分风险驱动）" data-i18n-ph="buyregister.phSegment"></div>
+      <div class="field-row"><label data-i18n="buyregister.lblShares">股数 *</label><input id="f-shares" type="number" min="0"></div>
+      <div class="field-row"><label data-i18n="buyregister.lblAvgCost">均价 *</label><input id="f-avgcost" type="number" step="0.0001" min="0"></div>
     </div>
     <div class="step-nav">
-      <span></span><button class="btn btn-primary" onclick="wizGo(1)">下一步 →</button>
+      <span></span><button class="btn btn-primary" onclick="wizGo(1)" data-i18n="buyregister.next">下一步 →</button>
     </div>
   </div>
 
   <!-- 第2步 论文四段 -->
   <div class="step-panel" id="panel1">
-    <h3>② 论文四段（全部必填，留空=不能买）</h3>
-    <div class="field-row"><label>为什么买（original）*</label><textarea id="f-original" rows="3" placeholder="生意本质 / 护城河 / 价格 vs 内在价值"></textarea></div>
-    <div class="field-row"><label>预期与验证条件（expected，可证伪的量化预期）*</label><textarea id="f-expected" rows="2" placeholder="如：FY2026 营收 ≥ 520 亿（管理层指引下限）· 12个月"></textarea></div>
-    <div class="field-row"><label>何时会错（redlines，每行一条）*</label><textarea id="f-redlines" rows="3" placeholder="如：AI 回报证伪，FCF 连续两季为负"></textarea></div>
-    <div class="field-row"><label>卖出条件（exit_conditions，每行一条）*</label><textarea id="f-exits" rows="3" placeholder="如：价差收敛到 <10%"></textarea></div>
+    <h3 data-i18n="buyregister.step2">② 论文四段（全部必填，留空=不能买）</h3>
+    <div class="field-row"><label data-i18n="buyregister.lblOriginal">为什么买（original）*</label><textarea id="f-original" rows="3" placeholder="生意本质 / 护城河 / 价格 vs 内在价值" data-i18n-ph="buyregister.phOriginal"></textarea></div>
+    <div class="field-row"><label data-i18n="buyregister.lblExpected">预期与验证条件（expected，可证伪的量化预期）*</label><textarea id="f-expected" rows="2" placeholder="如：FY2026 营收 ≥ 520 亿（管理层指引下限）· 12个月" data-i18n-ph="buyregister.phExpected"></textarea></div>
+    <div class="field-row"><label data-i18n="buyregister.lblRedlines">何时会错（redlines，每行一条）*</label><textarea id="f-redlines" rows="3" placeholder="如：AI 回报证伪，FCF 连续两季为负" data-i18n-ph="buyregister.phRedlines"></textarea></div>
+    <div class="field-row"><label data-i18n="buyregister.lblExits">卖出条件（exit_conditions，每行一条）*</label><textarea id="f-exits" rows="3" placeholder="如：价差收敛到 <10%" data-i18n-ph="buyregister.phExits"></textarea></div>
     <div class="step-nav">
-      <button class="btn" onclick="wizGo(0)">← 上一步</button><button class="btn btn-primary" onclick="wizGo(2)">下一步 →</button>
+      <button class="btn" onclick="wizGo(0)" data-i18n="buyregister.prev">← 上一步</button><button class="btn btn-primary" onclick="wizGo(2)" data-i18n="buyregister.next">下一步 →</button>
     </div>
   </div>
 
   <!-- 第3步 预算检查 -->
   <div class="step-panel" id="panel2">
-    <h3>③ 组合预算检查</h3>
-    <div class="data-block" data-url="/api/portfolio/overview" data-empty="组合数据为空"></div>
-    <div id="budget-result" style="margin:12px 0;color:var(--text-muted);font-size:14px;">点击下方按钮跑 fengportfolio check…</div>
+    <h3 data-i18n="buyregister.step3">③ 组合预算检查</h3>
+    <div class="data-block" data-url="/api/portfolio/overview" data-empty-key="buyregister.emptyPortfolio" data-empty="组合数据为空"></div>
+    <div id="budget-result" style="margin:12px 0;color:var(--text-muted);font-size:14px;" data-i18n="buyregister.clickRunBudget">点击下方按钮跑 fengportfolio check…</div>
     <label style="display:block;margin:10px 0;font-size:14px;">
-      <input type="checkbox" id="f-override"> 我知道预算约束，仍要登记（覆盖将写入决策日志）
+      <input type="checkbox" id="f-override"> <span data-i18n="buyregister.override">我知道预算约束，仍要登记（覆盖将写入决策日志）</span>
     </label>
     <div class="step-nav">
-      <button class="btn" onclick="wizGo(1)">← 上一步</button><button class="btn btn-primary" onclick="runBudget()">跑预算检查</button>
-      <button class="btn btn-accent" onclick="wizGo(3)">继续 →（覆盖需勾选）</button>
+      <button class="btn" onclick="wizGo(1)" data-i18n="buyregister.prev">← 上一步</button><button class="btn btn-primary" onclick="runBudget()" data-i18n="buyregister.runBudget">跑预算检查</button>
+      <button class="btn btn-accent" onclick="wizGo(3)" data-i18n="buyregister.continueOverride">继续 →（覆盖需勾选）</button>
     </div>
   </div>
 
   <!-- 第4步 确认 -->
   <div class="step-panel" id="panel3">
-    <h3>④ 确认登记</h3>
+    <h3 data-i18n="buyregister.step4">④ 确认登记</h3>
     <div id="summary" style="font-size:14px;line-height:1.8;"></div>
     <div class="step-nav">
-      <button class="btn" onclick="wizGo(2)">← 上一步</button>
-      <button class="btn btn-primary" id="submitBtn" onclick="submitRegister()">确认登记（走 fengholding add 校验）</button>
+      <button class="btn" onclick="wizGo(2)" data-i18n="buyregister.prev">← 上一步</button>
+      <button class="btn btn-primary" id="submitBtn" onclick="submitRegister()" data-i18n="buyregister.submit">确认登记（走 fengholding add 校验）</button>
     </div>
     <div id="submit-result" style="margin-top:12px;"></div>
   </div>
@@ -87,40 +87,40 @@ function wizGo(n) {
 function validate(n) {
   if (n === 0) {
     var req = ['f-ticker','f-name','f-shares','f-avgcost','f-segment'];
-    for (var i of req) if (!document.getElementById(i).value.trim()) { alert('基础信息有必填项为空'); return false; }
+    for (var i of req) if (!document.getElementById(i).value.trim()) { alert(FengI18n.t('buyregister.alertBasic', '基础信息有必填项为空')); return false; }
   }
   if (n === 1) {
-    if (!document.getElementById('f-original').value.trim()) { alert('「为什么买」必填'); return false; }
-    if (!document.getElementById('f-expected').value.trim()) { alert('「预期与验证条件」必填'); return false; }
-    if (!document.getElementById('f-redlines').value.trim()) { alert('「何时会错」必填——没有证伪条件的买入不是投资'); return false; }
-    if (!document.getElementById('f-exits').value.trim()) { alert('「卖出条件」必填'); return false; }
+    if (!document.getElementById('f-original').value.trim()) { alert(FengI18n.t('buyregister.alertOriginal', '「为什么买」必填')); return false; }
+    if (!document.getElementById('f-expected').value.trim()) { alert(FengI18n.t('buyregister.alertExpected', '「预期与验证条件」必填')); return false; }
+    if (!document.getElementById('f-redlines').value.trim()) { alert(FengI18n.t('buyregister.alertRedlines', '「何时会错」必填——没有证伪条件的买入不是投资')); return false; }
+    if (!document.getElementById('f-exits').value.trim()) { alert(FengI18n.t('buyregister.alertExits', '「卖出条件」必填')); return false; }
   }
-  if (n === 2 && !document.getElementById('f-override').checked) { alert('需先跑预算检查并确认（或勾选覆盖声明）'); return false; }
+  if (n === 2 && !document.getElementById('f-override').checked) { alert(FengI18n.t('buyregister.alertOverride', '需先跑预算检查并确认（或勾选覆盖声明）')); return false; }
   return true;
 }
 function runBudget() {
   var el = document.getElementById('budget-result');
-  el.textContent = 'fengportfolio check 运行中…（可能需要较长时间）';
+  el.textContent = FengI18n.t('buyregister.budgetRunning', 'fengportfolio check 运行中…（可能需要较长时间）');
   fetch('/api/portfolio/budget-check', { method: 'POST' }).then(async r => {
     var d = await r.json();
     if (!r.ok) { el.innerHTML = '<span style="color:var(--danger);">' + (d.detail || d.error) + '</span>'; return; }
     el.innerHTML = '<pre style="font-size:12px;white-space:pre-wrap;background:var(--bg-inset);padding:10px;border-radius:8px;">' + JSON.stringify(d, null, 2).slice(0, 2000) + '</pre>';
-  }).catch(e => el.textContent = '网络错误: ' + e.message);
+  }).catch(e => el.textContent = FengI18n.t('common.netError', '网络错误: ') + e.message);
 }
 function lines(id) { return document.getElementById(id).value.split('\n').map(s => s.trim()).filter(Boolean); }
 function buildSummary() {
   document.getElementById('summary').innerHTML =
-    '<b>' + val('f-ticker') + ' ' + val('f-name') + '</b> — ' + val('f-shares') + ' 股 @ ' + val('f-avgcost') + ' ' + val('f-currency') +
-    '<br>为什么买：' + esc(val('f-original')) +
-    '<br>预期：' + esc(val('f-expected')) +
-    '<br>红线：' + lines('f-redlines').join('；') +
-    '<br>卖出条件：' + lines('f-exits').join('；');
+    '<b>' + val('f-ticker') + ' ' + val('f-name') + '</b> — ' + val('f-shares') + FengI18n.t('buyregister.sumShares', ' 股 @ ') + val('f-avgcost') + ' ' + val('f-currency') +
+    '<br>' + FengI18n.t('buyregister.sumWhy', '为什么买：') + esc(val('f-original')) +
+    '<br>' + FengI18n.t('buyregister.sumExpected', '预期：') + esc(val('f-expected')) +
+    '<br>' + FengI18n.t('buyregister.sumRedlines', '红线：') + lines('f-redlines').join('；') +
+    '<br>' + FengI18n.t('buyregister.sumExits', '卖出条件：') + lines('f-exits').join('；');
 }
 function val(id) { return document.getElementById(id).value.trim(); }
 function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
 async function submitRegister() {
   var btn = document.getElementById('submitBtn');
-  btn.disabled = true; btn.textContent = '提交中…（fengholding add 四段校验）';
+  btn.disabled = true; btn.textContent = FengI18n.t('buyregister.submitting', '提交中…（fengholding add 四段校验）');
   var body = {
     name: val('f-name'), currency: val('f-currency'),
     capital_zone: val('f-zone'), market: val('f-market'), segment: val('f-segment'),
@@ -144,11 +144,11 @@ async function submitRegister() {
     });
     var d = await r.json();
     var el = document.getElementById('submit-result');
-    if (!r.ok) el.innerHTML = '<div class="alert alert-danger">' + esc(d.error || '失败') + '：' + esc(d.detail || '') + '</div>';
-    else el.innerHTML = '<div class="alert alert-info">✅ 登记成功，fengholding 四段校验通过。<a href="/holdings/' + encodeURIComponent(val('f-ticker')) + '">查看持仓详情 →</a></div>';
+    if (!r.ok) el.innerHTML = '<div class="alert alert-danger">' + esc(d.error || FengI18n.t('buyregister.fail', '失败')) + FengI18n.t('common.colon', '：') + esc(d.detail || '') + '</div>';
+    else el.innerHTML = '<div class="alert alert-info">' + FengI18n.t('buyregister.success', '✅ 登记成功，fengholding 四段校验通过。') + '<a href="/holdings/' + encodeURIComponent(val('f-ticker')) + '">' + FengI18n.t('buyregister.viewDetail', '查看持仓详情 →') + '</a></div>';
   } catch (e) {
-    document.getElementById('submit-result').textContent = '网络错误: ' + e.message;
+    document.getElementById('submit-result').textContent = FengI18n.t('common.netError', '网络错误: ') + e.message;
   }
-  btn.disabled = false; btn.textContent = '确认登记（走 fengholding add 校验）';
+  btn.disabled = false; btn.textContent = FengI18n.t('buyregister.submit', '确认登记（走 fengholding add 校验）');
 }
 </script>

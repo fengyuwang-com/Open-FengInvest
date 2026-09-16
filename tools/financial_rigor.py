@@ -386,7 +386,8 @@ Examples:
     # verify-market-cap
     mc = sub.add_parser("verify-market-cap", help="验算市值 = 股价 × 总股本")
     mc.add_argument("--price", type=float, required=True)
-    mc.add_argument("--shares", type=float, required=True, help="总股本")
+    mc.add_argument("--shares", type=float, required=True,
+                    help="总股本，原始股数（如 9.11e9），勿用亿/万等中文单位")
     mc.add_argument("--reported", type=float, required=True, help="报告市值")
     mc.add_argument("--currency", default="", help="币种")
 

@@ -1,0 +1,289 @@
+{
+  "claim": {
+    "id": 23,
+    "title": "浮盈>30% 时执行钱仓滚存（回收本金），在震荡市中终值优于买入持有",
+    "statement": "买入后价格较入场价上涨 >=30% 时，卖出收回初始本金（保留利润部分继续持有）， 在震荡市（窗口末收盘相对入场在 +/-20% 内）中，窗口终值高于买入持有。",
+    "h0": "滚存 vs 买入持有无差异（终值差 <=0）。",
+    "price_basis": "前复权 close",
+    "cost_bps": 25,
+    "signal_def": {
+      "key": "每股每 504 交易日窗口（步长 126）：BH 终值 = close_end/close_entry。 滚存 = 窗口内首个收盘 >= 1.3x 入场价之日 T*，卖出价值 1.0 本金 （保留仓位比例 1 - 1/v*，v* = close_{T*}/入场），卖出额扣 25bps，现金不计息： 终值 = 1 + (1 - 1/v*) x close_end/入场 - 0.0025。终值差 = 滚存 - BH。 震荡域 = 窗口末 +/-20% 持平的全部窗口（含未触发窗口，差值恒 0，保守）",
+      "lookahead": "触发用窗口内可得收盘，卖出 T* 当日收盘价执行——T* 由当日收盘判定、当日收盘成交（与实盘可同步执行口径一致，已在红灯注明）"
+    },
+    "verdict_metric": {
+      "primary": "震荡域窗口终值差均值 >0 且股票级 bootstrap 95% CI 下限 >0（定性方向论断，铁律一）",
+      "secondary": "触发子集终值差/中位数；正差值股票占比；触发窗口 MDD 降幅（滚存 NAV 含现金 vs BH）",
+      "note": "震荡域判定使用窗口末结果（outcome-based 条件域），无法事前定义\"震荡市\"，已作 ⚠️ 披露；无条件全窗口对照一并列出"
+    },
+    "data_scope": {
+      "markets": [
+        "AU",
+        "CA",
+        "CH",
+        "CN",
+        "DE",
+        "ES",
+        "FR",
+        "HK",
+        "IN",
+        "IT",
+        "JP",
+        "KR",
+        "NL",
+        "NZ",
+        "SE",
+        "SG",
+        "TW",
+        "UK",
+        "US"
+      ],
+      "category": "stock",
+      "survivorship": "本地库仅当前成分快照（幸存者偏差使滚存与 BH 同向受益，对差值影响中性偏保守）"
+    }
+  },
+  "generated_at": "2026-09-11 08:36:50",
+  "engine": "qiancang-rollover",
+  "config": {
+    "bootstrap_iters": 2000,
+    "rng_seed": 20260820,
+    "oos_frac": 0.2,
+    "window_days": 504,
+    "step_days": 126,
+    "trigger": 1.3,
+    "flat_band": 0.2,
+    "cost_bps_on_principal": 25,
+    "cash_yield": 0.0
+  },
+  "survivorship_note": "仅当前成分快照；差值口径下影响中性偏保守",
+  "protocol_lights": [
+    {
+      "item": "判据对齐（定性方向论断）",
+      "status": "✅",
+      "note": "论断只说震荡市终值更优，主判据 = 震荡域终值差>0 且股级 CI 下限>0（铁律一）"
+    },
+    {
+      "item": "价格口径（前复权 close）",
+      "status": "✅",
+      "note": "000-data-biases.md A.1"
+    },
+    {
+      "item": "时机（无前视）",
+      "status": "⚠️",
+      "note": "触发日 T* 由当日收盘判定并按当日收盘成交——实盘收盘价确认后按收盘价卖出需收盘竞价/尾盘单，口径已披露；无未来信息"
+    },
+    {
+      "item": "交易成本",
+      "status": "✅",
+      "note": "触发卖出对收回本金 1.0 扣 25bps；现金不计息（保守）"
+    },
+    {
+      "item": "显著性/区间（Bootstrap 2000 次）",
+      "status": "✅",
+      "note": "股票级 bootstrap（每股坍缩为震荡域平均差，种子 20260820）"
+    },
+    {
+      "item": "重叠样本处理",
+      "status": "⚠️",
+      "note": "相邻窗共享 ~75% 数据；股级坍缩+窗口步长 126 缓解，跨股同日历相关未建模"
+    },
+    {
+      "item": "样本外验证（后 20%）",
+      "status": "✅",
+      "note": "每股后 20% 窗口震荡域单独报告"
+    },
+    {
+      "item": "幸存者偏差",
+      "status": "⚠️",
+      "note": "仅当前成分快照；滚存与 BH 同框架对比，对差值影响中性偏保守（崩退市股缺失使 BH 更差被剔除）"
+    },
+    {
+      "item": "条件域披露（震荡市定义）",
+      "status": "⚠️",
+      "note": "震荡域=窗口末±20% 持平，为 outcome-based 条件域，无法事前定义；含未触发差值 0 窗口（保守）；无条件触发域对照并列"
+    },
+    {
+      "item": "可复现",
+      "status": "✅",
+      "note": "种子固定重跑同数"
+    }
+  ],
+  "per_market": {
+    "AU": {
+      "stocks_total": 197,
+      "stocks_processed": 191,
+      "dom_windows": 774,
+      "trig_windows": 5494,
+      "domain_mean_diff_pct": 21.15,
+      "oos_domain_mean_diff_pct": 19.28
+    },
+    "CA": {
+      "stocks_total": 59,
+      "stocks_processed": 53,
+      "dom_windows": 219,
+      "trig_windows": 1638,
+      "domain_mean_diff_pct": 19.88,
+      "oos_domain_mean_diff_pct": 19.68
+    },
+    "CH": {
+      "stocks_total": 20,
+      "stocks_processed": 18,
+      "dom_windows": 82,
+      "trig_windows": 542,
+      "domain_mean_diff_pct": 19.87,
+      "oos_domain_mean_diff_pct": 21.45
+    },
+    "CN": {
+      "stocks_total": 300,
+      "stocks_processed": 297,
+      "dom_windows": 1442,
+      "trig_windows": 5484,
+      "domain_mean_diff_pct": 23.54,
+      "oos_domain_mean_diff_pct": 21.28
+    },
+    "DE": {
+      "stocks_total": 40,
+      "stocks_processed": 40,
+      "dom_windows": 213,
+      "trig_windows": 1116,
+      "domain_mean_diff_pct": 19.44,
+      "oos_domain_mean_diff_pct": 18.32
+    },
+    "ES": {
+      "stocks_total": 35,
+      "stocks_processed": 35,
+      "dom_windows": 121,
+      "trig_windows": 780,
+      "domain_mean_diff_pct": 21.74,
+      "oos_domain_mean_diff_pct": 21.28
+    },
+    "FR": {
+      "stocks_total": 39,
+      "stocks_processed": 39,
+      "dom_windows": 169,
+      "trig_windows": 1128,
+      "domain_mean_diff_pct": 18.38,
+      "oos_domain_mean_diff_pct": 17.54
+    },
+    "HK": {
+      "stocks_total": 85,
+      "stocks_processed": 84,
+      "dom_windows": 483,
+      "trig_windows": 1968,
+      "domain_mean_diff_pct": 32.72,
+      "oos_domain_mean_diff_pct": 19.57
+    },
+    "IN": {
+      "stocks_total": 50,
+      "stocks_processed": 50,
+      "dom_windows": 231,
+      "trig_windows": 1713,
+      "domain_mean_diff_pct": 21.48,
+      "oos_domain_mean_diff_pct": 16.16
+    },
+    "IT": {
+      "stocks_total": 40,
+      "stocks_processed": 40,
+      "dom_windows": 168,
+      "trig_windows": 979,
+      "domain_mean_diff_pct": 20.25,
+      "oos_domain_mean_diff_pct": 23.42
+    },
+    "JP": {
+      "stocks_total": 223,
+      "stocks_processed": 204,
+      "dom_windows": 1173,
+      "trig_windows": 5672,
+      "domain_mean_diff_pct": 20.93,
+      "oos_domain_mean_diff_pct": 18.12
+    },
+    "KR": {
+      "stocks_total": 200,
+      "stocks_processed": 193,
+      "dom_windows": 995,
+      "trig_windows": 4481,
+      "domain_mean_diff_pct": 22.73,
+      "oos_domain_mean_diff_pct": 23.16
+    },
+    "NL": {
+      "stocks_total": 24,
+      "stocks_processed": 24,
+      "dom_windows": 91,
+      "trig_windows": 577,
+      "domain_mean_diff_pct": 18.54,
+      "oos_domain_mean_diff_pct": 14.46
+    },
+    "NZ": {
+      "stocks_total": 47,
+      "stocks_processed": 47,
+      "dom_windows": 133,
+      "trig_windows": 995,
+      "domain_mean_diff_pct": 20.88,
+      "oos_domain_mean_diff_pct": 20.01
+    },
+    "SE": {
+      "stocks_total": 30,
+      "stocks_processed": 30,
+      "dom_windows": 122,
+      "trig_windows": 870,
+      "domain_mean_diff_pct": 19.22,
+      "oos_domain_mean_diff_pct": 16.99
+    },
+    "SG": {
+      "stocks_total": 30,
+      "stocks_processed": 30,
+      "dom_windows": 84,
+      "trig_windows": 614,
+      "domain_mean_diff_pct": 19.75,
+      "oos_domain_mean_diff_pct": 16.04
+    },
+    "TW": {
+      "stocks_total": 50,
+      "stocks_processed": 49,
+      "dom_windows": 254,
+      "trig_windows": 1413,
+      "domain_mean_diff_pct": 20.43,
+      "oos_domain_mean_diff_pct": 17.38
+    },
+    "UK": {
+      "stocks_total": 97,
+      "stocks_processed": 95,
+      "dom_windows": 574,
+      "trig_windows": 3161,
+      "domain_mean_diff_pct": 20.05,
+      "oos_domain_mean_diff_pct": 18.84
+    },
+    "US": {
+      "stocks_total": 506,
+      "stocks_processed": 480,
+      "dom_windows": 3256,
+      "trig_windows": 21665,
+      "domain_mean_diff_pct": 19.78,
+      "oos_domain_mean_diff_pct": 19.36
+    }
+  },
+  "aggregate": {
+    "domain_n_windows": 10584,
+    "domain_mean_diff_pct": 21.46,
+    "triggered_n_windows": 60290,
+    "mdd_reduction_mean_pct": 36.3
+  },
+  "verdict": {
+    "claim_type": "qualitative（方向性：震荡域终值差>0 即支持）",
+    "domain_mean_diff_pct": 21.46,
+    "domain_median_diff_pct": 19.63,
+    "domain_n_windows": 10584,
+    "stock_ew_boot": {
+      "mean_pct": 21.22,
+      "ci95_low_pct": 20.96,
+      "ci95_high_pct": 21.5
+    },
+    "stocks_positive_pct": 100.0,
+    "triggered_mean_diff_pct": -38.07,
+    "triggered_n_windows": 60290,
+    "mdd_reduction_mean_pct": 36.3,
+    "ci_low_above_zero": true,
+    "oos_domain_mean_diff_pct": 19.63,
+    "oos_n_windows": 1281,
+    "supported": true
+  }
+}

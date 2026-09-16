@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """补爬 CN 沪深300 6只缺失股票的 baostock 数据"""
+# 豁免 safe_batch：一次性补丁（6 只缺失票 INSERT OR IGNORE，有数即跳过）。日期 2026-09-09，见 docs/DATA-MANAGEMENT.md §八。
 import os, sys, sqlite3, time
 
 sys.stdout.reconfigure(encoding='utf-8')

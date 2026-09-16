@@ -20,6 +20,10 @@ RESEARCH = os.path.join(BASE, "research")
 
 LIGHTS = ("GREEN", "YELLOW", "RED")
 
+# deep_collision 的 DK 入参契约（2026-09-15）：四原则齐全才算"已提供"。
+# 缺任一即规则 10–14 空转，必须出声（DK_INPUT_MISSING），不得静默按 GREEN 放行。
+_DK_PRINCIPLE_KEYS = ("坐标原则", "家国原则", "息价原则", "取舍原则")
+
 
 def _worst(*lights):
     """Return worst light: RED > YELLOW > GREEN."""
@@ -230,6 +234,9 @@ def _get_l1_light(l1: dict) -> str:
     if not l1:
         return "GREEN"
     light = l1.get("overall_light")
+    # 顶层标量与嵌套路径同口径：emoji 灯必须规范化，否则 "🔴" 落穿成 GREEN、L1-RED 快否被吞（2026-09-13 修复，PDD/腾讯 08-15 实证）
+    if light in ("🟢", "🟡", "🔴"):
+        return {"🟢": "GREEN", "🟡": "YELLOW", "🔴": "RED"}[light]
     if light in ("GREEN", "YELLOW", "RED"):
         return light
     overall = l1.get("overall", {})
@@ -256,6 +263,19 @@ def _get_l2b_factors(l2b: dict) -> list:
 def _get_l1_rules(l1: dict) -> list:
     """Get discipline rules list."""
     return l1.get("rules", []) if l1 else []
+
+
+def _m_light(v):
+    """提取 M 层灯值对象：dict → light 字段（历史档案 "color" 字段名兼容），str 取原值。"""
+    if isinstance(v, dict):
+        return v.get("light", v.get("color"))
+    return v
+
+
+def _m_is_red(v):
+    """M 层红灯判定：emoji 🔴 / 文本 RED / 旧文本格式 bearish。"""
+    s = str(_m_light(v) if v is not None else "").strip()
+    return s in ("🔴", "RED", "red", "bearish")
 
 
 def _collect_dissenting_signals(l1: dict, l2b: dict, fundamentals: dict,
@@ -343,7 +363,25 @@ def _collect_dissenting_signals(l1: dict, l2b: dict, fundamentals: dict,
             })
 
     # ── M layer: RED lights ────────────────────────────────────────
+    # 修复 (2026-09-13): 真实 M 产物（02-market.json）为顶层 overall_light 标量 +
+    # m_layer 四维 {light, reason} 结构。旧实现把嵌套维度 str(dict) 后与 "🔴" 比对
+    # 永不匹配，且从不读顶层 overall_light → M 层红灯整体被吞（159766.SZ 实测证实）。
+    # 现 (a) 兼容读取顶层 overall_light 标量（RED 计入并标明来源标量）；
+    # (b) 逐维提取 m_layer 四维灯值（含历史键名变体/nested "lights"/"color" 字段），红灯计入。
+    # 语义约束：market_red_lights 只进入 dissenting_signals/conflicts 输出字段，
+    # deep_collision 规则树不读本字段（m_red 仍只由顶层三维计算），M 红不单独构成否决。
     m = market if isinstance(market, dict) else {}
+
+    # (a) 顶层 overall_light 标量（fengstate 合规结构，旧实现漏读）
+    overall_raw = m.get("overall_light")
+    if _m_is_red(overall_raw):
+        signals["market_red_lights"].append("整体(overall_light)")
+        signals["conflicts"].append({
+            "source": "M层-整体",
+            "message": f"M层整体红灯（来源：顶层 overall_light={_m_light(overall_raw)} 标量）",
+            "handling": "已在碰撞规则中考虑市场风险",
+        })
+
     # Handle both emoji format (🟢🟡🔴) and text format (bullish/neutral/bearish)
     m_labels = {
         "宏观": m.get("macro", "🟡"),
@@ -351,18 +389,30 @@ def _collect_dissenting_signals(l1: dict, l2b: dict, fundamentals: dict,
         "趋势": m.get("trend", "🟡"),
         "情绪": m.get("sentiment", "🟡"),
     }
-    # Also check nested m_layer field (temp_m_*.json format)
-    if "m_layer" in m:
-        ml = m["m_layer"]
-        if isinstance(ml, dict):
-            label_map = {"": ""}
-            for cn, en in (("宏观", "macro"), ("估值", "valuation"), ("趋势", "trend"), ("情绪", "sentiment")):
-                if ml.get(en):
-                    m_labels[f"M-{cn}"] = str(ml[en])
+    # Also check nested m_layer field (02-market.json / temp_m_*.json format)
+    ml = m.get("m_layer")
+    if isinstance(ml, dict):
+        # 历史变体（0700.HK-2026-07-23）：四维再嵌在 m_layer.lights 下
+        dims = ml["lights"] if isinstance(ml.get("lights"), dict) else ml
+        for cn, keys in (("宏观", ("macro", "macro_cycle")),
+                         ("估值", ("valuation", "market_valuation")),
+                         ("趋势", ("trend", "market_trend")),
+                         ("情绪", ("sentiment", "market_sentiment"))):
+            for k in keys:
+                if dims.get(k) is not None:
+                    m_labels[f"M-{cn}"] = _m_light(dims[k])
+                    break
+
+    # 去重 (2026-09-15)：_read_market_data 现会把 m_layer 四维摊平到顶层键，同一盏灯
+    # 会同时以「估值」和「M-估值」两个标签进来，重复计入 conflicts。四维已有 M- 前缀
+    # 版本时丢弃无前缀的同名项。
+    if any(k.startswith("M-") for k in m_labels):
+        for cn in ("宏观", "估值", "趋势", "情绪"):
+            if f"M-{cn}" in m_labels:
+                m_labels.pop(cn, None)
 
     for label, val in m_labels.items():
-        val_str = str(val).strip()
-        if val_str == "🔴" or val_str == "bearish":
+        if _m_is_red(val):
             signals["market_red_lights"].append(label)
             signals["conflicts"].append({
                 "source": f"M层-{label}",
@@ -616,34 +666,93 @@ def _persona_verdicts(l1: dict, l2b: dict, fundamentals: dict,
     return verdicts
 
 
+def _l1_is_etf(l1: dict) -> bool:
+    """识别上游 ETF/数据盲（2026-09-13 fengcheck 审计修复）。
+
+    1) L1 输出顶层 "asset_type"=="etf"（fengrule.py --asset-type etf 产生）→ ETF。
+    2) 无该字段时：仅当 true_value 规则的三个真值检查字段 *存在且全为 None* 才视为数据盲
+       （fengrule ETF 模式显式写 None）。字段缺失（AI 手写 MD 转 JSON 的常见最小格式）
+       或为布尔值（有数据公司，含 False）→ 不判数据盲 —— 保守，不改有数据公司路径。
+    """
+    if not isinstance(l1, dict) or not l1:
+        return False
+    if l1.get("asset_type") == "etf":
+        return True
+    tv = None
+    for r in (l1.get("rules") or []):
+        if isinstance(r, dict) and r.get("check") == "true_value":
+            tv = r
+            break
+    if tv is None:
+        return False
+    keys = ("has_cashflow", "has_revenue", "is_profitable")
+    if not all(k in tv for k in keys):
+        return False
+    return all(tv.get(k) is None for k in keys)
+
+
+def _safe_margin_detail_below_30(l2a: dict) -> bool:
+    """L2a 安全边际灯 detail 是否明示 <30% 折扣检查未过（与灯色冲突时以事实描述为准）。"""
+    v = (l2a or {}).get("安全边际") if isinstance(l2a, dict) else None
+    if not isinstance(v, dict):
+        return False
+    detail = str(v.get("detail") or v.get("reason") or "")
+    if not detail:
+        return False
+    markers = ("<30%", "< 30%", ">30%折扣检查未过", "不足30", "低于30", "未达30", "未过30")
+    return any(m in detail for m in markers)
+
+
 def _deep_value_conditions(l1: dict, l2b: dict, fundamentals: dict, l2a: dict) -> dict:
-    """Check all 4 Deep Value Path conditions."""
-    roe = fundamentals.get("roe_pct") or 0
-    pe = fundamentals.get("trailing_pe") or 99
-    pb = fundamentals.get("pb") or 99
-    fcf = fundamentals.get("fcf_annual", [])
+    """Check all 4 Deep Value Path conditions.
+
+    修复 (2026-09-13, fengcheck 审计): 显式三态 True/False/"ABSTAIN" —
+    原 `latest_fcf > 0 or latest_fcf is not None` 让任何存在过的 FCF 值（含负值）与
+    缺失值自动放行（数据盲当通过证据），其余科目缺失被机械判 False（对 ETF 等于
+    "看不见所以否掉"）。现在：值存在 → 照常判（数据齐全公司输出与原公式一致）；
+    值缺失 → ABSTAIN，由 deep_collision 的 DATA_BLIND 分支让位于 L2a 定性。
+    """
+    roe = fundamentals.get("roe_pct")
+    pe_raw = fundamentals.get("trailing_pe")
+    pb_raw = fundamentals.get("pb")
+    fcf = fundamentals.get("fcf_annual") or []
+    rg_raw = fundamentals.get("revenue_growth_pct")
 
     # A. 好生意: ROE > 10%
-    cond_a = {"check": "好生意", "pass": roe > 10}
-    # B. 极端低估: PE < 15 or PB < 1
-    cond_b = {"check": "极端低估", "pass": pe < 15 or pb < 1}
-    # C. 非价值陷阱: FCF positive (or capex-driven)
-    latest_fcf = fcf[0] if fcf else 0
-    cond_c = {"check": "非价值陷阱", "pass": latest_fcf > 0 or latest_fcf is not None}
-    # D. 回归催化剂: buybacks or improving margins
-    # Proxy: revenue growth positive or improving margins
-    cond_d = {"check": "回归催化剂", "pass": fundamentals.get("revenue_growth_pct", 0) > 0}
+    cond_a = {"check": "好生意", "state": "ABSTAIN" if roe is None else (roe > 10)}
+    # B. 极端低估: PE < 15 or PB < 1（单侧缺失回退 99，与原公式一致；双侧缺失 → ABSTAIN）
+    if pe_raw is None and pb_raw is None:
+        state_b = "ABSTAIN"
+    else:
+        pe = pe_raw or 99
+        pb = pb_raw or 99
+        state_b = pe < 15 or pb < 1
+    cond_b = {"check": "极端低估", "state": state_b}
+    # C. 非价值陷阱: FCF 为正（修复: 缺失 → ABSTAIN，不再"自动过"）
+    latest_fcf = fcf[0] if fcf else None
+    cond_c = {"check": "非价值陷阱",
+              "state": "ABSTAIN" if latest_fcf is None else (latest_fcf > 0)}
+    # D. 回归催化剂: 营收增速为正（缺失 → ABSTAIN）
+    cond_d = {"check": "回归催化剂", "state": "ABSTAIN" if rg_raw is None else (rg_raw > 0)}
 
-    all_pass = all(c["pass"] for c in (cond_a, cond_b, cond_c, cond_d))
-    return {
-        "all_pass": all_pass,
-        "conditions": [cond_a, cond_b, cond_c, cond_d],
+    conds = [cond_a, cond_b, cond_c, cond_d]
+    for c in conds:
+        c["pass"] = c["state"] is True  # 向后兼容旧读者（bool-only，fail 列表逻辑不变）
+        if c["state"] != "ABSTAIN":
+            del c["state"]  # 无 ABSTAIN 时输出结构与原实现逐字节一致（公司路径零变化）
+    abstain = [c for c in conds if c.get("state") == "ABSTAIN"]
+    out = {
+        "all_pass": not abstain and all(c["pass"] for c in conds),
+        "conditions": conds,
     }
+    if abstain:
+        out["abstain_count"] = len(abstain)
+    return out
 
 
-def deep_collision(l1: dict, l2b: dict, fundamentals: dict,
-                   l2a: dict = None, market: dict = None,
-                   dk: dict = None, degradation: dict = None) -> dict:
+def _collision_rules(l1: dict, l2b: dict, fundamentals: dict,
+                     l2a: dict = None, market: dict = None,
+                     dk: dict = None, degradation: dict = None) -> dict:
     """Priority-ordered rule tree returning one decision dict."""
     if market is None:
         market = {}
@@ -667,6 +776,11 @@ def deep_collision(l1: dict, l2b: dict, fundamentals: dict,
     l2a_safe = l2a.get("安全边际", {}).get("light", "GREEN")
 
     # DK assessment defaults (GREEN when not provided)
+    # 有声失败（2026-09-15 AAPL 案例）：DK 四原则未提供时此前静默按 GREEN 处理——
+    # 规则 10–14 全部空转，且 dk_boost 恒真、把规则 6/7/8 的仓位默默抬一档
+    # （70→90 / 40→60 / 80→100）。缺失本身不是错，装作验过才是。故：
+    #   ① 缺任一原则 → conflicts 留一条 DK_INPUT_MISSING（上层可透传/告警）
+    #   ② dk_boost 先要 dk_supplied 才可能为真（未提供 = 未验证 = 不加分）
     dk_coordinate = dk.get("坐标原则", "GREEN")
     dk_nation = dk.get("家国原则", "GREEN")
     dk_price = dk.get("息价原则", "GREEN")
@@ -675,6 +789,8 @@ def deep_collision(l1: dict, l2b: dict, fundamentals: dict,
     dk_any_red = any(v == "RED" for v in dk_lights)
     dk_all_green = all(v == "GREEN" for v in dk_lights)
     dk_margin_lt_30 = dk.get("安全边际_pct", 100) < 30
+    dk_missing_keys = [k for k in _DK_PRINCIPLE_KEYS if k not in dk]
+    dk_supplied = not dk_missing_keys
 
     # L2b signals summary
     factors = _get_l2b_factors(l2b)
@@ -689,6 +805,17 @@ def deep_collision(l1: dict, l2b: dict, fundamentals: dict,
 
     # ── Conflicts tracking ──────────────────────────────────────────
     conflicts = []
+
+    # ── DK 输入缺失出声：规则 10–14 空转必须可见，不许静默装验过 ────
+    if not dk_supplied:
+        conflicts.append({
+            "code": "DK_INPUT_MISSING",
+            "source": "DK 四原则",
+            "message": (f"DK 原则未提供（缺 {'/'.join(dk_missing_keys)}）— "
+                        f"规则 10–14 未参与判定；DK 双验加分不授予"),
+            "handling": ("若需 DK 拦截生效，须向 deep_collision 传 dk="
+                         "{'坐标原则':..,'家国原则':..,'息价原则':..,'取舍原则':..,'安全边际_pct':N}"),
+        })
 
     # ── Rule 1: 好生意/护城河 RED → PASS ────────────────────────────
     if l2a_biz == "RED" or l2a_moat == "RED":
@@ -717,7 +844,23 @@ def deep_collision(l1: dict, l2b: dict, fundamentals: dict,
 
     # ── L1 RED → Deep Value Path ────────────────────────────────────
     if l1_light == "RED":
+        etf_blind = _l1_is_etf(l1)
         dv = _deep_value_conditions(l1, l2b, fundamentals, l2a)
+        # 修复 (2026-09-13, fengcheck 审计): ETF/公司科目大面积数据盲时，Deep Value 四条件
+        # 对"看不见的科目"只能机械判 False → 原逻辑强制 PASS，等于"看不见所以否掉"。
+        # 改为 WAIT 让位于 L2a 安全边际灯与息价规则（定性证据）。数据齐全公司不进此分支。
+        data_blind = etf_blind or dv.get("abstain_count", 0) >= 3
+        if data_blind and (etf_blind or l2a_safe != "GREEN" or _safe_margin_detail_below_30(l2a)):
+            return {
+                "decision": "WAIT",
+                "confidence": "low",
+                "position_pct": 0,
+                "applicable_rule": "DATA_BLIND_DEFER_QUALITATIVE",
+                "reason": "引擎无公司科目可用（ETF/数据盲），数据缺失非负面证据 — 让位于 L2a 安全边际灯与息价规则",
+                "deep_value_checks": dv,
+                "conflicts": conflicts,
+                "next_steps": "以 L2a 安全边际灯+息价原则为准复核；补齐基金口径指标（分配覆盖率/费率/组合PE/PB）后再碰",
+            }
         if dv["all_pass"]:
             return {
                 "decision": "BUY",
@@ -812,7 +955,7 @@ def deep_collision(l1: dict, l2b: dict, fundamentals: dict,
         }
 
     # Rule 14: 全部DK🟢+L1🟢 → 调高置信度（双重验证加分）
-    dk_boost = dk_all_green and l1_light == "GREEN"
+    dk_boost = dk_supplied and dk_all_green and l1_light == "GREEN"
     if dk_boost:
         conflicts.append({
             "source": "DK 双重验证",
@@ -917,18 +1060,26 @@ def deep_collision(l1: dict, l2b: dict, fundamentals: dict,
     green_lights = sum(1 for k, v in l2a.items() if isinstance(v, dict) and v.get("light") == "GREEN")
     red_lights = sum(1 for k, v in l2a.items() if isinstance(v, dict) and v.get("light") == "RED")
 
+    # 有声修复 (2026-09-15)：真实 L2a 产物落进 fallback 时不得自称"代理信号"——
+    # 那会让复核者以为定性分析还没跑，从而把已完成的四大师结论误读为待办。
+    is_proxy = str((l2a or {}).get("source", "")).startswith("proxy")
+    tag = "L2a代理信号" if is_proxy else "L2a真实灯"
+    tail = "需要定性分析澄清" if is_proxy else "已用真实定性灯，落入通用兜底（未命中规则 1-13）"
+
     if l2a_biz == "GREEN" and l2a.get("需求稳定", {}).get("light") == "RED":
         reason = "好生意GREEN但需求稳定RED - 盈利指标好看但需求在下滑, 可能为价值陷阱"
         next_steps = "运行L2a定性分析确认需求下滑的性质: 临时性vs结构性"
     elif red_lights > green_lights:
-        reason = f"L2a代理信号整体偏空(G{green_lights}R{red_lights}) - 多个维度亮红灯"
-        next_steps = "运行L2a定性分析确认红灯的真实程度"
+        reason = f"{tag}整体偏空(G{green_lights}R{red_lights}) - 多个维度亮红灯"
+        next_steps = "运行L2a定性分析确认红灯的真实程度" if is_proxy else "以 L2a 红灯与 L1/DK 纪律为准，等待安全边际改善"
     elif green_lights == 0:
-        reason = "L2a代理信号全部偏弱 - 各项指标均不理想"
+        reason = f"{tag}全部偏弱 - 各项指标均不理想"
         next_steps = "基本面未改善前不建议入场"
     else:
-        reason = f"L2a代理信号矛盾(G{green_lights}R{red_lights}) - 需要定性分析澄清"
-        next_steps = "运行L2a定性分析解决矛盾信号后再决策"
+        reason = f"{tag}矛盾(G{green_lights}R{red_lights}) - {tail}"
+        next_steps = ("运行L2a定性分析解决矛盾信号后再决策" if is_proxy
+                      else "规则树未覆盖本组合（好生意GREEN+安全边际RED+护城河非GREEN），"
+                           "出站按 L1 纪律与 L2a 安全边际红灯人工定音")
 
     return {
         "decision": "WAIT",
@@ -939,6 +1090,104 @@ def deep_collision(l1: dict, l2b: dict, fundamentals: dict,
         "conflicts": conflicts,
         "next_steps": next_steps,
     }
+
+
+# ── DK 规则族（10–14）出站报告 → dk_rules（只加不减，2026-09-15）──────
+# fengcheck 基准 L3-4 要求 L3 产物带 dk_rules：单看标量 applicable_rule 分不清
+# "验过未命中"与"根本没执行"。规则树是短路返回的，故按返回分支（applicable_rule）
+# 反推每条 DK 规则的到达线，不重演判定条件 —— 避免与规则树真实行为漂移
+# （谁先返回谁说了算）。
+# 序位 = 各规则在 _collision_rules 源码中的先后：10 → 11 → 12 → 13 → 14（加分）。
+_DK_RULE_SPECS = (
+    ("10", "DK 任一原则🔴 → PASS（DK 纪律高于一切）", 1,
+     "已判定未命中：DK 四原则无🔴"),
+    ("11", "坐标原则🔴 → WAIT（无对标支撑的分析不可靠）", 5,
+     "已判定未命中：坐标原则非🔴（🟡 只记 conflicts + 降置信度，不另立分支）"),
+    ("12", "家国原则🔴 → PASS（方向与国家利益冲突）", 6,
+     "已判定未命中：家国原则非🔴"),
+    ("13", "安全边际<30% 或 息价原则🔴 → WAIT（价格不够便宜）", 7,
+     "已判定未命中：安全边际≥30% 且 息价原则非🔴"),
+    ("14", "DK 双验加分 modifier（全 DK🟢 + L1🟢 → 规则 5/6/7 调高置信度/仓位）", 8,
+     "已判定未命中：DK 未全🟢 或 L1 非🟢 — 未授予双重验证加分"),
+)
+
+# str(applicable_rule) → 该返回分支的到达线；规则序位 ≥ 到达线 = 该规则执行到了。
+# 未列出的（规则 4–9 与兜底 None）= 走完整棵树，取默认 8。
+_DK_BRANCH_RANK = {
+    "1": 0,                                                # 规则 1：DK 族之前就返回
+    "10": 1,
+    "DATA_BLIND_DEFER_QUALITATIVE": 2, "deep_value": 2,    # L1 RED 两分支
+    "2": 3, "3": 4, "11": 5, "12": 6, "13": 7,
+}
+# 短路者标签（只在"未执行"原因里指出被谁短路）
+_DK_BRANCH_LABEL = {
+    "1": "规则 1（好生意/护城河 RED）",
+    "10": "规则 10（DK 任一原则🔴 拦截）",
+    "DATA_BLIND_DEFER_QUALITATIVE": "L1 RED 数据盲分支",
+    "deep_value": "L1 RED 深度价值分支",
+    "2": "规则 2", "3": "规则 3", "11": "规则 11", "12": "规则 12", "13": "规则 13",
+}
+
+
+def _dk_rules_report(dk: dict, decision: dict) -> dict:
+    """DK 族（规则 10–14）逐条状态：fired / evaluated_not_fired / not_evaluated。
+
+    只读引擎自身产物（applicable_rule / reason / conflicts），不改判定。
+    """
+    dk = dk if isinstance(dk, dict) else {}
+    missing = [k for k in _DK_PRINCIPLE_KEYS if k not in dk]
+    supplied = not missing
+    applicable_rule = decision.get("applicable_rule")
+    rank = _DK_BRANCH_RANK.get(str(applicable_rule), 8)
+    # 加分是否真写入 conflicts（modifier 无独立分支，冲突记录就是它的生效凭证）
+    boost = next((c for c in (decision.get("conflicts") or [])
+                  if c.get("source") == "DK 双重验证"), None)
+    missing_reason = (f"DK 原则未提供（缺 {'/'.join(missing)}）— 规则 10–14 未参与判定；"
+                      f"DK 双验加分不授予")
+
+    rules = {}
+    for rid, name, pos, pass_reason in _DK_RULE_SPECS:
+        fired = bool(boost) if rid == "14" else str(applicable_rule) == rid
+        entry = {"name": name}
+        if rid == "14":
+            entry["active"] = fired
+        if fired:
+            entry["status"] = "fired"
+            # 沿用引擎自己的话（不重写理由，避免与决策文本两套说法）
+            entry["reason"] = boost.get("message", "") if rid == "14" else decision.get("reason", "")
+            if rid == "14":
+                entry["reason"] += (f"；本分支（规则 {applicable_rule}）已按加分调高置信度/仓位"
+                                    if applicable_rule in (5, 6, 7) else "；本分支未消费该加分")
+        elif not supplied:
+            entry["status"] = "not_evaluated"
+            entry["reason"] = missing_reason
+        elif pos > rank:
+            entry["status"] = "not_evaluated"
+            entry["reason"] = (f"未执行：规则树已在 {_DK_BRANCH_LABEL.get(str(applicable_rule), '上层分支')}"
+                               f" 短路返回，本规则按优先级未到达")
+        else:
+            entry["status"] = "evaluated_not_fired"
+            entry["reason"] = pass_reason
+        rules[rid] = entry
+
+    return {
+        "supplied": supplied,
+        "principles": {k: dk.get(k) for k in _DK_PRINCIPLE_KEYS},
+        "rules": rules,
+    }
+
+
+def deep_collision(l1: dict, l2b: dict, fundamentals: dict,
+                   l2a: dict = None, market: dict = None,
+                   dk: dict = None, degradation: dict = None) -> dict:
+    """Priority-ordered rule tree returning one decision dict.
+
+    只加不减（2026-09-15）：出站多带 dk_rules（DK 规则 10–14 逐条状态 + 四原则
+    灯值 + supplied）；既有字段与判定逐字节不变。
+    """
+    decision = _collision_rules(l1, l2b, fundamentals, l2a, market, dk, degradation)
+    decision["dk_rules"] = _dk_rules_report(dk, decision)
+    return decision
 
 
 # ── I/O helpers ────────────────────────────────────────────────────
@@ -1036,24 +1285,102 @@ def _read_fundamentals(ticker: str) -> dict:
     return result
 
 
-def _read_market_data(ticker: str) -> dict:
-    """Read market sentiment data."""
-    market_file = os.path.join(RESEARCH, "market", "latest.json")
-    mkt = _read_json(market_file)
+def _flatten_m_layer(m: dict) -> dict:
+    """把 M 层产物的 m_layer 四维灯/整体灯摊平到顶层键。
 
-    # Build simplified M-layer summary
+    2026-09-15 AAPL 实测：`--market <file>` 直连旧路径绕过了 `_read_market_data`
+    的摊平逻辑 —— 显式传 `02-market.json` 反而比自动发现**少**看到 M 层整体红灯
+    （overall_light 藏在 m_layer 下）。同一份文件，两条路读出两种结论 = 静默降级。
+    故把摊平抽成公共函数，两条路共用；只加不减，顶层已有值不覆盖。
+    """
+    if not isinstance(m, dict):
+        return {}
+    out = dict(m)
+    ml = m.get("m_layer")
+    if isinstance(ml, dict):
+        dims = ml["lights"] if isinstance(ml.get("lights"), dict) else ml
+        for cn, keys in (("macro", ("macro", "macro_cycle")),
+                         ("valuation", ("valuation", "market_valuation")),
+                         ("trend", ("trend", "market_trend")),
+                         ("sentiment", ("sentiment", "market_sentiment"))):
+            for k in keys:
+                if dims.get(k) is not None:
+                    if not isinstance(out.get(cn), str) or not out.get(cn):
+                        out[cn] = _m_light(dims[k])
+                    break
+        if out.get("overall_light") is None and ml.get("overall_light") is not None:
+            out["overall_light"] = ml["overall_light"]
+    return out
+
+
+def _read_market_data(ticker: str) -> dict:
+    """Read market data — 优先本标的 M 层产物，其次全局市场快照。
+
+    修复 (2026-09-15, AAPL 实测): 旧实现只读全局 `research/market/latest.json`
+    并把 `valuation` 填成一段文字 summary。deep_collision 的 `m_red` 由
+    `market["macro"|"valuation"|"sentiment"]` 三键推导，而这两个键在旧实现下
+    永远不是灯值 → **m_red 恒为 False，本标的 M 层红灯对规则树完全不可见**。
+    2026-09-13 那轮修了 `_collect_dissenting_signals` 的读法，但没人改调用方喂的源，
+    病灶仍在（与 159766.SZ 同型：M 红被吞，只是位置不同）。
+
+    现 (a) 优先读本标的 02-market（含 m_layer 四维灯与顶层 overall_light），
+    把四维灯以字符串形式摊平到顶层键供规则树读取；(b) 全局快照保留在
+    `global_market` 下，不丢信息。
+    """
+    # (a) 本标的 M 层产物优先
+    out = {}
+    m_file = _find_file(ticker, "02-market")
+    if not m_file:
+        m_file = os.path.join(RESEARCH, f"temp_m_{ticker.upper()}.json")
+    m = _read_json(m_file)
+    if isinstance(m, dict) and m:
+        for k in ("overall_light", "m_layer", "macro", "valuation", "trend", "sentiment"):
+            if m.get(k) is not None:
+                out[k] = m[k]
+        out["source_file"] = m_file
+        ml = m.get("m_layer")
+        if isinstance(ml, dict):
+            dims = ml["lights"] if isinstance(ml.get("lights"), dict) else ml
+            for cn, keys in (("macro", ("macro", "macro_cycle")),
+                             ("valuation", ("valuation", "market_valuation")),
+                             ("trend", ("trend", "market_trend")),
+                             ("sentiment", ("sentiment", "market_sentiment"))):
+                for k in keys:
+                    if dims.get(k) is not None:
+                        flat = _m_light(dims[k])
+                        # 已摊平的顶层键不覆盖（顶层优先）
+                        if not isinstance(out.get(cn), str) or not out.get(cn):
+                            out[cn] = flat
+                        break
+            if out.get("overall_light") is None and ml.get("overall_light") is not None:
+                out["overall_light"] = ml["overall_light"]
+
+    # (b) 全局市场快照（保留原行为，挪到子键）
+    mkt = _read_json(os.path.join(RESEARCH, "market", "latest.json"))
     temp = mkt.get("temperature", {})
     behavior = mkt.get("behavior", {}).get("baseline", {})
-
-    return {
-        "composite_score": temp.get("composite"),
-        "composite_label": temp.get("label", "neutral"),
+    out["composite_score"] = temp.get("composite")
+    out["composite_label"] = temp.get("label", "neutral")
+    out["global_market"] = {
         "macro": behavior.get("reading", "neutral"),
         "valuation": behavior.get("summary", ""),
     }
+    if not m:
+        # 无本标的 M 产物时退回旧行为，规则树仍能拿到两个键
+        out.setdefault("macro", out["global_market"]["macro"])
+        out.setdefault("valuation", out["global_market"]["valuation"])
+    return out
 
 
 def main():
+    # 修复 (2026-09-13): 旧版把 "--help" 当 ticker 代理执行了一遍。入口处识别帮助标志。
+    if any(a in ("-h", "--help") for a in sys.argv[1:]):
+        print("Usage: fengcollision.py TICKER [--l1 <file>] [--l2b <file>] "
+              "[--fundamentals <file>] [--market <file>] [--l2a <file>]")
+        print("  Layers: 03-discipline (L1), 04-quantitative (L2b), "
+              "05-qualitative (L2a), 02-market (M)")
+        sys.exit(0)
+
     if len(sys.argv) < 2:
         print(json.dumps({
             "error": "Usage: fengcollision.py TICKER [--l1 <file>] [--l2b <file>] "
@@ -1084,7 +1411,8 @@ def main():
     l1 = _read_json(l1_file)
     l2b = _read_json(l2b_file)
     fundamentals = _read_json(fundamentals_file) if fundamentals_file else _read_fundamentals(ticker)
-    market = _read_json(market_file) if market_file else _read_market_data(ticker)
+    # --market 显式传入时同样走摊平（2026-09-15 修：此前绕开，M 层整体红灯会被吞）
+    market = _flatten_m_layer(_read_json(market_file)) if market_file else _read_market_data(ticker)
     l2a_raw = _read_json(l2a_file) if l2a_file else None
 
     # Build L2a qualitative dict (accepts investment-team format or proxy)
@@ -1174,6 +1502,18 @@ def main():
         },
         "l2a_source": l2a_source,
         "l2a_lights": {k: v["light"] for k, v in l2a.items() if isinstance(v, dict) and "light" in v},
+        # 有声声明（2026-09-15）：本 CLI 路径不向 deep_collision 传 dk，
+        # 故规则 10–14 不参与判定、dk_boost 不授予。字段在此显式暴露，不静默。
+        "dk_input": {
+            "supplied": False,
+            "principles_expected": list(_DK_PRINCIPLE_KEYS),
+            "note": ("CLI 路径（fengcollision.py main）未传 dk，规则 10–14 本轮未生效；"
+                     "此前该状态是隐式的（默认全 GREEN + dk_boost 恒真），现改为显式字段 + "
+                     "conflicts 内 DK_INPUT_MISSING 明细。"),
+        },
+        # 只加不减（2026-09-15）：DK 族逐条状态（fengcheck 基准 L3-4 要的 dk_rules），
+        # 由 deep_collision 出站自带，此处原样透传。
+        "dk_rules": decision.get("dk_rules"),
         "dissenting_signals": {
             "l2b_bear_factors": dissenting.get("l2b_bear_factors", []),
             "l1_failed_checks": dissenting.get("l1_failed_checks", []),

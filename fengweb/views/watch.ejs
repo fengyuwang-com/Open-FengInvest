@@ -1,46 +1,46 @@
 <div class="page-header">
   <h2 data-i18n="page.watch">📡 持仓监控</h2>
-  <div class="breadcrumb"><a href="/">系统总览</a> / 持仓监控</div>
+  <div class="breadcrumb"><a href="/" data-i18n="common.sysOverview">系统总览</a> / <span data-i18n="nav.watch">持仓监控</span></div>
 </div>
 
 <!-- Action Bar -->
 <div class="card" style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
-  <button class="btn btn-primary" onclick="runDailyCheck()">▶ 每日检查</button>
-  <a href="/watch/history" class="btn btn-outline">📜 历史持仓</a>
+  <button class="btn btn-primary" onclick="runDailyCheck()" data-i18n="watch.dailyCheck">▶ 每日检查</button>
+  <a href="/watch/history" class="btn btn-outline" data-i18n="watch.historyBtn">📜 历史持仓</a>
   <span id="last-check" style="font-size:13px;color:var(--text-muted);">—</span>
-  <span id="status-spinner" style="display:none;font-size:13px;color:var(--primary);">⏳ 运行中...</span>
+  <span id="status-spinner" style="display:none;font-size:13px;color:var(--primary);" data-i18n="watch.running">⏳ 运行中...</span>
 </div>
 
-<!-- Summary Dashboard -->
-<div class="dashboard-grid" id="summary-grid">
-  <div class="stat-card">
+<!-- Summary Dashboard（点击过滤） -->
+<div class="dashboard-grid" id="summary-grid" style="cursor:pointer;">
+  <div class="stat-card" data-filter="ALL">
     <div class="stat-value" id="total-count" style="color:var(--text);">—</div>
-    <div class="stat-label">总持仓</div>
+    <div class="stat-label" data-i18n="watch.statTotal">总持仓</div>
   </div>
-  <div class="stat-card">
-    <div class="stat-value positive" id="green-count">—</div>
-    <div class="stat-label">正常 🟢</div>
+  <div class="stat-card" data-filter="GREEN">
+    <div class="stat-value" id="green-count" style="color:var(--ok);">—</div>
+    <div class="stat-label" data-i18n="watch.statGreen">正常 🟢</div>
   </div>
-  <div class="stat-card">
-    <div class="stat-value" id="yellow-count" style="color:var(--yellow);">—</div>
-    <div class="stat-label">关注 🟡</div>
+  <div class="stat-card" data-filter="YELLOW">
+    <div class="stat-value" id="yellow-count" style="color:var(--warn);">—</div>
+    <div class="stat-label" data-i18n="watch.statYellow">关注 🟡</div>
   </div>
-  <div class="stat-card">
-    <div class="stat-value negative" id="red-count">—</div>
-    <div class="stat-label">警告 🔴</div>
+  <div class="stat-card" data-filter="RED">
+    <div class="stat-value" id="red-count" style="color:var(--danger);">—</div>
+    <div class="stat-label" data-i18n="watch.statRed">警告 🔴</div>
   </div>
 </div>
 
 <!-- Holdings Detail -->
-<div class="section-title">持仓退出条件状态</div>
+<div class="section-title" data-i18n="watch.exitCondStatus">每只持仓的情况（点上面的色块可以过滤）</div>
 <div id="holdings-list">
-  <div class="empty-state"><p>点击"每日检查"加载持仓数据</p></div>
+  <div class="empty-state"><p data-i18n="watch.clickToLoad">点击"每日检查"加载持仓数据</p></div>
 </div>
 
 <!-- Recent Log -->
-<div class="section-title" style="margin-top:24px">最近决策记录</div>
+<div class="section-title" style="margin-top:24px" data-i18n="watch.recentLog">最近决策记录</div>
 <div id="log-list">
-  <div class="empty-state"><p>暂无记录</p></div>
+  <div class="empty-state"><p data-i18n="watch.noRecords">暂无记录</p></div>
 </div>
 
 <script>
@@ -66,7 +66,7 @@ async function runDailyCheck() {
     const data = await res.json();
     renderDashboard(data);
   } catch (e) {
-    alert('检查失败: ' + e.message);
+    alert(FengI18n.t('watch.checkFailed', '检查失败: ') + e.message);
   } finally {
     document.getElementById('status-spinner').style.display = 'none';
     document.querySelector('#summary-grid .btn-primary')?.style.removeProperty('opacity');
@@ -81,70 +81,92 @@ function renderDashboard(data) {
   document.getElementById('red-count').textContent = data.red || 0;
 
   const ts = data.generated_at ? new Date(data.generated_at).toLocaleString('zh-CN') : '';
-  document.getElementById('last-check').textContent = '上次检查: ' + (data.date || ts);
+  document.getElementById('last-check').textContent = FengI18n.t('watch.lastCheck', '上次检查: ') + (data.date || ts);
 
   renderHoldings(data.results || []);
 }
 
+let currentFilter = 'ALL';
+
+function overallCN(o) {
+  return { GREEN: FengI18n.t('watch.ovGreen', '正常'), YELLOW: FengI18n.t('watch.ovYellow', '需要关注'), RED: FengI18n.t('watch.ovRed', '需要行动') }[o] || o;
+}
+// 结论先行：第一条非 OK 检查的 label，没有则给安心句
+function firstConclusion(h) {
+  const checks = h.checks || {};
+  const keys = Object.keys(checks);
+  for (const k of keys) {
+    const c = checks[k];
+    if (c && (c.label || c.signal) && c.level && c.level !== 'OK') return c.label || c.signal;
+  }
+  return FengI18n.t('watch.allWell', '各项检查正常，按计划持有。');
+}
+
+document.querySelectorAll('#summary-grid .stat-card[data-filter]').forEach(el => {
+  el.addEventListener('click', () => {
+    currentFilter = el.dataset.filter;
+    document.querySelectorAll('#summary-grid .stat-card[data-filter]').forEach(x => x.style.outline = '');
+    el.style.outline = '2px solid var(--accent)';
+    if (currentData) renderHoldings(currentData.results || []);
+  });
+});
+
 function renderHoldings(holdings) {
   const container = document.getElementById('holdings-list');
-  if (holdings.length === 0) {
-    container.innerHTML = '<div class="empty-state"><p>暂无持仓数据</p></div>';
+  const filtered = currentFilter === 'ALL' ? holdings : holdings.filter(h => h.overall === currentFilter);
+  if (filtered.length === 0) {
+    container.innerHTML = '<div class="empty-state"><p>' + FengI18n.t('watch.noHoldingsData', '暂无持仓数据') + '</p></div>';
     return;
   }
 
   let html = '';
-  holdings.forEach(h => {
+  filtered.forEach(h => {
     const pos = h.position || {};
     const ret = pos.return_pct;
     const retClass = ret >= 0 ? 'positive' : 'negative';
     const retStr = ret != null ? (ret >= 0 ? '+' : '') + ret.toFixed(1) + '%' : '—';
     const icon = { GREEN: '🟢', YELLOW: '🟡', RED: '🔴' }[h.overall] || '⚪';
-    const statusColor = { GREEN: 'var(--green)', YELLOW: 'var(--yellow)', RED: 'var(--red)' }[h.overall] || 'var(--text-muted)';
+    const isGreen = h.overall === 'GREEN';
 
-    html += '<div class="card">';
-    html += '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">';
-    const dispName = h.name && h.name !== h.ticker ? h.name : fengName(h.ticker);
-    html += '<div><strong style="font-size:18px;">' + icon + ' ' + dispName + '</strong>';
-    if (dispName !== h.ticker) html += ' <span style="font-size:13px;color:var(--text-muted)">' + h.ticker + '</span>';
-    html += '</div>';
-    html += '<span style="padding:4px 10px;border-radius:4px;font-weight:600;font-size:14px;background:' + statusColor + '22;color:' + statusColor + ';">' + h.overall + '</span>';
-    html += '</div>';
+    // 结论先行：状态徽章用中文，绿色一笔带过可折叠
+    const head =
+      '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">' +
+      '<div><strong style="font-size:18px;">' + icon + ' ' + (h.name && h.name !== h.ticker ? h.name : fengName(h.ticker)) + '</strong></div>' +
+      '<span style="padding:4px 10px;border-radius:4px;font-weight:600;font-size:14px;">' + overallCN(h.overall) + '</span>' +
+      '</div>' +
+      '<div style="margin-top:6px;font-size:14px;">' + firstConclusion(h) + '</div>';
 
-    html += '<div style="margin-top:12px;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;font-size:14px;">';
-    html += '<div><span style="color:var(--text-muted)">成本</span> ¥' + (pos.avg_cost || '—').toLocaleString() + '</div>';
-    html += '<div><span style="color:var(--text-muted)">现价</span> ¥' + (pos.current_price || '—').toLocaleString() + '</div>';
-    html += '<div class="' + retClass + '"><span style="color:var(--text-muted)">盈亏</span> ' + retStr + '</div>';
-    html += '<div><span style="color:var(--text-muted)">市值</span> ¥' + (pos.market_value || 0).toLocaleString() + '</div>';
-    html += '</div>';
+    const body =
+      '<div style="margin-top:12px;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;font-size:14px;">' +
+      '<div><span style="color:var(--text-muted)">' + FengI18n.t('watch.lblCost', '成本') + '</span> ' + (pos.avg_cost != null ? Number(pos.avg_cost).toLocaleString() : '—') + '</div>' +
+      '<div><span style="color:var(--text-muted)">' + FengI18n.t('watch.lblNow', '现价') + '</span> ' + (pos.current_price != null ? Number(pos.current_price).toLocaleString() : '—') + '</div>' +
+      '<div class="' + retClass + '"><span style="color:var(--text-muted)">' + FengI18n.t('watch.lblPnl', '盈亏') + '</span> ' + retStr + '</div>' +
+      '<div><span style="color:var(--text-muted)">' + FengI18n.t('watch.lblMv', '市值') + '</span> ' + (pos.market_value != null ? Number(pos.market_value).toLocaleString() : '—') + '</div>' +
+      '</div>' +
+      (h.thesis ? '<div style="margin-top:8px;font-size:13px;color:var(--text-muted);font-style:italic;">📄 ' + h.thesis.slice(0, 100) + (h.thesis.length > 100 ? '…' : '') + '</div>' : '') +
+      '<div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;">' +
+      '<a href="/holdings/' + h.ticker + '" class="btn btn-sm btn-primary">' + FengI18n.t('watch.btnDetail', '持仓详情') + '</a>' +
+      '<button class="btn btn-sm btn-outline" onclick="runReview(\'' + h.ticker + '\')">' + FengI18n.t('watch.btnReview', '复盘') + '</button>' +
+      '<a href="/watch/sell/' + h.ticker + '" class="btn btn-sm btn-danger-outline">' + FengI18n.t('watch.btnSell', '卖出') + '</a>' +
+      '</div>';
 
-    if (h.thesis) {
-      html += '<div style="margin-top:8px;font-size:13px;color:var(--text-muted);font-style:italic;">📄 ' + h.thesis.slice(0, 100) + (h.thesis.length > 100 ? '…' : '') + '</div>';
-    }
-
-    html += '<div style="margin-top:4px;font-size:12px;color:var(--text-muted);">资本阶段: ' + (h.capital_phase || 'capital_at_risk') + '</div>';
-
-    html += '<div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;">';
-    html += '<a href="/holdings/' + h.ticker + '" class="btn btn-sm btn-primary">持仓详情</a>';
-    html += '<button class="btn btn-sm btn-outline" onclick="runReview(\'' + h.ticker + '\')">复盘</button>';
-    html += '<a href="/watch/sell/' + h.ticker + '" class="btn btn-sm btn-danger-outline">卖出</a>';
-    html += '</div>';
-
-    html += '</div>';
+    html += isGreen
+      ? '<div class="card"><details><summary style="cursor:pointer;list-style:none;">' + head.replace('</div>\n', '</div>') + '</summary>' + body + '</details></div>'
+      : '<div class="card">' + head + body + '</div>';
   });
 
   container.innerHTML = html;
 }
 
 async function runReview(ticker) {
-  if (!confirm('确定对 ' + ticker + ' 执行复盘？将生成复盘文件并记录日志。')) return;
+  if (!confirm(FengI18n.t('watch.confirmReview1', '确定对 ') + ticker + FengI18n.t('watch.confirmReview2', ' 执行复盘？将生成复盘文件并记录日志。'))) return;
   try {
     const res = await fetch('/api/watch/review/' + ticker, { method: 'POST' });
     const data = await res.json();
-    alert(data.message || '复盘完成');
+    alert(data.message || FengI18n.t('watch.reviewDone', '复盘完成'));
     loadLog();
   } catch (e) {
-    alert('复盘失败: ' + e.message);
+    alert(FengI18n.t('watch.reviewFailed', '复盘失败: ') + e.message);
   }
 }
 
@@ -154,7 +176,7 @@ async function loadLog() {
     const data = await res.json();
     const container = document.getElementById('log-list');
     if (!data.entries || data.entries.length === 0) {
-      container.innerHTML = '<div class="empty-state"><p>暂无记录</p></div>';
+      container.innerHTML = '<div class="empty-state"><p>' + FengI18n.t('watch.noRecords', '暂无记录') + '</p></div>';
       return;
     }
     let html = '<div class="activity-list">';
@@ -172,7 +194,7 @@ async function loadLog() {
       html += '</div>';
     });
     html += '</div>';
-    html += '<div style="margin-top:8px;"><a href="/journal" class="btn btn-sm btn-outline">查看全部 →</a></div>';
+    html += '<div style="margin-top:8px;"><a href="/journal" class="btn btn-sm btn-outline">' + FengI18n.t('watch.viewAll', '查看全部 →') + '</a></div>';
     container.innerHTML = html;
   } catch (e) {
     // ignore

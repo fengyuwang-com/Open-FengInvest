@@ -2,12 +2,14 @@
 """补爬 12 只 HK 缺失股票 — 使用 AKShare 数据源
 
 AKShare（https://akshare.akfamily.xyz）是中国开源金融数据接口，
-支持港股、A股、期货等数据。无需 Futu OpenD。
+支持港股、A股、期货等数据。零 Futu 依赖。
 
 用法:
     python tools/fix_hk_nodata.py                          # 补爬全部
     python tools/fix_hk_nodata.py --ticker 0700.HK         # 单只
 """
+# 豁免 safe_batch：一次性补爬（12 只 HK 缺失票 AKShare INSERT OR IGNORE，有数即跳过）。
+# 日期 2026-09-09，见 docs/DATA-MANAGEMENT.md §八。
 import os, sqlite3, sys, time
 from datetime import datetime
 

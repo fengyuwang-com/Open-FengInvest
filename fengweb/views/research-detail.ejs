@@ -1,15 +1,15 @@
 <div class="page-header">
-  <div class="breadcrumb"><a href="/research">研究</a> / <%= name.replace(ticker + '-', '') %></div>
+  <div class="breadcrumb"><a href="/research" data-i18n="researchdetail.crumbResearch">研究</a> / <%= name.replace(ticker + '-', '') %></div>
   <h2><%= name.replace(ticker + '-', '') %> <span class="num" style="font-size:16px;color:var(--text-muted);font-weight:500;"><%= ticker %></span></h2>
   <% var l1 = (layers || []).find(function(x){ return x.layer === 'l1'; });
      var principle = l1 && l1.data && l1.data.overall_light;
      var dispName = name.replace(ticker + '-', ''); %>
   <div style="margin-top:6px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-    <span class="badge badge-<%= principle === 'GREEN' ? 'green' : principle === 'RED' ? 'red' : 'neutral' %>" title="L1 硬纪律四灯总评">
-      原则符合度 <%= principle === 'GREEN' ? '✓' : principle === 'RED' ? '✗' : '待验' %>
+    <span class="badge badge-<%= principle === 'GREEN' ? 'green' : principle === 'RED' ? 'red' : 'neutral' %>" title="L1 硬纪律四灯总评" data-i18n-tt="researchdetail.principleTitle">
+      <span data-i18n="researchdetail.principle">原则符合度</span> <%= principle === 'GREEN' ? '✓' : principle === 'RED' ? '✗' : '待验' %>
     </span>
-    <a class="btn btn-accent" href="/reports/<%= ticker %>">📚 报告书架（<%= reports.reports.length %>）</a>
-    <a class="btn" href="/holdings/<%= ticker %>">💼 持仓详情</a>
+    <a class="btn btn-accent" href="/reports/<%= ticker %>"><span data-i18n="researchdetail.shelfBtn">📚 报告书架</span>（<%= reports.reports.length %>）</a>
+    <a class="btn" href="/holdings/<%= ticker %>" data-i18n="researchdetail.holdingDetail">💼 持仓详情</a>
   </div>
   <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:12px;" id="layer-nav">
     <% var order = ['l0','m','l1','l2b','l2a','l3','l4','l4n']; %>
@@ -21,28 +21,29 @@
 </div>
 
 <% if (principle === 'RED') { %>
-<div class="card" style="border-left:3px solid var(--danger);">
-  <h3 class="section-title">🚪 L1 红灯 ≠ 公司完了——深度价值路径核对单（docs/03-discipline.md）</h3>
+<div class="card">
+  <h3 class="section-title" data-i18n="researchdetail.redcardTitle">🚪 L1 红灯 ≠ 公司完了——深度价值路径核对单（docs/03-discipline.md）</h3>
   <p style="font-size:13px;color:var(--text-secondary);margin:0 0 12px 0;">
-    红灯拦截买入，<b>不拦截研究继续</b>。四条全过 → 可走深度价值路径（DCA，仓位上限 30-50%）；任一不满足 → PASS。逐条核对：
+    <span data-i18n="researchdetail.redcardIntro1">红灯拦截买入，</span><b data-i18n="researchdetail.redcardIntro2">不拦截研究继续</b><span data-i18n="researchdetail.redcardIntro3">。四条全过 → 可走深度价值路径（DCA，仓位上限 30-50%）；任一不满足 → PASS。逐条核对：</span>
   </p>
   <div class="alert-list">
-    <div class="alert-item info"><span class="num" style="font-weight:600;">A</span><span><b>好生意 🟢</b>：ROE &gt; 10% 或护城河未坏（去 L2a 层核对护城河灯）</span></div>
-    <div class="alert-item info"><span class="num" style="font-weight:600;">B</span><span><b>极端低估</b>：PE &lt; 15 或 PB &lt; 1 或净现金 &gt; 30% 市值（对照上方估值速览）</span></div>
-    <div class="alert-item info"><span class="num" style="font-weight:600;">C</span><span><b>非价值陷阱</b>：FCF 为负必须有合理解释（周期性/一次性投入/账期）</span></div>
-    <div class="alert-item info"><span class="num" style="font-weight:600;">D</span><span><b>回归催化剂</b>：存在让估值回归的具体事件或时点</span></div>
+    <div class="alert-item info"><span class="num" style="font-weight:600;">A</span><span><b data-i18n="researchdetail.condA">好生意 🟢</b><span data-i18n="researchdetail.condAText">：ROE &gt; 10% 或护城河未坏（去 L2a 层核对护城河灯）</span></span></div>
+    <div class="alert-item info"><span class="num" style="font-weight:600;">B</span><span><b data-i18n="researchdetail.condB">极端低估</b><span data-i18n="researchdetail.condBText">：PE &lt; 15 或 PB &lt; 1 或净现金 &gt; 30% 市值（对照上方估值速览）</span></span></div>
+    <div class="alert-item info"><span class="num" style="font-weight:600;">C</span><span><b data-i18n="researchdetail.condC">非价值陷阱</b><span data-i18n="researchdetail.condCText">：FCF 为负必须有合理解释（周期性/一次性投入/账期）</span></span></div>
+    <div class="alert-item info"><span class="num" style="font-weight:600;">D</span><span><b data-i18n="researchdetail.condD">回归催化剂</b><span data-i18n="researchdetail.condDText">：存在让估值回归的具体事件或时点</span></span></div>
   </div>
-  <p style="font-size:12px;color:var(--text-muted);margin:12px 0 0 0;">⚠️ 红灯可以往上推翻（L2a 定性核心推翻 L1），不能往下忽略。结论必须落档进 L3 碰撞层。</p>
+  <p style="font-size:12px;color:var(--text-muted);margin:12px 0 0 0;" data-i18n="researchdetail.redcardNote">⚠️ 红灯可以往上推翻（L2a 定性核心推翻 L1），不能往下忽略。结论必须落档进 L3 碰撞层。</p>
 </div>
 <% } %>
 
 <div class="card" id="valuation-card">
-  <h3 class="section-title">💰 估值速览</h3>
-  <div id="valuation-body" style="color:var(--text-muted);font-size:13px;">加载中…</div>
+  <h3 class="section-title" data-i18n="researchdetail.valuation">💰 估值速览</h3>
+  <div id="valuation-body" style="color:var(--text-muted);font-size:13px;" data-i18n="researchdetail.loading">加载中…</div>
 </div>
 
 <% if (layers && layers.length > 0) { %>
-  <% var layerOrder = ['l0','m','l1','l2b','l2a','l3','l4','l4n']; %>
+  <% /* L3 碰撞结论置顶：先给答案，再给过程（UX 审计 P0-4） */ %>
+  <% var layerOrder = ['l3','l0','m','l1','l2b','l2a','l4','l4n']; %>
   <% layerOrder.forEach(function(layerId) { %>
     <% var layer = layers.find(function(x) { return x.layer === layerId; }); %>
     <% if (!layer) return; %>
@@ -69,19 +70,19 @@
           <% var coreRules = layer.data.rules.filter(function(r) { return dkRules.indexOf(r.check) === -1; }); %>
           <% var dkOnly = layer.data.rules.filter(function(r) { return dkRules.indexOf(r.check) !== -1; }); %>
 
-          <h4 style="font-size:13px;color:var(--text-muted);margin-bottom:6px;">核心纪律</h4>
+          <h4 style="font-size:13px;color:var(--text-muted);margin-bottom:6px;" data-i18n="researchdetail.coreDiscipline">核心纪律</h4>
           <% coreRules.forEach(function(r) { %>
             <div class="result-row">
-              <span class="label"><%= r.check === 'no_knife' ? '不接飞刀' : r.check === 'no_fomo' ? '不蹭热点' : r.check === 'no_leverage' ? '杠杆=0' : r.check === 'true_value' ? '真价值' : r.check %></span>
+              <span class="label" data-i18n="researchdetail.rule.<%= r.check %>"><%= r.check === 'no_knife' ? '不接飞刀' : r.check === 'no_fomo' ? '不蹭热点' : r.check === 'no_leverage' ? '杠杆=0' : r.check === 'true_value' ? '真价值' : r.check %></span>
               <span class="value"><span class="badge badge-<%= r.light === 'RED' ? 'red' : r.light === 'YELLOW' ? 'yellow' : 'green' %>"><%= r.light %></span> <%= r.signal || '' %> — <%= r.reason %></span>
             </div>
           <% }) %>
 
           <% if (dkOnly.length > 0) { %>
-          <h4 style="font-size:13px;color:var(--warn);margin:10px 0 6px;">DK 纪律规则</h4>
+          <h4 style="font-size:13px;color:var(--warn);margin:10px 0 6px;" data-i18n="researchdetail.dkRules">DK 纪律规则</h4>
           <% dkOnly.forEach(function(r) { %>
             <div class="result-row">
-              <span class="label"><%= r.check === 'no_2638' ? '2638法则/大盘' : r.check === 'no_chasing' ? '年线追高' : r.check === 'no_first_mover' ? '后发制人' : r.check === 'divergence_or_consensus' ? '分歧共识' : r.check %></span>
+              <span class="label" data-i18n="researchdetail.rule.<%= r.check %>"><%= r.check === 'no_2638' ? '2638法则/大盘' : r.check === 'no_chasing' ? '年线追高' : r.check === 'no_first_mover' ? '后发制人' : r.check === 'divergence_or_consensus' ? '分歧共识' : r.check %></span>
               <span class="value"><span class="badge badge-<%= r.light === 'RED' ? 'red' : r.light === 'YELLOW' ? 'yellow' : 'green' %>"><%= r.light %></span> <%= r.signal || '' %> — <%= r.reason %></span>
             </div>
           <% }) %>
@@ -100,28 +101,24 @@
           <!-- L3 collision display -->
           <div class="detail-grid">
             <div class="result-row">
-              <span class="label">决策</span>
+              <span class="label" data-i18n="researchdetail.decision">决策</span>
               <span class="value"><span class="badge badge-<%= layer.data.decision === 'PASS' ? 'red' : layer.data.decision === 'WAIT' ? 'yellow' : 'green' %>"><%= layer.data.decision %></span></span>
             </div>
             <div class="result-row">
-              <span class="label">置信度</span>
+              <span class="label" data-i18n="researchdetail.confidence">置信度</span>
               <span class="value"><%= layer.data.confidence || '—' %></span>
             </div>
             <div class="result-row">
-              <span class="label">仓位</span>
+              <span class="label" data-i18n="researchdetail.position">仓位</span>
               <span class="value"><%= layer.data.position_pct != null ? layer.data.position_pct + '%' : '—' %></span>
             </div>
             <div class="result-row">
-              <span class="label">命中规则</span>
-              <span class="value">#<%= layer.data.applicable_rule || '—' %></span>
-            </div>
-            <div class="result-row">
-              <span class="label">原因</span>
+              <span class="label" data-i18n="researchdetail.reason">原因</span>
               <span class="value"><%= layer.data.reason || '' %></span>
             </div>
             <% if (layer.data.next_steps) { %>
             <div class="result-row">
-              <span class="label">下一步</span>
+              <span class="label" data-i18n="researchdetail.nextSteps">下一步</span>
               <span class="value"><%= layer.data.next_steps %></span>
             </div>
             <% } %>
@@ -129,27 +126,27 @@
 
           <!-- DK Assessment if available -->
           <% if (layer.data.dk_assessment) { %>
-          <h4 style="font-size:13px;color:var(--warn);margin:14px 0 8px;">DK 原则审计</h4>
+          <h4 style="font-size:13px;color:var(--warn);margin:14px 0 8px;" data-i18n="researchdetail.dkAudit">DK 原则审计</h4>
           <div class="detail-grid">
             <div class="result-row">
-              <span class="label">坐标原则</span>
+              <span class="label" data-i18n="researchdetail.dkPosition">坐标原则</span>
               <span class="value"><span class="badge badge-<%= layer.data.dk_assessment.坐标原则 === 'RED' ? 'red' : layer.data.dk_assessment.坐标原则 === 'YELLOW' ? 'yellow' : 'green' %>"><%= layer.data.dk_assessment.坐标原则 || '—' %></span></span>
             </div>
             <div class="result-row">
-              <span class="label">家国原则</span>
+              <span class="label" data-i18n="researchdetail.dkNation">家国原则</span>
               <span class="value"><span class="badge badge-<%= layer.data.dk_assessment.家国原则 === 'RED' ? 'red' : layer.data.dk_assessment.家国原则 === 'YELLOW' ? 'yellow' : 'green' %>"><%= layer.data.dk_assessment.家国原则 || '—' %></span></span>
             </div>
             <div class="result-row">
-              <span class="label">息价原则</span>
+              <span class="label" data-i18n="researchdetail.dkDividendPrice">息价原则</span>
               <span class="value"><span class="badge badge-<%= layer.data.dk_assessment.息价原则 === 'RED' ? 'red' : layer.data.dk_assessment.息价原则 === 'YELLOW' ? 'yellow' : 'green' %>"><%= layer.data.dk_assessment.息价原则 || '—' %></span></span>
             </div>
             <div class="result-row">
-              <span class="label">取舍原则</span>
+              <span class="label" data-i18n="researchdetail.dkTradeoff">取舍原则</span>
               <span class="value"><span class="badge badge-<%= layer.data.dk_assessment.取舍原则 === 'RED' ? 'red' : layer.data.dk_assessment.取舍原则 === 'YELLOW' ? 'yellow' : 'green' %>"><%= layer.data.dk_assessment.取舍原则 || '—' %></span></span>
             </div>
             <% if (layer.data.dk_intervention) { %>
             <div class="result-row">
-              <span class="label">DK 干预</span>
+              <span class="label" data-i18n="researchdetail.dkIntervention">DK 干预</span>
               <span class="value"><%= layer.data.dk_intervention %></span>
             </div>
             <% } %>
@@ -158,7 +155,7 @@
 
           <!-- Conflicts if any -->
           <% if (layer.data.conflicts && layer.data.conflicts.length > 0) { %>
-          <h4 style="font-size:13px;color:var(--danger);margin:14px 0 8px;">冲突记录</h4>
+          <h4 style="font-size:13px;color:var(--danger);margin:14px 0 8px;" data-i18n="researchdetail.conflicts">冲突记录</h4>
           <% layer.data.conflicts.forEach(function(c) { %>
             <div class="result-row">
               <span class="label"><%= c.source || '' %></span>
@@ -167,18 +164,37 @@
           <% }) %>
           <% } %>
         <% } else { %>
-          <!-- Generic JSON data -->
-          <pre style="font-size:12px;background:var(--bg-inset);padding:12px;border-radius:4px;overflow-x:auto;max-height:400px;"><%= JSON.stringify(layer.data, null, 2) %></pre>
+          <% /* 通用层：可读键值 + 折叠原始结构，不再裸奔 JSON（UX 审计 P0-4） */ %>
+          <div class="detail-grid">
+            <% Object.keys(layer.data).forEach(function(k) {
+                 var v = layer.data[k];
+                 if (v == null || k === 'generated_at' || k === 'tool' || k === 'schema_version') return;
+                 if (typeof v !== 'object') { %>
+              <div class="result-row"><span class="label"><%= k %></span><span class="value"><%= String(v) %></span></div>
+            <% } %>
+            <% }) %>
+          </div>
+          <% var objKeys = Object.keys(layer.data).filter(function(k) { return layer.data[k] && typeof layer.data[k] === 'object'; }); %>
+          <% if (objKeys.length) { %>
+            <details style="margin-top:10px;">
+              <summary style="cursor:pointer;font-size:12px;color:var(--text-muted);" data-i18n="researchdetail.rawStructure">查看原始结构（技术明细）</summary>
+              <% objKeys.forEach(function(k) { %>
+                <details style="margin-top:6px;"><summary style="cursor:pointer;font-size:12px;color:var(--text-muted);"><%= k %></summary>
+                  <pre style="font-size:11px;background:var(--bg-inset);padding:10px;border-radius:6px;overflow-x:auto;max-height:280px;"><%= JSON.stringify(layer.data[k], null, 2) %></pre>
+                </details>
+              <% }) %>
+            </details>
+          <% } %>
         <% } %>
       <% } else if (layer.output_path) { %>
-        <p style="color:var(--text-muted);font-size:13px;">📄 输出文件: <%= path.basename(layer.output_path) %></p>
+        <p style="color:var(--text-muted);font-size:13px;"><span data-i18n="researchdetail.outputFile">📄 输出文件:</span> <%= path.basename(layer.output_path) %></p>
       <% } %>
     </div>
   <% }) %>
 <% } else { %>
 <div class="empty-state">
-  <h3>暂无研究数据</h3>
-  <p>运行 CLI 分析工具后再查看</p>
+  <h3 data-i18n="researchdetail.noData">暂无研究数据</h3>
+  <p data-i18n="researchdetail.noDataHint">运行 CLI 分析工具后再查看</p>
 </div>
 <% } %>
 
@@ -186,20 +202,20 @@
 (function() {
   var el = document.getElementById('valuation-body');
   fetch('/api/company/<%= ticker %>').then(function(r) { return r.json().then(function(j) { return { ok: r.ok, j: j }; }); }).then(function(res) {
-    if (!res.ok) { el.textContent = '取数失败：' + (res.j.error || '未知'); return; }
+    if (!res.ok) { el.textContent = FengI18n.t('researchdetail.fetchFail', '取数失败：') + (res.j.error || FengI18n.t('researchdetail.unknown', '未知')); return; }
     var d = res.j;
-    function pct(p) { if (p == null) return '<span style="color:var(--text-faint);">无分位</span>'; return (p * 100).toFixed(0) + '%'; }
+    function pct(p) { if (p == null) return '<span style="color:var(--text-faint);">' + FengI18n.t('researchdetail.noPercentile', '无分位') + '</span>'; return (p * 100).toFixed(0) + '%'; }
     var pctPe = d.pe_percentile && d.pe_percentile.pe != null ? (d.pe_percentile.pe * 100).toFixed(0) + '%（' + (d.pe_percentile.window || '') + '）' : '—';
     var pctPb = d.pe_percentile && d.pe_percentile.pb != null ? (d.pe_percentile.pb * 100).toFixed(0) + '%' : '—';
-    var staleBadge = d.stale ? '<span class="badge badge-yellow">⚠ 快照/陈旧数据</span>' : '<span class="badge badge-green">实时</span>';
+    var staleBadge = d.stale ? '<span class="badge badge-yellow">' + FengI18n.t('researchdetail.staleData', '⚠ 快照/陈旧数据') + '</span>' : '<span class="badge badge-green">' + FengI18n.t('researchdetail.realtime', '实时') + '</span>';
     el.innerHTML =
       '<div style="display:flex;gap:24px;flex-wrap:wrap;align-items:baseline;">' +
-      '<div><div style="font-size:12px;color:var(--text-muted);">现价</div><div class="num" style="font-size:20px;font-weight:600;">' + (d.price != null ? d.price : '—') + (d.currency ? ' <span style="font-size:12px;">' + d.currency + '</span>' : '') + '</div></div>' +
-      '<div><div style="font-size:12px;color:var(--text-muted);">PE(TTM)</div><div class="num" style="font-size:20px;font-weight:600;">' + (d.pe_ttm != null ? d.pe_ttm : '—') + '</div><div style="font-size:11px;color:var(--text-muted);">历史分位 ' + pctPe + '</div></div>' +
-      '<div><div style="font-size:12px;color:var(--text-muted);">PB</div><div class="num" style="font-size:20px;font-weight:600;">' + (d.pb != null ? d.pb : '—') + '</div><div style="font-size:11px;color:var(--text-muted);">历史分位 ' + pctPb + '</div></div>' +
+      '<div><div style="font-size:12px;color:var(--text-muted);">' + FengI18n.t('researchdetail.price', '现价') + '</div><div class="num" style="font-size:20px;font-weight:600;">' + (d.price != null ? d.price : '—') + (d.currency ? ' <span style="font-size:12px;">' + d.currency + '</span>' : '') + '</div></div>' +
+      '<div><div style="font-size:12px;color:var(--text-muted);">PE(TTM)</div><div class="num" style="font-size:20px;font-weight:600;">' + (d.pe_ttm != null ? d.pe_ttm : '—') + '</div><div style="font-size:11px;color:var(--text-muted);">' + FengI18n.t('researchdetail.histPercentile', '历史分位') + ' ' + pctPe + '</div></div>' +
+      '<div><div style="font-size:12px;color:var(--text-muted);">PB</div><div class="num" style="font-size:20px;font-weight:600;">' + (d.pb != null ? d.pb : '—') + '</div><div style="font-size:11px;color:var(--text-muted);">' + FengI18n.t('researchdetail.histPercentile', '历史分位') + ' ' + pctPb + '</div></div>' +
       '<div>' + staleBadge + '</div>' +
       '</div>' +
-      '<div style="margin-top:8px;font-size:11px;color:var(--text-faint);">来源：' + (d.source || '—') + ' · ' + (d.as_of || '') + '</div>';
-  }).catch(function(e) { el.textContent = '取数失败：' + e; });
+      '<div style="margin-top:8px;font-size:11px;color:var(--text-faint);">' + FengI18n.t('researchdetail.source', '来源：') + (d.source || '—') + ' · ' + (d.as_of || '') + '</div>';
+  }).catch(function(e) { el.textContent = FengI18n.t('researchdetail.fetchFail', '取数失败：') + e; });
 })();
 </script>

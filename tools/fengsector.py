@@ -27,7 +27,7 @@ yfinance 一律 auto_adjust=False，每只间隔 ≥1.2s；A 股申万走新浪�
     python tools/fengsector.py analyze --json       # 纯 JSON（三层 x/y/象限/信号/26 周尾迹）
     python tools/fengsector.py longterm             # L-CN 长周期体检人读表（只读库）
     python tools/fengsector.py longterm --json      # 沉寂榜+年度矩阵+CAGR排名+回撤采样 JSON
-    python tools/fengsector.py dashboard            # 生成 research/070-reports/SECTOR-DASHBOARD.html
+    python tools/fengsector.py dashboard            # 生成 research/070-reports/SECTOR-DASHBOARD.html（主副关系：/sector 为主，HTML 为 CLI 副产品保留）
 """
 import argparse
 import contextlib

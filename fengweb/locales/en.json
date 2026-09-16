@@ -41,8 +41,6 @@
   "crumb.system": "Architecture — infused with 奇衡DK-CAPITAL ideas",
   "page.discuss": "Discussion Archive",
   "crumb.discuss": "Discussion archive — Discussion/ (read-only; independent of stock analysis)",
-  "page.analyze": "Stock Analysis",
-  "crumb.analyze": "Stock analysis",
   "page.buy-register": "Register Buy (4 steps · incomplete thesis blocks buy)",
   "crumb.buy-register": "Register buy",
   "page.watch-history": "Holding History",
@@ -61,5 +59,6 @@
   "home.knowledge": "📚 This Week's Knowledge",
   "page.watch": "📡 Watch",
   "page.workspace": "🎯 Workspace",
-  "page.spec": "🎲 Spec Wallet"
+  "page.spec": "🎲 Spec Wallet",
+  "nav.mission": "🚀 Autonomous Evolution"
 }

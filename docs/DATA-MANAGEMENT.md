@@ -95,3 +95,17 @@ python tools/fengdb.py status            # 变更集与索引一览
 ## 七、待办
 
 已完成：J（fengdb 新建 + fengfuyao 转正）/ K2（invert 回滚演练 PASS）/ L（全市场财报回填）。进行中见 [docs/todo.md](todo.md)：K（本地双备份+定时复制）、M（衍生列 ETL 重算）、Q（16 市场 unadj_close 补齐）、S（flush_batch 缺陷修复）。
+
+## 八、safe_batch 豁免清单（2026-09-09 登记）
+
+以下工具因结构原因不走 `safe_batch`，文件头已注豁免原因；其余批量写库一律走 `safe_batch`。
+
+| 工具 | 豁免原因 |
+|:-----|:---------|
+| tools/feng_import_csmar.py | 一次性历史导入已执行（2.1GB CSMAR .dta 全量底座；含 DROP/CREATE DDL；交互式全表重写风险大） |
+| tools/fengdbrefine.py | 长周期全市场回填（逐只 UPDATE+INSERT、逐只 commit、检查点断点续传；包大事务会长锁库） |
+| tools/fengfundamentals.py | 长周期全市场回填（逐只 UPSERT、逐只 commit、检查点断点续传；包大事务会长锁库） |
+| tools/fengstockcnfix.py | 一次性补丁（6 只缺失票 INSERT OR IGNORE，有数即跳过） |
+| tools/fill_hk_gaps.py | 一次性回填（12 只 HK close→unadj_close + dividends INSERT OR IGNORE） |
+| tools/fix_hk_nodata.py | 一次性补爬（12 只 HK AKShare INSERT OR IGNORE，有数即跳过） |
+| tools/feng_add_capex.py | ALTER TABLE 加列系 DDL（不进 changeset）+ 源 .dta 已不在本机 + 增量补填 |

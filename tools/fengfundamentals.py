@@ -11,6 +11,8 @@
     python tools/fengfundamentals.py --proxy      # 通过 Clash 代理
     python tools/fengfundamentals.py --market US  # 只拉取指定市场
 """
+# 豁免 safe_batch：长周期全市场回填（逐只 UPSERT fundamentals、逐只 commit、检查点断点续传；
+# 包大事务会长锁库）。日期 2026-09-09，见 docs/DATA-MANAGEMENT.md §八。
 import json, os, random, socket, sqlite3, sys, time
 from datetime import datetime
 

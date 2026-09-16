@@ -59,13 +59,28 @@ function safeMd(html: string): string {
   setTimeout(autoUpdateCheck, 15_000);
   setInterval(autoUpdateCheck, 30 * 60_000);
 
+  // --- 工具链冒烟体检（2026-09-13 三件套①：每日真跑，死灯上 /mission 看板）---
+  // 启动 90 秒后首跑（让自动更新链先走），此后每 24 小时一次；自动更新在跑则本轮跳过
+  let probeRunning = false;
+  const runToolProbe = (): void => {
+    if (probeRunning || queue.isRunning()) return;
+    probeRunning = true;
+    runner.runTool('fengprobe.py', [], 900_000)
+      .then((r) => { if (!r.success) console.error('[fengprobe] 探针未绿: ' + String(r.error).slice(0, 200)); })
+      .catch((e) => console.error('[fengprobe] 探针异常:', e))
+      .finally(() => { probeRunning = false; });
+  };
+  setTimeout(runToolProbe, 90_000);
+  setInterval(runToolProbe, 24 * 3600_000);
+
   // --- Page routes ---
 
   app.get('/', (_req, res) => {
     const sys = store.getSystemStatus();
     const list = store.getResearchList();
     const meta = store.getResearchMeta();
-    res.render('index', { sys, list, meta, title: 'FengInvest' });
+    const shelves = store.getAllShelves();
+    res.render('index', { sys, list, meta, shelves, title: 'FengInvest' });
   });
 
   app.get('/system', (_req, res) => {
@@ -76,6 +91,10 @@ function safeMd(html: string): string {
       systemMapMermaid = fs.readFileSync(mmdPath, 'utf-8');
     }
     res.render('system', { title: '系统架构', systemMapMermaid });
+  });
+
+  app.get('/mission', (_req, res) => {
+    res.render('mission', { title: '自主进化看板' });
   });
 
   app.get('/ledger', (_req, res) => {
@@ -115,7 +134,7 @@ function safeMd(html: string): string {
     const layers = store.getResearchLayers(req.params.ticker);
     const meta = store.getResearchMeta();
     const info = meta.find(m => m.ticker === req.params.ticker);
-    const reports = store.getReports(req.params.ticker) || { name: req.params.ticker, reports: [] };
+    const reports = store.getReports(req.params.ticker) || { name: req.params.ticker, reports: [], formalLatest: null, stale: false, staleDays: 0 };
     const layerLabels: Record<string, string> = {
       l0: 'L0 能力圈', m: 'M 市场数据', l1: 'L1 硬纪律',
       l2b: 'L2b 量化', l2a: 'L2a 定性', l3: 'L3 碰撞',
@@ -199,7 +218,18 @@ function safeMd(html: string): string {
     const doc = store.getDiscussionDoc(req.params.file);
     if (!doc) return res.status(404).send('讨论档案未找到');
     const contentHtml = safeMd(marked.parse(doc.content) as string);
-    res.render('report', { ticker: '', name: '讨论档案', doc: { title: doc.title, source: 'own', redteam: null, rel: req.params.file, contentHtml }, title: doc.title });
+    // 册五：讨论档案复用报告阅读器目录逻辑（report.ejs 要求 toc；缺则 500）
+    const toc: { level: number; text: string; id: string }[] = [];
+    let hi = 0;
+    const withIds = contentHtml.replace(/<h([23])>([\s\S]*?)<\/h\1>/g, (_m: string, lvl: string, txt: string) => {
+      if (toc.length < 40) {
+        const id = `discuss-h-${++hi}`;
+        toc.push({ level: +lvl, text: txt.replace(/<[^>]+>/g, '').trim(), id });
+        return `<h${lvl} id="${id}">${txt}</h${lvl}>`;
+      }
+      return _m;
+    });
+    res.render('report', { ticker: '', name: '讨论档案', doc: { title: doc.title, source: 'own', redteam: null, rel: req.params.file, contentHtml: withIds }, toc, title: doc.title });
   });
 
   app.get('/spec', (_req, res) => {
@@ -214,7 +244,10 @@ function safeMd(html: string): string {
   app.get('/masters/:id', (req, res) => {
     const person = store.getPeople().find(p => p.id === req.params.id);
     if (!person) return res.status(404).send('投资家未找到');
-    res.render('master-detail', { person, title: person.name });
+    // Strip frontmatter and render Markdown to HTML (same as /knowledge/* route)
+    const body = person.content.replace(/^---[\s\S]*?---\r?\n?/, '').trim();
+    const contentHtml = safeMd(marked.parse(body) as string);
+    res.render('master-detail', { person: { ...person, contentHtml }, title: person.name });
   });
 
   app.get('/knowledge', (_req, res) => {
@@ -274,14 +307,6 @@ function safeMd(html: string): string {
       res.json({ ok: true, model: cfg.model, content: out.slice(0, 50) });
     } catch (e: any) { res.json({ ok: false, error: String(e.message || e) }); }
   });
-  app.post('/api/llm/chat', async (req, res) => {
-    try {
-      const { messages } = req.body || {};
-      if (!Array.isArray(messages) || !messages.length) return res.status(400).json({ ok: false, error: 'messages 必填' });
-      const content = await llmChat(messages.slice(-20));
-      res.json({ ok: true, content });
-    } catch (e: any) { res.json({ ok: false, error: String(e.message || e) }); }
-  });
 
   app.get('/journal', (_req, res) => {
     const entries = store.getJournal();
@@ -308,22 +333,6 @@ function safeMd(html: string): string {
     const holding = store.getHolding(req.params.ticker);
     if (!holding) return res.status(404).send('持仓未找到');
     res.render('watch-sell', { holding, title: `卖出 ${req.params.ticker}` });
-  });
-
-  app.get('/analyze', (_req, res) => {
-    res.render('analyze', { title: '股票分析' });
-  });
-
-  app.get('/analyze/:ticker', (req, res) => {
-    const layers = store.getResearchLayers(req.params.ticker);
-    const meta = store.getResearchMeta();
-    const info = meta.find(m => m.ticker === req.params.ticker);
-    res.render('analyze', {
-      ticker: req.params.ticker,
-      name: info?.name || req.params.ticker,
-      layers: layers || [],
-      title: `${req.params.ticker} 分析`,
-    });
   });
 
   // --- Start ---

@@ -1,5 +1,5 @@
 ---
-name: michael-price-perspective
+name: 迈克尔·普莱斯·低估价值
 description: |
   迈克尔·普莱斯(Michael Price)的投资思维框架与决策方式。基于其执掌Mutual Series基金的公开言论、
   投资记录与华创金工量化策略的深度调研，提炼5个核心心智模型、8条决策启发式和完整的表达DNA。
@@ -7,6 +7,11 @@ description: |
   当用户提到「迈克尔普莱斯」「迈克尔·普莱斯」「Michael Price」「低估价值」「低估值选股」
   「Mutual Series」「并购套利」「用普莱斯的视角」「普莱斯会怎么看」时使用。
   即使用户只是说「帮我用普莱斯的角度看看这只股票」「如果Michael Price会怎么做」也应触发。
+school: deep_value
+representative: Michael Price
+when_to_use: 用迈克尔·普莱斯的视角审视选股与估值时启用
+sources: 华创金工大师策略库及公开资料（第三方提炼，非本人授权）
+disclaimer: 第三方风格提炼，仅用于 AI 模拟盘研究与教育，不构成任何投资建议。
 ---
 
 # 迈克尔·普莱斯 · 思维操作系统

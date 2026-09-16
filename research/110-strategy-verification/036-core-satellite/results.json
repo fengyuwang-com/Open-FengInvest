@@ -1,0 +1,209 @@
+{
+  "verdict": {
+    "claim_type": "quantitative",
+    "cs_frac": 0.65,
+    "satellite_n": 12,
+    "ndraw": 50,
+    "n_windows_pooled": 46,
+    "diff_vs_etf": {
+      "median": 0.16190115507544123,
+      "ci": [
+        0.10975623398043322,
+        0.2647807181668309
+      ],
+      "oos_median": 0.10322175180924331
+    },
+    "diff_vs_stock": {
+      "median": -0.21180970101300056,
+      "ci": [
+        -0.3371441171004214,
+        -0.14592687438132307
+      ],
+      "oos_median": -0.1091216710635845
+    },
+    "per_market": {
+      "US": {
+        "n_windows": 7,
+        "sharpe_cs_med": 1.0029322976646704,
+        "sharpe_etf_med": 0.9659328408637152,
+        "sharpe_stk_med": 0.9295465293536411,
+        "diff_etf_med": 0.03756186954705942,
+        "diff_stk_med": 0.06039911573267709
+      },
+      "CN": {
+        "n_windows": 7,
+        "sharpe_cs_med": -0.03030014235050022,
+        "sharpe_etf_med": -0.2607197309993677,
+        "sharpe_stk_med": 0.3058488245083026,
+        "diff_etf_med": 0.14455546743146996,
+        "diff_stk_med": -0.19323984115942622
+      },
+      "JP": {
+        "n_windows": 7,
+        "sharpe_cs_med": 0.8890888649471518,
+        "sharpe_etf_med": 0.7173033700989084,
+        "sharpe_stk_med": 1.136203221375509,
+        "diff_etf_med": 0.15071054216207408,
+        "diff_stk_med": -0.15037627737585613
+      },
+      "HK": {
+        "n_windows": 7,
+        "sharpe_cs_med": -0.0694333534709161,
+        "sharpe_etf_med": -0.23231633821190198,
+        "sharpe_stk_med": 0.15006319295417403,
+        "diff_etf_med": 0.064872936048463,
+        "diff_stk_med": -0.0701502605012391
+      },
+      "KR": {
+        "n_windows": 6,
+        "sharpe_cs_med": 0.2500392601376788,
+        "sharpe_etf_med": -0.0547456762253376,
+        "sharpe_stk_med": 0.7036934755685882,
+        "diff_etf_med": 0.29068872131432383,
+        "diff_stk_med": -0.40018199096765705
+      },
+      "TW": {
+        "n_windows": 5,
+        "sharpe_cs_med": 0.470384681543526,
+        "sharpe_etf_med": 0.1215247372214413,
+        "sharpe_stk_med": 1.1957093790141813,
+        "diff_etf_med": 0.28207279687322573,
+        "diff_stk_med": -0.4422477571285534
+      },
+      "IN": {
+        "n_windows": 7,
+        "sharpe_cs_med": 1.03169110299,
+        "sharpe_etf_med": 0.7909068178904011,
+        "sharpe_stk_med": 1.3417819966664752,
+        "diff_etf_med": 0.2647807181668309,
+        "diff_stk_med": -0.3630626794323777
+      },
+      "AU": {
+        "error": "no usable index"
+      },
+      "CA": {
+        "error": "no usable index"
+      },
+      "DE": {
+        "error": "no usable index"
+      },
+      "ES": {
+        "error": "no usable index"
+      },
+      "FR": {
+        "error": "no usable index"
+      },
+      "IT": {
+        "error": "no usable index"
+      },
+      "NZ": {
+        "error": "no usable index"
+      },
+      "SE": {
+        "error": "no usable index"
+      },
+      "SG": {
+        "error": "no usable index"
+      },
+      "UK": {
+        "error": "no usable index"
+      }
+    },
+    "supported": false
+  },
+  "per_market": {
+    "US": {
+      "n_windows": 7,
+      "sharpe_cs_med": 1.0029322976646704,
+      "sharpe_etf_med": 0.9659328408637152,
+      "sharpe_stk_med": 0.9295465293536411,
+      "diff_etf_med": 0.03756186954705942,
+      "diff_stk_med": 0.06039911573267709
+    },
+    "CN": {
+      "n_windows": 7,
+      "sharpe_cs_med": -0.03030014235050022,
+      "sharpe_etf_med": -0.2607197309993677,
+      "sharpe_stk_med": 0.3058488245083026,
+      "diff_etf_med": 0.14455546743146996,
+      "diff_stk_med": -0.19323984115942622
+    },
+    "JP": {
+      "n_windows": 7,
+      "sharpe_cs_med": 0.8890888649471518,
+      "sharpe_etf_med": 0.7173033700989084,
+      "sharpe_stk_med": 1.136203221375509,
+      "diff_etf_med": 0.15071054216207408,
+      "diff_stk_med": -0.15037627737585613
+    },
+    "HK": {
+      "n_windows": 7,
+      "sharpe_cs_med": -0.0694333534709161,
+      "sharpe_etf_med": -0.23231633821190198,
+      "sharpe_stk_med": 0.15006319295417403,
+      "diff_etf_med": 0.064872936048463,
+      "diff_stk_med": -0.0701502605012391
+    },
+    "KR": {
+      "n_windows": 6,
+      "sharpe_cs_med": 0.2500392601376788,
+      "sharpe_etf_med": -0.0547456762253376,
+      "sharpe_stk_med": 0.7036934755685882,
+      "diff_etf_med": 0.29068872131432383,
+      "diff_stk_med": -0.40018199096765705
+    },
+    "TW": {
+      "n_windows": 5,
+      "sharpe_cs_med": 0.470384681543526,
+      "sharpe_etf_med": 0.1215247372214413,
+      "sharpe_stk_med": 1.1957093790141813,
+      "diff_etf_med": 0.28207279687322573,
+      "diff_stk_med": -0.4422477571285534
+    },
+    "IN": {
+      "n_windows": 7,
+      "sharpe_cs_med": 1.03169110299,
+      "sharpe_etf_med": 0.7909068178904011,
+      "sharpe_stk_med": 1.3417819966664752,
+      "diff_etf_med": 0.2647807181668309,
+      "diff_stk_med": -0.3630626794323777
+    },
+    "AU": {
+      "error": "no usable index"
+    },
+    "CA": {
+      "error": "no usable index"
+    },
+    "DE": {
+      "error": "no usable index"
+    },
+    "ES": {
+      "error": "no usable index"
+    },
+    "FR": {
+      "error": "no usable index"
+    },
+    "IT": {
+      "error": "no usable index"
+    },
+    "NZ": {
+      "error": "no usable index"
+    },
+    "SE": {
+      "error": "no usable index"
+    },
+    "SG": {
+      "error": "no usable index"
+    },
+    "UK": {
+      "error": "no usable index"
+    }
+  },
+  "protocol_lights": {
+    "primary_metric_is_claim_quantity": true,
+    "all_in_scope_markets": true,
+    "oos": true,
+    "no_lookahead": true,
+    "survivorship_note": "DB 仅存当前存在标的，退市股缺失，对核心-卫星略偏乐观"
+  }
+}

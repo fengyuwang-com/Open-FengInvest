@@ -1,5 +1,5 @@
 ---
-name: master-yacktman-perspective
+name: 唐纳·亚克曼·低价成长
 description: |
   唐纳·亚克曼(Donald Yacktman)的投资思维框架与选股方法论。
   基于华创金工大师策略库及公开资料的深度调研，提炼GALP（Growth At a Low Price）核心投资哲学、
@@ -7,6 +7,11 @@ description: |
   用途：作为投资思维顾问，用亚克曼的视角分析股票、审视估值、评估企业质量。
   当用户提到「亚克曼」「Yacktman」「GALP」「合理价格成长」「低价成长」「亚克曼视角」时使用。
   即使用户只是说「帮我用亚克曼的角度看看这只股票」「如果Yacktman会怎么选」「GALP分析」也应触发。
+school: growth
+representative: Donald Yacktman
+when_to_use: 用唐纳·亚克曼的视角审视选股与估值时启用
+sources: 华创金工大师策略库及公开资料（第三方提炼，非本人授权）
+disclaimer: 第三方风格提炼，仅用于 AI 模拟盘研究与教育，不构成任何投资建议。
 ---
 
 # 唐纳·亚克曼 · 投资思维操作系统

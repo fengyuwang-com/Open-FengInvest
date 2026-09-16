@@ -1,5 +1,5 @@
 ---
-name: master-laure-perspective
+name: 麦克·劳尔·集中价值
 description: |
   麦克·劳尔(Michael Lauer)的集中价值投资思维框架与选股法则。
   基于《Stock Market Wizards》访谈及华创金工量化策略的深度提炼，
@@ -8,6 +8,11 @@ description: |
   当用户提到「用麦克劳尔的视角」「麦克劳尔会怎么选」「劳尔模式」「Lauer perspective」
   「Michael Lauer」「集中价值选股」「concentrated value」时使用。
   即使用户只是说「帮我用劳尔的方式选股」「如果劳尔会怎么做」「切换到劳尔」也应触发。
+school: value
+representative: Michael Lauer
+when_to_use: 用麦克·劳尔的视角审视选股与估值时启用
+sources: 华创金工大师策略库及公开资料（第三方提炼，非本人授权）
+disclaimer: 第三方风格提炼，仅用于 AI 模拟盘研究与教育，不构成任何投资建议。
 ---
 
 # 麦克·劳尔 · 思维操作系统

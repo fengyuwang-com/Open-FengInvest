@@ -83,6 +83,36 @@ def build(with_en=False):
             if i % 20 == 0:
                 print("  en %d/%d" % (i, len(targets)), flush=True)
 
+        # 腾讯 qt.gtimg.cn fallback（免代理）：港股英文名在行情字段里（如 TENCENT/POP MART）
+        missing = [tk for tk in targets if tk.endswith(".HK") and not names[tk].get("en")]
+        if missing:
+            import re
+            import urllib.request
+            q = ",".join("hk" + tk[3:].zfill(5) for tk in missing)
+            body = ""
+            for _attempt in range(3):  # qt.gtimg.cn 偶发 none_match，重试即过
+                req = urllib.request.Request(
+                    "https://qt.gtimg.cn/q=" + q,
+                    headers={"User-Agent": "Mozilla/5.0", "Referer": "https://gu.qq.com/"})
+                body = urllib.request.urlopen(req, timeout=15).read().decode("gbk", "replace")
+                if "none_match" not in body:
+                    break
+                import time as _t
+                print("  tencent none_match, retry %d" % (_attempt + 1), flush=True)
+                _t.sleep(2)
+            for tk, line in zip(missing, body.strip().splitlines()):
+                fields = line.split("~")
+                if len(fields) < 3:
+                    continue
+                en = next((f for f in fields
+                           if re.fullmatch(r"[A-Z][A-Z0-9.\- ]{1,20}", f or "")
+                           and f not in ("GP", "HKD")), None)
+                if en:
+                    put(names, tk, en=en)
+            print("  tencent fallback: %d missing HK" % len(missing), flush=True)
+            if "none_match" in body:
+                print("  tencent fallback: 全部重试失败，本轮放弃", flush=True)
+
     json.dump(names, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1, sort_keys=True)
     zh = sum(1 for v in names.values() if v.get("zh"))
     en = sum(1 for v in names.values() if v.get("en"))

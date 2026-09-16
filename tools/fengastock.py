@@ -913,6 +913,18 @@ def cmd_valuation_hist(args) -> dict:
     code = norm_ticker(args.code)
     end = args.end or cn_today()
     start = args.start or "2016-01-01"
+    # 当日磁盘缓存：分位数当天不变，baostock 登录+全史拉取 ~15s 没必要重复付。
+    # key=code+start+end+metric；--full（大负载）不缓存。文件损坏/写失败静默降级。
+    import json as _json
+    import os as _os
+    cache_dir = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "data", "cache", "fengastock")
+    cache_file = _os.path.join(cache_dir, f"val_{code}_{start}_{end}_{args.metric}.json")
+    if not args.full:
+        try:
+            with open(cache_file, "r", encoding="utf-8") as cf:
+                return _json.load(cf)
+        except Exception:
+            pass
     df = baostock_valuation_history(code, start, end)
     if df.empty:
         raise RuntimeError(f"{code} 在 {start}~{end} 无数据（检查日期区间/代码）")
@@ -948,6 +960,13 @@ def cmd_valuation_hist(args) -> dict:
     }
     if args.full:
         out["rows"] = df[show_cols].to_dict(orient="records")
+    else:
+        try:
+            _os.makedirs(cache_dir, exist_ok=True)
+            with open(cache_file, "w", encoding="utf-8") as cf:
+                _json.dump(out, cf, ensure_ascii=False)
+        except Exception:
+            pass
     return out
 
 

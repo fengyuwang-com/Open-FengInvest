@@ -19,6 +19,7 @@
 - **开源吸收第三批（2026-08）**：fengpit PIT 双轴（companyfacts/cn_financials）+ fengvaluation 多方法估值（预期法移植）+ fengfactor 因子验证三件套 + hrp 层次风险平价（σ² 修正，skfolio 对照）+ risk 下行风险贡献（CVaR/回撤有限差分）+ 回测 T+1 对齐/quantstats 报告 + report_audit 质量三件套 + 复盘 outcome 追踪闭环
 - **论断验证机制 + 双钱包终态（2026-08-20）**：自建共享回测引擎 `backtest_core.py`（算数）+ 论断配方 `000-claims-def.md` + 12 项协议 `000-PROTOCOL.md`（判据对齐/复权/成本/显著性/样本外/幸存者/文献对标/A股制度……）+ 白话论断卡 `000-FORMAT-SAMPLE-白话卡.md`，入口 `/fengverify`（喊一句人话自动复测 → 出 0 代码白话卡；0 个开源回测仓库入库，只借鉴 tickflow 样本外/网格 + pwb 指标思想）；投机性买入 = 交易买入（TRADING 轨 `/fengspec`，右侧/事件驱动，-20% 机械止损，试盘 ≤3% / 单票 ≤10% / 总仓 ≤30%），与 INVESTMENT（价值/论文止损）两轨并立，`trade_entry` 进 holdings/SCHEMA.md；tickflow 投机侧车 `fengtick.py`（T0/T2/T4，只供数据）+ FinEval 知识门禁 `fengbench.py`（待数据集）；docs/10-discussion.md 归档 3 场讨论（判据错位 / 回测路线 / 双钱包终态，69→181 行）
 - **批量选股流水线（2026-08-29）**：`/fengbatch`（fengbatch.py plan/status/summary）+ `fengscreen.py --hard-rules` 纯规则精筛（7硬指标+3豁免）+ 内置 list 字典 `data/config/batch_lists.json`；首跑中证红利 50→24 幸存者。配套研究清单 `data/config/research_list.json`（独立于持仓的研究/候选/观察）+ 讨论 skill 通用化（`/fengdiscuss` / `/fengdiscusslog`，锚配置 `Discussion/discuss-config.json`）
+- **通宵自动化收割（2026-09-10）**：全站 i18n（1053 键/33 文件，fengwebcheck D 维双向对账）合入 master；fengverify 事件计数引擎 #3/#5/#6 实现并复测（#3 ✅27.98% / #5 🟡1.12 / #6 ✅2.43倍）；7 个 overnight 分支逐一审查后并回 master，全量回归 134 pass / 0 fail（master 6a884c8 双推）
 
 ---
 

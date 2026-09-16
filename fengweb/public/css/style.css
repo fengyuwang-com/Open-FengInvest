@@ -120,18 +120,19 @@ body {
   flex-shrink: 0;
 }
 .menu-toggle:hover { background: var(--bg-inset); border-radius: var(--radius); }
-.settings-btn {
+.settings-btn, .theme-btn {
   width: 34px; height: 34px;
   border: 0; border-radius: var(--radius);
   background: transparent;
   cursor: pointer;
   font-size: 18px;
+  color: var(--text);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
 }
-.settings-btn:hover { background: var(--bg-inset); }
+.settings-btn:hover, .theme-btn:hover { background: var(--bg-inset); }
 .topbar-title {
   font-size: var(--fs-body);
   font-weight: 600;
@@ -242,7 +243,7 @@ body {
 /* ---- 筛选页签（组件契约 2.4） ---- */
 .filter-tabs { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: var(--space-4); background: var(--bg-inset); padding: 4px; border-radius: var(--radius); width: fit-content; max-width: 100%; }
 
-/* ---- 提醒条目（宪法 2.3：禁大红大绿——语义色只作左侧 2px 指示，底用 soft 色） ---- */
+/* ---- 提醒条目（宪法 2.3：禁大红大绿——语义只用 soft 底色区分，无左侧竖线） ---- */
 .alert-list { display: flex; flex-direction: column; gap: var(--space-2); }
 .alert-item {
   display: flex;
@@ -263,10 +264,10 @@ body {
   text-align: center;
   justify-content: center;
 }
-.alert-item.info { background: var(--bg-inset); border-left: 2px solid var(--stale); }
-.alert-item.warning { background: var(--warn-bg); border-left: 2px solid var(--warn); }
-.alert-item.danger { background: var(--danger-bg); border-left: 2px solid var(--danger); }
-.alert-item.stale { background: var(--stale-bg); border-left: 2px solid var(--stale); }
+.alert-item.info { background: var(--bg-inset); }
+.alert-item.warning { background: var(--warn-bg); }
+.alert-item.danger { background: var(--danger-bg); }
+.alert-item.stale { background: var(--stale-bg); }
 .alert-tag {
   display: inline-block;
   padding: 2px 8px;
@@ -401,7 +402,7 @@ body {
 .btn-accent:hover { background: var(--accent-hover); }
 .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--fg); }
 .btn-outline:hover { border-color: var(--fg-muted); }
-.btn-danger-outline { background: transparent; border: 1px solid var(--red); color: var(--red); }
+.btn-danger-outline { background: transparent; border: 1px solid var(--danger); color: var(--danger); }
 .btn-danger-outline:hover { background: rgba(255,0,0,0.06); }
 .chip { background: transparent; border: 1px solid transparent; color: var(--text-secondary); border-radius: var(--radius-sm); cursor: pointer; padding: 4px 14px; font-size: 13px; min-height: 28px; transition: background 0.12s, color 0.12s, box-shadow 0.12s; }
 .chip:hover { color: var(--text); background: rgba(127, 127, 127, 0.12); }
@@ -441,6 +442,7 @@ body {
 
 /* ---- 详情网格 ---- */
 .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.detail-grid > * { min-width: 0; }
 
 /* ---- 条目列表 ---- */
 .entry-list { display: flex; flex-direction: column; gap: 8px; }
@@ -488,9 +490,8 @@ body {
 .md-content blockquote {
   margin: 12px 0;
   padding: 10px 16px;
-  border-left: 4px solid var(--accent);
   background: var(--accent-soft);
-  border-radius: 0 var(--radius) var(--radius) 0;
+  border-radius: var(--radius);
 }
 .md-content blockquote p { margin: 4px 0; font-size: 14px; }
 .md-content code {
@@ -545,7 +546,6 @@ body {
 /* ---- 红队栏（宪法册五：报告页无此栏 = P0 缺陷） ---- */
 .red-team-bar {
   border: 1px solid var(--warn);
-  border-left: 4px solid var(--warn);
   background: var(--warn-bg);
   border-radius: var(--radius);
   padding: 14px 18px;
@@ -556,7 +556,7 @@ body {
 .red-team-bar .rt-title { font-weight: 700; color: var(--warn); margin-bottom: 6px; }
 .red-team-bar .rt-row { margin: 4px 0; }
 .red-team-bar .rt-label { font-weight: 600; }
-.red-team-bar.missing { border-color: var(--stale); border-left-color: var(--stale); background: var(--stale-bg); }
+.red-team-bar.missing { border-color: var(--stale); background: var(--stale-bg); }
 .red-team-bar.missing .rt-title { color: var(--stale); }
 
 /* ---- 五态数据容器（宪法册二：loading/ok/empty/error/stale） ---- */
@@ -729,6 +729,8 @@ body {
 
 /* 宪法册二补充：数字等宽栈 + 移动端表格滚动 */
 .num { font-variant-numeric: tabular-nums; font-family: "SF Mono", "Cascadia Mono", Consolas, "Courier New", monospace; }
+/* O2 文献图谱/报告阅读器：宽表格横向滚动而非撑破视口 */
+.md-content table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; max-width: 100%; }
 @media (max-width: 640px) {
   .card > .data-table, .card table.data-table {
     display: block;
@@ -746,11 +748,108 @@ body {
   color: var(--sidebar-text);
   opacity: 0.75;
   font-size: 13px;
-  padding: 8px 16px;
+  padding: 9px 12px;
+  margin: 1px 0;
   text-align: left;
   cursor: pointer;
   letter-spacing: 0.5px;
+  border-radius: var(--radius);
 }
-.nav-more-toggle:hover { opacity: 1; background: var(--bg-inset); }
+.nav-more-toggle:hover { opacity: 1; color: var(--sidebar-active); background: rgba(255,255,255,0.07); }
 .nav-more-toggle .more-arrow { display: inline-block; float: right; }
 .nav-more-toggle.expanded .more-arrow { transform: rotate(180deg); }
+
+/* ---- market.ejs 内联样式收编（2026-09-11 #31） ---- */
+.source-section { margin-bottom: 20px; }
+.source-title { font-size: 15px; font-weight: 600; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 2px solid var(--border); }
+.source-card > div:nth-child(1) { font-weight: 600; font-size: 14px; }
+.source-card > div:nth-child(2) { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.mkt-muted { color: var(--text-muted); font-size: 13px; }
+.mkt-muted-sm { color: var(--text-muted); font-size: 12px; }
+.mkt-muted-xs { color: var(--text-muted); font-size: 11px; }
+.mkt-hint { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; }
+.mkt-loading { text-align: center; padding: 40px; }
+.mkt-table { width: 100%; font-size: 13px; }
+.mkt-hdr-row { display: flex; justify-content: space-between; align-items: center; }
+.mkt-flex-between { display: flex; justify-content: space-between; font-size: 13px; }
+.mkt-flex-gap { display: flex; gap: 8px; align-items: center; }
+.mkt-flex { display: flex; gap: 16px; }
+.mkt-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+.mkt-fx-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+.mkt-inset { padding: 12px; background: var(--bg-inset); border-radius: 8px; }
+.mkt-inset-c { flex: 1; text-align: center; padding: 12px; background: var(--bg-inset); border-radius: 8px; }
+.mkt-emoji { font-size: 20px; margin-bottom: 8px; }
+.mkt-val-lg { font-size: 28px; font-weight: 700; color: var(--ok); }
+.mkt-val { font-size: 22px; font-weight: 700; margin: 4px 0; }
+.mkt-val-plain { font-size: 22px; }
+.mkt-noise-p { font-size: 14px; line-height: var(--lh-body); color: var(--text-secondary); margin: 0; }
+.mkt-sources-intro { font-size: 15px; line-height: 1.7; margin: 0; }
+.mkt-notes-title { font-size: 14px; margin: 0; }
+.mkt-warn-note { font-size: 12px; margin-top: 4px; color: var(--warn); }
+.mkt-ok-banner { margin-top: 12px; background: var(--ok-bg); border: 1px solid var(--ok); }
+.mkt-warn-banner { margin-top: 12px; display: none; background: var(--warn-bg); border-color: var(--warn); }
+.mkt-mb0 { margin-bottom: 0; }
+.mkt-mt8 { margin-top: 8px; }
+.mkt-m4 { margin: 4px 0; }
+.mkt-hidden { display: none; }
+.mkt-bar-track { height: 8px; background: var(--border); border-radius: 4px; }
+
+/* ---- 表格 ≤640px 卡片化（2026-09-11 #32；data-label 由 i18n.js relabelTables 同步表头文字） ---- */
+@media (max-width: 640px) {
+  .holdings-table-wrap, .data-table-wrap { overflow-x: visible; }
+  .holdings-table thead, .data-table thead { display: none; }
+  .holdings-table, .data-table { border-collapse: separate; border-spacing: 0; }
+  .holdings-table tr, .data-table tr {
+    display: block; margin-bottom: 12px; padding: 4px 12px;
+    border: 1px solid var(--border); border-radius: 8px; background: var(--bg-card);
+  }
+  .holdings-table td, .data-table td {
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    min-height: 44px; padding: 6px 0; border: none; text-align: right;
+  }
+  .holdings-table td::before, .data-table td::before {
+    content: attr(data-label); font-weight: 600; font-size: 12px;
+    color: var(--text-muted); text-align: left; flex-shrink: 0;
+  }
+  .holdings-table td:empty, .data-table td:empty { display: none; }
+}
+
+/* ===== 结论卡 conclusion-card（R58 UX 审计 P0-1）：机器状态 → 一句人话 + 动词按钮 ===== */
+.conclusion-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 16px 20px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  margin: 0 0 18px 0;
+}
+.conclusion-card.cc-green { background: var(--ok-bg, #F0FDF6); }
+.conclusion-card.cc-yellow { background: var(--warn-bg, #FFFBEB); }
+.conclusion-card.cc-red { background: var(--danger-bg, #FDF2F2); }
+.conclusion-card .cc-badge {
+  font-size: 15px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.cc-green .cc-badge { background: var(--ok); color: #fff; }
+.cc-yellow .cc-badge { background: var(--warn); color: #fff; }
+.cc-red .cc-badge { background: var(--danger); color: #fff; }
+.conclusion-card .cc-main {
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.5;
+  flex: 1 1 300px;
+  min-width: 0;
+}
+.conclusion-card .cc-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+  flex: 1 1 200px;
+  min-width: 0;
+}
+.conclusion-card .cc-actions { display: flex; gap: 8px; margin-left: auto; flex-wrap: wrap; }

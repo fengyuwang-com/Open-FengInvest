@@ -1,7 +1,7 @@
 <div class="page-header">
   <div class="breadcrumb"><span data-i18n="crumb.holdings">持仓 → 详情 → 登记 → 卖出 → 滚存</span></div>
   <h2 data-i18n="page.holdings">💼 持仓总览</h2>
-  <div style="margin-top:10px;"><a class="btn btn-primary" href="/holdings/new">📝 登记新持仓</a></div>
+  <div style="margin-top:10px;"><a class="btn btn-primary" href="/holdings/new" data-i18n="holdings.registerNew">📝 登记新持仓</a></div>
 </div>
 
 <% /* 统计带（宪法 6.5） */
@@ -17,9 +17,9 @@
    var recPct = totalCost ? Math.round(recovered / totalCost * 100) : 0;
 %>
 <div class="dashboard-grid">
-  <div class="stat-card"><div class="stat-label">市值合计</div><div class="stat-value num" style="font-size:24px;"><%= totalMV ? totalMV.toLocaleString(undefined,{maximumFractionDigits:0}) : '—' %></div></div>
-  <div class="stat-card"><div class="stat-label">持仓标的</div><div class="stat-value" style="font-size:24px;"><%= stocks.length %></div></div>
-  <div class="stat-card"><div class="stat-label">本金回收进度</div><div class="stat-value" style="font-size:24px;color:var(--accent);"><%= recPct %>%</div>
+  <div class="stat-card"><div class="stat-label" data-i18n="holdings.statMarketValue">市值合计</div><div class="stat-value num" style="font-size:24px;"><%= totalMV ? totalMV.toLocaleString(undefined,{maximumFractionDigits:0}) : '—' %></div></div>
+  <div class="stat-card"><div class="stat-label" data-i18n="holdings.statCount">持仓标的</div><div class="stat-value" style="font-size:24px;"><%= stocks.length %></div></div>
+  <div class="stat-card"><div class="stat-label" data-i18n="holdings.statRecoveredPct">本金回收进度</div><div class="stat-value" style="font-size:24px;color:var(--accent);"><%= recPct %>%</div>
     <div style="height:5px;background:var(--border);border-radius:3px;margin-top:6px;"><div style="width:<%= recPct %>%;height:5px;background:var(--accent);border-radius:3px;"></div></div>
   </div>
 </div>
@@ -28,12 +28,12 @@
   <table class="holdings-table">
     <thead>
       <tr>
-        <th>公司</th>
-        <th>成本 → 现价</th>
-        <th>持仓回报</th>
-        <th>论文</th>
-        <th>下次回顾</th>
-        <th>钱包</th>
+        <th data-i18n="holdings.thCompany">公司</th>
+        <th data-i18n="holdings.thCostNow">成本 → 现价</th>
+        <th data-i18n="holdings.thReturn">持仓回报</th>
+        <th data-i18n="holdings.thThesis">论文</th>
+        <th data-i18n="holdings.thNextReview">下次回顾</th>
+        <th data-i18n="holdings.thWallet">钱包</th>
       </tr>
     </thead>
     <tbody>
@@ -48,19 +48,19 @@
         <td>
           <a href="/holdings/<%= h.ticker %>"><%= h.name || h.ticker %></a>
           <span style="font-size:11px;color:var(--text-muted);"><%= h.ticker %></span>
-          <% if (h.account_type === 'TRADING') { %><span class="badge badge-yellow">投机</span><% } %>
+          <% if (h.account_type === 'TRADING') { %><span class="badge badge-yellow" data-i18n="holdings.badgeTrading">投机</span><% } %>
         </td>
         <td class="num"><%= cost != null ? Number(cost).toFixed(2) : '—' %> → <%= px != null ? Number(px).toFixed(2) : '—' %></td>
         <td>
           <% if (pnl != null) { %>
             <span class="<%= pnl >= 0 ? 'pnl-positive' : 'pnl-negative' %>"><%= pnl >= 0 ? '+' : '' %><%= pnl.toFixed(1) %><%= pnl >= 0 ? '%▲' : '%▼' %></span>
-          <% } else { %><span style="color:var(--text-muted);" title="缺现价数据">—</span><% } %>
+          <% } else { %><span style="color:var(--text-muted);" title="缺现价数据" data-i18n-tt="holdings.noPrice">—</span><% } %>
         </td>
         <td>
-          <span class="badge <%= tv === 'valid' ? 'badge-green' : tv === 'invalid' ? 'badge-red' : 'badge-yellow' %>"><%= tv === 'valid' ? '有效 ✓' : tv === 'invalid' ? '失效 ✗' : '存疑 ⚠' %></span>
+          <span class="badge <%= tv === 'valid' ? 'badge-green' : tv === 'invalid' ? 'badge-red' : 'badge-yellow' %>" data-i18n="<%= tv === 'valid' ? 'holdings.thesisValid' : tv === 'invalid' ? 'holdings.thesisInvalid' : 'holdings.thesisPending' %>"><%= tv === 'valid' ? '有效 ✓' : tv === 'invalid' ? '失效 ✗' : '存疑 ⚠' %></span>
         </td>
-        <td <% if (overdue) { %>style="color:var(--danger);font-weight:600;"<% } %>><%= nd || '—' %><%= overdue ? '（已过期）' : '' %></td>
-        <td style="font-size:12px;color:var(--text-muted);"><%= h.capital_rollover && h.capital_rollover.phase === 'recovered' ? '已回收 ✓' : '风险资本' %></td>
+        <td <% if (overdue) { %>style="color:var(--danger);font-weight:600;"<% } %>><%= nd || '—' %><% if (overdue) { %><span data-i18n="holdings.overdue">（已过期）</span><% } %></td>
+        <td style="font-size:12px;color:var(--text-muted);"><% if (h.capital_rollover && h.capital_rollover.phase === 'recovered') { %><span data-i18n="holdings.recovered">已回收 ✓</span><% } else { %><span data-i18n="holdings.riskCapital">风险资本</span><% } %></td>
       </tr>
       <% }) %>
     </tbody>
@@ -70,9 +70,9 @@
 <% if (closed && closed.length > 0) { %>
 <div class="card">
   <details>
-    <summary style="cursor:pointer;font-weight:600;">🗄️ 已清仓（<%= closed.length %>）→ 历史明细</summary>
+    <summary style="cursor:pointer;font-weight:600;">🗄️ <span data-i18n="holdings.closed">已清仓</span>（<%= closed.length %>）→ <span data-i18n="holdings.historyDetail">历史明细</span></summary>
     <table class="data-table" style="margin-top:12px;">
-      <thead><tr><th>标的</th><th>名称</th><th>清仓日</th></tr></thead>
+      <thead><tr><th data-i18n="holdings.thTicker">标的</th><th data-i18n="holdings.thName">名称</th><th data-i18n="holdings.thClosedDate">清仓日</th></tr></thead>
       <tbody>
         <% closed.forEach(function(c) { %>
         <tr>
@@ -88,5 +88,5 @@
 <% } %>
 
 <div class="empty-state" style="padding:8px;">
-  <p style="font-size:12px;color:var(--text-faint);">市值列为人民币等值（capital.market_value_equiv_cny，汇率快照回退）；论文状态来自 thesis.hypotheses 判定。</p>
+  <p style="font-size:12px;color:var(--text-faint);" data-i18n="holdings.footnote">市值列为人民币等值（capital.market_value_equiv_cny，汇率快照回退）；论文状态来自 thesis.hypotheses 判定。</p>
 </div>

@@ -71,7 +71,11 @@ export class JobQueue {
       { tool: 'fengdata.py', scope: 'holdings-prices', status: 'pending' },
       // R27 创始人令：一键更新 = 所有东西。fengstockdb update 不带参数 = 19 市场全量增量（含 CN/HK，safe_batch 可回滚）
       { tool: 'fengstockdb.py', scope: 'stockdb-daily', status: 'pending' },
+      // R29 创始人令：系统里没有写死的数据，全部看日子更新
+      { tool: 'fengfx.py', scope: 'fx-history', status: 'pending' },
       { tool: 'fengfuyao.py', scope: 'financials', status: 'pending' },
+      { tool: 'fengsector.py', scope: 'sector-update', status: 'pending' },
+      { tool: 'fengwatch.py', scope: 'watch-daily', status: 'pending' },
     ];
     if (scope === 'fx') { steps.length = 1; }
     if (scope === 'quotes') { steps.length = 2; }
@@ -98,8 +102,8 @@ export class JobQueue {
       const cmd = `"${python}" "${path.join(this.baseDir, 'tools', step.tool)}" ${this.argsFor(step.scope).join(' ')}`;
       exec(cmd, {
         cwd: this.baseDir,
-        // 全市场日线（19 市场、CN 串行）跑得久：单独放宽到 60 分钟；其余步骤 10 分钟
-        timeout: step.scope === 'stockdb-daily' ? 3_600_000 : 600_000,
+        // 重步骤放宽：全市场日线 60 分钟；板块轮动 30 分钟；其余 10 分钟
+        timeout: step.scope === 'stockdb-daily' ? 3_600_000 : step.scope === 'sector-update' ? 1_800_000 : 600_000,
         maxBuffer: 10 * 1024 * 1024, windowsHide: true,
         // 国际日线实写开关（工具侧仍走 fengdb.safe_batch 可回滚）
         env: { ...process.env, FENG_INTL_FILL_CONFIRM: 'YES' },
@@ -120,7 +124,7 @@ export class JobQueue {
               step.rows = j.updated_count || 0;
               if (!j.updated_count && j.failed_count) {
                 step.status = 'failed';
-                step.error = `全部 ${j.failed_count} 只未取到价（Futu 与免费源均无价）`;
+                step.error = `全部 ${j.failed_count} 只未取到价（免费源均无价）`;
               }
             } catch { /* ignore */ }
           }
@@ -144,12 +148,14 @@ export class JobQueue {
     } catch { /* 解析失败不影响 job 状态 */ }
   }
 
-  /** 更新完成打时间戳（自动更新据此判断是否过期） */
+  /** 更新完成打时间戳（自动更新据此判断是否过期）；每步 status/error 一并落盘——
+   *  否则 jobs Map 纯内存，失败原因重启即丢（2026-09-11 02:55 那次失败已因无落盘不可查）。 */
   private stamp(job: Job): void {
     try {
       const p = STAMP_PATH(this.baseDir);
       fs.mkdirSync(path.dirname(p), { recursive: true });
-      fs.writeFileSync(p, JSON.stringify({ job_id: job.job_id, status: job.status, finished_at: job.finished_at }), 'utf-8');
+      const steps = job.steps.map(s => ({ tool: s.tool, scope: s.scope, status: s.status, error: s.error || undefined }));
+      fs.writeFileSync(p, JSON.stringify({ job_id: job.job_id, status: job.status, finished_at: job.finished_at, steps }), 'utf-8');
     } catch { /* ignore */ }
   }
 
@@ -159,6 +165,9 @@ export class JobQueue {
       case 'holdings-prices': return ['--holdings-update'];
       case 'intl-daily': return ['fill', '--market', 'US', '--no-dry-run']; // 已被 stockdb-daily 取代，保留兼容
       case 'stockdb-daily': return ['update']; // 全市场增量（us/cn/hk/jp/... 19 市场）
+      case 'fx-history': return ['fetch']; // 汇率四币对长历史增量（R29 入链）
+      case 'sector-update': return ['update']; // 板块轮动三层增量
+      case 'watch-daily': return ['daily', '--json']; // 监控提醒 alerts/today.json
       case 'financials': return ['backfill', '--universe', '--limit', '200']; // --universe 自带增量（进度文件跳过 done）；限块防超时
       default: return [];
     }

@@ -1,29 +1,31 @@
 <div class="page-header">
-  <div class="breadcrumb"><span data-i18n="crumb.portfolio">组合层 P — fengportfolio</span></div>
+  <div class="breadcrumb"><span data-i18n="crumb.portfolio">组合盘面</span></div>
   <h2 data-i18n="page.portfolio">🧮 组合盘面</h2>
 </div>
 
 <div class="card">
-  <h3 class="section-title">三轴正交盘面矩阵（市场 × 资金域 · 色块=市值占比）</h3>
-  <div class="data-block" data-url="/api/portfolio/matrix" data-render="renderMatrix" data-empty="暂无持仓"></div>
+  <h3 class="section-title" data-i18n="portfolio.overviewTitle">现在有多少钱、放在哪些市场</h3>
+  <div class="data-block" data-url="/api/portfolio/overview" data-render="renderPortfolio" data-empty-key="portfolio.emptyRegisterFirst" data-empty="暂无持仓，先去登记"></div>
 </div>
 
-<div class="card">
-  <h3 class="section-title">三轴正交盘面（市场 × 资金域 × 板块）</h3>
-  <div class="data-block" data-url="/api/portfolio/overview" data-render="renderPortfolio" data-empty="暂无持仓，先去登记"></div>
-</div>
+<details class="card" style="padding:16px 20px;">
+  <summary style="cursor:pointer;font-weight:600;" data-i18n="portfolio.matrixTitle">按市场 × 资金域的分布矩阵（技术视图）</summary>
+  <div style="margin-top:12px;">
+    <div class="data-block" data-url="/api/portfolio/matrix" data-render="renderMatrix" data-empty-key="portfolio.emptyHoldings" data-empty="暂无持仓"></div>
+  </div>
+</details>
 
 <div class="card">
-  <h3 class="section-title">买入预算检查</h3>
-  <button class="btn btn-accent" id="budgetBtn" onclick="runLong('/api/portfolio/budget-check','budgetOut','fengportfolio check 运行中（约1-3分钟）…')">跑 fengportfolio check</button>
+  <h3 class="section-title" data-i18n="portfolio.budgetTitle">想买新的？先查这笔预算</h3>
+  <button class="btn btn-accent" id="budgetBtn" data-i18n="portfolio.runBudgetCheck" onclick="runLong('/api/portfolio/budget-check','budgetOut',FengI18n.t('portfolio.budgetRunning','检查中（约1-3分钟）…'))">检查买入预算</button>
   <div id="budgetOut" style="margin-top:12px;"></div>
 </div>
 
 <div class="card">
   <details>
-    <summary style="cursor:pointer;font-weight:600;">高级：风险归因（CVaR/回撤下行贡献，fengportfolio risk，较慢）</summary>
+    <summary style="cursor:pointer;font-weight:600;" data-i18n="portfolio.riskSummary">高级：风险归因（哪个持仓贡献的回撤最大，较慢）</summary>
     <div style="margin-top:12px;">
-      <button class="btn" id="riskBtn" onclick="runLong('/api/portfolio/risk','riskOut','fengportfolio risk 运行中…')">跑风险归因</button>
+      <button class="btn" id="riskBtn" data-i18n="portfolio.runRisk" onclick="runLong('/api/portfolio/risk','riskOut',FengI18n.t('portfolio.riskRunning','风险分析运行中…'))">跑风险归因</button>
       <div id="riskOut" style="margin-top:12px;"></div>
     </div>
   </details>
@@ -32,7 +34,7 @@
 <script>
 function renderMatrix(d, el) {
   var max = Math.max.apply(null, Object.values(d.matrix).map(function(m){ return m.total; })) || 1;
-  var html = '<table class="data-table"><thead><tr><th>市场轴</th><th>资金域</th><th>板块明细</th><th>市值占比</th></tr></thead><tbody>';
+  var html = '<table class="data-table"><thead><tr><th>' + FengI18n.t('portfolio.thMarketAxis','市场轴') + '</th><th>' + FengI18n.t('portfolio.thCapitalZone','资金域') + '</th><th>' + FengI18n.t('portfolio.thSectorDetail','板块明细') + '</th><th>' + FengI18n.t('portfolio.thWeightPct','市值占比') + '</th></tr></thead><tbody>';
   Object.keys(d.matrix).forEach(function(m) {
     var zones = d.matrix[m].zones;
     Object.keys(zones).forEach(function(z) {
@@ -44,7 +46,7 @@ function renderMatrix(d, el) {
         '<td><div style="height:14px;background:var(--accent-soft);border-radius:4px;min-width:80px;"><div style="width:' + w + '%;height:14px;background:var(--accent);border-radius:4px;" title="' + Math.round(zones[z].total).toLocaleString() + '"></div></div></td></tr>';
     });
   });
-  el.innerHTML = html + '</tbody></table>';
+  el.innerHTML = '<div class="data-table-wrap">' + html + '</tbody></table></div>';
 }
 function renderPortfolio(d, el) {
   var pct = d.pnl_pct;
@@ -52,33 +54,33 @@ function renderPortfolio(d, el) {
   var droughtColor = drought == null ? 'var(--text)' : drought > 90 ? 'var(--warn)' : 'var(--text)';
   el.innerHTML =
     '<div class="dashboard-grid">' +
-    '<div class="stat-card"><div class="stat-label">持仓数</div><div class="stat-value" style="font-size:24px;">' + d.holdings_count + '</div></div>' +
-    '<div class="stat-card"><div class="stat-label">总投入（含基金·人民币口径）</div><div class="stat-value num" style="font-size:24px;">' + d.total_invested.toLocaleString() + '</div></div>' +
-    '<div class="stat-card"><div class="stat-label">持仓市值（不含现金·已换汇）</div><div class="stat-value num" style="font-size:24px;">' + d.total_market_value.toLocaleString() + '</div></div>' +
-    '<div class="stat-card"><div class="stat-label">现金（已换汇）</div><div class="stat-value num" style="font-size:24px;">' + (d.cash_value != null ? d.cash_value.toLocaleString() : '—') + '</div></div>' +
-    (pct != null ? '<div class="stat-card"><div class="stat-label">浮盈亏（持仓对成本）</div><div class="stat-value ' + (pct >= 0 ? 'positive' : 'negative') + '" style="font-size:24px;">' + pct + '%</div></div>' : '') +
+    '<div class="stat-card" style="min-width:0;"><div class="stat-label">' + FengI18n.t('portfolio.statHoldings','持仓数') + '</div><div class="stat-value" style="font-size:24px;overflow-wrap:anywhere;">' + d.holdings_count + '</div></div>' +
+    '<div class="stat-card" style="min-width:0;"><div class="stat-label">' + FengI18n.t('portfolio.statTotalInvested','总投入（含基金·人民币口径）') + '</div><div class="stat-value num" style="font-size:24px;overflow-wrap:anywhere;">' + d.total_invested.toLocaleString() + '</div></div>' +
+    '<div class="stat-card" style="min-width:0;"><div class="stat-label">' + FengI18n.t('portfolio.statMarketValue','持仓市值（不含现金·已换汇）') + '</div><div class="stat-value num" style="font-size:24px;overflow-wrap:anywhere;">' + d.total_market_value.toLocaleString() + '</div></div>' +
+    '<div class="stat-card" style="min-width:0;"><div class="stat-label">' + FengI18n.t('portfolio.statCash','现金（已换汇）') + '</div><div class="stat-value num" style="font-size:24px;overflow-wrap:anywhere;">' + (d.cash_value != null ? d.cash_value.toLocaleString() : '—') + '</div></div>' +
+    (pct != null ? '<div class="stat-card" style="min-width:0;"><div class="stat-label">' + FengI18n.t('portfolio.statUnrealizedPnl','浮盈亏（持仓对成本）') + '</div><div class="stat-value ' + (pct >= 0 ? 'positive' : 'negative') + '" style="font-size:24px;overflow-wrap:anywhere;">' + pct + '%</div></div>' : '') +
     '</div>' +
     '<div class="alert-item ' + (drought != null && drought > 90 ? 'warning' : 'info') + '" style="margin-bottom:16px;">' +
-    '<span>🏜️ <b>旱灾计时器</b>（信条 4：水则资车旱则资舟，但要防一直旱）——资金池 <b class="num">' + (d.cash_pool_value != null ? d.cash_pool_value.toLocaleString() : '—') + '</b>（占总资产 <b class="num">' + (d.cash_pool_pct != null ? d.cash_pool_pct + '%' : '—') + '</b>）· 距上次买入已 <b class="num">' + (drought != null ? drought : '—') + '</b> 天' +
-    (drought != null && drought > 90 ? '——现金趴了 90 天以上，检查是不是"一直旱"：是真没球可打，还是不敢出手？' : '。等球来是对的，旱久了要自查。') + '</span></div>' +
-    '<h4 style="font-size:13px;color:var(--text-muted);margin:8px 0;">资金域分布（资金墙）</h4>' +
+    '<span>' + FengI18n.t('portfolio.droughtHead','🏜️ <b>旱灾计时器</b>（信条 4：水则资车旱则资舟，但要防一直旱）——资金池 <b class="num">') + (d.cash_pool_value != null ? d.cash_pool_value.toLocaleString() : '—') + FengI18n.t('portfolio.droughtMid1','</b>（占总资产 <b class="num">') + (d.cash_pool_pct != null ? d.cash_pool_pct + '%' : '—') + FengI18n.t('portfolio.droughtMid2','</b>）· 距上次买入已 <b class="num">') + (drought != null ? drought : '—') + FengI18n.t('portfolio.droughtDays','</b> 天') +
+    (drought != null && drought > 90 ? FengI18n.t('portfolio.droughtStale','——现金趴了 90 天以上，检查是不是"一直旱"：是真没球可打，还是不敢出手？') : FengI18n.t('portfolio.droughtOk','。等球来是对的，旱久了要自查。')) + '</span></div>' +
+    '<h4 style="font-size:13px;color:var(--text-muted);margin:8px 0;">' + FengI18n.t('portfolio.zoneDistTitle','资金域分布（资金墙）') + '</h4>' +
     Object.keys(d.by_capital_zone || {}).map(function(z) {
       var v = d.by_capital_zone[z];
       var w = d.total_market_value ? Math.round(v / d.total_market_value * 100) : 0;
       return '<div style="margin:6px 0;"><div style="display:flex;justify-content:space-between;font-size:13px;"><span>' + z + '</span><span class="num">' + v.toLocaleString() + '（' + w + '%）</span></div>' +
         '<div style="height:8px;background:var(--border);border-radius:4px;"><div style="width:' + w + '%;height:8px;background:var(--accent);border-radius:4px;"></div></div></div>';
     }).join('') +
-    '<h4 style="font-size:13px;color:var(--text-muted);margin:16px 0 8px 0;">⚖️ 机会成本对手盘（取舍原则：新钱买什么之前，先看现有持仓值不值得加）</h4>' +
-    '<table class="holdings-table"><thead><tr><th>持仓</th><th>市值占比</th><th>PE</th><th>浮盈亏</th><th>论文</th></tr></thead><tbody>' +
+    '<h4 style="font-size:13px;color:var(--text-muted);margin:16px 0 8px 0;">' + FengI18n.t('portfolio.oppCostTitle','⚖️ 机会成本对手盘（取舍原则：新钱买什么之前，先看现有持仓值不值得加）') + '</h4>' +
+    '<table class="holdings-table"><thead><tr><th>' + FengI18n.t('portfolio.thHolding','持仓') + '</th><th>' + FengI18n.t('portfolio.thWeightPct','市值占比') + '</th><th>PE</th><th>' + FengI18n.t('portfolio.thPnl','浮盈亏') + '</th><th>' + FengI18n.t('portfolio.thThesis','论文') + '</th></tr></thead><tbody>' +
     (d.opportunity_rows || []).map(function(r) {
       return '<tr><td><a href="/holdings/' + r.ticker + '">' + (r.name || r.ticker) + '</a></td>' +
         '<td class="num">' + (r.pct_total != null ? r.pct_total + '%' : '—') + '</td>' +
         '<td class="num">' + (r.pe != null ? Number(r.pe).toFixed(1) : '—') + '</td>' +
         '<td class="num ' + (r.pnl_pct != null ? (r.pnl_pct >= 0 ? 'pnl-positive' : 'pnl-negative') : '') + '">' + (r.pnl_pct != null ? (r.pnl_pct >= 0 ? '+' : '') + r.pnl_pct + '%' : '—') + '</td>' +
-        '<td>' + (r.thesis_ok ? '<span class="badge badge-green">有</span>' : '<span class="badge badge-yellow">缺</span>') + '</td></tr>';
+        '<td>' + (r.thesis_ok ? '<span class="badge badge-green">' + FengI18n.t('portfolio.thesisYes','有') + '</span>' : '<span class="badge badge-yellow">' + FengI18n.t('portfolio.thesisNo','缺') + '</span>') + '</td></tr>';
     }).join('') +
     '</tbody></table>' +
-    '<p style="font-size:12px;color:var(--text-muted);margin:8px 0 0 0;">取舍原则问的不是"这个新标的好不好"，而是"它比加仓现有持仓更好吗"。确定性极高可破单标 20% 黄线，40% 绝对上限不可破。</p>';
+    '<p style="font-size:12px;color:var(--text-muted);margin:8px 0 0 0;">' + FengI18n.t('portfolio.oppCostNote','取舍原则问的不是"这个新标的好不好"，而是"它比加仓现有持仓更好吗"。确定性极高可破单标 20% 黄线，40% 绝对上限不可破。') + '</p>';
 }
 async function runLong(url, outId, waitText) {
   var el = document.getElementById(outId);
@@ -89,9 +91,9 @@ async function runLong(url, outId, waitText) {
     var r = await fetch(url, { method: 'POST' });
     var d = await r.json();
     el.innerHTML = r.ok
-      ? '<pre style="font-size:12px;white-space:pre-wrap;background:var(--bg-inset);padding:12px;border-radius:8px;max-height:480px;overflow:auto;">' + JSON.stringify(d, null, 2).slice(0, 8000) + '</pre>'
-      : '<div class="alert alert-danger">' + (d.error || '失败') + '：' + (d.detail || '') + '</div>';
-  } catch (e) { el.textContent = '网络错误: ' + e.message; }
+      ? '<details><summary style="cursor:pointer;font-size:13px;font-weight:600;">' + FengI18n.t('portfolio.viewRaw', '查看检查结果（原始数据）') + '</summary><pre style="font-size:12px;white-space:pre-wrap;background:var(--bg-inset);padding:12px;border-radius:8px;max-height:480px;overflow:auto;margin-top:8px;">' + JSON.stringify(d, null, 2).slice(0, 8000) + '</pre></details>'
+      : '<div class="alert alert-danger">' + (d.error || FengI18n.t('common.failed','失败')) + FengI18n.t('common.colonSep','：') + (d.detail || '') + '</div>';
+  } catch (e) { el.textContent = FengI18n.t('common.networkError','网络错误') + ': ' + e.message; }
   btn.disabled = false;
 }
 </script>

@@ -15,7 +15,7 @@ Usage:
     python fengportfolio.py check        # 组合检查（JSON输出）
     python fengportfolio.py status       # 仪表盘（人类可读）
     python fengportfolio.py sector       # 板块集中度（segment 轴）
-    python fengportfolio.py correlate    # 两两相关性矩阵
+    python fengportfolio.py correlate    # 两两相关性矩阵（本地DB→腾讯前复权→no_source）
     python fengportfolio.py stress       # 宏观情景压力测试
     python fengportfolio.py hrp          # HRP 权重（--tickers/--returns-file/--corr/--linkage/--check）
     python fengportfolio.py cov-advanced # 高级协方差矩阵（POET/Structured/Shrinkage）
@@ -272,6 +272,14 @@ def fx_info():
     if _FX_INFO is None:
         _FX_INFO = _get_fx()
     return _FX_INFO
+
+
+def _fx_exposure():
+    """人民币折算口径透出（fail-loud 2026-09-13 P2）：凡依赖 market_value_cny
+    的命令输出必须带此字段，让读者知道汇率是实时还是哪天的快照。"""
+    fx = fx_info()
+    return {"live": fx["live"], "date": fx["date"],
+            "USDCNY": fx["FX"]["USD"], "HKDCNY": fx["FX"]["HKD"]}
 
 
 def parse_portfolio():
@@ -563,42 +571,223 @@ def cmd_sector():
     return 0
 
 
+# correlate 取数链：本地库 → 腾讯前复权日K → 逐标的标 no_source（不崩不猜）。
+# yfinance 已移除：本机全域 403 死透（2026-09-13 确认），不再是可用依赖。
+CORR_BENCHMARKS = ["000300.SS", "^HSI", "^GSPC"]  # 基准指数列（本地库有则进矩阵）
+CORR_WINDOW = 250          # 日收益对拍窗口（交易日），同 local_factors 口径
+CORR_MIN_OBS = 60          # 少于该样本量不出相关值
+
+
+def _corr_series_db(con, pid):
+    """本地库 daily_data×indices 取收盘序列（容错匹配 ticker，同 _load_closes_db 风格）。"""
+    import pandas as pd
+    t = pid.upper()
+    base = t.split(".")[0]
+    cands = [t]
+    if "." in t:
+        cands.append(t.replace(".", ""))
+    if base != t:
+        cands.append(base)
+    rows = con.execute(
+        "SELECT d.date, d.close FROM daily_data d JOIN indices i ON d.index_id=i.id "
+        "WHERE (i.ticker=? OR i.ticker=? OR i.ticker=?) ORDER BY d.date",
+        (cands[0], cands[1] if len(cands) > 1 else "", cands[2] if len(cands) > 2 else "")
+    ).fetchall()
+    pts = {d: float(c) for d, c in rows if c is not None}
+    if len(pts) < CORR_MIN_OBS:
+        return None
+    s = pd.Series(pts, dtype=float)
+    s.index = pd.to_datetime(s.index)
+    return s.sort_index()
+
+
+def _corr_tencent_codes(pid):
+    """持仓 id → 腾讯 ifzq 代码候选（A股/ETF/LOF/港股/美股），映射不了返回 []。"""
+    t = pid.upper()
+    base, _, suffix = t.partition(".")
+    if suffix == "SZ" and base.isdigit():
+        return [f"sz{base}"]
+    if suffix == "SS" and base.isdigit():
+        return [f"sh{base}"]
+    if suffix == "HK" and base.isdigit():
+        return [f"hk{base.zfill(5)}"]
+    if not suffix and base.isalpha():
+        return [f"us{base}.OQ", f"us{base}.N", f"us{base}.UQ"]
+    return []
+
+
+def _corr_series_tencent(pid):
+    """腾讯 web.ifzq.gtimg.cn 前复权日K（qfq），近 420 自然日。失败/无网络返回 None。"""
+    import time
+    import urllib.request
+    import pandas as pd
+    from datetime import timedelta
+    codes = _corr_tencent_codes(pid)
+    if not codes:
+        return None
+    now = datetime.now()
+    d2 = now.strftime("%Y-%m-%d")
+    d1 = (now - timedelta(days=420)).strftime("%Y-%m-%d")
+    for code in codes:
+        url = (f"https://web.ifzq.gtimg.cn/appstock/app/fqkline/get"
+               f"?param={code},day,{d1},{d2},320,qfq")
+        try:
+            req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+            j = json.loads(urllib.request.urlopen(req, timeout=10).read().decode("utf-8"))
+        except Exception:  # noqa: BLE001 — 无网络/超时/解析失败一律视为该候选无源
+            time.sleep(0.3)
+            continue
+        node = (j.get("data") or {}).get(code) or {}
+        arr = node.get("qfqday") or node.get("day") or []
+        pts = {}
+        for it in arr:
+            try:  # 字段序 [date, open, close, high, low, volume]
+                pts[it[0]] = float(it[2])
+            except (ValueError, IndexError, TypeError):
+                continue
+        if len(pts) >= CORR_MIN_OBS:
+            s = pd.Series(pts, dtype=float)
+            s.index = pd.to_datetime(s.index)
+            time.sleep(0.3)
+            return s.sort_index()
+        time.sleep(0.3)
+    return None
+
+
+def _corr_pair(a, b):
+    """两条收盘序列 → (pearson 相关, β, 样本数)。日期先内连接对齐再 pct_change，
+    避免序列尾部缺口造成样本错位（2026-09-12 159766 对拍口径，见 local_factors._correction）。"""
+    import pandas as pd
+    both = pd.concat([a, b], axis=1, join="inner").dropna()
+    r = both.pct_change().dropna().tail(CORR_WINDOW)
+    if len(r) < CORR_MIN_OBS:
+        return None, None, len(r)
+    x, y = r.iloc[:, 0], r.iloc[:, 1]
+    corr = float(x.corr(y))
+    var_y = float(y.var())
+    beta = float(x.cov(y) / var_y) if var_y > 1e-15 else None
+    return corr, beta, len(r)
+
+
 def cmd_correlate():
-    """Pairwise correlation matrix of all positions（修复：用 id 而非失效的 ticker）。"""
+    """Pairwise correlation matrix of all positions.
+
+    取数优先级（仓库口径：本地DB > 腾讯 > …，yfinance 已移除）：
+      1) data/market_data.db daily_data×indices（join indices 按 ticker 容错匹配）
+      2) 腾讯 ifzq 前复权日K（个股/ETF 本地缺失时兜底，需网络）
+      3) 都拿不到 → sources 里逐标的标 no_source，不崩不猜
+    资金池（cash/quasi_cash）不参与相关性；另附基准指数列（本地库可得者）。
+    """
     positions = parse_portfolio()
     if not positions:
         print("{}")
         return 0
 
-    ids = [p["id"] for p in positions]
     try:
-        import yfinance as yf
-        import pandas as pd
-        import numpy as np
+        import pandas as pd  # noqa: F401
     except ImportError:
-        print(json.dumps({"error": "需要 yfinance/pandas/numpy（未安装，跳过相关性）"}, indent=2, ensure_ascii=False))
+        print(json.dumps({"error": "需要 pandas/numpy（未安装，跳过相关性）"}, indent=2, ensure_ascii=False))
         return 0
 
-    data = yf.download(ids, period="1y", progress=False, auto_adjust=True)
-    if data.empty:
+    ids = [p["id"] for p in positions]
+    equity = [p for p in positions if not _is_pool(p)]
+
+    import sqlite3
+    series, sources = {}, {}
+    con = None
+    db = os.path.join(BASE, "data", "market_data.db")
+    if os.path.exists(db):
+        try:
+            con = sqlite3.connect(db)
+        except Exception:  # noqa: BLE001 — 库打不开只降级，不崩
+            con = None
+    for p in equity:
+        pid = p["id"]
+        s = None
+        if con is not None:
+            try:
+                s = _corr_series_db(con, pid)
+            except Exception:  # noqa: BLE001 — 单标的读库失败降级到下一源
+                s = None
+        if s is not None:
+            series[pid], sources[pid] = s, {"source": "local_db", "rows": int(len(s))}
+            continue
+        try:
+            s = _corr_series_tencent(pid)
+        except Exception:  # noqa: BLE001 — 只带标的号，不带持仓明细
+            s = None
+        if s is not None:
+            series[pid], sources[pid] = s, {"source": "tencent_qfq", "rows": int(len(s))}
+        else:
+            sources[pid] = {"source": "no_source", "rows": 0}
+    for p in positions:
+        if _is_pool(p) and p["id"] not in sources:
+            sources[p["id"]] = {"source": "pool_excluded", "rows": 0}
+    if con is not None:
+        con.close()
+
+    # 基准指数列：仅本地库（指数无腾讯兜底必要，缺了如实标注）
+    bench_present = []
+    if os.path.exists(db):
+        con = sqlite3.connect(db)
+        for b in CORR_BENCHMARKS:
+            try:
+                s = _corr_series_db(con, b)
+            except Exception:  # noqa: BLE001
+                s = None
+            if s is not None:
+                series[b], sources[b] = s, {"source": "local_db_benchmark", "rows": int(len(s))}
+                bench_present.append(b)
+            else:
+                sources[b] = {"source": "no_source", "rows": 0}
+        con.close()
+
+    labels = [pid for pid in ids if pid in series] + bench_present
+    if len([l for l in labels if l not in bench_present]) < 2 and len(labels) < 2:
         print("{}")
         return 0
 
-    if isinstance(data.columns, pd.MultiIndex):
-        close = data["Close"]
-    else:
-        close = data
-    returns = close.pct_change().dropna()
-    corr = returns.corr()
-    triu = np.triu_indices_from(corr.values, k=1)
-    avg_corr = round(float(corr.values[triu].mean()), 3) if len(ids) > 1 and triu[0].size > 0 else 1.0
+    matrix = {l: {} for l in labels}
+    beta = {l: {} for l in labels}
+    obs = {l: {} for l in labels}
+    for i in range(len(labels)):
+        for j in range(len(labels)):
+            if i == j:
+                matrix[labels[i]][labels[j]] = 1.0
+                beta[labels[i]][labels[j]] = 1.0
+                obs[labels[i]][labels[j]] = int(len(series[labels[i]]))
+            elif j > i:
+                c, b, n = _corr_pair(series[labels[i]], series[labels[j]])
+                if c is None:
+                    continue
+                matrix[labels[i]][labels[j]] = matrix[labels[j]][labels[i]] = round(c, 3)
+                beta[labels[i]][labels[j]] = beta[labels[j]][labels[i]] = (
+                    round(b, 3) if b is not None else None)
+                obs[labels[i]][labels[j]] = obs[labels[j]][labels[i]] = n
+
+    eq_labels = [l for l in labels if l not in bench_present]
+    triu = [matrix[a][b] for i, a in enumerate(eq_labels) for b in eq_labels[i + 1:]
+            if b in matrix[a] and isinstance(matrix[a][b], float)]
+    avg_corr = round(sum(triu) / len(triu), 3) if len(eq_labels) > 1 and triu else 1.0
+    correlations = {f"{a}|{b}": matrix[a][b]
+                    for i, a in enumerate(eq_labels) for b in eq_labels[i + 1:]
+                    if b in matrix[a] and isinstance(matrix[a][b], float)}
+    no_src = sorted([k for k, v in sources.items() if v["source"] == "no_source"])
 
     result = {
         "ids": ids,
-        "correlation_matrix": corr.round(3).to_dict(),
+        "correlation_matrix": matrix,
         "avg_correlation": avg_corr,
-        "note": "需 yfinance+pandas+numpy（本机可选安装）",
+        "note": ("取数：本地库 daily_data×indices → 腾讯前复权日K 兜底 → 缺源逐标的标 no_source；"
+                 "yfinance 已移除（本机全域 403）。相关系数按对拍口径：日期内连接对齐后 250 交易日日收益 Pearson。"),
+        "window_days": CORR_WINDOW,
+        "benchmark_ids": bench_present,
+        "sources": sources,
+        "correlations": correlations,
+        "beta_matrix": beta,
     }
+    if no_src:
+        result["note"] += f" 无源标的: {', '.join(no_src)}"
     print(json.dumps(result, indent=2, ensure_ascii=False))
     return 0
 
@@ -758,6 +947,7 @@ def cmd_optimize():
 
     # 输出
     result = {
+        "fx": _fx_exposure(),
         "constraints": LIMIT,
         "cash_buffer_pct": round(pool_pct, 1),
         "turnover_pct": round(turnover, 2),
@@ -912,6 +1102,7 @@ def cmd_risk():
     dd_rc_sum = float(dd_contrib.sum())
 
     result = {
+        "fx": _fx_exposure(),
         "tickers_used": used,
         "tickers_missing": missing,
         "daily_vol_pct": round(port_vol * 100, 2),
@@ -1480,7 +1671,7 @@ if __name__ == "__main__":
         print("  fengportfolio.py check         - 组合检查（JSON输出）")
         print("  fengportfolio.py status        - 仪表盘（人类可读）")
         print("  fengportfolio.py sector        - 板块集中度（segment 轴）")
-        print("  fengportfolio.py correlate     - 两两相关性矩阵")
+        print("  fengportfolio.py correlate     - 两两相关性矩阵（本地DB→腾讯前复权日K→逐标的 no_source）")
         print("  fengportfolio.py stress        - 宏观情景压力测试")
         print("  fengportfolio.py optimize [--max-turnover N] - 约束再平衡建议（钳制+可选换手上限）")
         print("  fengportfolio.py risk          - 风险归因（收缩协方差+MCTR+CVaR/回撤贡献）")
@@ -1493,7 +1684,7 @@ if __name__ == "__main__":
         print("  fengportfolio.py brinson --port-weights w.json --bench-weights b.json"
               " --port-returns r.json --bench-returns r.json [--json] - Brinson 绩效归因")
         print()
-        print("数据来源: holdings/hold_*.json（真源）+ data/market_data.db（risk/hrp/cov-advanced）")
+        print("数据来源: holdings/hold_*.json（真源）+ data/market_data.db（risk/hrp/cov-advanced/correlate）")
         print("分类维度: market(资产类别) x segment(板块) x qualifier(现金属性)")
         sys.exit(1)
 

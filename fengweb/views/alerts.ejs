@@ -1,46 +1,49 @@
 <div class="page-header">
-  <div class="breadcrumb"><span data-i18n="crumb.alerts">提醒中心 — alerts/today.json + 回顾日合并</span></div>
+  <div class="breadcrumb"><span data-i18n="crumb.alerts">提醒中心</span></div>
   <h2 data-i18n="page.alerts">🔔 提醒中心</h2>
 </div>
 
 <div class="filter-tabs">
-  <button class="btn btn-sm tab-active" data-tab="today">今日</button>
-  <button class="btn btn-sm" data-tab="overdue">回顾过期</button>
+  <button class="btn btn-sm tab-active" data-tab="today" data-i18n="alerts.tabToday">今日</button>
+  <button class="btn btn-sm" data-tab="overdue" data-i18n="alerts.tabOverdue">回顾过期</button>
 </div>
 
 <div class="card" id="tab-today">
-  <h3 class="section-title">今日提醒</h3>
-  <div class="data-block" data-url="/api/watch/status" data-render="renderAlerts" data-empty="今日暂无提醒——跑一次 fengwatch daily 生成">
-    <button class="btn btn-accent" onclick="runDaily(this)">跑每日检查（fengwatch daily）</button>
-  </div>
+  <h3 class="section-title" data-i18n="alerts.todayTitle">今日提醒</h3>
+  <div class="data-block" data-url="/api/watch/status" data-render="renderAlerts" data-empty-key="alerts.emptyToday" data-empty="今日暂无提醒——一切正常"></div>
 </div>
 
 <div class="card" id="tab-overdue" style="display:none;">
-  <h3 class="section-title">回顾日过期持仓（严重级：红）</h3>
-  <div class="data-block" data-url="/api/holdings" data-render="renderOverdue" data-empty="无持仓数据"></div>
-</div>
-
-<div class="card">
-  <h3 class="section-title">最近决策日志（提醒相关动作留痕）</h3>
-  <div class="data-block" data-url="/api/journal?limit=15" data-render="renderJournal" data-empty="暂无日志"></div>
+  <h3 class="section-title" data-i18n="alerts.overdueTitle">回顾日过期持仓（严重级：红）</h3>
+  <div class="data-block" data-url="/api/holdings" data-render="renderOverdue" data-empty-key="alerts.emptyHoldings" data-empty="无持仓数据"></div>
 </div>
 
 <script>
 function renderAlerts(d, el) {
   var list = d.alerts || d.items || [];
-  var html = (Array.isArray(list) && list.length ? '' : '<div class="empty-state"><p>今日暂无提醒。</p><button class="btn btn-accent" onclick="runDaily(this)">跑每日检查（fengwatch daily）</button></div>');
-  if (Array.isArray(list) && list.length) {
+  var gd = d.generated_date || d.date || '?';
+  var nowD = new Date(); var todayS = nowD.getFullYear() + '-' + ('0'+(nowD.getMonth()+1)).slice(-2) + '-' + ('0'+nowD.getDate()).slice(-2);
+  var stale = (typeof d.stale === 'boolean') ? d.stale : (gd !== todayS);
+  var freshLabel;
+  if (gd === todayS) freshLabel = FengI18n.t('alerts.dataDate','数据日期：') + gd + FengI18n.t('alerts.dateToday','（今日）');
+  else {
+    var diff = Math.round((new Date(todayS) - new Date(gd)) / 86400000);
+    freshLabel = FengI18n.t('alerts.dataDate','数据日期：') + gd + FengI18n.t('alerts.dateStalePre','（过期') + (isNaN(diff) ? '?' : diff) + FengI18n.t('alerts.dateStaleSuf','天）');
+  }
+  var html = '<div style="font-size:13px;color:var(--text-muted);margin-bottom:8px;">' + freshLabel + '</div>';
+  if (stale) {
+    html += '<div style="background:#fff8e1;border:1px solid #f0c36d;padding:8px 12px;border-radius:6px;margin-bottom:10px;font-size:13px;">' + FengI18n.t('alerts.autoRefreshing','提醒是 ') + gd + FengI18n.t('alerts.staleSuf',' 的数据——正在自动刷新，稍等几秒…') + '</div>';
+  }
+  if (!Array.isArray(list) || !list.length) {
+    html += '<div class="empty-state"><p>' + FengI18n.t('alerts.noToday','今日暂无提醒——一切正常。✓') + '</p></div>';
+  } else {
     html += '<div class="alert-list">' + list.map(function(a) {
-      return '<div class="alert-item ' + (a.severity || 'info') + '"><span class="alert-tag ' + (a.severity || 'info') + '">' + (a.type || '提醒') + '</span><span>' + (a.ticker ? '[' + fengName(a.ticker) + '] ' : '') + (a.message || '') + '</span></div>';
+      var href = a.ticker ? '/holdings/' + a.ticker : (a.severity === 'warning' || a.severity === 'danger' ? '/watch' : null);
+      return '<div class="alert-item ' + (a.severity || 'info') + '"><span class="alert-tag ' + (a.severity || 'info') + '">' + (a.type || FengI18n.t('alerts.tagAlert','提醒')) + '</span><span style="flex:1;">' + (a.ticker ? '<b>' + fengName(a.ticker) + '</b> ' : '') + (a.message || '') + '</span>' +
+        (href ? '<a class="btn btn-sm" href="' + href + '">' + FengI18n.t('alerts.seeWhatToDo','去看怎么办 →') + '</a>' : '') + '</div>';
     }).join('') + '</div>';
   }
   el.innerHTML = html;
-}
-function renderJournal(d, el) {
-  var entries = Array.isArray(d) ? d : (d.entries || []);
-  el.innerHTML = '<div>' + entries.map(function(e) {
-    return '<div class="journal-entry"><div class="journal-date">' + (e.timestamp || '').slice(0, 10) + '</div><div class="journal-ticker">' + (e.ticker ? fengName(e.ticker) : '') + '</div><div class="journal-body">' + (e.message || '') + '</div></div>';
-  }).join('') + '</div>';
 }
 function renderOverdue(list, el) {
   var now = new Date();
@@ -49,20 +52,24 @@ function renderOverdue(list, el) {
   });
   el.innerHTML = rows.length
     ? '<div class="alert-list">' + rows.map(function(h) {
-        return '<div class="alert-item danger"><span class="alert-tag danger">过期</span><span><b>' + (h.name || h.ticker) + '</b> 回顾日 ' + h.triggers.next_review_date + '</span><a class="btn btn-sm" href="/holdings/' + h.ticker + '/review">去复盘 →</a></div>';
+        return '<div class="alert-item danger"><span class="alert-tag danger">' + FengI18n.t('alerts.tagOverdue','过期') + '</span><span><b>' + (h.name || h.ticker) + '</b>' + FengI18n.t('alerts.reviewDateMid',' 回顾日 ') + h.triggers.next_review_date + '</span><a class="btn btn-sm" href="/holdings/' + h.ticker + '/review">' + FengI18n.t('alerts.goReview','去复盘 →') + '</a></div>';
       }).join('') + '</div>'
-    : '<div class="empty-state"><p>没有过期回顾。✓</p></div>';
+    : '<div class="empty-state"><p>' + FengI18n.t('alerts.noOverdue','没有过期回顾。✓') + '</p></div>';
 }
-async function runDaily(btn) {
-  btn.disabled = true; btn.textContent = 'fengwatch daily 运行中…（可能几分钟）';
+// 进页自动刷新：数据过期就后台重跑每日检查，不需要用户点按钮
+(async function() {
   try {
-    var r = await fetch('/api/watch/daily', { method: 'POST' });
+    var r = await fetch('/api/watch/status');
     var d = await r.json();
-    if (r.ok) { window.FengData.fetchAll(); btn.textContent = '✅ 已生成'; }
-    else { btn.textContent = '失败：' + (d.error || ''); btn.disabled = false; return; }
-  } catch (e) { btn.textContent = '网络错误'; }
-  btn.disabled = false;
-}
+    var gd = d.generated_date || d.date || '';
+    var nowD = new Date(); var todayS = nowD.getFullYear() + '-' + ('0'+(nowD.getMonth()+1)).slice(-2) + '-' + ('0'+nowD.getDate()).slice(-2);
+    var stale = (typeof d.stale === 'boolean') ? d.stale : (gd !== todayS);
+    if (stale) {
+      await fetch('/api/watch/daily', { method: 'POST' });
+      window.FengData.fetchAll();
+    }
+  } catch (e) { /* 自动刷新失败不打扰用户，页面显示的仍是旧数据 */ }
+})();
 (function() {
   document.querySelectorAll('.filter-tabs [data-tab]').forEach(function(b) {
     b.addEventListener('click', function() {

@@ -85,11 +85,13 @@ def _pre_flight():
     else:
         checks.append(("knowledge/principles/", "❌ 目录不存在"))
 
-    # 3) docs/ 完整性
+    # 3) docs/ 完整性（现行命名，以 ls docs/ 为准）
     required_docs = [
+        "00-system-guide.md", "00-workflow.md",
         "01-philosophy.md", "02-market.md", "03-discipline.md",
         "04-qualitative.md", "05-quantitative.md", "06-collision.md",
-        "07-report.md", "08-exit.md", "09-portfolio.md",
+        "07-narrative.md", "07-report.md", "08-exit.md", "09-portfolio.md",
+        "10-discussion.md", "11-speculation-track.md",
     ]
     if os.path.isdir(DOCS):
         missing = [d for d in required_docs if not os.path.exists(os.path.join(DOCS, d))]
@@ -249,6 +251,19 @@ VERIFY_RULES = {
         "key_fields": ["overall_light", "dashboard"],
         "desc": "overall_light + dashboard",
     },
+    # L2a (qualitative): 双格式——json 需六维灯证据；md 需"投票"或六维名≥4
+    # （2026-09-13 补：此前 05/07 无 schema，空壳文件也能过关，与 AGENTS.md 承诺不符）
+    "05-qualitative": {
+        "desc": "json: lights/votes 字段或六维名≥4 / md: 含『投票』或六维名≥4（好生意/护城河/安全边际/需求稳定/管理层/会计质量）",
+        "six_dims": ["好生意", "护城河", "安全边际", "需求稳定", "管理层", "会计质量"],
+        "min_dims": 4,
+    },
+    # L4 (report): MD，首行必须含决策+仓位 "BUY/HOLD/WAIT/PASS @ N%"
+    # （历史合法产物存在 "@ 30-50%" 区间写法与 "BUY低置信" 后缀，正则已放宽兼容）
+    "07-report": {
+        "desc": "MD 首行匹配 (BUY|HOLD|WAIT|PASS) ... @ N%（允许 N-M% 区间）",
+        "first_line_re": r"(?:BUY|HOLD|WAIT|PASS)[^@\n]*@\s*\d+(?:\s*[-~]\s*\d+)?\s*%",
+    },
 }
 
 
@@ -343,13 +358,63 @@ def verify_output(step: str, output_file: str) -> bool:
         print(f"  [VERIFY] OK: JSON 结构验证通过 + 验收标准满足")
         return True
     else:
-        # Markdown 层：检查非空 + 有内容
+        # Markdown 层：检查非空 + 有内容；05/07 层加结构验证（2026-09-13 补，见 VERIFY_RULES）
         with open(output_file, encoding="utf-8") as f:
             content = f.read()
         if len(content.strip()) < 50:
             print(f"  [VERIFY] WARN: 内容过短 ({len(content.strip())} chars), 可能不完整")
+        mapped = {"l2a": "05-qualitative", "l4": "07-report"}.get(step.lower(), step.lower())
+        if mapped == "05-qualitative":
+            return _verify_05_qualitative(output_file, content)
+        if mapped == "07-report":
+            return _verify_07_report(output_file, content)
         print(f"  [VERIFY] OK: 文件存在 ({len(content.strip())} chars)")
         return True
+
+
+def _verify_05_qualitative(output_file: str, content: str) -> bool:
+    """L2a 六维定性证据验证：.json 需 lights/votes 字段或六维名≥4 个键；其余（.md）需含『投票』或六维名≥4。"""
+    rule = VERIFY_RULES["05-qualitative"]
+    dims = rule["six_dims"]
+    min_dims = rule["min_dims"]
+    if output_file.lower().endswith(".json"):
+        try:
+            data = json.loads(content)
+        except json.JSONDecodeError as e:
+            print(f"  [VERIFY] ERROR: 05 层 JSON 解析失败: {e}")
+            return False
+        if not isinstance(data, dict):
+            print("  [VERIFY] ERROR: 05 层 JSON 顶层须为 object")
+            return False
+        dims_hit = [d for d in dims if d in data]
+        if ("lights" in data or "votes" in data) or len(dims_hit) >= min_dims:
+            src = "lights/votes" if ("lights" in data or "votes" in data) else f"六维键{len(dims_hit)}个"
+            print(f"  [VERIFY] OK: 05 JSON 六维灯证据满足（{src}，{len(content.strip())} chars）")
+            return True
+        print(f"  [VERIFY] ERROR: 05 层 JSON 缺六维灯证据：需 lights/votes 字段，或六维名至少 {min_dims} 个键（实际 {dims_hit}）")
+        print(f"  [VERIFY] 层 05-QUALITATIVE 需要包含: {rule['desc']}")
+        return False
+    dims_hit = [d for d in dims if d in content]
+    if "投票" in content or len(dims_hit) >= min_dims:
+        src = "『投票』" if "投票" in content else f"六维名{len(dims_hit)}个"
+        print(f"  [VERIFY] OK: 05 MD 六维证据满足（{src}，{len(content.strip())} chars）")
+        return True
+    print(f"  [VERIFY] ERROR: 05 层 MD 缺六维证据：需含『投票』或六维名至少 {min_dims} 个（实际 {dims_hit}）")
+    print(f"  [VERIFY] 层 05-QUALITATIVE 需要包含: {rule['desc']}")
+    return False
+
+
+def _verify_07_report(output_file: str, content: str) -> bool:
+    """L4 报告验证：首行必须含决策+仓位（BUY/HOLD/WAIT/PASS @ N%，兼容历史 N-M% 区间写法）。"""
+    rule = VERIFY_RULES["07-report"]
+    lines = content.splitlines()
+    first = lines[0] if lines else ""
+    if re.search(rule["first_line_re"], first):
+        print(f"  [VERIFY] OK: 07 首行决策格式合规（{first[:60]}）")
+        return True
+    print(f"  [VERIFY] ERROR: 07 层首行未匹配决策格式，实际首行: {first[:80]!r}")
+    print(f"  [VERIFY] 层 07-REPORT 需要包含: {rule['desc']}")
+    return False
 
 
 # 双格式闸门：JSON 层必须同目录有同名可读 .md（SKILL「产出文档规范」2026-08-15 定稿）
@@ -402,6 +467,7 @@ def cmd_complete(ticker, step, output_file=None, verify=True, force=False):
 
     if state.get("status") != "active" and not force:
         print(f"ERROR: 分析已 {state['status']}。")
+        print("      产物被修正过？用 --force 重新验证并覆盖记录。")
         _log_event(ticker, "complete_fail", step, "error", f"status={state['status']}")
         return 1
 
@@ -594,7 +660,7 @@ def _cross_layer_consistency(state, ticker):
             pe_factor = next((f for f in factors if "PE" in f.get("factor", "").upper()), None)
             if pe_factor:
                 interp = pe_factor.get("interpretation", "")
-                pe_matches = re.findall(r'PE[~\s]*(\d+\.?\d*)', interp)
+                pe_matches = re.findall(r'PE[~/s]*(\d+\.?\d*)', interp)
                 if pe_matches:
                     l2b_pe = float(pe_matches[0])
                     diff_pct = abs(m_pe - l2b_pe) / max(m_pe, l2b_pe) * 100

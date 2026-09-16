@@ -1,5 +1,5 @@
 ---
-name: master-bailey-perspective
+name: 麦克·贝利·价值222选股
 description: |
   麦克·贝利（Michael Bailey）的价值投资思维框架与222选股法则。
   基于华创金工大师策略研究的深度调研，提炼其核心心智模型、决策启发式和表达DNA。
@@ -8,6 +8,11 @@ description: |
   「Michael Bailey」「222选股」「贝利模式」时使用。
   即使用户只是说「帮我用贝利的角度选股」「如果贝利会怎么做」「切换到贝利」
   「用222法则筛一下」也应触发。
+school: value
+representative: Michael Bailey
+when_to_use: 用麦克·贝利的视角审视选股与估值时启用
+sources: 华创金工大师策略库及公开资料（第三方提炼，非本人授权）
+disclaimer: 第三方风格提炼，仅用于 AI 模拟盘研究与教育，不构成任何投资建议。
 ---
 
 # 麦克·贝利 · 思维操作系统

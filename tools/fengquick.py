@@ -73,8 +73,22 @@ try:
     out = r.stdout.strip().split("\n")[-1]
     m = re.search(r'\{[\s\S]*\}', out)
     if m:
+        # 有声失败（2026-09-13）：yf 限流/退市时各字段全 null 也照标 source:"live"——
+        # 空壳不是"live"，纠正标记并显式非零退出（原 JSON 结构与字段一律保留）。
+        try:
+            _d = json.loads(m.group(0))
+        except ValueError:
+            _d = {}
+        if _d and not _d.get("price") and not _d.get("market_cap"):
+            _d["source"] = "yf_failed"
+            print(json.dumps(_d, ensure_ascii=False))
+            print(f"[WARN] {ticker}: yfinance 未返回任何可用数据（限流/退市/代码错），source=yf_failed",
+                  file=sys.stderr)
+            sys.exit(2)
         print(m.group(0))
     else:
         print(json.dumps({"error": "No JSON from yfinance", "raw": out[:200]}))
+        sys.exit(2)
 except Exception as e:
     print(json.dumps({"error": str(e)}))
+    sys.exit(2)

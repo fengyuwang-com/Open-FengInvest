@@ -41,8 +41,6 @@
   "crumb.system": "架构图 — 奇衡DK-CAPITAL 思想融入版",
   "page.discuss": "🗣️ 讨论档案",
   "crumb.discuss": "讨论档案 — Discussion/（只读；独立于个股分析）",
-  "page.analyze": "🔍 股票分析",
-  "crumb.analyze": "股票分析",
   "page.buy-register": "📝 登记买入（四步 · 论文不完整不能买）",
   "crumb.buy-register": "登记买入",
   "page.watch-history": "📜 持仓历史",
@@ -61,5 +59,6 @@
   "home.knowledge": "📚 本周知识",
   "page.watch": "📡 监控",
   "page.workspace": "🎯 决策台",
-  "page.spec": "🎲 投机钱包"
+  "page.spec": "🎲 投机钱包",
+  "nav.mission": "🚀 自主进化看板"
 }

@@ -12,6 +12,9 @@ from datetime import datetime, timedelta
 
 import akshare as ak
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import fengdb  # noqa: E402  安全写库入口（safe_batch 批量写入可回滚）
+
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "market_data.db")
 
 # A 股指数注册表 — yfinance 缺失的部分
@@ -34,17 +37,18 @@ def seed_indices(conn):
     """写入 indices 表（如已存在则跳过）"""
     cur = conn.execute("SELECT ticker FROM indices")
     existing = {row[0] for row in cur.fetchall()}
-    inserted = 0
-    for ticker, (name, market, cat, _) in INDICES_AK.items():
-        if ticker not in existing:
-            conn.execute(
+    to_add = [
+        (ticker, name, market, cat)
+        for ticker, (name, market, cat, _) in INDICES_AK.items()
+        if ticker not in existing
+    ]
+    if to_add:
+        with fengdb.safe_batch(["indices"], "indexdb_ak_seed") as wcon:
+            wcon.executemany(
                 "INSERT OR IGNORE INTO indices (ticker, name, market, category) VALUES (?, ?, ?, ?)",
-                (ticker, name, market, cat),
+                to_add,
             )
-            inserted += 1
-    if inserted:
-        conn.commit()
-        print(f"  新增 {inserted} 个 A 股指数到注册表")
+        print(f"  新增 {len(to_add)} 个 A 股指数到注册表")
     return len(INDICES_AK)
 
 def download_index(conn, ticker, force_all=False):
@@ -108,11 +112,12 @@ def download_index(conn, ticker, force_all=False):
     if not new_rows:
         return 0
 
-    conn.executemany(
-        "INSERT OR IGNORE INTO daily_data (index_id, date, open, high, low, close, volume) VALUES (?,?,?,?,?,?,?)",
-        new_rows,
-    )
-    conn.commit()
+    # 经 fengdb.safe_batch 写入（可回滚 changeset），读过滤逻辑不变
+    with fengdb.safe_batch(["daily_data"], f"indexdb_ak_{ticker}") as wcon:
+        wcon.executemany(
+            "INSERT OR IGNORE INTO daily_data (index_id, date, open, high, low, close, volume) VALUES (?,?,?,?,?,?,?)",
+            new_rows,
+        )
 
     last = new_rows[-1][1]
     print(f"  [OK] {ticker}: +{len(new_rows)} rows -> {last} ({name})")

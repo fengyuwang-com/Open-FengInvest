@@ -6,38 +6,38 @@
 <!-- Legend -->
 <div class="card legend-card">
   <div class="legend-items">
-    <span class="legend-item"><span class="legend-color" style="background:var(--ok-bg);"></span> 已有组件</span>
-    <span class="legend-item"><span class="legend-color" style="background:var(--warn-bg);"></span> DK 新增</span>
-    <span class="legend-item"><span class="legend-color" style="background:var(--accent-soft);"></span> 新增模块</span>
-    <span class="legend-item"><span class="legend-color" style="background:var(--danger-bg);"></span> 交互检查</span>
-    <span class="legend-item"><span class="legend-color" style="background:var(--primary-soft);"></span> 知识库</span>
+    <span class="legend-item"><span class="legend-color" style="background:var(--ok-bg);"></span> <span data-i18n="system.legendExisting">已有组件</span></span>
+    <span class="legend-item"><span class="legend-color" style="background:var(--warn-bg);"></span> <span data-i18n="system.legendDK">DK 新增</span></span>
+    <span class="legend-item"><span class="legend-color" style="background:var(--accent-soft);"></span> <span data-i18n="system.legendNew">新增模块</span></span>
+    <span class="legend-item"><span class="legend-color" style="background:var(--danger-bg);"></span> <span data-i18n="system.legendInteraction">交互检查</span></span>
+    <span class="legend-item"><span class="legend-color" style="background:var(--primary-soft);"></span> <span data-i18n="system.legendKB">知识库</span></span>
   </div>
 </div>
 
 <div class="card">
-  <h3 class="section-title">🔄 状态机总览（fengstate 进度）</h3>
-  <div id="sm-body" style="color:var(--text-muted);font-size:13px;">加载中…</div>
+  <h3 class="section-title" data-i18n="system.smTitle">🔄 状态机总览（fengstate 进度）</h3>
+  <div id="sm-body" style="color:var(--text-muted);font-size:13px;" data-i18n="system.loading">加载中…</div>
 </div>
 
 <div class="card">
-  <h3 class="section-title">🗄️ 数据库更新进度</h3>
-  <div id="db-body" style="color:var(--text-muted);font-size:13px;">加载中…</div>
+  <h3 class="section-title" data-i18n="system.dbTitle">🗄️ 数据库更新进度</h3>
+  <div id="db-body" style="color:var(--text-muted);font-size:13px;" data-i18n="system.loading">加载中…</div>
 </div>
 
 <div class="card">
-  <h3 class="section-title">🩺 环境检查</h3>
-  <div id="env-body" style="color:var(--text-muted);font-size:13px;">加载中…</div>
+  <h3 class="section-title" data-i18n="system.envTitle">🩺 环境检查</h3>
+  <div id="env-body" style="color:var(--text-muted);font-size:13px;" data-i18n="system.loading">加载中…</div>
 </div>
 
 <script>
 (function() {
   fetch('/api/system/status').then(function(r){ return r.json(); }).then(function(d) {
     var sm = document.getElementById('sm-body');
-    if (!d.states || !d.states.length) { sm.textContent = '无状态文件。'; }
+    if (!d.states || !d.states.length) { sm.textContent = FengI18n.t('system.noStates','无状态文件。'); }
     else {
       sm.innerHTML = d.states.map(function(s) {
         var pct = Math.round(s.layers_done / s.total * 100);
-        var badge = s.status === 'active' ? '<span class="badge badge-yellow">进行中</span>' : '<span class="badge badge-green">已完成</span>';
+        var badge = s.status === 'active' ? '<span class="badge badge-yellow">' + FengI18n.t('system.statusRunning','进行中') + '</span>' : '<span class="badge badge-green">' + FengI18n.t('system.statusDone','已完成') + '</span>';
         return '<div style="display:flex;align-items:center;gap:10px;padding:4px 0;">' +
           '<a href="/research/' + s.ticker + '" class="num" style="min-width:90px;">' + s.ticker + '</a>' + badge +
           '<div style="flex:1;height:8px;background:var(--bg-inset);border-radius:4px;overflow:hidden;"><div style="width:' + pct + '%;height:100%;background:var(--accent);"></div></div>' +
@@ -45,23 +45,23 @@
       }).join('');
     }
     var db = document.getElementById('db-body');
-    if (!d.db) { db.textContent = 'market_data.db 不存在。'; }
+    if (!d.db) { db.textContent = FengI18n.t('system.noDb','market_data.db 不存在。'); }
     else {
-      db.innerHTML = '容量 <span class="num">' + d.db.size_gb.toFixed(2) + ' GB</span> · 最后写入 ' + (d.db.mtime || '').slice(0, 16).replace('T', ' ') +
-        (d.db.stale ? ' <span class="badge badge-yellow">⚠ 超 7 天未更新（陈旧）</span>' : ' <span class="badge badge-green">7 天内有更新</span>') +
-        (d.db.fuyao_done != null ? '<br>财报回填进度：<span class="num">' + d.db.fuyao_done + '</span> 家（fengfuyao）' : '');
+      db.innerHTML = FengI18n.t('system.dbSize','容量 ') + '<span class="num">' + d.db.size_gb.toFixed(2) + ' GB</span>' + FengI18n.t('system.dbLastWrite',' · 最后写入 ') + (d.db.mtime || '').slice(0, 16).replace('T', ' ') +
+        (d.db.stale ? ' <span class="badge badge-yellow">' + FengI18n.t('system.dbStale','⚠ 超 7 天未更新（陈旧）') + '</span>' : ' <span class="badge badge-green">' + FengI18n.t('system.dbFresh','7 天内有更新') + '</span>') +
+        (d.db.fuyao_done != null ? FengI18n.t('system.dbFuyaoPre','<br>财报回填进度：') + '<span class="num">' + d.db.fuyao_done + '</span>' + FengI18n.t('system.dbFuyaoPost',' 家（fengfuyao）') : '');
     }
     var env = document.getElementById('env-body');
-    env.innerHTML = 'Python：<span class="num">' + (d.env.python || '—') + '</span> · 服务器已运行 <span class="num">' + Math.round(d.env.server_uptime_s / 60) + '</span> 分钟';
+    env.innerHTML = FengI18n.t('system.envPython','Python：<span class="num">') + (d.env.python || '—') + '</span>' + FengI18n.t('system.envUptime',' · 服务器已运行 <span class="num">') + Math.round(d.env.server_uptime_s / 60) + '</span>' + FengI18n.t('system.envUptimeUnit',' 分钟');
   }).catch(function(e) {
-    ['sm-body','db-body','env-body'].forEach(function(id) { var el = document.getElementById(id); if (el) el.textContent = '加载失败：' + e; });
+    ['sm-body','db-body','env-body'].forEach(function(id) { var el = document.getElementById(id); if (el) el.textContent = FengI18n.t('system.loadFailed','加载失败：') + e; });
   });
 })();
 </script>
 
 <!-- Diagram 0: System Architecture -->
 <div class="card diagram-card">
-  <h3>图0: 系统架构 — 双界面，同一核心</h3>
+  <h3 data-i18n="system.d0">图0: 系统架构 — 双界面，同一核心</h3>
   <div class="mermaid">
     flowchart TB
       subgraph 数据层["共享数据层 (文件系统)"]
@@ -102,7 +102,7 @@
 
 <!-- Diagram 1: 7-Layer Framework -->
 <div class="card diagram-card">
-  <h3>图1: 七层框架 × DK 原则注入</h3>
+  <h3 data-i18n="system.d1">图1: 七层框架 × DK 原则注入</h3>
   <div class="mermaid">
     flowchart TB
       subgraph 入口["入口"]
@@ -166,7 +166,7 @@
 
 <!-- Diagram 2: Lifecycle -->
 <div class="card diagram-card">
-  <h3>图2: 完整投资生命周期</h3>
+  <h3 data-i18n="system.d2">图2: 完整投资生命周期</h3>
   <div class="mermaid">
     flowchart TB
       subgraph 研究阶段["① 研究阶段 — 七层"]
@@ -223,7 +223,7 @@
 
 <!-- Diagram 3: Trigger Engine -->
 <div class="card diagram-card">
-  <h3>图3: 触发引擎逻辑</h3>
+  <h3 data-i18n="system.d3">图3: 触发引擎逻辑</h3>
   <div class="mermaid">
     flowchart TD
       START["🔄 每日触发"] --> CHECK["检查所有 holdings/ 下的 hold_*.json"]
@@ -251,7 +251,7 @@
 
 <!-- Diagram 4: Knowledge Base -->
 <div class="card diagram-card">
-  <h3>图4: 知识库结构</h3>
+  <h3 data-i18n="system.d4">图4: 知识库结构</h3>
   <div class="mermaid">
     flowchart TB
       subgraph 知识库["knowledge/"]
@@ -275,7 +275,7 @@
 
 <!-- Diagram 5: Sell Checklist -->
 <div class="card diagram-card">
-  <h3>图5: 卖出前检查流程</h3>
+  <h3 data-i18n="system.d5">图5: 卖出前检查流程</h3>
   <div class="mermaid">
     stateDiagram-v2
       [*] --> 卖出触发
@@ -313,14 +313,14 @@
 
 <!-- Diagram 6: 全系统组件关系 (自动生成) -->
 <div class="card diagram-card">
-  <h3>图6: 全系统组件关系（数据流视角 · 自动生成）</h3>
+  <h3 data-i18n="system.d6">图6: 全系统组件关系（数据流视角 · 自动生成）</h3>
   <% if (systemMapMermaid) { %>
   <div class="mermaid system-map-diagram"><%- systemMapMermaid %></div>
   <% } else { %>
-  <p style="color:var(--text-muted);">未生成：先运行 <code>python tools/system-map/build.py</code></p>
+  <p style="color:var(--text-muted);"><span data-i18n="system.d6Hint">未生成：先运行</span> <code>python tools/system-map/build.py</code></p>
   <% } %>
 </div>
 
 <div class="card" style="text-align:center;color:var(--text-muted);font-size:14px;padding:16px;">
-  FengInvest 操作系统 — 架构文档 | 基于 奇衡DK-CAPITAL 思想体系 | 版本 v3
+  <span data-i18n="system.footer">FengInvest 操作系统 — 架构文档 | 基于 奇衡DK-CAPITAL 思想体系 | 版本 v3</span>
 </div>

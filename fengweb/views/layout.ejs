@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= title || 'FengInvest' %></title>
   <link rel="stylesheet" href="/css/tokens.css?v=2">
-  <link rel="stylesheet" href="/css/style.css?v=18">
+  <link rel="stylesheet" href="/css/style.css?v=19">
   <script>
     // 主题防闪烁（宪法册八）：渲染前先读本地主题
     (function(){var t=localStorage.getItem('feng_theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');})();
@@ -38,49 +38,54 @@
           <img src="/img/logo.svg" alt="FengInvest" width="26" height="26" style="border-radius:6px;">
           FengInvest
         </a>
-        <button class="sidebar-toggle" type="button" id="sidebarToggle" aria-label="切换侧栏">✕</button>
+        <button class="sidebar-toggle" type="button" id="sidebarToggle" data-i18n-tt="layout.toggleSidebar" aria-label="切换侧栏">✕</button>
       </div>
       <ul class="sidebar-nav">
         <li class="nav-group-label" data-i18n="group.core">主力</li>
         <li><a href="/" class="nav-item" data-i18n="nav.home">🏠 首页</a></li>
+        <li><a href="/holdings" class="nav-item" data-i18n="nav.holdings">💼 持仓</a></li>
+        <li><a href="/alerts" class="nav-item" data-i18n="nav.alerts">🔔 提醒中心</a></li>
         <li><a href="/research" class="nav-item" data-i18n="nav.research">🔬 研究</a></li>
         <li><a href="/reports" class="nav-item" data-i18n="nav.reports">📚 报告</a></li>
-        <li><a href="/holdings" class="nav-item" data-i18n="nav.holdings">💼 持仓</a></li>
         <li><a href="/portfolio" class="nav-item" data-i18n="nav.portfolio">🧮 组合</a></li>
-        <li><a href="/workspace" class="nav-item" data-i18n="nav.workspace">🎯 决策台</a></li>
-        <li class="nav-group-label" data-i18n="group.ext">延伸</li>
-        <li><a href="/ledger" class="nav-item">🪞 纪律账本</a></li>
-        <li><a href="/alerts" class="nav-item" data-i18n="nav.alerts">🔔 提醒中心</a></li>
-        <li><a href="/watch" class="nav-item" data-i18n="nav.watch">📡 监控</a></li>
-        <li><a href="/spec" class="nav-item" data-i18n="nav.spec">🎲 投机钱包</a></li>
-        <li><a href="/discuss" class="nav-item" data-i18n="nav.discuss">🗣️ 讨论档案</a></li>
-        <li><a href="/market" class="nav-item" data-i18n="nav.market">📊 市场</a></li>
         <li>
-          <button class="nav-more-toggle" type="button" id="navMoreToggle">⚙️ 更多工具 <span class="more-arrow">▾</span></button>
+          <button class="nav-more-toggle" type="button" data-fold-toggle><span data-i18n="group.archive">🏛️ 档案馆</span> <span class="more-arrow">▾</span></button>
         </li>
         <li class="nav-more-group" hidden>
           <ul style="list-style:none;margin:0;padding:0;">
+            <li><a href="/market" class="nav-item" data-i18n="nav.market">📊 市场</a></li>
             <li><a href="/sector" class="nav-item" data-i18n="nav.sector">🧭 板块轮动</a></li>
-            <li><a href="/masters" class="nav-item" data-i18n="nav.masters">🧠 投资家列传</a></li>
             <li><a href="/knowledge" class="nav-item" data-i18n="nav.knowledge">📚 知识库</a></li>
-            <li><a href="/rollover" class="nav-item" data-i18n="nav.rollover">🔄 钱仓滚存</a></li>
+            <li><a href="/masters" class="nav-item" data-i18n="nav.masters">🧠 投资家列传</a></li>
+            <li><a href="/discuss" class="nav-item" data-i18n="nav.discuss">🗣️ 讨论档案</a></li>
+            <li><a href="/ledger" class="nav-item" data-i18n="nav.ledger">🪞 纪律账本</a></li>
             <li><a href="/journal" class="nav-item" data-i18n="nav.journal">📝 决策日志</a></li>
-            <li><a href="/system" class="nav-item" data-i18n="nav.system">🖼️ 架构图</a></li>
           </ul>
         </li>
-        <!-- 股票分析已并入聊天方式，隐藏入口（代码保留，恢复时取消注释）
-        <li><a href="/analyze" class="nav-item">🔍 股票分析</a></li> -->
+        <li>
+          <button class="nav-more-toggle" type="button" data-fold-toggle><span data-i18n="group.aiTools">🤖 AI 工具</span> <span class="more-arrow">▾</span></button>
+        </li>
+        <li class="nav-more-group" hidden>
+          <ul style="list-style:none;margin:0;padding:0;">
+            <li><a href="/workspace" class="nav-item" data-i18n="nav.workspace">🎯 决策台</a></li>
+            <li><a href="/spec" class="nav-item" data-i18n="nav.spec">🎲 投机钱包</a></li>
+            <li><a href="/rollover" class="nav-item" data-i18n="nav.rollover">🔄 钱仓滚存</a></li>
+            <li><a href="/watch" class="nav-item" data-i18n="nav.watch">📡 监控</a></li>
+            <li><a href="/system" class="nav-item" data-i18n="nav.system">🖼️ 架构图</a></li>
+            <li><a href="/mission" class="nav-item" data-i18n="nav.mission">🚀 自主进化看板</a></li>
+          </ul>
+        </li>
       </ul>
     </nav>
     <main class="main-content" id="mainContent">
       <div class="topbar">
-        <button class="menu-toggle" type="button" id="menuToggle" aria-label="展开菜单">☰</button>
-        <span class="topbar-title"><%= title || 'FengInvest' %></span>
+        <button class="menu-toggle" type="button" id="menuToggle" data-i18n-tt="layout.openMenu" aria-label="展开菜单">☰</button>
+        <span class="topbar-title" data-i18n="page.title.<%= title || 'FengInvest' %>"><%= title || 'FengInvest' %></span>
         <span style="flex:1;"></span>
-        <button class="btn btn-sm" type="button" id="dataUpdateBtn" title="更新汇率/持仓现价/国际日线/财报" style="margin-right:8px;">⟳ 更新数据</button>
-        <button class="theme-btn" type="button" id="themeBtn" aria-label="切换亮暗主题" title="亮/暗主题">🌓</button>
-        <button class="settings-btn" type="button" id="langBtn" aria-label="切换语言" title="Language" >EN</button>
-        <button class="settings-btn" type="button" id="settingsBtn" aria-label="系统设置" title="系统设置">⚙️</button>
+        <button class="btn btn-sm" type="button" id="dataUpdateBtn" data-i18n="layout.updateData" data-i18n-tt="layout.updateDataTip" title="更新汇率/持仓现价/国际日线/财报" style="margin-right:8px;">⟳ 更新数据</button>
+        <button class="theme-btn" type="button" id="themeBtn" data-i18n-tt="layout.themeToggle" aria-label="切换亮暗主题" title="亮/暗主题">🌓</button>
+        <button class="settings-btn" type="button" id="langBtn" data-i18n-tt="layout.switchLang" aria-label="切换语言" title="Language" >EN</button>
+        <button class="settings-btn" type="button" id="settingsBtn" data-i18n-tt="layout.systemSettings" aria-label="系统设置" title="系统设置">⚙️</button>
       </div>
       <%- body %>
     </main>
@@ -88,49 +93,49 @@
 
   <!-- 移动端底部导航（宪法册八） -->
   <nav class="bottom-nav">
-    <a href="/" class="bn-item">🏠<span>首页</span></a>
-    <a href="/research" class="bn-item">🔬<span>研究</span></a>
-    <a href="/holdings" class="bn-item">💼<span>持仓</span></a>
-    <a href="/portfolio" class="bn-item">🧮<span>组合</span></a>
-    <a href="/alerts" class="bn-item">🔔<span>提醒</span></a>
+    <a href="/" class="bn-item">🏠<span data-i18n="layout.bnHome">首页</span></a>
+    <a href="/holdings" class="bn-item">💼<span data-i18n="layout.bnHoldings">持仓</span></a>
+    <a href="/alerts" class="bn-item">🔔<span data-i18n="layout.bnAlerts">提醒</span></a>
+    <a href="/research" class="bn-item">🔬<span data-i18n="layout.bnResearch">研究</span></a>
+    <a href="/portfolio" class="bn-item">🧮<span data-i18n="layout.bnPortfolio">组合</span></a>
   </nav>
 
   <!-- Settings Modal -->
   <div id="settingsModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.4);z-index:20000;align-items:center;justify-content:center;">
     <div style="background:var(--bg-card);border-radius:12px;padding:24px;max-width:360px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,0.2);">
-      <h3 style="font-size:16px;margin:0 0 16px;">⚙️ 系统设置</h3>
+      <h3 style="font-size:16px;margin:0 0 16px;" data-i18n="settings.title">⚙️ 系统设置</h3>
       <div style="margin-bottom:16px;">
-        <div style="font-size:13px;font-weight:600;margin-bottom:6px;">涨跌颜色</div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:6px;" data-i18n="settings.updown">涨跌颜色</div>
         <div style="display:flex;gap:8px;">
           <button class="scheme-opt" data-scheme="red_up" type="button">
-            <span style="color:var(--color-up);">🔴涨</span> <span style="color:var(--color-down);">🟢跌</span><br><span style="font-size:11px;color:var(--text-muted);">A股风格</span>
+            <span style="color:var(--color-up);" data-i18n="settings.upRed">🔴涨</span> <span style="color:var(--color-down);" data-i18n="settings.downGreen">🟢跌</span><br><span style="font-size:11px;color:var(--text-muted);" data-i18n="settings.cnStyle">A股风格</span>
           </button>
           <button class="scheme-opt" data-scheme="green_up" type="button">
-            <span style="color:var(--color-down);">🟢涨</span> <span style="color:var(--color-up);">🔴跌</span><br><span style="font-size:11px;color:var(--text-muted);">美股风格</span>
+            <span style="color:var(--color-down);" data-i18n="settings.upGreen">🟢涨</span> <span style="color:var(--color-up);" data-i18n="settings.downRed">🔴跌</span><br><span style="font-size:11px;color:var(--text-muted);" data-i18n="settings.usStyle">美股风格</span>
           </button>
         </div>
       </div>
       <div style="margin-bottom:16px;">
-        <div style="font-size:13px;font-weight:600;margin-bottom:6px;">🔑 自带钥匙（BYOK — AI 直跑用，钥匙只存本机）</div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:6px;" data-i18n="settings.byok">🔑 自带钥匙（BYOK — AI 直跑用，钥匙只存本机）</div>
         <div style="display:flex;flex-direction:column;gap:6px;">
           <select id="llmProvider" style="padding:7px 10px;border:1px solid var(--border-strong);border-radius:var(--radius);font-size:13px;background:var(--bg-card);color:var(--text);">
-            <option value="zhipu">智谱 GLM（open.bigmodel.cn）</option>
+            <option value="zhipu" data-i18n="settings.providerZhipu">智谱 GLM（open.bigmodel.cn）</option>
             <option value="deepseek">DeepSeek</option>
             <option value="moonshot">Moonshot Kimi</option>
             <option value="openai">OpenAI</option>
-            <option value="custom">自定义（OpenAI 兼容）</option>
+            <option value="custom" data-i18n="settings.providerCustom">自定义（OpenAI 兼容）</option>
           </select>
-          <input id="llmBaseUrl" placeholder="接口地址 https://..." style="padding:7px 10px;border:1px solid var(--border-strong);border-radius:var(--radius);font-size:13px;">
-          <input id="llmModel" placeholder="模型名，如 glm-4-flash / deepseek-chat" style="padding:7px 10px;border:1px solid var(--border-strong);border-radius:var(--radius);font-size:13px;">
-          <input id="llmKey" type="password" placeholder="API Key（留空 = 不改）" style="padding:7px 10px;border:1px solid var(--border-strong);border-radius:var(--radius);font-size:13px;">
+          <input id="llmBaseUrl" placeholder="接口地址 https://..." data-i18n-ph="settings.baseUrlPh" style="padding:7px 10px;border:1px solid var(--border-strong);border-radius:var(--radius);font-size:13px;">
+          <input id="llmModel" placeholder="模型名，如 glm-4-flash / deepseek-chat" data-i18n-ph="settings.modelPh" style="padding:7px 10px;border:1px solid var(--border-strong);border-radius:var(--radius);font-size:13px;">
+          <input id="llmKey" type="password" placeholder="API Key（留空 = 不改）" data-i18n-ph="settings.keyPh" style="padding:7px 10px;border:1px solid var(--border-strong);border-radius:var(--radius);font-size:13px;">
           <div style="display:flex;gap:8px;align-items:center;">
-            <button class="btn btn-sm btn-accent" id="llmSave" type="button">保存</button>
-            <button class="btn btn-sm btn-outline" id="llmTest" type="button">测试连通</button>
+            <button class="btn btn-sm btn-accent" id="llmSave" type="button" data-i18n="settings.save">保存</button>
+            <button class="btn btn-sm btn-outline" id="llmTest" type="button" data-i18n="settings.testConn">测试连通</button>
             <span id="llmStatus" style="font-size:12px;color:var(--text-muted);"></span>
           </div>
         </div>
       </div>
-      <button class="btn btn-primary" id="settingsClose" style="width:100%;">关闭</button>
+      <button class="btn btn-primary" id="settingsClose" style="width:100%;" data-i18n="settings.close">关闭</button>
     </div>
   </div>
 
@@ -141,29 +146,31 @@
       if (!btn) return;
       var label = btn.textContent;
       var busy = false;
+      var T = function(k, fb) { return window.FengI18n ? window.FengI18n.t(k, fb) : fb; };
       function setBtn(text, disable) { btn.textContent = text; btn.disabled = !!disable; }
+      function resetLabel() { setBtn(T('layout.updateData', label), false); }
       function poll(jobId) {
         fetch('/api/data/update/' + jobId).then(function(r){ return r.json(); }).then(function(j) {
           var steps = (j.steps || []).map(function(s) {
             var icon = s.status === 'done' ? '✅' : s.status === 'running' ? '⏳' : s.status === 'failed' ? '❌' : '·';
-            return icon + s.tool.replace('.py','') + (s.rows ? '(' + s.rows + '行)' : '');
+            return icon + s.tool.replace('.py','') + (s.rows ? '(' + s.rows + T('layout.rowsUnit','行') + ')' : '');
           }).join(' ');
           if (j.status === 'running') { setBtn('⏳ ' + steps.slice(0, 40), true); setTimeout(function(){ poll(jobId); }, 3000); }
           else {
             busy = false;
-            setBtn(j.status === 'done' ? '✅ 已更新' : '⚠ 部分失败', false);
-            setTimeout(function(){ setBtn(label, false); }, 60000);
+            setBtn(j.status === 'done' ? T('layout.updated','✅ 已更新') : T('layout.partialFail','⚠ 部分失败'), false);
+            setTimeout(function(){ resetLabel(); }, 60000);
           }
-        }).catch(function(){ busy = false; setBtn(label, false); });
+        }).catch(function(){ busy = false; resetLabel(); });
       }
       btn.addEventListener('click', function() {
         if (busy) return;
         busy = true;
-        setBtn('⏳ 启动…', true);
+        setBtn(T('layout.starting','⏳ 启动…'), true);
         fetch('/api/data/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' })
           .then(function(r){ return r.json(); })
-          .then(function(d) { if (d.job_id) poll(d.job_id); else { busy = false; setBtn(label, false); } })
-          .catch(function(){ busy = false; setBtn(label, false); });
+          .then(function(d) { if (d.job_id) poll(d.job_id); else { busy = false; resetLabel(); } })
+          .catch(function(){ busy = false; resetLabel(); });
       });
     })();
     (function() {
@@ -214,6 +221,7 @@
 
       // --- BYOK 自带钥匙（LLM 配置：存本机 data/config/llm_config.json） ---
       (function() {
+        var T = function(k, fb) { return window.FengI18n ? window.FengI18n.t(k, fb) : fb; };
         var PRESETS = {
           zhipu:    { url: 'https://open.bigmodel.cn/api/paas/v4',  model: 'glm-4-flash' },
           deepseek: { url: 'https://api.deepseek.com/v1',           model: 'deepseek-chat' },
@@ -234,21 +242,21 @@
           if (cfg.provider) prov.value = cfg.provider;
           if (cfg.base_url) url.value = cfg.base_url;
           if (cfg.model) model.value = cfg.model;
-          if (cfg.configured) status.textContent = '已配置 ' + cfg.api_key_masked;
+          if (cfg.configured) status.textContent = T('settings.configured','已配置 ') + cfg.api_key_masked;
         }).catch(function(){});
         document.getElementById('llmSave').addEventListener('click', function() {
-          status.textContent = '保存中…';
+          status.textContent = T('settings.saving','保存中…');
           fetch('/api/llm/config', { method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ provider: prov.value, base_url: url.value, model: model.value, api_key: key.value }) })
             .then(function(r){ return r.json(); })
-            .then(function(j){ status.textContent = j.ok ? '已保存 ✓' : (j.error || '保存失败'); if (j.ok) key.value = ''; })
-            .catch(function(e){ status.textContent = '失败: ' + e.message; });
+            .then(function(j){ status.textContent = j.ok ? T('settings.saved','已保存 ✓') : (j.error || T('settings.saveFail','保存失败')); if (j.ok) key.value = ''; })
+            .catch(function(e){ status.textContent = T('settings.failPrefix','失败: ') + e.message; });
         });
         document.getElementById('llmTest').addEventListener('click', function() {
-          status.textContent = '测试中…';
+          status.textContent = T('settings.testing','测试中…');
           fetch('/api/llm/test', { method: 'POST' }).then(function(r){ return r.json(); })
-            .then(function(j){ status.textContent = j.ok ? ('连通 ✓ ' + j.content) : ('失败: ' + j.error); })
-            .catch(function(e){ status.textContent = '失败: ' + e.message; });
+            .then(function(j){ status.textContent = j.ok ? (T('settings.connOk','连通 ✓ ') + j.content) : (T('settings.failPrefix','失败: ') + j.error); })
+            .catch(function(e){ status.textContent = T('settings.failPrefix','失败: ') + e.message; });
         });
       })();
 
@@ -272,19 +280,17 @@
       if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
       if (window.innerWidth > 768) openSidebar();
 
-      // 更多工具折叠组
-      var moreToggle = document.getElementById('navMoreToggle');
-      var moreGroup = document.querySelector('.nav-more-group');
-      if (moreToggle && moreGroup) {
-        moreToggle.addEventListener('click', function() {
-          var open = moreGroup.hidden;
-          moreGroup.hidden = !open;
-          moreToggle.classList.toggle('expanded', open);
+      // 折叠导航组（档案馆 / AI 工具）：点标题开合，当前页在其中则自动展开
+      document.querySelectorAll('[data-fold-toggle]').forEach(function(tg) {
+        var grp = tg.parentElement.nextElementSibling;
+        if (!grp) return;
+        tg.addEventListener('click', function() {
+          var open = grp.hidden;
+          grp.hidden = !open;
+          tg.classList.toggle('expanded', open);
         });
-        // 当前页在折叠组内时自动展开
-        var activeInGroup = moreGroup.querySelector('a.active');
-        if (activeInGroup) { moreGroup.hidden = false; moreToggle.classList.add('expanded'); }
-      }
+        if (grp.querySelector('a.active')) { grp.hidden = false; tg.classList.add('expanded'); }
+      });
 
       // 根据当前路径高亮侧栏当前页
       (function highlightActiveNav() {

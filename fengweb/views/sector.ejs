@@ -1,6 +1,6 @@
 <div class="page-header">
-  <h2>🧭 板块轮动</h2>
-  <div class="breadcrumb"><a href="/">系统总览</a> / 板块轮动</div>
+  <h2 data-i18n="sector.title">🧭 板块轮动</h2>
+  <div class="breadcrumb"><a href="/" data-i18n="common.sysOverview">系统总览</a> / <span data-i18n="sector.title">板块轮动</span></div>
 </div>
 
 <script src="/vendor/echarts.min.js"></script>
@@ -26,12 +26,12 @@
 <!-- Loading / Error -->
 <div id="sec-loading" class="card" style="text-align:center;padding:40px;">
   <div style="font-size:20px;margin-bottom:8px;">⏳</div>
-  <p>正在计算板块轮动与长周期数据（本地库，约数秒）...</p>
+  <p data-i18n="sector.loading">正在计算板块轮动与长周期数据（本地库，约数秒）...</p>
 </div>
 <div id="sec-error" class="card" style="display:none;margin-top:12px;background:var(--danger-bg);border-color:var(--danger);">
-  <h3 style="font-size:14px;margin:0 0 6px;">⚠️ 加载失败</h3>
+  <h3 style="font-size:14px;margin:0 0 6px;" data-i18n="sector.loadFailed">⚠️ 加载失败</h3>
   <div id="sec-error-msg" style="font-size:13px;color:var(--danger);"></div>
-  <button class="btn btn-primary" onclick="location.reload()" style="margin-top:10px;">重试</button>
+  <button class="btn btn-primary" onclick="location.reload()" style="margin-top:10px;" data-i18n="sector.retry">重试</button>
 </div>
 
 <div id="sec-content" style="display:none;">
@@ -42,15 +42,15 @@
   <!-- ═══ RRG 散点图（三标签） ═══ -->
   <div class="card">
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
-      <h3 class="section-title">RRG 相对轮动图（周线，尾迹 26 周）</h3>
+      <h3 class="section-title" data-i18n="sector.rrgTitle">RRG 相对轮动图（周线，尾迹 26 周）</h3>
       <div style="display:flex;gap:8px;">
-        <button class="sec-tab active" data-layer="L-CN" onclick="switchLayer('L-CN')">🇨🇳 L-CN 申万一级</button>
-        <button class="sec-tab" data-layer="L-US" onclick="switchLayer('L-US')">🇺🇸 L-US SPDR 行业</button>
-        <button class="sec-tab" data-layer="L-GLOBAL" onclick="switchLayer('L-GLOBAL')">🌍 L-GLOBAL 全球行业</button>
+        <button class="sec-tab active" data-layer="L-CN" onclick="switchLayer('L-CN')" data-i18n="sector.tabCN">🇨🇳 L-CN 申万一级</button>
+        <button class="sec-tab" data-layer="L-US" onclick="switchLayer('L-US')" data-i18n="sector.tabUS">🇺🇸 L-US SPDR 行业</button>
+        <button class="sec-tab" data-layer="L-GLOBAL" onclick="switchLayer('L-GLOBAL')" data-i18n="sector.tabGlobal">🌍 L-GLOBAL 全球行业</button>
       </div>
     </div>
     <p style="font-size:12px;color:var(--text-muted);margin:0 0 8px;">
-      x = RS-Ratio（板块/基准价格比 · 52 周滚动 z-score×100），y = RS-Momentum（12 周动量 · 同归一）。右上=领涨 Leading｜右下=改善 Improving｜左上=走弱 Weakening｜左下=滞后 Lagging。
+      <span data-i18n="sector.rrgDesc">x = RS-Ratio（板块/基准价格比 · 52 周滚动 z-score×100），y = RS-Momentum（12 周动量 · 同归一）。右上=领涨 Leading｜右下=改善 Improving｜左上=走弱 Weakening｜左下=滞后 Lagging。</span>
       <span id="rrg-meta" style="margin-left:8px;"></span>
     </p>
     <div id="rrg-chart" style="width:100%;height:560px;"></div>
@@ -59,32 +59,32 @@
 
   <!-- ═══ L-CN 长周期区块 ═══ -->
   <div class="card" style="margin-top:12px;">
-    <h3 class="section-title">🇨🇳 L-CN 年度收益热力图（申万一级 × 年份，%）</h3>
-    <p style="font-size:12px;color:var(--text-muted);margin:0 0 4px;">按自然年最后收盘环比；今年度为年初至今未完年收益。行序 = 沉寂榜序（距前高年数降序）。</p>
+    <h3 class="section-title" data-i18n="sector.heatTitle">🇨🇳 L-CN 年度收益热力图（申万一级 × 年份，%）</h3>
+    <p style="font-size:12px;color:var(--text-muted);margin:0 0 4px;"><span data-i18n="sector.heatDesc">按自然年最后收盘环比；今年度为年初至今未完年收益。行序 = 沉寂榜序（距前高年数降序）。</span></p>
     <div id="heat-chart" style="width:100%;height:760px;"></div>
   </div>
 
   <div class="card" style="margin-top:12px;">
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
-      <h3 class="section-title">📉 回撤水下图（月度采样，自历史最高点）</h3>
+      <h3 class="section-title" data-i18n="sector.ddTitle">📉 回撤水下图（月度采样，自历史最高点）</h3>
       <div class="dd-wrap">
-        <button class="btn" id="dd-toggle" onclick="toggleDdPanel(event)" style="min-width:220px;">选择行业（<span id="dd-count">0</span>）▾</button>
+        <button class="btn" id="dd-toggle" onclick="toggleDdPanel(event)" style="min-width:220px;"><span data-i18n="sector.selectPre">选择行业（</span><span id="dd-count">0</span><span data-i18n="sector.selectPost">）▾</span></button>
         <div class="dd-panel" id="dd-panel">
           <div style="padding:2px 12px 6px;border-bottom:1px solid var(--border);">
-            <button class="btn btn-sm" onclick="ddSelectAll()" type="button">全选</button>
-            <button class="btn btn-sm" onclick="ddSelectNone()" type="button">清空</button>
+            <button class="btn btn-sm" onclick="ddSelectAll()" type="button" data-i18n="sector.selectAll">全选</button>
+            <button class="btn btn-sm" onclick="ddSelectNone()" type="button" data-i18n="sector.selectNone">清空</button>
           </div>
           <div id="dd-options"></div>
         </div>
       </div>
     </div>
-    <p style="font-size:12px;color:var(--text-muted);margin:4px 0 0;">每行业每月一个采样点；0 线 = 历史最高点。</p>
+    <p style="font-size:12px;color:var(--text-muted);margin:4px 0 0;"><span data-i18n="sector.ddDesc">每行业每月一个采样点；0 线 = 历史最高点。</span></p>
     <div id="dd-chart" style="width:100%;height:460px;"></div>
   </div>
 
   <div class="card" style="margin-top:12px;">
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
-      <h3 class="section-title">🏝️ 沉寂榜（距前高年数降序）</h3>
+      <h3 class="section-title" data-i18n="sector.stagTitle">🏝️ 沉寂榜（距前高年数降序）</h3>
       <span id="stag-rules" style="font-size:11px;color:var(--text-muted);"></span>
     </div>
     <div style="overflow-x:auto;">
@@ -93,8 +93,8 @@
   </div>
 
   <div class="card" style="margin-top:12px;">
-    <h3 class="section-title">🏆 CAGR 排名（近 5 年 / 近 10 年，%）</h3>
-    <p style="font-size:12px;color:var(--text-muted);margin:0 0 4px;">悬停可看相对沪深300 超额 CAGR；环保/美容护理/石油石化为 2021 版申万新序列，不足窗长则无值。</p>
+    <h3 class="section-title" data-i18n="sector.cagrTitle">🏆 CAGR 排名（近 5 年 / 近 10 年，%）</h3>
+    <p style="font-size:12px;color:var(--text-muted);margin:0 0 4px;"><span data-i18n="sector.cagrDesc">悬停可看相对沪深300 超额 CAGR；环保/美容护理/石油石化为 2021 版申万新序列，不足窗长则无值。</span></p>
     <div id="cagr-chart" style="width:100%;height:760px;"></div>
   </div>
 
@@ -106,12 +106,12 @@
 <script>
 (function() {
   'use strict';
-  var QUAD_CN = { Leading: '领涨', Improving: '改善', Weakening: '走弱', Lagging: '滞后' };
+  function quadCN(k) { return { Leading: FengI18n.t('sector.quadLeading','领涨'), Improving: FengI18n.t('sector.quadImproving','改善'), Weakening: FengI18n.t('sector.quadWeakening','走弱'), Lagging: FengI18n.t('sector.quadLagging','滞后') }[k]; }
   function cssVar(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim();}
   var QUAD_COLOR = { Leading: cssVar('--ok'), Improving: cssVar('--accent'), Weakening: cssVar('--warn'), Lagging: cssVar('--text-muted') };
-  var LAYER_TITLE = {
-    'L-CN': '中国申万一级行业', 'L-US': '美国 SPDR 行业 ETF', 'L-GLOBAL': '全球 iShares 行业 ETF'
-  };
+  function layerTitle(k) {
+    return { 'L-CN': FengI18n.t('sector.layerCN','中国申万一级行业'), 'L-US': FengI18n.t('sector.layerUS','美国 SPDR 行业 ETF'), 'L-GLOBAL': FengI18n.t('sector.layerGlobal','全球 iShares 行业 ETF') }[k];
+  }
   var charts = {};           // echarts 实例
   var rotationData = null;   // analyze --json
   var longtermData = null;   // longterm --json
@@ -236,17 +236,17 @@
       label: { position: 'insideTopRight', fontSize: 12, fontWeight: 'bold' },
       data: [
         [{ xAxis: 100, yAxis: 100, itemStyle: { color: 'rgba(22,163,74,0.06)' },
-           label: { show: true, formatter: '领涨 Leading', color: QUAD_COLOR.Leading, offset: [0, 6] } },
+           label: { show: true, formatter: FengI18n.t('sector.quadLeadingFull','领涨 Leading'), color: QUAD_COLOR.Leading, offset: [0, 6] } },
          { xAxis: xmax, yAxis: ymax }],
         [{ xAxis: 100, yAxis: ymin, itemStyle: { color: 'rgba(37,99,235,0.05)' },
-           label: { show: true, formatter: '改善 Improving（获得动能）', color: QUAD_COLOR.Improving,
+           label: { show: true, formatter: FengI18n.t('sector.quadImprovingFull','改善 Improving（获得动能）'), color: QUAD_COLOR.Improving,
                     offset: [0, 24] } },
          { xAxis: xmax, yAxis: 100 }],
         [{ xAxis: xmin, yAxis: 100, itemStyle: { color: 'rgba(234,88,12,0.05)' },
-           label: { show: true, formatter: '走弱 Weakening', color: QUAD_COLOR.Weakening, offset: [0, 6] } },
+           label: { show: true, formatter: FengI18n.t('sector.quadWeakeningFull','走弱 Weakening'), color: QUAD_COLOR.Weakening, offset: [0, 6] } },
          { xAxis: 100, yAxis: ymax }],
         [{ xAxis: xmin, yAxis: ymin, itemStyle: { color: 'rgba(107,114,128,0.05)' },
-           label: { show: true, formatter: '滞后 Lagging', color: QUAD_COLOR.Lagging, offset: [0, 24] } },
+           label: { show: true, formatter: FengI18n.t('sector.quadLaggingFull','滞后 Lagging'), color: QUAD_COLOR.Lagging, offset: [0, 24] } },
          { xAxis: 100, yAxis: 100 }]
       ]
     };
@@ -269,10 +269,10 @@
           var lines = '<b>' + nm + '</b>';
           lines += '<br>X=' + Number(p.value[0]).toFixed(2) + '　Y=' + Number(p.value[1]).toFixed(2);
           if (sec) {
-            lines += '<br>' + QUAD_CN[sec.quadrant] + (sec.signal && sec.signal !== '持续'
-              ? '（上周 ' + QUAD_CN[sec.prev_quadrant] + '，' + sec.signal.replace(/Leading|Improving|Weakening|Lagging/g,
-                  function(m) { return QUAD_CN[m]; }) + '）' : '');
-            if (sec.excess_mom) lines += '<br>3M 超额动量 ' + fmtPct(sec.excess_mom['3M'], 1);
+            lines += '<br>' + quadCN(sec.quadrant) + (sec.signal && sec.signal !== '持续'
+              ? FengI18n.t('sector.tipWasPre','（上周 ') + quadCN(sec.prev_quadrant) + FengI18n.t('sector.tipSep','，') + sec.signal.replace(/Leading|Improving|Weakening|Lagging/g,
+                  function(m) { return quadCN(m); }) + FengI18n.t('sector.tipClose','）') : '');
+            if (sec.excess_mom) lines += '<br>' + FengI18n.t('sector.tipExcessMom','3M 超额动量 ') + fmtPct(sec.excess_mom['3M'], 1);
           }
           return lines;
         }
@@ -291,22 +291,22 @@
     }, { notMerge: true });
 
     document.getElementById('rrg-meta').textContent =
-      LAYER_TITLE[curLayer] + '｜基准 ' + (L.benchmark_label || L.benchmark)
-      + '｜最后周 ' + L.last_week + '｜覆盖 ' + L.weeks_used + ' 周'
-      + (L.excluded && L.excluded.length ? '｜排除 ' + L.excluded.length + ' 只' : '');
+      layerTitle(curLayer) + FengI18n.t('sector.metaBench','｜基准 ') + (L.benchmark_label || L.benchmark)
+      + FengI18n.t('sector.metaLastWeek','｜最后周 ') + L.last_week + FengI18n.t('sector.metaWeeksUsed','｜覆盖 ') + L.weeks_used + FengI18n.t('sector.metaWeekUnit',' 周')
+      + (L.excluded && L.excluded.length ? FengI18n.t('sector.metaExcluded','｜排除 ') + L.excluded.length + FengI18n.t('sector.metaExcludedUnit',' 只') : '');
   }
 
   function renderSignalChips() {
     var el = document.getElementById('rrg-signals');
     var sigs = (rotationData.rotation_signals || {})[curLayer] || [];
     if (!sigs.length) {
-      el.innerHTML = '<span style="font-size:12px;color:var(--text-muted);">本周无象限迁移信号（全部持续）。</span>';
+      el.innerHTML = '<span style="font-size:12px;color:var(--text-muted);">' + FengI18n.t('sector.noSignals','本周无象限迁移信号（全部持续）。') + '</span>';
       return;
     }
-    el.innerHTML = '<span style="font-size:12px;color:var(--text-muted);margin-right:6px;">轮动信号：</span>'
+    el.innerHTML = '<span style="font-size:12px;color:var(--text-muted);margin-right:6px;">' + FengI18n.t('sector.signalsLabel','轮动信号：') + '</span>'
       + sigs.map(function(s) {
           return '<span class="quad-chip"><b>' + s.name + '</b> ' + s.signal.replace(/Leading|Improving|Weakening|Lagging/g,
-            function(m) { return QUAD_CN[m]; }) + '</span>';
+            function(m) { return quadCN(m); }) + '</span>';
         }).join('');
   }
 
@@ -325,8 +325,8 @@
       tooltip: {
         position: 'top',
         formatter: function(p) {
-          return '<b>' + yCats[p.value[1]] + '</b> ' + years[p.value[0]] + ' 年<br>年度收益 '
-            + fmtPct(p.value[2]) + '（今年为未完年）';
+          return '<b>' + yCats[p.value[1]] + '</b> ' + years[p.value[0]] + FengI18n.t('sector.tipYear',' 年<br>年度收益 ')
+            + fmtPct(p.value[2]) + FengI18n.t('sector.tipPartial','（今年为未完年）');
         }
       },
       grid: { left: 76, right: 18, top: 12, bottom: 60 },
@@ -423,16 +423,16 @@
 
   // ---------- 沉寂榜表 ----------
   function badge(level) {
-    var txt = { deep: '深度沉寂', mid: '沉寂', none: '正常' }[level] || level;
+    var txt = { deep: FengI18n.t('sector.stagDeep','深度沉寂'), mid: FengI18n.t('sector.stagMid','沉寂'), none: FengI18n.t('sector.stagNone','正常') }[level] || level;
     return '<span class="quad-chip badge-' + level + '">' + txt + '</span>';
   }
   function renderStagnationTable() {
     var rules = longtermData.stagnation_rules || {};
     document.getElementById('stag-rules').textContent =
-      '分级：' + rules.deep + '｜' + rules.mid + '｜其余正常 · 200 周均线 ≈ ' + longtermData.ma200w_weeks + ' 周';
+      FengI18n.t('sector.stagRulesPre','分级：') + rules.deep + '｜' + rules.mid + FengI18n.t('sector.stagRulesRest','｜其余正常 · 200 周均线 ≈ ') + longtermData.ma200w_weeks + FengI18n.t('sector.stagRulesWeeks',' 周');
     var rows = longtermData.sectors;
     var h = '<thead><tr style="border-bottom:2px solid var(--border);">'
-      + ['排名','行业','代码','ATH 日期','回撤','距前高年数','vs 200周MA','连续低于月数','CAGR 5Y','CAGR 10Y','分级']
+      + [FengI18n.t('sector.thRank','排名'), FengI18n.t('sector.thSector','行业'), FengI18n.t('sector.thTicker','代码'), FengI18n.t('sector.thAthDate','ATH 日期'), FengI18n.t('sector.thDrawdown','回撤'), FengI18n.t('sector.thYearsSinceAth','距前高年数'), FengI18n.t('sector.thVs200w','vs 200周MA'), FengI18n.t('sector.thMonthsBelow','连续低于月数'), FengI18n.t('sector.thCagr5','CAGR 5Y'), FengI18n.t('sector.thCagr10','CAGR 10Y'), FengI18n.t('sector.thGrade','分级')]
         .map(function(t) { return '<th style="padding:6px 8px;text-align:left;white-space:nowrap;">' + t + '</th>'; }).join('')
       + '</tr></thead><tbody>';
     rows.forEach(function(r, i) {
@@ -481,7 +481,7 @@
             h += '<br>' + p.marker + ' ' + p.seriesName + '：' + fmtPct(p.value);
           });
           var e5 = excMap[tk.ticker] || {};
-          h += '<br>超额 vs 沪深300：5Y ' + fmtPct(e5['5Y']) + '｜10Y ' + fmtPct(e5['10Y']);
+          h += FengI18n.t('sector.tipExcess','<br>超额 vs 沪深300：5Y ') + fmtPct(e5['5Y']) + FengI18n.t('sector.tipExcess10','｜10Y ') + fmtPct(e5['10Y']);
           return h;
         }
       },
@@ -513,11 +513,11 @@
     var usLast = (rot.layers['L-US'] || {}).last_date || '—';
     var glLast = (rot.layers['L-GLOBAL'] || {}).last_date || '—';
     document.getElementById('sec-footer').innerHTML =
-      '<b>数据源</b>：A 股申万一级行业指数 = 新浪财经·申万（akshare index_hist_sw）；美股/全球行业 ETF = yfinance。'
-      + '<br><b>最后交易日</b>：L-CN ' + cnLast + '｜L-US ' + usLast + '｜L-GLOBAL ' + glLast
-      + '。RRG 基准：沪深300 / S&P500(^GSPC) / ACWI。'
-      + '<br><b>算法</b>：RRG 相对轮动（52 周 z-score 归一）；长周期体检基于周线(W-FRI)，只读本地 market_data.db。'
-      + '<br><b>生成时间</b>：' + (lt.generated_at || '') + ' · FengInvest fengsector.py · 仅供内部研究。';
+      FengI18n.t('sector.footerSource','<b>数据源</b>：A 股申万一级行业指数 = 新浪财经·申万（akshare index_hist_sw）；美股/全球行业 ETF = yfinance。')
+      + FengI18n.t('sector.footerLastPre','<br><b>最后交易日</b>：L-CN ') + cnLast + FengI18n.t('sector.footerSepUS','｜L-US ') + usLast + FengI18n.t('sector.footerSepGL','｜L-GLOBAL ') + glLast
+      + FengI18n.t('sector.footerBench','。RRG 基准：沪深300 / S&P500(^GSPC) / ACWI。')
+      + FengI18n.t('sector.footerAlgo','<br><b>算法</b>：RRG 相对轮动（52 周 z-score 归一）；长周期体检基于周线(W-FRI)，只读本地 market_data.db。')
+      + FengI18n.t('sector.footerGenPre','<br><b>生成时间</b>：') + (lt.generated_at || '') + FengI18n.t('sector.footerGenPost',' · FengInvest fengsector.py · 仅供内部研究。');
   }
 })();
 </script>

@@ -12,6 +12,8 @@ CSMAR 原始 754 列中有资本支出字段 C002006000 / Capexp，但导入 cn_
     python tools/feng_add_capex.py --mode annual # 年度数据
     python tools/feng_add_capex.py --check      # 只检查状态，不改数据
 """
+# 豁免 safe_batch：ALTER TABLE 加列系 DDL（DDL 不进 changeset）+ 依赖 .dta 源文件已不在本机 + 增量补填。
+# 日期 2026-09-09，见 docs/DATA-MANAGEMENT.md §八。
 import os, sqlite3, sys, time, json
 
 sys.stdout.reconfigure(encoding="utf-8")
@@ -19,8 +21,8 @@ sys.stdout.reconfigure(encoding="utf-8")
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DB_PATH = os.path.join(BASE, "data", "market_data.db")
 
-Q_DTA = os.path.expanduser(r"~\Downloads\上市公司财务季度数据合并（90-25.3）.dta")
-A_DTA = os.path.expanduser(r"~\Downloads\上市公司财务年度数据合并（90-24）.dta")
+Q_DTA = os.path.expanduser(r"~/Downloads/上市公司财务季度数据合并（90-25.3）.dta")
+A_DTA = os.path.expanduser(r"~/Downloads/上市公司财务年度数据合并（90-24）.dta")
 
 CSMAR_COL = "C002006000"  # 购建固定资产、无形资产和其他长期资产支付的现金
 LEGACY_COL = "Capexp"     # 同一数据的旧版英文命名

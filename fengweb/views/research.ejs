@@ -5,55 +5,60 @@
 
 <% var statusMeta = { researching: '已研究', candidate: '候选', watching: '观察', holding: '持仓', parked: '停靠' }; %>
 <div class="filter-tabs">
-  <button class="btn btn-sm tab-active" data-status="all">全部 (<%= list.length %>)</button>
+  <button class="btn btn-sm tab-active" data-status="all"><span data-i18n="research.all">全部</span> (<%= list.length %>)</button>
   <% Object.keys(statusMeta).forEach(function(s) { %>
     <% var n = list.filter(function(c){ return c.status === s; }).length; %>
-    <button class="btn btn-sm" data-status="<%= s %>"><%= statusMeta[s] %> (<%= n %>)</button>
+    <button class="btn btn-sm" data-status="<%= s %>"><span data-i18n="research.status.<%= s %>"><%= statusMeta[s] %></span> (<%= n %>)</button>
   <% }) %>
 </div>
 
 <div class="card">
-  <input id="rl-search" placeholder="搜索标的/名称…" style="width:100%;max-width:320px;padding:8px 12px;margin-bottom:12px;background:var(--bg-inset);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;">
+  <input id="rl-search" placeholder="搜索标的/名称…" data-i18n-ph="research.searchPh" style="width:100%;max-width:320px;padding:8px 12px;margin-bottom:12px;background:var(--bg-inset);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;">
   <table class="data-table" id="research-table">
     <thead>
       <tr>
-        <th>标的</th>
-        <th>名称</th>
-        <th>状态</th>
-        <th>完成层</th>
-        <th>备注</th>
-        <th>操作</th>
+        <th data-i18n="research.th.ticker">标的</th>
+        <th data-i18n="research.th.name">名称</th>
+        <th data-i18n="research.th.status">状态</th>
+        <th data-i18n="research.th.layers">完成层</th>
+        <th data-i18n="research.th.note">备注</th>
+        <th data-i18n="research.th.actions">操作</th>
       </tr>
     </thead>
     <tbody>
       <% var merged = list.slice(); meta.forEach(function(m) { if (!merged.find(function(c){ return c.ticker === m.ticker; })) merged.push({ ticker: m.ticker, name: m.name, status: 'researching', note: '' }); }); %>
+      <% /* 新到旧：按 meta.latest_date 倒序，无日期排最后 */ %>
+      <% function latestOf(t){ var mm = meta.find(function(x){ return x.ticker === t; }); return (mm && mm.latest_date) || ''; } merged.sort(function(a, b){ return latestOf(b.ticker).localeCompare(latestOf(a.ticker)); }); %>
       <% merged.forEach(function(item) { %>
       <tr data-status="<%= item.status %>">
         <td>
           <a href="/research/<%= item.ticker %>" class="num"><%= item.ticker %></a>
-          <% if (domains && domains[item.ticker]) { %><span class="badge badge-primary" title="关注领域（knowledge/关注领域.md）——决定研究谁，不决定何时买"><%= domains[item.ticker] %></span><% } %>
+          <% if (domains && domains[item.ticker]) { %><span class="badge badge-primary" title="关注领域（knowledge/关注领域.md）——决定研究谁，不决定何时买" data-i18n-tt="research.domainTitle"><%= domains[item.ticker] %></span><% } %>
+          <% var ld = latestOf(item.ticker); if (ld) { %><div style="font-size:11px;color:var(--text-faint);"><span data-i18n="research.lastAnalyzed">最近分析</span> <%= ld %></div><% } %>
         </td>
         <td><%= item.name !== item.ticker ? item.name : '—' %></td>
         <td>
-          <span class="badge badge-<%= item.status === 'researching' ? 'primary' : item.status === 'candidate' ? 'yellow' : item.status === 'holding' ? 'green' : 'neutral' %>"><%= statusMeta[item.status] || item.status %></span>
+          <span class="badge badge-<%= item.status === 'researching' ? 'primary' : item.status === 'candidate' ? 'yellow' : item.status === 'holding' ? 'green' : 'neutral' %>"><span data-i18n="research.status.<%= item.status %>"><%= statusMeta[item.status] || item.status %></span></span>
         </td>
         <td>
           <% var m2 = meta.find(function(x){ return x.ticker === item.ticker; }); %>
           <% if (m2) { ['l0','m','l1','l2b','l2a','l3','l4'].forEach(function(l) { %>
             <% var found = m2.layers.find(function(x) { return x.layer === l; }); %>
             <span class="badge badge-<%= found ? 'green' : 'neutral' %>"><%= l.toUpperCase() %></span>
-          <% }) } else { %><span style="color:var(--text-faint);">未开工</span><% } %>
+          <% }) } else { %><span style="color:var(--text-faint);" data-i18n="research.notStarted">未开工</span><% } %>
         </td>
         <td style="max-width:280px;font-size:12px;color:var(--text-muted);"><%= item.note || '' %></td>
         <td>
-          <a href="/research/<%= item.ticker %>" class="btn btn-sm">详情</a>
-          <a href="/reports/<%= item.ticker %>" class="btn btn-sm">报告</a>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <a href="/research/<%= item.ticker %>" class="btn btn-sm" data-i18n="research.detail">详情</a>
+            <a href="/reports/<%= item.ticker %>" class="btn btn-sm" data-i18n="research.report">报告</a>
+          </div>
         </td>
       </tr>
       <% }) %>
     </tbody>
   </table>
-  <p style="margin-top:12px;color:var(--text-muted);font-size:13px;">共 <%= merged.length %> 个标的（清单内标的 + 已分析未入清单自动补为「已研究」）· 领域徽章 = 关注领域（垄断性收费/资源型/成长引擎，编辑 data/config/attention-domains.json）</p>
+  <p style="margin-top:12px;color:var(--text-muted);font-size:13px;"><span data-i18n="research.footerTotal">共</span> <%= merged.length %> <span data-i18n="research.footerNote">个标的（清单内标的 + 已分析未入清单自动补为「已研究」）· 领域徽章 = 关注领域（垄断性收费/资源型/成长引擎，编辑 data/config/attention-domains.json）</span></p>
 </div>
 
 <script>

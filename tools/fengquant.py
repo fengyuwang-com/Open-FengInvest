@@ -262,6 +262,17 @@ def main():
         print(json.dumps({"error": f"Cannot fetch target {ticker}", "detail": target_data["error"]}, indent=2))
         sys.exit(1)
 
+    # 有声失败（2026-09-13）：yfinance 被限流/退市时不抛异常而是返回空壳（info={}、hist 空）——
+    # target 全部关键因子为 null 即数据获取失败，显式报错退出，禁止把空表当好数据输出。
+    _core_keys = ("pe", "fwd_pe", "pb", "market_cap", "momentum_6m_pct")
+    if all(target_data.get(k) is None for k in _core_keys):
+        print(json.dumps({
+            "error": f"Target {ticker} 取数全空（yf 限流/退市/代码错误），拒绝输出空因子表",
+            "target_raw": target_data,
+            "peers_failed": [e.get("ticker") for e in errors],
+        }, indent=2), file=sys.stderr)
+        sys.exit(2)
+
     # Compute factors
     factors = compute_factors(target_data, peer_data)
 
@@ -275,6 +286,13 @@ def main():
 
     if errors:
         result["fetch_errors"] = errors
+
+    # 数据健康度：z-score 只在幸存 peer 上算，分母与失败名单必须显式（无声降级治理 B 线）
+    result["data_health"] = {
+        "peers_requested": len(peers_tickers),
+        "peers_fetched": len(peer_data),
+        "peers_failed": [e.get("ticker") for e in errors],
+    }
 
     print(json.dumps(result, indent=2, default=str))
 

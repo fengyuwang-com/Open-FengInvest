@@ -61,6 +61,8 @@ python tools/fengholding.py add <TICKER> # 新持仓登记：校验 + 组合影�
 
 每次调仓（买入/卖出/现金变动）后必跑 `check`。
 
+> GUI 范围：GUI 暂仅暴露 check/risk，optimize/hrp 走 CLI。
+
 ## 六、硬约束（不变）
 
 | 约束 | 上限 |

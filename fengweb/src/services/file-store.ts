@@ -167,6 +167,9 @@ export interface JournalEntry {
   ticker?: string;
   action?: string;
   message: string;
+  type?: string;
+  summary?: string;
+  date?: string;
 }
 
 export interface RedTeamData {
@@ -180,6 +183,7 @@ export interface ReportMeta {
   rel: string;           // 相对公司目录的路径（正斜杠）
   title: string;
   source: 'own' | 'community';
+  kind: 'formal' | 'note' | 'external'; // formal=七层结论；note=own/过程稿；external=社区/书籍
   redteam: RedTeamData | null;
 }
 
@@ -203,19 +207,28 @@ export class FileStore {
 
   // --- Holdings ---
 
+  // fengholding.py 写的持仓 JSON 顶层键是 id 而非 ticker；
+  // 视图模板统一用 h.ticker 生成 /holdings/<ticker> 链接，读取口归一化补齐。
+  private _normHolding(h: Holding): Holding {
+    if (!h.ticker && (h as any).id) (h as any).ticker = (h as any).id;
+    return h;
+  }
+
   getHoldings(): Holding[] {
     const dir = path.join(this.baseDir, 'holdings');
     if (!fs.existsSync(dir)) return [];
     return fs.readdirSync(dir)
       .filter(f => f.startsWith('hold_') && f.endsWith('.json'))
       .map(f => this._readJson<Holding>(path.join(dir, f)))
-      .filter((h): h is Holding => h !== null);
+      .filter((h): h is Holding => h !== null)
+      .map(h => this._normHolding(h));
   }
 
   getHolding(ticker: string): Holding | null {
-    return this._readJson<Holding>(
+    const h = this._readJson<Holding>(
       path.join(this.baseDir, 'holdings', `hold_${ticker}.json`)
     );
+    return h ? this._normHolding(h) : null;
   }
 
   saveHolding(holding: Holding): void {
@@ -352,7 +365,7 @@ export class FileStore {
     fs.writeFileSync(file, JSON.stringify(next, null, 2), 'utf-8');
   }
 
-  getResearchMeta(): { ticker: string; name: string; layers: ResearchLayer[] }[] {
+  getResearchMeta(): { ticker: string; name: string; layers: ResearchLayer[]; latest_date: string | null }[] {
     const tickerMap = new Map<string, { name: string; layers: ResearchLayer[] }>();
 
     // 1. Scan research/060-companies/
@@ -408,11 +421,20 @@ export class FileStore {
       }
     }
 
-    return Array.from(tickerMap.entries()).map(([ticker, v]) => ({
-      ticker,
-      name: v.name,
-      layers: v.layers,
-    }));
+    // R51-A：已研究按新到旧 — 从各层 output_path 抽 YYYY-MM-DD 取最大，无则 null（排最后）
+    return Array.from(tickerMap.entries()).map(([ticker, v]) => {
+      let latest: string | null = null;
+      for (const l of v.layers) {
+        const m = (l.output_path || '').match(/(\d{4}-\d{2}-\d{2})/);
+        if (m && (!latest || m[1] > latest)) latest = m[1];
+      }
+      return {
+        ticker,
+        name: v.name,
+        layers: v.layers,
+        latest_date: latest,
+      };
+    });
   }
 
   getResearchLayers(ticker: string): ResearchLayer[] {
@@ -490,9 +512,15 @@ export class FileStore {
           const frontmatter = this._readFrontmatter(fullPath);
           const content = fs.readFileSync(fullPath, 'utf-8');
           const body = content.replace(/---[\s\S]*?---\n?/, '').trim();
+          const fmName = frontmatter['name'] || '';
+          const h1Name = (content.match(/^#\s+(.+)$/m)?.[1]?.trim() || '')
+            .replace(/\s*[·•]\s*(思维操作系统|投资思维操作系统|投资思想纲要)\s*$/u, '').trim();
+          const name = (/[\u4e00-\u9fff]/.test(fmName) && !/perspective/i.test(fmName))
+            ? fmName
+            : (/[\u4e00-\u9fff]/.test(h1Name) ? h1Name : f.replace(/\.md$/, ''));
           return {
             category: 'people',
-            name: frontmatter['name'] || f.replace(/\.md$/, ''),
+            name,
             path: `knowledge/people/${f}`,
             frontmatter,
             preview: `${frontmatter['school'] || ''} | ${frontmatter['representative'] || ''} — ${this._plain(body).slice(0, 100)}`,
@@ -551,7 +579,7 @@ export class FileStore {
       if (!fs.existsSync(mdPath)) return null;
       const content = fs.readFileSync(mdPath, 'utf-8');
       const fm = this._readFrontmatter(mdPath);
-      const title = fm['name'] || path.basename(relPath, '.md');
+      const title = this._peopleDisplay(fm, content, fileName).name;
       return { content, title };
     }
     // Route research/ paths (aggregated knowledge categories) to research/ dir
@@ -583,11 +611,12 @@ export class FileStore {
         const fm = this._readFrontmatter(fullPath);
         const content = fs.readFileSync(fullPath, 'utf-8');
         const body = content.replace(/---[\s\S]*?---\n?/, '').trim();
+        const disp = this._peopleDisplay(fm, content, f);
         return {
           id: f.replace(/\.md$/, ''),
-          name: fm['name'] || f.replace(/\.md$/, ''),
-          school: fm['school'] || 'unknown',
-          representative: fm['representative'] || '',
+          name: disp.name,
+          school: disp.school,
+          representative: disp.representative,
           when_to_use: fm['when_to_use'] || '',
           sources: fm['sources'] || '',
           disclaimer: fm['disclaimer'] || '',
@@ -614,7 +643,12 @@ export class FileStore {
     const file = path.join(this.baseDir, 'logs', 'journal.jsonl');
     if (!fs.existsSync(file)) return [];
     const lines = fs.readFileSync(file, 'utf-8').split('\n').filter(Boolean);
-    return lines.slice(-limit).map(line => JSON.parse(line) as JournalEntry).reverse();
+    return lines.slice(-limit).map(line => {
+      const e = JSON.parse(line) as JournalEntry;
+      e.message = e.message || e.summary || '';
+      e.action = e.action || e.type || '';
+      return e;
+    }).reverse();
   }
 
   appendJournal(entry: JournalEntry): void {
@@ -737,6 +771,52 @@ export class FileStore {
 
   // --- Private helpers ---
 
+  // 人物显示名统一规则（B: 中文名优先，绝不泄露英文 slug/带杠文件名/unknown）：
+  //   1) frontmatter name 含中文 → 直接用（权威）；
+  //   2) 否则取 H1（如 "# 罗伯特·巴卡雷纳 · 思维操作系统" → "罗伯特·巴卡雷纳"）；
+  //   3) 否则取 description 首句中文名；兜底才用文件名。
+  // school 缺失时按关键词推断（绝不返回 unknown）；representative 缺失时从 description 括号英文名提取。
+  private _peopleDisplay(
+    fm: Record<string, string>,
+    content: string,
+    fileName: string
+  ): { name: string; school: string; representative: string } {
+    const hasCjk = (s: string): boolean => /[\u4e00-\u9fff]/.test(s);
+    const isSlug = (s: string): boolean => /perspective/i.test(s) || /^[A-Za-z0-9_.\-]+$/.test(s);
+    let name = fm['name'] || '';
+    if (!name || !hasCjk(name) || isSlug(name)) {
+      const h1 = content.match(/^#\s+(.+)$/m)?.[1]?.trim() || '';
+      const stripped = h1
+        .replace(/\s*[·•]\s*(思维操作系统|投资思维操作系统|投资思想纲要)\s*$/u, '')
+        .trim();
+      if (stripped && hasCjk(stripped)) {
+        name = stripped;
+      } else {
+        const descBlock = content.match(/^description:\s*\|?\s*\n?((?:  .*\n?)+)/m)?.[1] || '';
+        const cn = descBlock.match(/^\s*([\u4e00-\u9fff（）·\s]{2,20}?)\s*[\(（]/);
+        if (cn) name = cn[1].trim();
+        else name = fileName.replace(/\.md$/, '');
+      }
+    }
+    let school = fm['school'] || '';
+    if (!school) {
+      const head = content.slice(0, 1500);
+      if (/量化|因子|统计套利|随机漫步|指数/.test(head)) school = 'quant';
+      else if (/逆向|反向|反脆弱|非对称/.test(head)) school = 'contrarian';
+      else if (/宏观|反身性|全天候/.test(head)) school = 'macro';
+      else if (/趋势|投机|短线|三重滤网|动量/.test(head)) school = 'trend';
+      else if (/成长|GARP|GALP|收益型/.test(head)) school = 'growth';
+      else if (/深度价值|安全边际|清算|破产|并购套利/.test(head)) school = 'deep_value';
+      else school = 'value';
+    }
+    let representative = fm['representative'] || '';
+    if (!representative) {
+      const m = content.slice(0, 1200).match(/[\(（]([A-Za-z][A-Za-z .&'\-]{2,40})[\)）]/);
+      if (m) representative = m[1].trim();
+    }
+    return { name, school, representative };
+  }
+
   private _readJson<T>(filePath: string): T | null {
     try {
       if (!fs.existsSync(filePath)) return null;
@@ -749,7 +829,7 @@ export class FileStore {
   private _readFrontmatter(filePath: string): Record<string, string> {
     try {
       const content = fs.readFileSync(filePath, 'utf-8');
-      const match = content.match(/^---\n([\s\S]*?)\n---/);
+      const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
       if (!match) return {};
       const fm: Record<string, string> = {};
       for (const line of match[1].split('\n')) {
@@ -855,9 +935,23 @@ export class FileStore {
   /** 红队检验数据（adversarial_check.json，与报告同目录） */
   private _redTeam(dir: string): RedTeamData | null {
     const p = path.join(dir, 'adversarial_check.json');
-    const data = this._readJson<{ completed?: boolean; answers?: { q: string; answer: string }[] }>(p);
-    if (!data || !Array.isArray(data.answers) || data.answers.length === 0) return null;
-    return { completed: data.completed !== false, answers: data.answers };
+    const data = this._readJson<{ completed?: boolean; answers?: { q: string; answer: string }[] } & Record<string, { question?: string; answer?: string | string[]; status?: string }>>(p);
+    if (!data) return null;
+    // 新契约 answers[]（苏泊尔批次写法）
+    if (Array.isArray(data.answers) && data.answers.length > 0) {
+      return { completed: data.completed !== false, answers: data.answers };
+    }
+    // 兼容 q1-q4 内联写法（NVDA 批次：q1_five_ways_to_lose / q2_down_30pct / q3_up_30pct / q4_recency_bias）
+    const qs = ['q1_five_ways_to_lose', 'q2_down_30pct', 'q3_up_30pct', 'q4_recency_bias']
+      .map((k) => data[k]).filter((q) => q && (q.answer ?? q.question));
+    if (qs.length === 0) return null;
+    return {
+      completed: data.completed !== false && qs.every((q) => q.status !== 'todo'),
+      answers: qs.map((q) => ({
+        q: q.question ?? '',
+        answer: Array.isArray(q.answer) ? q.answer.join('；') : (q.answer ?? ''),
+      })),
+    };
   }
 
   private _reportTitle(fullPath: string, fallback: string): string {
@@ -878,7 +972,7 @@ export class FileStore {
   }
 
   /** 某公司的全部报告书架（日期目录=自有；community/=外来；根散文件=自有未归档） */
-  getReports(ticker: string): { name: string; reports: ReportMeta[] } | null {
+  getReports(ticker: string): { name: string; reports: ReportMeta[]; formalLatest: string | null; stale: boolean; staleDays: number } | null {
     const companiesDir = path.join(this.baseDir, 'research', '060-companies');
     if (!fs.existsSync(companiesDir)) return null;
     let companyDir: string | null = null;
@@ -897,17 +991,19 @@ export class FileStore {
     // 层文件不进书架；但 07-report / 07-narrative 是主报告，必须可读
     const LAYER_RE = /^(0[1-6]-|08-|l[0-4][abn]?\.(md|json)$|m\.(md|json)$|temp_)/i;
 
-    const pushFile = (fullPath: string, date: string | null, source: 'own' | 'community') => {
+    const pushFile = (fullPath: string, date: string | null, source: 'own' | 'community', kind: 'formal' | 'note' | 'external') => {
       const file = path.basename(fullPath);
       if (!file.endsWith('.md')) return;
-      if (LAYER_RE.test(file)) return; // 层文件走研究层视图，不进书架
-      if (/^(README|TODO)\.md$/i.test(file)) return; // 元文件不进书架
+      // 注意：LAYER_RE 只在日期目录分支用（七层层文件）；own/community/根散文件不套用，
+      // 否则 own/ 里以 01- 开头的笔记（如《看懂拼多多》系列）会被误杀
+      if (/^(README|TODO|AUDIT_REPORT|00-INDEX)\.md$/i.test(file)) return; // 审计产物与批次索引不进书架
       reports.push({
         date,
         file,
         rel: path.relative(companyDir!, fullPath).replace(/\\/g, '/'),
         title: this._reportTitle(fullPath, file.replace(/\.md$/, '')),
         source,
+        kind,
         redteam: date ? this._redTeam(path.join(companyDir!, date)) : null,
       });
     };
@@ -917,7 +1013,7 @@ export class FileStore {
       if (e.isFile()) {
         // 目录即真相：自有 = 日期目录里的七层产出；根目录散文件默认外来；
         // 确属本人产出的散文件移入 own/ 子目录即可改判
-        pushFile(path.join(companyDir, e.name), null, 'community');
+        pushFile(path.join(companyDir, e.name), null, 'community', 'external');
       } else if (e.isDirectory()) {
         if (/^\d{4}-\d{2}-\d{2}$/.test(e.name)) {
           const dateDir = path.join(companyDir, e.name);
@@ -927,39 +1023,50 @@ export class FileStore {
               const file = de.name;
               if (!file.endsWith('.md')) continue;
               if (LAYER_RE.test(file)) continue;
+              if (/^(README|TODO|AUDIT_REPORT|00-INDEX)\.md$/i.test(file)) continue; // 审计产物与批次索引不进书架
+              // 日期目录内仅 07-report / 07-narrative 是正式报告，其余进书架的 MD 算笔记
+              const isFormal = /^(07-report|07-narrative)\.md$/i.test(file);
               reports.push({
                 date: e.name, file,
                 rel: `${e.name}/${file}`,
                 title: this._reportTitle(path.join(dateDir, file), file.replace(/\.md$/, '')),
-                source: 'own', redteam: rt,
+                source: 'own', kind: isFormal ? 'formal' : 'note', redteam: rt,
               });
             }
           }
         } else if (e.name === 'community') {
           for (const md of this._findMdRecursive(communityDir)) {
-            pushFile(md, null, 'community');
+            pushFile(md, null, 'community', 'external');
           }
         } else if (e.name === 'own') {
           for (const md of this._findMdRecursive(path.join(companyDir, e.name))) {
-            pushFile(md, null, 'own');
+            pushFile(md, null, 'own', 'note');
           }
         } else if (e.name !== 'sources' && e.name !== 'temp') {
           // 其他子目录（如未拆分的外来书系）按外来算
           for (const md of this._findMdRecursive(path.join(companyDir, e.name))) {
-            pushFile(md, null, 'community');
+            pushFile(md, null, 'community', 'external');
           }
         }
       }
     }
     reports.sort((a, b) => (b.date || '').localeCompare(a.date || '') || a.file.localeCompare(b.file));
-    return { name: displayName, reports };
+    // R51-D：正式报告最新日期（仅 kind==formal）+ 过期判定（距今>90天），/api/reports/:ticker 验证用
+    const formalDates = reports.filter(r => r.source === 'own' && r.kind === 'formal' && r.date).map(r => r.date as string).sort();
+    const formalLatest = formalDates.length > 0 ? formalDates[formalDates.length - 1] : null;
+    let stale = false, staleDays = 0;
+    if (formalLatest) {
+      staleDays = Math.floor((Date.now() - new Date(formalLatest + 'T00:00:00').getTime()) / 86400000);
+      stale = staleDays > 90;
+    }
+    return { name: displayName, reports, formalLatest, stale, staleDays };
   }
 
   /** 全部公司书架概览（/reports 总览页用） */
-  getAllShelves(): { ticker: string; name: string; own: number; community: number; latestDate: string | null; hasRedteam: boolean }[] {
+  getAllShelves(): { ticker: string; name: string; own: number; formal: number; notes: number; community: number; latestDate: string | null; hasRedteam: boolean; formalLatest: string | null; formalLatestRel: string | null; stale: boolean; staleDays: number }[] {
     const companiesDir = path.join(this.baseDir, 'research', '060-companies');
     if (!fs.existsSync(companiesDir)) return [];
-    const out: { ticker: string; name: string; own: number; community: number; latestDate: string | null; hasRedteam: boolean }[] = [];
+    const out: { ticker: string; name: string; own: number; formal: number; notes: number; community: number; latestDate: string | null; hasRedteam: boolean; formalLatest: string | null; formalLatestRel: string | null; stale: boolean; staleDays: number }[] = [];
     for (const e of fs.readdirSync(companiesDir, { withFileTypes: true })) {
       if (!e.isDirectory()) continue;
       const ticker = this._extractTicker(e.name);
@@ -967,20 +1074,30 @@ export class FileStore {
       const shelf = this.getReports(ticker);
       if (!shelf) continue;
       const own = shelf.reports.filter(r => r.source === 'own');
+      const formalLatest = shelf.formalLatest;
+      const stale = shelf.stale, staleDays = shelf.staleDays;
+      // UX 审计 P2：最新正式报告的 rel（报告中心"最近一篇 →"直达链接用）
+      const formalSorted = own.filter(r => r.kind === 'formal' && r.rel).sort((a, b) => (b.date || '').localeCompare(a.date || ''));
       out.push({
         ticker,
         name: shelf.name,
         own: own.length,
+        formal: own.filter(r => r.kind === 'formal').length,
+        notes: own.filter(r => r.kind === 'note').length,
         community: shelf.reports.length - own.length,
         latestDate: own[0]?.date || null,
         hasRedteam: own.some(r => r.redteam),
+        formalLatest,
+        formalLatestRel: formalSorted[0]?.rel || null,
+        stale,
+        staleDays,
       });
     }
     return out;
   }
 
   /** 读单篇报告（带红队数据与来源） */
-  getReportDoc(ticker: string, rel: string): { content: string; title: string; source: 'own' | 'community'; redteam: RedTeamData | null; rel: string } | null {
+  getReportDoc(ticker: string, rel: string): { content: string; title: string; source: 'own' | 'community'; kind: 'formal' | 'note' | 'external'; redteam: RedTeamData | null; rel: string } | null {
     const shelf = this.getReports(ticker);
     if (!shelf) return null;
     const meta = shelf.reports.find(r => r.rel === rel.replace(/\\/g, '/'));
@@ -998,7 +1115,7 @@ export class FileStore {
     const redteam = meta.date
       ? this._redTeam(path.join(companyDir, meta.date))
       : null;
-    return { content, title: meta.title, source: meta.source, redteam, rel: meta.rel };
+    return { content, title: meta.title, source: meta.source, kind: meta.kind, redteam, rel: meta.rel };
   }
 
   private _categoryLabel(name: string): string {

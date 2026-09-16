@@ -1,31 +1,31 @@
 <div class="page-header">
-  <div class="breadcrumb">投机钱包轨道 — /fengspec</div>
+  <div class="breadcrumb" data-i18n="crumb.spec">投机钱包轨道 — /fengspec</div>
   <h2 data-i18n="page.spec">🎲 投机钱包</h2>
 </div>
 
-<div class="alert alert-warning" style="border-left:4px solid var(--warn);">
-  <b>👻 幽灵原则：</b>本页只供数据，纪律与卖出决策永远留在 FengInvest 主体系。投机钱包（account_type=TRADING）独立核算，两套钱包两套规则，预算默认 ≤15%/30%，杠杆=0。
+<div class="alert alert-warning">
+  <b data-i18n="spec.ghostLabel">👻 幽灵原则：</b><span data-i18n="spec.ghostBody">本页只供数据，纪律与卖出决策永远留在 FengInvest 主体系。投机钱包（account_type=TRADING）独立核算，两套钱包两套规则，预算默认 ≤15%/30%，杠杆=0。</span>
 </div>
 
 <div class="card">
-  <h3 class="section-title">T0 候选（fengtick tickflow 侧车，纯本地只读）</h3>
-  <div class="data-block" data-url="/api/spec/t0" data-render="renderT0" data-empty="tickflow 侧车尚未产出候选——在 tickflow 仓库跑扫描后重试"></div>
+  <h3 class="section-title" data-i18n="spec.t0Title">T0 候选（fengtick tickflow 侧车，纯本地只读）</h3>
+  <div class="data-block" data-url="/api/spec/t0" data-render="renderT0" data-empty-key="spec.emptyT0" data-empty="tickflow 侧车尚未产出候选——在 tickflow 仓库跑扫描后重试"></div>
 </div>
 
 <div class="card">
-  <h3 class="section-title">T2 防线位查询</h3>
+  <h3 class="section-title" data-i18n="spec.t2Title">T2 防线位查询</h3>
   <div style="display:flex;gap:8px;">
     <input id="t2-ticker" placeholder="TICKER" style="padding:8px 12px;border:1px solid var(--border-strong);border-radius:8px;">
-    <button class="btn btn-accent" onclick="loadT2()">查防线位</button>
+    <button class="btn btn-accent" data-i18n="spec.queryT2" onclick="loadT2()">查防线位</button>
   </div>
   <div id="t2-out" style="margin-top:12px;"></div>
 </div>
 
 <div class="card">
-  <h3 class="section-title">TRADING 持仓（<%= data.holdings.length %>）</h3>
+  <h3 class="section-title"><span data-i18n="spec.holdingsTitle">TRADING 持仓</span>（<%= data.holdings.length %>）</h3>
   <% if (data.holdings.length > 0) { %>
   <table class="holdings-table">
-    <thead><tr><th>标的</th><th>名称</th><th>股数</th><th>成本</th><th>现价</th><th>盈亏</th><th>详情</th></tr></thead>
+    <thead><tr><th data-i18n="spec.thTicker">标的</th><th data-i18n="spec.thName">名称</th><th data-i18n="spec.thShares">股数</th><th data-i18n="spec.thCost">成本</th><th data-i18n="spec.thPrice">现价</th><th data-i18n="spec.thPnl">盈亏</th><th data-i18n="spec.thDetail">详情</th></tr></thead>
     <tbody>
       <% data.holdings.forEach(function(h) { %>
       <% var p = h.position || {}; var pnl = p.avg_cost && p.current_price ? (p.current_price / p.avg_cost - 1) * 100 : null; %>
@@ -40,18 +40,18 @@
       <% }) %>
     </tbody>
   </table>
-  <% } else { %><div class="empty-state"><p>投机钱包当前为空（这是好事）。</p></div><% } %>
+  <% } else { %><div class="empty-state"><p data-i18n="spec.emptyWallet">投机钱包当前为空（这是好事）。</p></div><% } %>
 </div>
 
 <div class="card">
-  <h3 class="section-title">投机研究笔记</h3>
+  <h3 class="section-title" data-i18n="spec.notesTitle">投机研究笔记</h3>
   <% if (data.notes.length > 0) { %>
   <div class="entry-list">
     <% data.notes.forEach(function(n) { %>
       <div class="entry-item"><div class="entry-title"><%= n.title %></div><div class="entry-preview"><%= n.file %></div></div>
     <% }) %>
   </div>
-  <% } else { %><div class="empty-state"><p>research/speculative/ 下暂无笔记。</p></div><% } %>
+  <% } else { %><div class="empty-state"><p data-i18n="spec.noNotes">research/speculative/ 下暂无笔记。</p></div><% } %>
 </div>
 
 <script>
@@ -59,22 +59,22 @@ function esc2(s){var d=document.createElement('div');d.textContent=s==null?'':St
 function renderT0(d, el) {
   var cands = d.candidates || d.items || [];
   if (Array.isArray(cands) && cands.length) {
-    el.innerHTML = '<table class="data-table"><thead><tr><th>代码</th><th>事件</th><th>类型</th></tr></thead><tbody>' +
+    el.innerHTML = '<table class="data-table"><thead><tr><th>' + FengI18n.t('spec.thCode','代码') + '</th><th>' + FengI18n.t('spec.thEvent','事件') + '</th><th>' + FengI18n.t('spec.thType','类型') + '</th></tr></thead><tbody>' +
       cands.slice(0,30).map(function(c){ return '<tr><td class="num">' + esc2(c.symbol||c.ticker||c.code) + '</td><td>' + esc2(c.event||c.trigger) + '</td><td>' + esc2(c.trigger_type||'') + '</td></tr>'; }).join('') + '</tbody></table>';
   } else {
-    el.innerHTML = '<div class="empty-state"><p>' + esc2(d.raw || d.message || '暂无候选').slice(0, 500) + '</p></div>';
+    el.innerHTML = '<div class="empty-state"><p>' + esc2(d.raw || d.message || FengI18n.t('spec.noCandidates','暂无候选')).slice(0, 500) + '</p></div>';
   }
 }
 async function loadT2() {
   var t = document.getElementById('t2-ticker').value.trim();
   if (!t) return;
   var el = document.getElementById('t2-out');
-  el.textContent = '查询中…';
+  el.textContent = FengI18n.t('spec.querying','查询中…');
   try {
     var r = await fetch('/api/spec/t2/' + encodeURIComponent(t));
     var d = await r.json();
     el.innerHTML = r.ok ? '<pre style="font-size:12px;white-space:pre-wrap;background:var(--bg-inset);padding:12px;border-radius:8px;">' + esc2(d.raw || JSON.stringify(d, null, 2)).slice(0, 1500) + '</pre>'
-      : '<div class="alert alert-danger">' + esc2(d.error || '失败') + '</div>';
-  } catch (e) { el.textContent = '网络错误'; }
+      : '<div class="alert alert-danger">' + esc2(d.error || FengI18n.t('common.failed','失败')) + '</div>';
+  } catch (e) { el.textContent = FengI18n.t('common.networkError','网络错误'); }
 }
 </script>

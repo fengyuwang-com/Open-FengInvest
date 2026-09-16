@@ -97,7 +97,7 @@ def _is_valid_label(label: str) -> bool:
     if re.fullmatch(r'[\d\s年季度Q]+', label):
         return False
     # 以符号/markdown标记开头
-    if re.match(r'^[+\-\*#\|~\$>_`]', label):
+    if re.match(r'^[+\-\*#\|~/$>_`]', label):
         return False
     # 含有 markdown 粗体/代码标记
     if '**' in label or '`' in label or '__' in label:
@@ -124,6 +124,24 @@ _KV_LABEL_RE = re.compile(
     r'(?P<label>[\u4e00-\u9fa5A-Za-z][^\|\n：:*]{1,30})[：:]\s*[~约]?\$?'
     r'(?P<num>-?[\d,，\.]+)\s*(?P<unit>亿[元美港]?元?|万亿|[xX倍]|%|[BMT])?'
 )
+
+# 文件名/日期/URL 噪声 token：表格「来源」列、正文引用串里的 02-market.json、
+# dividendhistory.org、2026-06-30、05-qualitative 这类字符串不是财务数据点，
+# 抽数字前先剔除，防止 "02-market.json" 被抽成 Beta=2.00（2026-09-13 LVHI 复盘修复）。
+# 注意不含 `\d+[.]\d` 之类，避免误伤 "19.79" 等正常小数。
+_NOISE_TOKEN_RE = re.compile(
+    r'https?://\S+'                                                        # URL
+    r'|[\w\-./]*\.(?:json|jsonl|md|markdown|csv|tsv|pdf|html?|txt|py|ipynb|ya?ml|log|xlsx?|docx?)\b'  # 文件名
+    r'|\b[\w\-]+\.(?:com|org|net|io|cn|gov|edu|info|co|me|tv|xyz|dev|app|wiki|news)(?:\.[a-z]{2,3})?(?:/\S*)?\b'  # 域名
+    r'|\b\d{4}[-/]\d{1,2}(?:[-/]\d{1,2})?\b'                               # 日期 2016-07-27 / 2026-06
+    r'|\b\d+-(?=[A-Za-z])[\w\-]+',                                         # 数字前缀标识 02-market
+    re.IGNORECASE,
+)
+
+
+def _strip_noise(text: str) -> str:
+    """剔除文件名/日期/URL 等噪声 token（用空格占位，不粘连剩余内容）。"""
+    return _NOISE_TOKEN_RE.sub(' ', text)
 
 
 def _parse_md_tables(lines: list) -> list:
@@ -153,9 +171,10 @@ def _parse_md_tables(lines: list) -> list:
                     for col_idx, cell in enumerate(cells[1:], start=1):
                         col_header = headers_raw[col_idx] if col_idx < len(headers_raw) else f'列{col_idx}'
                         # 提取 cell 中的数字+单位（含负号，2026-08-16 修复：原正则漏 - 导致 -1.28 → 1.28）
+                        # 先剔除文件名/日期/URL 噪声 token，防止来源列 "02-market.json" 抽出假数字
                         m = re.search(
                             r'[~约]?\$?(-?[\d,，\.]+)\s*(亿[元美港]?元?|万亿|[xX倍]|%|[BMT])?',
-                            cell
+                            _strip_noise(cell)
                         )
                         if m:
                             val = _clean_num(m.group(1))
@@ -212,8 +231,9 @@ def extract_data_points(md_text: str) -> list:
         # 跳过无意义行标签
         if not _is_valid_label(row_label):
             continue
-        # 跳过无意义列标题（YoY增速列单独标注，不作为待核验数据）
-        if col_header.upper() in ('YOY', 'YOY增速', '增速', '同比', '变化', '趋势', '说明', '备注'):
+        # 跳过无意义列标题（YoY增速列单独标注，不作为待核验数据；来源列整列跳过，2026-09-13 LVHI 复盘）
+        if col_header.upper() in ('YOY', 'YOY增速', '增速', '同比', '变化', '趋势', '说明', '备注') \
+                or col_header.strip().lower() in ('来源', '出处', '数据源', 'source', 'sources'):
             continue
         # label = "行标签 · 列标题"（若列标题是行标签的补充）
         if col_header and col_header != row_label:
@@ -233,7 +253,7 @@ def extract_data_points(md_text: str) -> list:
         if '|' in stripped:
             continue  # 表格已在上面处理
 
-        for m in _KV_LABEL_RE.finditer(stripped):
+        for m in _KV_LABEL_RE.finditer(_strip_noise(stripped)):
             label = m.group('label')
             val = _clean_num(m.group('num'))
             unit = (m.group('unit') or '').strip()
@@ -493,8 +513,36 @@ def _count_items(body_lines):
 _DEFAULT_KEY_FIELDS = [
     ('日期', r'报告日期|日期|date|20\d{2}[-/年]\d{1,2}'),
     ('ticker/代码', r'ticker|股票代码|证券代码|代码'),
-    ('结论', r'结论|投资结论|综合判断|建议|verdict'),
+    # “结论”认同义词“投资论点”（现行报告多用“## 1. 投资论点”作结论章，防误杀）；
+    # ticker 另有首行标题回退（见 _ticker_title_hit）。
+    ('结论', r'结论|投资论点|投资结论|综合判断|建议|verdict'),
 ]
+
+
+def _ticker_title_hit(path: str, text: str) -> bool:
+    """ticker 回退命中：从 `<TICKER>-<中文名>` 目录名推断 TICKER，
+    若报告首个 `#` 标题行含该 TICKER 即算命中（防 over-strict 误杀）。
+
+    例：research/060-companies/NVDA-英伟达/.../07-report.md 首行
+    `# NVDA — ...` 含 NVDA → 命中。目录名无中文后缀（如 2026-09-09）
+    不参与推断，避免年份误判。
+    """
+    cand = None
+    for part in os.path.normpath(path).split(os.sep):
+        m = re.match(r'^([A-Za-z0-9.]+)-.*[\u4e00-\u9fa5]', part)
+        if m:
+            cand = m.group(1).upper()
+            break
+    if not cand:
+        return False
+    first_heading = ''
+    for ln in text.splitlines():
+        if ln.strip().startswith('#'):
+            first_heading = ln.strip()
+            break
+    if not first_heading:
+        return False
+    return cand in first_heading.upper()
 
 
 def _check_one(path, required, key_fields, min_items):
@@ -514,6 +562,13 @@ def _check_one(path, required, key_fields, min_items):
         except re.error:
             found = re.search(re.escape(pat), text, re.IGNORECASE)
         if not found:
+            # ticker/代码回退：默认 key_fields 的 ticker 项若未命中，
+            # 看首行标题是否含目录名推断的 TICKER（含即命中，防误杀）。
+            # 用户显式 --key-field 追加的同名项不参与回退（只对默认项）。
+            if name == 'ticker/代码' and (name, pat) == (
+                    _DEFAULT_KEY_FIELDS[1][0], _DEFAULT_KEY_FIELDS[1][1]) \
+                    and _ticker_title_hit(path, text):
+                continue
             missing_fields.append(name)
 
     min_fails = []
@@ -690,6 +745,10 @@ def _csv_one(path):
         i += 1
 
     # 原始 CSV 文本块：连续 ≥2 行、每行 ≥2 个 ASCII 逗号、无 |、非标题/非代码
+    # 排除 markdown 列表项（- / * / + / 「N.」开头）：裸 CSV 导出不会带列表项目符号，
+    # 而分析报告里连续几条含逗号的要点句是常态（AAPL 2026-09-15 三条 ROE/因子要点被
+    # 整块误判为 CSV，从而把 Gate 3 卡死）。列表项本身另有 number_without_source 检查覆盖。
+    _LIST_ITEM_RE = re.compile(r'^([-*+]|\d+[.)])\s+\S')
     run = []
     in_code2 = False
     for idx, ln in enumerate(lines, 1):
@@ -698,7 +757,8 @@ def _csv_one(path):
             in_code2 = not in_code2
             continue
         is_csv = (not in_code2) and s and '|' not in s and not s.startswith('#') \
-                 and not _HEADING_RE.match(s) and s.count(',') >= 2
+                 and not _HEADING_RE.match(s) and not _LIST_ITEM_RE.match(s) \
+                 and s.count(',') >= 2
         if is_csv:
             run.append(idx)
         else:

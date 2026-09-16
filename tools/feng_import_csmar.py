@@ -10,6 +10,8 @@ CSMAR 季度财务数据库（闲鱼 0.1 元）：
     python tools/feng_import_csmar.py --status                     # 查看进度
     python tools/feng_import_csmar.py --update-fund                # 只更新 fundamentals 表
 """
+# 豁免 safe_batch：一次性历史导入已执行（2.1GB CSMAR .dta 全量底座；含 DROP/CREATE DDL，
+# DDL 不进 changeset；交互式 DELETE 全表重写风险大）。日期 2026-09-09，见 docs/DATA-MANAGEMENT.md §八。
 import json, os, sqlite3, sys, time
 from datetime import datetime
 
@@ -18,8 +20,8 @@ sys.stdout.reconfigure(encoding="utf-8")
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DB_PATH = os.path.join(BASE, "data", "market_data.db")
 
-Q_DTA = os.path.expanduser(r"~\Downloads\上市公司财务季度数据合并（90-25.3）.dta")
-A_DTA = os.path.expanduser(r"~\Downloads\上市公司财务年度数据合并（90-24）.dta")
+Q_DTA = os.path.expanduser(r"~/Downloads/上市公司财务季度数据合并（90-25.3）.dta")
+A_DTA = os.path.expanduser(r"~/Downloads/上市公司财务年度数据合并（90-24）.dta")
 
 CN_FIN_TABLE = "cn_financials"
 STKCD_MAP_TABLE = "stkcd_map"

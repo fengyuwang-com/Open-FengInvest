@@ -755,6 +755,21 @@ def collect() -> dict:
         "index_pe": {"hsi": hsi_pe, "csi300": csi300_pe},
     }
 
+    # 有声失败（2026-09-13）：记录每个数据组件是否真拿到了。compute_temperature 对缺数
+    # 成分会取中性值（VIX 缺=20、SPY 缺=0.5），温度照样出——但快照必须带上"哪些成分是
+    # 造出来的默认值"的真相，供 web 页/体检探针/人工判断温度可信度。
+    def _comp_ok(v):
+        if isinstance(v, dict):
+            if "error" in v:
+                return False
+            if "available" in v:
+                return bool(v["available"])
+        return bool(v)
+    data_health = {k: ("ok" if _comp_ok(v) else "FAILED")
+                   for k, v in raw.items() if k != "index_pe"}
+    data_health["index_pe_hsi"] = "ok" if _comp_ok(hsi_pe) else "FAILED"
+    data_health["index_pe_csi300"] = "ok" if _comp_ok(csi300_pe) else "FAILED"
+
     # 4. Temperature (now per-country)
     temp_global = compute_temperature(raw)
     temp_country = compute_temperatures_by_country(raw)
@@ -774,6 +789,7 @@ def collect() -> dict:
         "temperature": temp_global,
         "temperatures": temp_country,
         "behavior": insights,
+        "data_health": data_health,
     }
 
     # Save daily
@@ -975,7 +991,13 @@ def main():
 
     if cmd == "collect":
         result = collect()
-        print(json.dumps({"status": "ok", "date": result["date"],
+        _failed = [k for k, s in result.get("data_health", {}).items() if s == "FAILED"]
+        if _failed:
+            print(f"[WARN] {len(_failed)} 个数据组件取数失败，温度含中性默认值成分: {', '.join(_failed)}",
+                  file=sys.stderr)
+        print(json.dumps({"status": "ok" if not _failed else "partial",
+                          "failed_components": _failed,
+                          "date": result["date"],
                           "temperature": result["temperature"]["composite"],
                           "label": result["temperature"]["label"]}, indent=2))
 

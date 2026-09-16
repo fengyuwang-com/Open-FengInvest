@@ -1,3 +1,12 @@
+---
+name: 奇衡·格氏坐标价值
+school: value
+representative: DK-CAPITAL
+when_to_use: 研究格氏坐标定位、价值回归择时、不变一面基本面时启用
+sources: 雪球专栏《基本面是基本不变那一面》（136篇，2018-2026）
+disclaimer: 第三方风格提炼，仅用于 AI 模拟盘研究与教育，不构成任何投资建议。
+distilled_at: 2026-08-20
+---
 # 奇衡DK-CAPITAL 投资思想纲要
 
 > 格氏坐标，极光猎人 —— "基本面是基本不变的那一面"

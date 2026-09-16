@@ -14,10 +14,11 @@
   function setState(el, state) { el.setAttribute('data-state', state); }
 
   function ensureBanners(el) {
+    var T = (window.FengI18n && window.FengI18n.t) || function (k, fb) { return fb; };
     if (!el.querySelector('.db-stale-banner')) {
       var b = document.createElement('div');
       b.className = 'db-stale-banner';
-      b.textContent = '数据已过期 —— 正在尝试后台刷新';
+      b.textContent = T('common.stale', '数据已过期 —— 正在尝试后台刷新');
       el.insertBefore(b, el.firstChild);
     }
     if (!el.querySelector('.db-error')) {
@@ -28,7 +29,8 @@
     if (!el.querySelector('.db-empty')) {
       var m = document.createElement('div');
       m.className = 'db-empty';
-      m.textContent = el.getAttribute('data-empty') || '暂无数据';
+      // i18n：data-empty-key 提供键，data-empty 中文为源语言兜底
+      m.textContent = T(el.getAttribute('data-empty-key') || 'common.noData', el.getAttribute('data-empty') || '暂无数据');
       el.insertBefore(m, el.firstChild);
     }
   }
@@ -53,7 +55,7 @@
       try { data = await res.json(); } catch (e) { /* non-JSON */ }
       if (!res.ok) {
         body.style.display = 'none';
-        errEl.textContent = (data && (data.error || data.detail)) || ('请求失败 (' + res.status + ')');
+        errEl.textContent = (data && (data.error || data.detail)) || (T('common.reqFailed', '请求失败') + ' (' + res.status + ')');
         errEl.style.display = 'block';
         setState(el, 'error');
         return;
@@ -77,11 +79,11 @@
       if (data._stale) staleEl.style.display = 'block';
       var fn = el.getAttribute('data-render');
       if (fn && typeof window[fn] === 'function') window[fn](data, body);
-      else if (fn) { body.textContent = '渲染函数未定义: ' + fn; }
+      else if (fn) { body.textContent = T('common.renderMissing', '渲染函数未定义: ') + fn; }
       setState(el, 'ok');
     } catch (e) {
       body.style.display = 'none';
-      errEl.textContent = '网络错误: ' + e.message;
+      errEl.textContent = T('common.netError2', '网络错误: ') + e.message;
       errEl.style.display = 'block';
       setState(el, 'error');
     }

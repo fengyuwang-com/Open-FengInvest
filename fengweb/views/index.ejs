@@ -6,41 +6,50 @@
 <!-- 今日待办（宪法 6.1：按紧急排序，每条带动作链接） -->
 <div class="card">
   <h3 class="section-title" data-i18n="home.todo">☑️ 今日研究待办</h3>
-  <% var todos = []; %>
+  <% var overdue = []; %>
   <% (sys.holdings || []).forEach(function(h) { %>
     <% var nd = h.triggers && h.triggers.next_review_date; if (!nd) return;
        var days = Math.round((new Date(nd) - new Date()) / 86400000); %>
     <% if (days < 0) { var eesc = function(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); };
-       todos.push({lv:'danger', t:'<b>' + eesc(h.name || h.ticker) + '</b> 回顾日已过期 ' + (-days) + ' 天', href:'/holdings/' + h.ticker, act:'去复盘'}); } %>
+       overdue.push({lv:'danger', t:'<b>' + eesc(h.name || h.ticker) + '</b> 回顾日已过期 ' + (-days) + ' 天', href:'/holdings/' + h.ticker, act:'去复盘'}); } %>
   <% }) %>
+  <% /* R51-D：报告过期 warning，拼在 overdue 之后、普通 alert 之前（排 danger 之后） */ %>
+  <% var staleTodos = []; %>
+  <% (typeof shelves !== 'undefined' ? shelves : []).forEach(function(s) { %>
+    <% if (s.stale) { var sesc = function(x){ return String(x||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); };
+       staleTodos.push({lv:'warning', t:'<b>' + sesc(s.name) + '</b> 正式报告已过期 ' + s.staleDays + ' 天', href:'/reports/' + s.ticker, act:'去更新'}); } %>
+  <% }) %>
+  <% var todos = overdue.concat(staleTodos); %>
   <% (sys.alerts || []).slice(0, 6).forEach(function(a) { %>
     <% var nm = (names[a.ticker] || {}); var aName = nm.zh || nm.en || a.ticker || '';
        var esc = function(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); };
        todos.push({lv:a.severity === 'danger' ? 'danger' : a.severity === 'warning' ? 'warning' : 'info', t:(a.ticker ? '<b>' + esc(aName) + '</b> ' : '') + esc(a.message), href:'/watch', act:'查看'}); %>
   <% }) %>
   <% if (todos.length === 0) { %>
-    <div class="empty-state"><p>今日没有过期回顾、层缺口或监控告警。研究候选池去吧 → <a href="/research">研究列表</a></p></div>
+    <div class="empty-state"><p><span data-i18n="index.emptyTodo">今日没有过期回顾、层缺口或监控告警。研究候选池去吧 →</span> <a href="/research" class="btn btn-sm btn-outline" data-i18n="index.researchList">研究列表</a></p></div>
   <% } else { %>
     <div class="alert-list">
-      <% todos.slice(0, 8).forEach(function(td) { %>
+      <% todos.slice(0, 3).forEach(function(td) { %>
         <div class="alert-item <%= td.lv %>"><span class="alert-text"><%- td.t %></span><a class="btn btn-sm" href="<%= td.href %>"><%= td.act %> →</a></div>
       <% }) %>
     </div>
+    <div style="margin-top:8px;"><a class="btn btn-sm btn-outline" href="/alerts"><span data-i18n="index.viewAllPre">查看全部</span> <%= todos.length %> <span data-i18n="index.viewAllSuf">条 →</span></a></div>
   <% } %>
 </div>
 
 <!-- 已研究公司（研究透了才入此列，创始人定调：只有研究了/没研究） -->
 <div class="card">
-  <h3 class="section-title" data-i18n="home.studied">📚 已研究公司 <a href="/research" style="font-size:12px;font-weight:normal;margin-left:auto;">全部 →</a></h3>
-  <% var active = meta.filter(function(m){ return m.layers && m.layers.length >= 7; }).slice(0, 6); %>
+  <h3 class="section-title"><span data-i18n="home.studied">📚 已研究公司</span> <a class="btn btn-sm btn-outline" href="/research" style="margin-left:auto;" data-i18n="index.viewAll">全部 →</a></h3>
+  <% /* R51-A：已研究按 latest_date 新到旧，无日期排最后；只改首页，不改 research.ejs */ %>
+  <% var active = meta.filter(function(m){ return m.layers && m.layers.length >= 7; }).sort(function(a, b){ return (b.latest_date || '').localeCompare(a.latest_date || ''); }).slice(0, 6); %>
   <% if (active.length === 0) { %>
-    <div class="empty-state"><p>没有已研究标的。候选池在 <a href="/research">研究列表</a> 等你挑。</p></div>
+    <div class="empty-state"><p><span data-i18n="index.emptyStudied">没有已研究标的。候选池在</span> <a href="/research" class="btn btn-sm btn-outline" data-i18n="index.researchList">研究列表</a><span data-i18n="index.emptyStudied2">等你挑。</span></p></div>
   <% } else { %>
   <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;">
     <% active.forEach(function(c) { %>
       <a href="/research/<%= c.ticker %>" class="entry-item" style="margin:0;">
         <div class="entry-title"><%= c.name %></div>
-        <div style="font-size:11px;color:var(--text-muted);"><%= c.ticker %> · 七层已完成 ✓</div>
+        <div style="font-size:11px;color:var(--text-muted);"><%= c.ticker %> <span data-i18n="index.layersDone">· 七层已完成 ✓</span><%= c.latest_date ? ' · 最近分析 ' + c.latest_date : '' %></div>
       </a>
     <% }) %>
   </div>
@@ -49,13 +58,13 @@
 
 <!-- 持仓公司（只显原则/论文/回顾日，无当日涨跌，宪法 6.1） -->
 <div class="card">
-  <h3 class="section-title" data-i18n="home.holdings">💼 持仓公司 <a href="/holdings" style="font-size:12px;font-weight:normal;margin-left:auto;">全部 →</a></h3>
+  <h3 class="section-title"><span data-i18n="home.holdings">💼 持仓公司</span> <a class="btn btn-sm btn-outline" href="/holdings" style="margin-left:auto;" data-i18n="index.viewAll">全部 →</a></h3>
   <% var hstocks = (sys.holdings || []).filter(function(h){ return h.asset_type !== 'cash'; }); %>
   <% if (hstocks.length === 0) { %>
-    <div class="empty-state"><p>暂无持仓。<a href="/holdings/new">登记新持仓 →</a></p></div>
+    <div class="empty-state"><p><span data-i18n="index.emptyHoldings">暂无持仓。</span><a href="/holdings/new" class="btn btn-sm btn-outline" data-i18n="index.registerHoldings">登记新持仓 →</a></p></div>
   <% } else { %>
   <table class="holdings-table">
-    <thead><tr><th>公司</th><th>钱包</th><th>滚存阶段</th><th>下次回顾</th></tr></thead>
+    <thead><tr><th data-i18n="index.thCompany">公司</th><th data-i18n="index.thWallet">钱包</th><th data-i18n="index.thRolloverPhase">滚存阶段</th><th data-i18n="index.thNextReview">下次回顾</th></tr></thead>
     <tbody>
       <% hstocks.forEach(function(h) { %>
       <% var nd = h.triggers && h.triggers.next_review_date;
@@ -72,9 +81,9 @@
   <% } %>
 </div>
 
-<!-- 本周知识位（宪法 6.1） -->
-<div class="card">
-  <h3 class="section-title" data-i18n="home.knowledge">📚 本周知识 <a href="/knowledge" style="font-size:12px;font-weight:normal;margin-left:auto;">知识库 →</a></h3>
+<!-- 本周知识位（宪法 6.1，折叠不挡路） -->
+<details class="card" style="padding:16px 20px;">
+  <summary style="cursor:pointer;font-weight:600;"><span data-i18n="home.knowledge">📚 本周知识</span> <a href="/knowledge" class="btn btn-sm btn-outline" style="margin-left:12px;" onclick="event.stopPropagation();" data-i18n="index.knowledgeBase">知识库 →</a></summary>
   <% if (sys.kbCategories && sys.kbCategories.length > 0) { %>
   <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;">
     <% sys.kbCategories.slice(0, 5).forEach(function(cat) { %>
@@ -84,12 +93,12 @@
     </a>
     <% }) %>
   </div>
-  <% } else { %><div class="empty-state"><p>知识库为空</p></div><% } %>
-</div>
+  <% } else { %><div class="empty-state"><p data-i18n="index.kbEmpty">知识库为空</p></div><% } %>
+</details>
 
-<!-- 最近决策 -->
-<div class="card">
-  <h3 class="section-title">📝 最近决策 <a href="/journal" style="font-size:12px;font-weight:normal;margin-left:auto;">决策日志 →</a></h3>
+<!-- 最近决策（折叠） -->
+<details class="card" style="padding:16px 20px;">
+  <summary style="cursor:pointer;font-weight:600;"><span data-i18n="index.recentDecisions">📝 最近决策</span> <a href="/journal" class="btn btn-sm btn-outline" style="margin-left:12px;" onclick="event.stopPropagation();" data-i18n="index.journalLink">决策日志 →</a></summary>
   <% if (sys.journal && sys.journal.length > 0) { %>
     <% sys.journal.slice(0, 6).forEach(function(e) { %>
     <div class="journal-entry">
@@ -98,23 +107,24 @@
       <div class="journal-body"><%= e.message %></div>
     </div>
     <% }) %>
-  <% } else { %><div class="empty-state"><p>暂无决策记录</p></div><% } %>
-</div>
+  <% } else { %><div class="empty-state"><p data-i18n="index.emptyJournal">暂无决策记录</p></div><% } %>
+</details>
 
-<!-- 大盘速览（参考信息，垫底） -->
-<div class="card">
-  <div style="display:flex;justify-content:space-between;align-items:center;">
-    <h3 class="section-title" style="font-size:14px;color:var(--text-muted);border:none;">📈 大盘速览（参考信息，不指导决策） <span id="market-updated" style="font-size:11px;color:var(--text-muted);font-weight:normal;"></span></h3>
-    <button class="btn btn-sm btn-outline" onclick="refreshMarket()" type="button">刷新</button>
+<!-- 大盘速览（参考信息，垫底，折叠） -->
+<details class="card" style="padding:16px 20px;">
+  <summary style="cursor:pointer;font-weight:600;font-size:14px;color:var(--text-muted);"><span data-i18n="index.marketOverview">📈 大盘速览（参考信息，不指导决策）</span> <span id="market-updated" style="font-size:11px;color:var(--text-muted);font-weight:normal;"></span></summary>
+  <div style="display:flex;justify-content:flex-end;margin-top:8px;">
+    <button class="btn btn-sm btn-outline" onclick="refreshMarket()" type="button" data-i18n="index.refresh">刷新</button>
   </div>
   <div class="dashboard-grid" id="index-cards" style="margin-top:8px;">
-    <div class="stat-card"><div class="stat-label">加载中...</div></div>
+    <div class="stat-card"><div class="stat-label" data-i18n="index.loading">加载中...</div></div>
   </div>
-</div>
+</details>
 
 <script>
+var T = function(k, fb) { return window.FengI18n ? window.FengI18n.t(k, fb) : fb; };
 async function refreshMarket() {
-  document.getElementById('index-cards').innerHTML = '<div class="stat-card"><div class="stat-label">刷新中...</div></div>';
+  document.getElementById('index-cards').innerHTML = '<div class="stat-card"><div class="stat-label">' + T('index.refreshing','刷新中...') + '</div></div>';
   try {
     const res = await fetch('/api/market/futu-overview');
     const data = await res.json();
@@ -132,9 +142,9 @@ async function refreshMarket() {
         <div style="font-size:12px;${cls ? 'color:var(--' + cls + ');' : 'color:var(--text-muted);'}">${arrow} ${chg != null ? sign + chg.toFixed(2) + '%' : '—'}</div>
       </div>`;
     }
-    document.getElementById('market-updated').textContent = '更新 ' + (data.fetched_at || '').slice(0, 16);
+    document.getElementById('market-updated').textContent = T('index.updatedAt','更新 ') + (data.fetched_at || '').slice(0, 16);
   } catch (e) {
-    document.getElementById('index-cards').innerHTML = '<div class="stat-card"><div class="stat-label">获取失败</div></div>';
+    document.getElementById('index-cards').innerHTML = '<div class="stat-card"><div class="stat-label">' + T('index.fetchFail','获取失败') + '</div></div>';
   }
 }
 refreshMarket();

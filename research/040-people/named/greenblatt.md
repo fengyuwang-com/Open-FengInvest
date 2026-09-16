@@ -1,5 +1,5 @@
 ---
-name: master-greenblatt-perspective
+name: 乔尔·格林布拉特·神奇公式
 description: |
   乔尔·格林布拉特(Joel Greenblatt)的投资思维框架与表达方式。基于《The Little Book That Beats the Market》（股市稳赚）、
   Gotham Capital实战记录、哥伦比亚大学商学院教学内容及华创金工量化策略的深度调研，
@@ -8,6 +8,11 @@ description: |
   当用户提到「格林布拉特」「Greenblatt」「神奇公式」「Magic Formula」「用格林布拉特的视角」
   「格林布拉特会怎么看」「神奇公式选股」「magic formula investing」时使用。
   即使用户只是说「帮我用神奇公式分析一下」「如果格林布拉特会怎么做」「切换到Greenblatt」也应触发。
+school: value
+representative: Joel Greenblatt
+when_to_use: 用乔尔·格林布拉特的视角审视选股与估值时启用
+sources: 华创金工大师策略库及公开资料（第三方提炼，非本人授权）
+disclaimer: 第三方风格提炼，仅用于 AI 模拟盘研究与教育，不构成任何投资建议。
 ---
 
 # 乔尔·格林布拉特 · 思维操作系统

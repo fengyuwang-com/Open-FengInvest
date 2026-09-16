@@ -1,0 +1,371 @@
+{
+  "claim": {
+    "id": 10,
+    "title": "放量突破关键阻力位的成功率在所有技术信号中最高",
+    "statement": "排名型论断：放量突破（收盘创 50 日新高且量 > 1.5×20 日均量）的 20 交易日上涨概率 在常见技术信号中最高——同台对比：S2 无量突破 / S3 缩量回踩支撑（#9 口径）/ S4 金叉（MA50 上穿 MA120）。",
+    "h0": "各技术信号 20 日胜率无差异（放量突破不系统性高于其他信号）。",
+    "price_basis": "前复权 close",
+    "cost_bps": 25,
+    "signal_def": {
+      "key": "S1 放量突破：close_T > 前 50 日最高收盘 且 vol_T > 1.5×前 20 日均量（前 20 日不含 T）； S2 无量突破：同 S1 去掉量条件（S1 ⊂ S2）；S3 缩量回踩：#9 口径原样（含 5 日确认，T+6 入场）； S4 金叉：MA50 上穿 MA120。各信号 T 日收盘确定，T+1 收盘入场（S3 为 T+6）， 持 20 交易日，收盘涨为胜",
+      "lookahead": "全部信号只用 T 及之前数据；入场在信号后第一个可交易收盘"
+    },
+    "verdict_metric": {
+      "primary": "S1 混合胜率在四信号中最高（pooled 与分市场双口径）",
+      "secondary": "S1−S2 胜率差的股票级 bootstrap CI（\"放量\"是否真能加分）",
+      "note": "排名型论断，主判据是相对排名而非绝对阈值（铁律一：测的就是论断声称的量）"
+    },
+    "data_scope": {
+      "markets": [
+        "AU",
+        "CA",
+        "CH",
+        "CN",
+        "DE",
+        "ES",
+        "FR",
+        "HK",
+        "IN",
+        "IT",
+        "JP",
+        "KR",
+        "NL",
+        "NZ",
+        "SE",
+        "SG",
+        "TW",
+        "UK",
+        "US"
+      ],
+      "category": "stock",
+      "survivorship": "本地库仅当前成分快照（幸存者高估源）；volume 缺失标的整只跳过"
+    }
+  },
+  "generated_at": "2026-09-11 12:16:18",
+  "engine": "volume-breakout-ranking",
+  "config": {
+    "bootstrap_iters": 2000,
+    "rng_seed": 20260820,
+    "oos_frac": 0.2,
+    "vol_ratio": 1.5,
+    "breakout_window": 50,
+    "hold_days": 20,
+    "golden_cross": "MA50 上穿 MA120",
+    "min_rows": 150,
+    "markets": [
+      "AU",
+      "CA",
+      "CH",
+      "CN",
+      "DE",
+      "ES",
+      "FR",
+      "HK",
+      "IN",
+      "IT",
+      "JP",
+      "KR",
+      "NL",
+      "NZ",
+      "SE",
+      "SG",
+      "TW",
+      "UK",
+      "US"
+    ]
+  },
+  "pools": {
+    "stocks_total": 2072,
+    "stocks_processed_by_market": {
+      "AU": 196,
+      "CA": 53,
+      "CH": 19,
+      "CN": 298,
+      "DE": 40,
+      "ES": 35,
+      "FR": 39,
+      "HK": 85,
+      "IN": 50,
+      "IT": 40,
+      "JP": 204,
+      "KR": 196,
+      "NL": 24,
+      "NZ": 47,
+      "SE": 30,
+      "SG": 30,
+      "TW": 50,
+      "UK": 96,
+      "US": 482
+    },
+    "no_volume_skips": 0
+  },
+  "survivorship_note": "本地库 indices 仅当前成分股快照，不含退市/被剔除股；结果存在幸存者偏差，方向为高估突破类胜率",
+  "protocol_lights": [
+    {
+      "item": "判据对齐（论断=排名最高）",
+      "status": "✅",
+      "note": "排名型论断，主判据就是相对排名本身（S1 vs S2/S3/S4 同台 20 日胜率），不用绝对阈值替代（铁律一）"
+    },
+    {
+      "item": "价格口径（前复权 close）",
+      "status": "✅",
+      "note": "daily_data.close 为前复权（000-data-biases.md A.1）"
+    },
+    {
+      "item": "时机（无前视）",
+      "status": "✅",
+      "note": "各信号在 T 日收盘确定；S1/S2/S4 入场=T+1 收盘，S3 入场=T+6（确认后）；50 日新高=前 50 日窗口不含 T；量均线=前 20 日不含 T"
+    },
+    {
+      "item": "交易成本",
+      "status": "⚠️",
+      "note": "主判据是方向概率排名，成本不改变方向；25bps 口径保留字段一致"
+    },
+    {
+      "item": "显著性/区间（Bootstrap 2000 次）",
+      "status": "✅",
+      "note": "股票级 bootstrap（每股坍缩为胜率；S1−S2 配对差同法，种子 20260820）"
+    },
+    {
+      "item": "重叠样本处理",
+      "status": "⚠️",
+      "note": "相邻突破/金叉事件 20 日窗口重叠 → 每股坍缩后股票级 bootstrap；跨股同日历相关未建模"
+    },
+    {
+      "item": "样本外验证（后 20%）",
+      "status": "✅",
+      "note": "每标的自有交易日后 20% 的入场事件单独跑同口径"
+    },
+    {
+      "item": "幸存者偏差（含退市股）",
+      "status": "⚠️",
+      "note": "本地库仅当前成分快照；突破/动量类信号缺退市前下跌段，方向为高估胜率"
+    },
+    {
+      "item": "成交量数据质量",
+      "status": "⚠️",
+      "note": "volume 全缺失标的整只跳过（no_volume_skips 计数）；S3 另要求缩量有效"
+    },
+    {
+      "item": "口径对齐（S3 沿用 #9 契约）",
+      "status": "✅",
+      "note": "S3 与论断 #9 引擎完全同口径（含 5 日确认/T+6 入场），保证跨论断可比"
+    }
+  ],
+  "signals": {
+    "S1_volume_breakout": {
+      "events": 157179,
+      "wins": 84421,
+      "win_rate_pct": 53.71,
+      "stock_ew_boot": {
+        "mean_pct": 53.09,
+        "ci95_low_pct": 52.66,
+        "ci95_high_pct": 53.49
+      },
+      "oos": {
+        "events": 27782,
+        "wins": 14922,
+        "win_rate_pct": 53.71,
+        "stock_ew_boot": {
+          "mean_pct": 52.54,
+          "ci95_low_pct": 51.72,
+          "ci95_high_pct": 53.42
+        }
+      }
+    },
+    "S2_breakout": {
+      "events": 570884,
+      "wins": 308961,
+      "win_rate_pct": 54.12,
+      "stock_ew_boot": {
+        "mean_pct": 52.81,
+        "ci95_low_pct": 52.49,
+        "ci95_high_pct": 53.13
+      },
+      "oos": {
+        "events": 118816,
+        "wins": 64178,
+        "win_rate_pct": 54.01,
+        "stock_ew_boot": {
+          "mean_pct": 51.02,
+          "ci95_low_pct": 50.44,
+          "ci95_high_pct": 51.62
+        }
+      }
+    },
+    "S3_volume_pullback": {
+      "events": 69845,
+      "wins": 37933,
+      "win_rate_pct": 54.31,
+      "stock_ew_boot": {
+        "mean_pct": 52.81,
+        "ci95_low_pct": 52.09,
+        "ci95_high_pct": 53.46
+      },
+      "oos": {
+        "events": 12217,
+        "wins": 6464,
+        "win_rate_pct": 52.91,
+        "stock_ew_boot": {
+          "mean_pct": 51.22,
+          "ci95_low_pct": 49.8,
+          "ci95_high_pct": 52.59
+        }
+      }
+    },
+    "S4_golden_cross": {
+      "events": 55228,
+      "wins": 29905,
+      "win_rate_pct": 54.15,
+      "stock_ew_boot": {
+        "mean_pct": 53.66,
+        "ci95_low_pct": 53.12,
+        "ci95_high_pct": 54.22
+      },
+      "oos": {
+        "events": 11353,
+        "wins": 6105,
+        "win_rate_pct": 53.77,
+        "stock_ew_boot": {
+          "mean_pct": 54.5,
+          "ci95_low_pct": 53.46,
+          "ci95_high_pct": 55.57
+        }
+      }
+    }
+  },
+  "per_market": {
+    "AU": {
+      "S1_volume_breakout": 54.81,
+      "S2_breakout": 53.07,
+      "S3_volume_pullback": 56.74,
+      "S4_golden_cross": 53.5
+    },
+    "CA": {
+      "S1_volume_breakout": 56.07,
+      "S2_breakout": 56.76,
+      "S3_volume_pullback": 57.07,
+      "S4_golden_cross": 59.57
+    },
+    "CH": {
+      "S1_volume_breakout": 57.46,
+      "S2_breakout": 57.34,
+      "S3_volume_pullback": 53.16,
+      "S4_golden_cross": 51.68
+    },
+    "CN": {
+      "S1_volume_breakout": 48.81,
+      "S2_breakout": 49.01,
+      "S3_volume_pullback": 46.49,
+      "S4_golden_cross": 48.97
+    },
+    "DE": {
+      "S1_volume_breakout": 53.03,
+      "S2_breakout": 54.46,
+      "S3_volume_pullback": 54.98,
+      "S4_golden_cross": 55.46
+    },
+    "ES": {
+      "S1_volume_breakout": 54.35,
+      "S2_breakout": 55.3,
+      "S3_volume_pullback": 56.09,
+      "S4_golden_cross": 56.79
+    },
+    "FR": {
+      "S1_volume_breakout": 52.66,
+      "S2_breakout": 54.32,
+      "S3_volume_pullback": 51.31,
+      "S4_golden_cross": 55.16
+    },
+    "HK": {
+      "S1_volume_breakout": 54.23,
+      "S2_breakout": 53.81,
+      "S3_volume_pullback": 52.39,
+      "S4_golden_cross": 51.75
+    },
+    "IN": {
+      "S1_volume_breakout": 56.46,
+      "S2_breakout": 56.41,
+      "S3_volume_pullback": 56.7,
+      "S4_golden_cross": 57.58
+    },
+    "IT": {
+      "S1_volume_breakout": 55.86,
+      "S2_breakout": 55.66,
+      "S3_volume_pullback": 57.05,
+      "S4_golden_cross": 53.77
+    },
+    "JP": {
+      "S1_volume_breakout": 53.22,
+      "S2_breakout": 53.11,
+      "S3_volume_pullback": 53.01,
+      "S4_golden_cross": 54.69
+    },
+    "KR": {
+      "S1_volume_breakout": 50.06,
+      "S2_breakout": 50.01,
+      "S3_volume_pullback": 50.23,
+      "S4_golden_cross": 49.5
+    },
+    "NL": {
+      "S1_volume_breakout": 55.55,
+      "S2_breakout": 55.5,
+      "S3_volume_pullback": 52.6,
+      "S4_golden_cross": 54.36
+    },
+    "NZ": {
+      "S1_volume_breakout": 56.72,
+      "S2_breakout": 55.72,
+      "S3_volume_pullback": 55.43,
+      "S4_golden_cross": 51.31
+    },
+    "SE": {
+      "S1_volume_breakout": 55.92,
+      "S2_breakout": 55.34,
+      "S3_volume_pullback": 55.89,
+      "S4_golden_cross": 58.7
+    },
+    "SG": {
+      "S1_volume_breakout": 54.45,
+      "S2_breakout": 53.27,
+      "S3_volume_pullback": 50.46,
+      "S4_golden_cross": 54.33
+    },
+    "TW": {
+      "S1_volume_breakout": 53.41,
+      "S2_breakout": 54.35,
+      "S3_volume_pullback": 53.98,
+      "S4_golden_cross": 55.49
+    },
+    "UK": {
+      "S1_volume_breakout": 53.46,
+      "S2_breakout": 53.01,
+      "S3_volume_pullback": 55.38,
+      "S4_golden_cross": 52.06
+    },
+    "US": {
+      "S1_volume_breakout": 56.02,
+      "S2_breakout": 55.79,
+      "S3_volume_pullback": 56.46,
+      "S4_golden_cross": 56.49
+    }
+  },
+  "verdict": {
+    "claim_type": "ranking（相对排名，非绝对阈值）",
+    "s1_win_rate_pct": 53.71,
+    "other_signals_pct": {
+      "S2_breakout": 54.12,
+      "S3_volume_pullback": 54.31,
+      "S4_golden_cross": 54.15
+    },
+    "s1_highest_pooled": false,
+    "s1_highest_markets": 5,
+    "markets_comparable": 19,
+    "s1_minus_s2_diff_stock_ew_boot": {
+      "mean_pct": 0.26,
+      "ci95_low_pct": -0.01,
+      "ci95_high_pct": 0.54
+    },
+    "supported": false
+  }
+}

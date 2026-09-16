@@ -1,25 +1,25 @@
 <div class="page-header">
-  <div class="breadcrumb"><a href="/research">研究</a> / <%= ticker %></div>
-  <h2>📚 <%= shelf.name %> 报告书架</h2>
+  <div class="breadcrumb"><a href="/research" data-i18n="reports.crumbResearch">研究</a> / <%= ticker %></div>
+  <h2><span data-i18n="reports.title">📚</span> <%= shelf.name %> <span data-i18n="reports.shelf">报告书架</span></h2>
 </div>
 
 <% if (shelf.reports.length === 0) { %>
   <div class="empty-state">
-    <p>暂无报告。完成七层分析后，报告会自动出现在这里。</p>
+    <p data-i18n="reports.empty">暂无报告。完成七层分析后，报告会自动出现在这里。</p>
   </div>
 <% } else { %>
-  <% const own = shelf.reports.filter(r => r.source === 'own'); const community = shelf.reports.filter(r => r.source === 'community'); %>
+  <% const formal = shelf.reports.filter(r => r.kind === 'formal'); const notes = shelf.reports.filter(r => r.kind === 'note'); const community = shelf.reports.filter(r => r.source === 'community'); %>
 
-  <div class="section-title">✍️ 自有研究（<%= own.length %> 篇）</div>
+  <div class="section-title"><span data-i18n="reports.formalTitle">🏛️ 正式报告</span>（<%= formal.length %> <span data-i18n="reports.formalUnit">篇·七层结论</span>）</div>
   <div class="entry-list">
-    <% let lastDate = null; for (const r of own) { %>
+    <% let lastDate = null; for (const r of formal) { %>
       <% if (r.date !== lastDate) { lastDate = r.date; %>
         <div style="font-size:12px;color:var(--text-muted);margin-top:10px;text-transform:uppercase;letter-spacing:0.5px;">
           <%= r.date || '未归档（公司目录根）' %>
           <% if (r.redteam) { %>
-            <span class="badge badge-green">✓ 红队检验</span>
+            <span class="badge badge-green" data-i18n="reports.redteamOk">✓ 红队检验</span>
           <% } else if (r.date) { %>
-            <span class="badge badge-yellow">反方检验未执行</span>
+            <span class="badge badge-yellow" data-i18n="reports.redteamMissing">反方检验未执行</span>
           <% } %>
         </div>
       <% } %>
@@ -27,14 +27,37 @@
         <div class="entry-title"><%= r.title %></div>
       </a>
     <% } %>
+    <% if (formal.length === 0) { %>
+      <p style="font-size:13px;color:var(--text-muted);" data-i18n="reports.noFormal">暂无正式报告。</p>
+    <% } %>
+  </div>
+
+  <div class="section-title" style="margin-top:24px;"><span data-i18n="reports.notesTitle">📝 研究笔记</span>（<%= notes.length %> <span data-i18n="reports.notesUnit">篇·过程稿</span>）</div>
+  <div class="entry-list">
+    <% let lastNoteDate = '__init__'; for (const r of notes) { %>
+      <% if (r.date !== lastNoteDate) { lastNoteDate = r.date; %>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:10px;text-transform:uppercase;letter-spacing:0.5px;">
+          <%= r.date || '未归档（own/ 过程稿）' %>
+          <% if (r.redteam) { %>
+            <span class="badge badge-green" data-i18n="reports.redteamOk">✓ 红队检验</span>
+          <% } %>
+        </div>
+      <% } %>
+      <a class="entry-item" href="/reports/<%= ticker %>/<%= r.rel %>">
+        <div class="entry-title"><%= r.title %> <span class="source-tag own" data-i18n="reports.noteTag">📝 笔记</span></div>
+      </a>
+    <% } %>
+    <% if (notes.length === 0) { %>
+      <p style="font-size:13px;color:var(--text-muted);" data-i18n="reports.noNotes">暂无研究笔记。</p>
+    <% } %>
   </div>
 
   <% if (community.length > 0) { %>
-    <div class="section-title" style="margin-top:24px;">📥 外来资料（<%= community.length %> 篇 · 社区/书籍，非本人产出）</div>
+    <div class="section-title" style="margin-top:24px;"><span data-i18n="reports.communityTitle">📥 外来资料</span>（<%= community.length %> <span data-i18n="reports.communityUnit">篇 · 社区/书籍，非本人产出</span>）</div>
     <div class="entry-list">
       <% for (const r of community) { %>
         <a class="entry-item" href="/reports/<%= ticker %>/<%= r.rel %>">
-          <div class="entry-title"><%= r.title %> <span class="source-tag community">📥 外来</span></div>
+          <div class="entry-title"><%= r.title %> <span class="source-tag community" data-i18n="reports.externalTag">📥 外来</span></div>
         </a>
       <% } %>
     </div>

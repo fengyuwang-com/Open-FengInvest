@@ -3,34 +3,36 @@
 <% var pnl = px && holding.position.avg_cost ? (px / holding.position.avg_cost - 1) * 100 : null; %>
 
 <div class="page-header">
-  <div class="breadcrumb"><a href="/holdings">持仓</a> / <%= holding.name || ticker %></div>
+  <div class="breadcrumb"><a href="/holdings" data-i18n="crumb.holdingsTail">持仓</a> / <%= holding.name || ticker %></div>
   <h2><%= holding.name || ticker %> <span class="num" style="font-size:16px;color:var(--text-muted);font-weight:500;"><%= ticker %></span></h2>
   <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
-    <a class="btn btn-danger" href="/watch/sell/<%= ticker %>">📤 卖出决策</a>
-    <a class="btn btn-accent" href="/holdings/<%= ticker %>/review">🔁 复盘</a>
-    <a class="btn" href="/research/<%= ticker %>">🔬 关联研究</a>
-    <a class="btn" href="/rollover">🔄 滚存工具</a>
+    <a class="btn btn-danger" href="/watch/sell/<%= ticker %>" data-i18n="holdingdetail.btnSell">📤 卖出决策</a>
+    <a class="btn btn-accent" href="/holdings/<%= ticker %>/review" data-i18n="holdingdetail.btnReview">🔁 复盘</a>
+    <a class="btn" href="/research/<%= ticker %>" data-i18n="holdingdetail.btnResearch">🔬 关联研究</a>
+    <a class="btn" href="/rollover" data-i18n="holdingdetail.btnRollover">🔄 滚存工具</a>
   </div>
 </div>
 
+<div id="cc-slot"></div>
+
 <div class="dashboard-grid">
-  <div class="stat-card"><div class="stat-label">成本 → 现价</div><div class="stat-value num" style="font-size:20px;"><%= holding.position.avg_cost != null ? Number(holding.position.avg_cost).toFixed(2) : '—' %> → <%= px != null ? Number(px).toFixed(2) : '—' %></div></div>
-  <div class="stat-card"><div class="stat-label">持仓回报</div>
+  <div class="stat-card"><div class="stat-label" data-i18n="holdingdetail.statCostNow">成本 → 现价</div><div class="stat-value num" style="font-size:20px;"><%= holding.position.avg_cost != null ? Number(holding.position.avg_cost).toFixed(2) : '—' %> → <%= px != null ? Number(px).toFixed(2) : '—' %></div></div>
+  <div class="stat-card"><div class="stat-label" data-i18n="holdingdetail.statReturn">持仓回报</div>
     <div class="stat-value <%= pnl != null ? (pnl >= 0 ? 'positive' : 'negative') : '' %>" style="font-size:22px;"><%= pnl != null ? (pnl >= 0 ? '+' : '') + pnl.toFixed(1) + '%' + (pnl >= 0 ? '▲' : '▼') : '—' %></div>
   </div>
-  <div class="stat-card"><div class="stat-label">股数 / 钱包</div><div class="stat-value" style="font-size:20px;"><%= holding.position.shares || holding.position.units || '—' %></div>
-    <div style="font-size:11px;color:var(--text-muted);margin-top:4px;"><%= holding.account_type === 'TRADING' ? '投机钱包 ⚠' : '投资钱包' %></div>
+  <div class="stat-card"><div class="stat-label" data-i18n="holdingdetail.statSharesWallet">股数 / 钱包</div><div class="stat-value" style="font-size:20px;"><%= holding.position.shares || holding.position.units || '—' %></div>
+    <div style="font-size:11px;color:var(--text-muted);margin-top:4px;" data-i18n="<%= holding.account_type === 'TRADING' ? 'holdingdetail.walletTrading' : 'holdingdetail.walletInvestment' %>"><%= holding.account_type === 'TRADING' ? '投机钱包 ⚠' : '投资钱包' %></div>
   </div>
-  <div class="stat-card"><div class="stat-label">下次回顾</div><div class="stat-value" style="font-size:20px;color:var(--<%= holding.triggers && holding.triggers.next_review_date && new Date(holding.triggers.next_review_date) < new Date() ? 'danger' : 'text' %>);"><%= (holding.triggers && holding.triggers.next_review_date) || '—' %></div></div>
+  <div class="stat-card"><div class="stat-label" data-i18n="holdingdetail.statNextReview">下次回顾</div><div class="stat-value" style="font-size:20px;color:var(--<%= holding.triggers && holding.triggers.next_review_date && new Date(holding.triggers.next_review_date) < new Date() ? 'danger' : 'text' %>);"><%= (holding.triggers && holding.triggers.next_review_date) || '—' %></div></div>
 </div>
 
 <div class="card">
-  <h3 class="section-title">持仓档案</h3>
+  <h3 class="section-title" data-i18n="holdingdetail.profileTitle">持仓档案</h3>
   <div class="detail-grid">
-    <div class="field-row"><label>市场 / 板块</label><span><%= holding.market || '—' %> · <%= holding.segment || '—' %></span></div>
-    <div class="field-row"><label>资金域</label><span><%= holding.capital_zone || '—' %></span></div>
-    <div class="field-row"><label>买入日 / 券商</label><span><%= (holding.meta && holding.meta.buy_date) || '—' %> · <%= holding.broker || '—' %></span></div>
-    <div class="field-row"><label>滚存阶段</label><span><%= holding.capital_rollover && holding.capital_rollover.phase === 'recovered' ? '本金已回收 ✓（可考虑滚存）' : '风险资本在市' %></span></div>
+    <div class="field-row"><label data-i18n="holdingdetail.marketSegment">市场 / 板块</label><span><%= holding.market || '—' %> · <%= holding.segment || '—' %></span></div>
+    <div class="field-row"><label data-i18n="holdingdetail.capitalZone">资金域</label><span><%= holding.capital_zone || '—' %></span></div>
+    <div class="field-row"><label data-i18n="holdingdetail.buyDateBroker">买入日 / 券商</label><span><%= (holding.meta && holding.meta.buy_date) || '—' %> · <%= holding.broker || '—' %></span></div>
+    <div class="field-row"><label data-i18n="holdingdetail.rolloverPhase">滚存阶段</label><span data-i18n="<%= holding.capital_rollover && holding.capital_rollover.phase === 'recovered' ? 'holdingdetail.phaseRecovered' : 'holdingdetail.phaseAtRisk' %>"><%= holding.capital_rollover && holding.capital_rollover.phase === 'recovered' ? '本金已回收 ✓（可考虑滚存）' : '风险资本在市' %></span></div>
   </div>
 </div>
 
@@ -38,40 +40,41 @@
    var reviewDays = reviewDate ? Math.round((new Date(reviewDate) - new Date()) / 86400000) : null;
    var isTrading = holding.account_type === 'TRADING'; %>
 <% if (holding.thesis) { %>
-<div class="card" style="border-left:3px solid var(--accent);">
-  <h3 class="section-title">📜 买入论文<%= isTrading ? '（投机钱包·机械止损 -20%）' : '（投资钱包·论文止损）' %></h3>
+<div class="card">
+  <h3 class="section-title" data-i18n="<%= isTrading ? 'holdingdetail.thesisTitleTrading' : 'holdingdetail.thesisTitleInvest' %>">📜 买入论文<%= isTrading ? '（投机钱包·机械止损 -20%）' : '（投资钱包·论文止损）' %></h3>
   <% if (holding.thesis.summary) { %>
     <p style="font-size:17px;font-weight:600;line-height:1.5;margin:0 0 12px 0;"><%= holding.thesis.summary %></p>
   <% } %>
   <div class="md-content" style="font-size:14px;line-height:1.8;">
     <% if (holding.thesis.original) { %><p style="color:var(--text-secondary);"><%= holding.thesis.original %></p><% } %>
     <% if (holding.thesis.mirror_test) { %>
-      <details><summary style="cursor:pointer;font-size:13px;color:var(--text-muted);">照镜子测试（买入时的自己）</summary><p style="font-size:13px;color:var(--text-muted);"><%= holding.thesis.mirror_test %></p></details>
+      <details><summary style="cursor:pointer;font-size:13px;color:var(--text-muted);" data-i18n="holdingdetail.mirrorTest">照镜子测试（买入时的自己）</summary><p style="font-size:13px;color:var(--text-muted);"><%= holding.thesis.mirror_test %></p></details>
     <% } %>
   </div>
   <% var reds = holding.thesis.redlines || holding.thesis.exit_conditions || []; %>
   <% if (reds.length) { %>
     <div style="margin-top:16px;">
-      <h4 style="font-size:13px;color:var(--danger);margin:0 0 8px 0;">🚨 论文证伪条件（redlines）——碰到任何一条就是卖出信号，与价格无关</h4>
+      <h4 style="font-size:13px;color:var(--danger);margin:0 0 8px 0;" data-i18n="holdingdetail.redlinesTitle">🚨 论文证伪条件（redlines）——碰到任何一条就是卖出信号，与价格无关</h4>
       <div class="alert-list">
         <% reds.forEach(function(r, i) { %>
-          <div class="alert-item danger"><span class="num" style="color:var(--text-muted);"><%= i + 1 %></span><span><%= typeof r === 'string' ? r : (r.statement || r.text || JSON.stringify(r)) %></span></div>
+          <div class="alert-item danger"><span class="num" style="color:var(--text-muted);"><%= i + 1 %></span><span><%= typeof r === 'string' ? r : ((r.statement || r.trigger || r.text || '') + (r.action ? ' → ' + r.action : '') || JSON.stringify(r)) %></span></div>
         <% }) %>
       </div>
     </div>
   <% } %>
   <% if ((holding.thesis.hypotheses || []).length) { %>
     <div style="margin-top:16px;">
-      <h4 style="font-size:13px;color:var(--text-muted);margin:0 0 8px 0;">🧪 假设验证进度</h4>
+      <h4 style="font-size:13px;color:var(--text-muted);margin:0 0 8px 0;" data-i18n="holdingdetail.hypothesesTitle">🧪 假设验证进度</h4>
       <table class="holdings-table">
-        <thead><tr><th>假设</th><th>验证方式</th><th>频率</th><th>状态</th></tr></thead>
+        <thead><tr><th data-i18n="holdingdetail.thHypothesis">假设</th><th data-i18n="holdingdetail.thVerify">验证方式</th><th data-i18n="holdingdetail.thFreq">频率</th><th data-i18n="holdingdetail.thStatus">状态</th></tr></thead>
         <tbody>
         <% holding.thesis.hypotheses.forEach(function(hp) {
              var st = hp.status || '?';
              var cls = st === 'valid' ? 'green' : st === 'invalid' || st === 'falsified' ? 'red' : 'yellow';
              var cn = st === 'valid' ? '成立' : st === 'invalid' || st === 'falsified' ? '证伪' : st;
+             var stKey = st === 'valid' ? 'holdingdetail.stValid' : st === 'invalid' || st === 'falsified' ? 'holdingdetail.stFalsified' : null;
         %>
-          <tr><td><%= hp.statement || hp.id %></td><td><%= hp.verify || '—' %></td><td><%= hp.freq || '—' %></td><td><span class="badge badge-<%= cls %>"><%= cn %></span></td></tr>
+          <tr><td><%= hp.statement || hp.id %></td><td><%= hp.verify || '—' %></td><td><%= hp.freq || '—' %></td><td><span class="badge badge-<%= cls %>"<% if (stKey) { %> data-i18n="<%= stKey %>"<% } %>><%= cn %></span></td></tr>
         <% }) %>
         </tbody>
       </table>
@@ -80,46 +83,103 @@
 </div>
 <% } else { %>
 <div class="alert-item warning">
-  <span>⚠️ 这笔持仓<b>没有登记论文</b>——无 thesis.original + redlines 的持仓 = 黄灯（fengwatch check_thesis_missing）。亏损持有无论文支撑即散户处置效应（Odean 1998）。<a href="/holdings/<%= ticker %>/review">补建论文 →</a></span>
+  <span><span data-i18n="holdingdetail.noThesis1">⚠️ 这笔持仓</span><b data-i18n="holdingdetail.noThesisBold">没有登记论文</b><span data-i18n="holdingdetail.noThesis2">——无 thesis.original + redlines 的持仓 = 黄灯（fengwatch check_thesis_missing）。没有论文支撑的亏损拿着，是散户最常见的错误。</span><a href="/holdings/<%= ticker %>/review" class="btn btn-sm btn-outline" style="margin-left:8px;" data-i18n="holdingdetail.noThesisLink">补建论文 →</a></span>
 </div>
 <% } %>
 <% if (!isTrading && pnl != null && pnl < 0 && holding.thesis) { %>
 <div class="alert-item warning">
-  <span>🪞 当前浮亏 <%= pnl.toFixed(1) %>%。<b>投资账户不因价格卖出</b>——因论文卖（双账户规则 2026-08-16）。检查上面的证伪条件：基本面未变 = 继续持有；基本面同步恶化 = 走 <a href="/watch/sell/<%= ticker %>">卖出决策流程</a>。因亏损而卖 = 散户思维。</span>
+  <span><span data-i18n="holdingdetail.floatLoss1">🪞 当前浮亏</span> <%= pnl.toFixed(1) %>%。<b data-i18n="holdingdetail.noPriceSell">投资账户不因价格卖出</b><span data-i18n="holdingdetail.noPriceSell2">——因论文卖（双账户规则 2026-08-16）。检查上面的证伪条件：基本面未变 = 继续持有；基本面同步恶化 = 走</span> <a href="/watch/sell/<%= ticker %>" data-i18n="holdingdetail.sellFlowLink">卖出决策流程</a><span data-i18n="holdingdetail.noPriceSell3">。因亏损而卖 = 散户思维。</span></span>
 </div>
 <% } %>
 <% if (reviewDays != null && reviewDays < 0) { %>
 <div class="alert-item danger">
-  <span>🔴 回顾日已过期 <%= -reviewDays %> 天（<%= reviewDate %>）——定期复盘是强迫执行的一部分。<a href="/holdings/<%= ticker %>/review">去复盘 →</a></span>
+  <span>🔴 <span data-i18n="holdingdetail.reviewOverdue1">回顾日已过期</span> <%= -reviewDays %> <span data-i18n="holdingdetail.reviewOverdueDays">天</span>（<%= reviewDate %>）<span data-i18n="holdingdetail.reviewOverdue2">——定期复盘是强迫执行的一部分。</span><a href="/holdings/<%= ticker %>/review" data-i18n="holdingdetail.goReview">去复盘 →</a></span>
 </div>
 <% } %>
 
-<div class="card">
-  <h3 class="section-title">检查卡（fengwatch check 十规则）</h3>
-  <button class="btn btn-accent" id="chkBtn" onclick="runCheck()">跑单只检查</button>
-  <div id="check-out" style="margin-top:12px;"></div>
+<div class="card" id="check-card">
+  <h3 class="section-title" data-i18n="holdingdetail.checklistTitle">十项健康检查</h3>
+  <div id="check-out"></div>
+  <div style="margin-top:10px;"><button class="btn btn-sm btn-outline" id="chkBtn" onclick="runCheck()" data-i18n="holdingdetail.rerunCheck">重新检查 →</button></div>
 </div>
 
 <script>
+var TICKER = '<%= ticker %>';
+var ccDone = false;
+
+function firstProblem(h) {
+  var checks = (h && h.checks) || {};
+  var order = ['price_stop', 'thesis', 'review_due', 'float_loss', 'drawdown', 'concentration'];
+  var keys = order.concat(Object.keys(checks).filter(function(k){ return order.indexOf(k) < 0; }));
+  for (var i = 0; i < keys.length; i++) {
+    var c = checks[keys[i]];
+    if (c && (c.label || c.signal) && c.level && c.level !== 'OK') return c;
+  }
+  return null;
+}
+
+async function loadConclusion() {
+  var slot = document.getElementById('cc-slot');
+  try {
+    var r = await fetch('/api/watch/status');
+    var d = await r.json();
+    var h = null;
+    ((d && d.results) || []).forEach(function(x) { if (String(x.ticker).toUpperCase() === TICKER.toUpperCase()) h = x; });
+    if (!h || !h.overall) { slot.style.display = 'none'; return; }
+    var tone = h.overall === 'GREEN' ? 'cc-green' : h.overall === 'RED' ? 'cc-red' : 'cc-yellow';
+    var badge = h.overall === 'GREEN' ? FengI18n.t('cc.holdEasy', '🟢 拿得安稳')
+      : h.overall === 'RED' ? FengI18n.t('cc.actNow', '🔴 需要行动')
+      : FengI18n.t('cc.payAttention', '🟡 需要关注');
+    var prob = firstProblem(h);
+    var main = prob && prob.label ? prob.label
+      : (h.overall === 'GREEN' ? FengI18n.t('cc.allClear', '十项检查全部通过，论文有效，按计划拿着就行。')
+        : FengI18n.t('cc.seeChecks', '有检查项触发，看下方明细。'));
+    var pos = h.position || {};
+    var sub = [];
+    if (pos.return_pct != null) sub.push(FengI18n.t('cc.pnl', '浮盈亏 ') + (pos.return_pct >= 0 ? '+' : '') + pos.return_pct + '%');
+    if (h.next_review_date) {
+      var days = Math.round((new Date(h.next_review_date) - new Date()) / 86400000);
+      sub.push(days < 0 ? FengI18n.t('cc.reviewOverdue', '复盘已过期 ') + (-days) + FengI18n.t('cc.days', ' 天')
+        : FengI18n.t('cc.reviewIn', '下次复盘还有 ') + days + FengI18n.t('cc.days', ' 天'));
+    }
+    var acts = '';
+    if (h.overall !== 'GREEN') acts += '<a class="btn btn-sm btn-primary" href="#check-card" onclick="document.getElementById(\'check-card\').scrollIntoView({behavior:\'smooth\'});return false;">' + FengI18n.t('cc.why', '为什么？') + '</a>';
+    if (days2(h) < 0) acts += '<a class="btn btn-sm btn-accent" href="/holdings/<%= ticker %>/review">' + FengI18n.t('cc.goReview', '去复盘') + '</a>';
+    if (h.overall === 'RED') acts += '<a class="btn btn-sm btn-danger-outline" href="/watch/sell/<%= ticker %>">' + FengI18n.t('cc.sellFlow', '卖出决策') + '</a>';
+    slot.innerHTML = '<div class="conclusion-card ' + tone + '">' +
+      '<span class="cc-badge">' + badge + '</span>' +
+      '<span class="cc-main">' + main + '</span>' +
+      '<span class="cc-sub">' + (sub.join(' · ') || '') + '</span>' +
+      (acts ? '<span class="cc-actions">' + acts + '</span>' : '') +
+      '</div>';
+    ccDone = true;
+  } catch (e) { slot.style.display = 'none'; }
+}
+function days2(h) { return h && h.next_review_date ? Math.round((new Date(h.next_review_date) - new Date()) / 86400000) : 0; }
+
 async function runCheck() {
   var btn = document.getElementById('chkBtn');
-  btn.disabled = true; btn.textContent = '检查中…（fengwatch.py check）';
+  btn.disabled = true; btn.textContent = FengI18n.t('holdingdetail.checking', '检查中…（fengwatch.py check）');
   var el = document.getElementById('check-out');
   try {
     var r = await fetch('/api/watch/check/<%= ticker %>');
     var d = await r.json();
-    if (!r.ok) { el.innerHTML = '<div class="alert alert-danger">' + (d.error || '失败') + '</div>'; }
+    if (!r.ok) { el.innerHTML = '<div class="alert alert-danger">' + (d.error || FengI18n.t('holdingdetail.fail', '失败')) + '</div>'; }
     else {
       var rules = d.rules || d.checks || [];
       el.innerHTML = Array.isArray(rules) && rules.length
-        ? '<table class="data-table"><thead><tr><th>规则</th><th>状态</th><th>说明</th></tr></thead><tbody>' +
+        ? '<table class="data-table"><thead><tr><th>' + FengI18n.t('holdingdetail.thRule', '规则') + '</th><th>' + FengI18n.t('holdingdetail.thStatus', '状态') + '</th><th>' + FengI18n.t('holdingdetail.thDesc', '说明') + '</th></tr></thead><tbody>' +
           rules.map(function(x) {
             return '<tr><td>' + (x.rule || x.name || '?') + '</td><td><span class="badge badge-' +
-              (String(x.status || x.triggered).match(/(ok|false|pass)/i) ? 'green' : 'red') + '">' + (x.status || (x.triggered ? '触发' : '未触发')) + '</span></td><td style="font-size:12px;color:var(--text-muted);">' + (x.message || x.detail || x.note || '') + '</td></tr>';
+              (String(x.status || x.triggered).match(/(ok|false|pass)/i) ? 'green' : 'red') + '">' + (x.status || (x.triggered ? FengI18n.t('holdingdetail.triggered', '触发') : FengI18n.t('holdingdetail.notTriggered', '未触发'))) + '</span></td><td style="font-size:12px;color:var(--text-muted);">' + (x.message || x.detail || x.note || '') + '</td></tr>';
           }).join('') + '</tbody></table>'
-        : '<pre style="font-size:12px;white-space:pre-wrap;background:var(--bg-inset);padding:12px;border-radius:8px;max-height:360px;overflow:auto;">' + JSON.stringify(d, null, 2).slice(0, 3000) + '</pre>';
+        : '<div class="alert-item info"><span>' + FengI18n.t('holdingdetail.noDetail', '本次检查没有明细项——十项都正常，没有需要你处理的事。') + '</span></div>';
     }
-  } catch (e) { el.textContent = '网络错误: ' + e.message; }
-  btn.disabled = false; btn.textContent = '跑单只检查';
+  } catch (e) { el.innerHTML = '<div class="alert-item info"><span>' + FengI18n.t('holdingdetail.checkUnavailable', '检查服务暂时没响应，稍后点"重新检查"再试。') + '</span></div>'; }
+  btn.disabled = false; btn.textContent = FengI18n.t('holdingdetail.rerunCheck', '重新检查 →');
 }
+window.addEventListener('DOMContentLoaded', function() {
+  runCheck();
+  loadConclusion();
+});
 </script>

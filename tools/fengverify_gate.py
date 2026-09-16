@@ -113,12 +113,11 @@ def gate_state(ticker: str) -> GateResult:
     # 解析输出，提取关键信息
     combined = (out + "\n" + err).strip()
     if rc == 0:
-        # 统计通过/失败层数
-        pass_count = combined.count("PASS") + combined.count("OK") + combined.count("✅")
-        warn_count = combined.count("WARN") + combined.count("WARNING")
-        detail = f"state verify OK (pass={pass_count}, warn={warn_count})"
-        if warn_count > 0:
-            detail += f"\nWarnings:\n{combined}"
+        # 不伪造层数：只报告 OK + 原始输出摘要（此前误数 PASS/OK/✅ 出现次数为"层数"）
+        tail = "\n".join(combined.splitlines()[-5:])
+        detail = f"state verify OK\n{tail}"
+        if "WARN" in combined:
+            detail += f"\nWarnings present, full output:\n{combined}"
         return GateResult("state", "状态机完整性", True, detail, elapsed)
     else:
         return GateResult("state", "状态机完整性", False,
@@ -148,10 +147,10 @@ def gate_structure(ticker: str) -> GateResult:
 
     combined = (out + "\n" + err).strip()
     if rc == 0:
-        # 统计合规层
-        ok_lines = [l for l in combined.splitlines() if "✅" in l or "PASS" in l]
+        # 不伪造层数：只报告 clean + 原始输出摘要（此前误数✅行数为"层数"）
+        tail = "\n".join(combined.splitlines()[-5:])
         return GateResult("structure", "文档结构合规", True,
-                          f"all layers OK ({len(ok_lines)} layers)", elapsed)
+                          f"fengdoclint --strict clean\n{tail}", elapsed)
     else:
         fail_lines = [l for l in combined.splitlines() if "❌" in l or "FAIL" in l]
         return GateResult("structure", "文档结构合规", False,
@@ -180,39 +179,197 @@ def gate_report(ticker: str) -> GateResult:
 
     report_tool = os.path.join(ROOT, "tools", "report_audit.py")
     issues = []
+    warns: list[str] = []
 
-    # 3a: 结构校验
+    def _parse_stdout_json(stdout: str) -> Any:
+        """解析子命令 stdout 的 JSON；失败返回原文片段。"""
+        try:
+            return json.loads(stdout.strip())
+        except (json.JSONDecodeError, ValueError):
+            return None
+
+    def _as_file_list(data: Any) -> list:
+        """check/sources/csvdetect 单文件返回 dict、多文件返回 {'files': [...]}，统一为 list。"""
+        if isinstance(data, dict) and "files" in data and isinstance(data["files"], list):
+            return data["files"]
+        if isinstance(data, dict):
+            return [data]
+        return []
+
+    # 3a: 结构校验 — 以 JSON passed 字段为准（不只看 exit code）
     rc, out, err = run_cmd(
         [sys.executable, report_tool, "check", "--report", report_md]
     )
     combined = (out + "\n" + err).strip()
-    if rc != 0:
-        issues.append(f"[check] EXIT {rc}: {combined[:300]}")
+    check_data = _parse_stdout_json(out)
+    check_rows = _as_file_list(check_data)
+    check_passed = (
+        all(r.get("passed", False) for r in check_rows) if check_rows else (rc == 0)
+    )
+    if check_data is None:
+        issues.append(f"[check] 非 JSON 输出 EXIT {rc}: {combined[:300]}")
+    elif not check_passed:
+        fails = [r for r in check_rows if not r.get("passed", False)]
+        bits = []
+        for r in fails[:3]:
+            miss = r.get("missing_sections", [])
+            kfields = r.get("missing_key_fields", [])
+            minfails = r.get("min_items_failures", [])
+            bits.append(f"{r.get('file', '?')}: 缺章节={miss} 缺字段={kfields} "
+                        f"条目不足={len(minfails)}处")
+        issues.append("[check] passed=false: " + "; ".join(bits))
 
-    # 3b: 来源标注
+    # 3b: 来源标注 — sources 恒 exit 0，必须解析 JSON；unsourced>0 只 WARN 不 FAIL
     rc, out, err = run_cmd(
         [sys.executable, report_tool, "sources", "--report", report_md]
     )
     combined = (out + "\n" + err).strip()
-    if rc != 0:
-        issues.append(f"[sources] EXIT {rc}: {combined[:300]}")
+    src_data = _parse_stdout_json(out)
+    src_rows = _as_file_list(src_data)
+    if src_data is None:
+        issues.append(f"[sources] 非 JSON 输出 EXIT {rc}: {combined[:300]}")
+    else:
+        total_unsourced = sum(int(r.get("unsourced_count", 0) or 0) for r in src_rows)
+        sec_names = [s.get("section", "?") for r in src_rows
+                     for s in (r.get("section_unsourced", []) or [])]
+        if total_unsourced > 0 or sec_names:
+            warns.append(f"[WARN][sources] unsourced_count={total_unsourced} "
+                         f"section_unsourced={sec_names[:5]}")
 
-    # 3c: CSV 乱入
+    # 3c: CSV 乱入 — csvdetect 恒 exit 0，issue_count>0 则 FAIL
     rc, out, err = run_cmd(
         [sys.executable, report_tool, "csvdetect", "--report", report_md]
     )
     combined = (out + "\n" + err).strip()
-    if rc != 0:
-        issues.append(f"[csvdetect] EXIT {rc}: {combined[:300]}")
+    csv_data = _parse_stdout_json(out)
+    csv_rows = _as_file_list(csv_data)
+    if csv_data is None:
+        issues.append(f"[csvdetect] 非 JSON 输出 EXIT {rc}: {combined[:300]}")
+    else:
+        total_csv = sum(int(r.get("issue_count", 0) or 0) for r in csv_rows)
+        if total_csv > 0:
+            sample = [i for r in csv_rows for i in (r.get("issues", []) or [])][:3]
+            issues.append(f"[csvdetect] issue_count={total_csv}: {sample}")
+
+    # 3d: 句内数字自洽 — "低于年线16.7%（0.559 vs MA250 0.6845）"类同句矛盾硬闸门
+    # （2026-09-13 董事长立规：从 SKILL 软纪律升为检查项，扫描分析目录全部 MD/JSON）
+    nc_issues = _numeric_selfcheck_dir(analysis_dir)
+    if nc_issues:
+        issues.append(f"[selfcheck] 句内数字矛盾 {len(nc_issues)} 处:\n"
+                      + "\n".join(f"  - {x}" for x in nc_issues[:10]))
 
     elapsed = int((time.monotonic() - t0) * 1000)
 
+    detail_parts = warns  # WARN 先行，FAIL 在后；详情必须带出计数
     if not issues:
-        return GateResult("report", "报告质量", True,
-                          "check + sources + csvdetect all passed", elapsed)
+        detail = ("check + sources + csvdetect parsed "
+                  f"({' ; '.join(warns) if warns else 'no warnings'})")
+        return GateResult("report", "报告质量", True, detail, elapsed)
     else:
         return GateResult("report", "报告质量", False,
-                          "\n".join(issues), elapsed)
+                          "\n".join(detail_parts + issues), elapsed)
+
+
+# ── Gate 3d: 句内数字自洽（年线偏离对拍硬闸门） ─────────────────────────
+# 2026-09-13 董事长立规（三件套③）："现价低于年线(MA250=0.6845)16.7%"这类同句矛盾
+# 从 SKILL 软纪律升为硬闸门。判定锚点：同句四要素齐全才判——方向词(低于/高于)、
+# 年线/MA 关键词、浮点数对(A vs B / 现价A…年线=B)、百分比；缺任一要素无法互算，跳过。
+# 通过条件：存在某 pct 使 |pct - |A/B-1|*100| <= max(0.2pp, 1%) 且方向与数对大小关系一致。
+
+import re as _re
+
+_NC_ANCHOR = _re.compile(r'年线|MA\d+')
+_NC_DIR = _re.compile(r'([低高])于')
+_NC_PCT = _re.compile(r'(\d+(?:\.\d+)?)\s*%')
+_NC_PAIRS = (
+    # (正则, 是否交换组序) —— 组1恒=价、组2恒=基准(MA/年线)
+    # A vs MA250 B / A vs B / A/B
+    (_re.compile(r'(\d+\.\d+)\s*(?:vs\.?|VS|对比|/)\s*(?:MA\d+\s*[=为]?\s*|年线\s*=\s*)?(\d+\.\d+)'), False),
+    # 现价A …（年线|MA250…）=B —— 等号必须存在，防"年线18.3%"里的18.3被误当基准
+    (_re.compile(r'(?:现价|价格)\s*[=为]?\s*(\d+\.\d+)[^。；\n%]{0,30}?(?:年线|MA\d+)[^。；\n%=]{0,10}?[=为]\s*(\d+\.\d+)'), False),
+    # （MA250=B） … 现价A —— 反序，需交换；容忍中间隔着 % 数
+    (_re.compile(r'(?:MA\d+|年线)\s*=\s*(\d+\.\d+)[^。；\n]{0,30}?(?:现价|价格)\s*[=为]?\s*(\d+\.\d+)'), True),
+)
+
+
+def _numeric_selfcheck_text(text: str, label: str) -> list[str]:
+    """扫描一段文本（MD 或 JSON 原文），返回句内数字矛盾发现列表。
+
+    防误杀三重关联：①同句方向词唯一（既低于又高于→不判）；②被判的 % 必须紧跟
+    方向词之后 ≤30 字（"低于年线16.7%"、"低于年线(MA250=0.6845)16.7%"都算），
+    同句无关的 %（估值折价46.4%、成交额降30%…）不会被拉来对拍；③每个 % 只挂
+    最近的一个数对（窗口 40 字），多组比较各判各的。要素不齐/关联不上→跳过。
+    """
+    issues = []
+    for sent in _re.split(r'[。；;\n]', text):
+        if not _NC_ANCHOR.search(sent) or len(sent) > 400:
+            continue
+        dirs = list(_NC_DIR.finditer(sent))
+        if not dirs or len({m.group(1) for m in dirs}) != 1:
+            continue
+        d = dirs[0].group(1)
+        pairs: list[tuple[float, float, int, int]] = []
+        seen: set[tuple[float, float]] = set()
+        for rx, swap in _NC_PAIRS:
+            for mm in rx.finditer(sent):
+                g1, g2 = mm.group(1), mm.group(2)
+                if swap:
+                    g1, g2 = g2, g1
+                try:
+                    a, b = float(g1), float(g2)
+                except ValueError:
+                    continue
+                if b <= 0 or (a, b) in seen:
+                    continue
+                seen.add((a, b))
+                pairs.append((a, b, mm.start(), mm.end()))
+        if not pairs:
+            continue
+        for pm in _NC_PCT.finditer(sent):
+            if not any(0 <= pm.start() - m.end() <= 30 for m in dirs):
+                continue  # 该 % 不紧跟方向词，关联不上，跳过
+            def gap(pr, _pm=pm):
+                return min(abs(_pm.start() - pr[3]), abs(pr[2] - _pm.end()))
+            near = min(pairs, key=gap)
+            if gap(near) > 40:
+                continue
+            a, b = near[0], near[1]
+            stated = float(pm.group(1))
+            expected = abs(a / b - 1) * 100
+            tol = max(0.2, expected * 0.01)
+            val_ok = abs(expected - stated) <= tol
+            dir_ok = (a < b) if d == '低' else (a > b)
+            if abs(a - b) < 1e-9:
+                dir_ok = True
+            if not (val_ok and dir_ok):
+                why = []
+                if not val_ok:
+                    why.append(f"'{d}于'标注{stated}%，按 {a} vs {b} 重算={expected:.1f}%"
+                               f"（容差{tol:.2f}pp）")
+                if not dir_ok:
+                    why.append(f"方向词'{d}于'与数对({a} vs {b})大小关系矛盾")
+                issues.append(f"{label}: {'；'.join(why)} | 句: {sent.strip()[:120]}")
+    return issues
+
+
+def _numeric_selfcheck_dir(analysis_dir: str) -> list[str]:
+    """对分析目录下所有 .md/.json（<2MB）跑句内数字自洽扫描。"""
+    found: list[str] = []
+    for root, _dirs, files in os.walk(analysis_dir):
+        for fn in sorted(files):
+            if not fn.endswith((".md", ".json")):
+                continue
+            path = os.path.join(root, fn)
+            try:
+                if os.path.getsize(path) > 2_000_000:
+                    continue
+                with open(path, encoding="utf-8", errors="replace") as f:
+                    text = f.read()
+            except OSError:
+                continue
+            rel = os.path.relpath(path, analysis_dir).replace("\\", "/")
+            found.extend(_numeric_selfcheck_text(text, rel))
+    return found
 
 
 # ── Gate 4: 管线完整性 ──────────────────────────────────────────────
@@ -301,6 +458,10 @@ def gate_consistency() -> GateResult:
             issues.append(f"[WARN] tools/ 中有但 AGENTS.md 未声明（非致命）: {', '.join(sorted(undocumented))}")
 
     # ── 2. Skill 目录一致性 ──
+    # 全局白名单：2026-09-06 起 fengdocsync / fenghistory 已升为全局 skill
+    # （位于 ~/.zcode/skills/），本地 .agents/skills/ 无此二目录属正常，不判 FAIL。
+    GLOBAL_SKILL_WHITELIST = {"fengdocsync", "fenghistory"}
+    GLOBAL_SKILLS_DIR = os.path.join(os.path.expanduser("~"), ".zcode", "skills")
     skills_dir = os.path.join(ROOT, ".agents", "skills")
     if os.path.isdir(skills_dir):
         actual_skills = {d for d in os.listdir(skills_dir)
@@ -314,8 +475,25 @@ def gate_consistency() -> GateResult:
             expected_skill_dirs = {"feng" + s for s in referenced_skills}
 
             missing_skills = expected_skill_dirs - actual_skills
-            if missing_skills:
-                issues.append(f"AGENTS.md 引用了但 .agents/skills/ 中不存在: {', '.join(sorted(missing_skills))}")
+            # 白名单 skill 若在全局目录存在则豁免（仅本地缺失不判 FAIL）
+            if GLOBAL_SKILLS_DIR and os.path.isdir(GLOBAL_SKILLS_DIR):
+                try:
+                    global_skills = {d for d in os.listdir(GLOBAL_SKILLS_DIR)
+                                     if os.path.isdir(os.path.join(GLOBAL_SKILLS_DIR, d))}
+                except OSError:
+                    global_skills = set()
+            else:
+                global_skills = set()
+            excused = {s for s in (missing_skills & GLOBAL_SKILL_WHITELIST)
+                       if s in global_skills}
+            if excused:
+                warns_note = (f"[WARN] 以下 skill 已升为全局（~/.zcode/skills/），"
+                              f"本地缺失属正常: {', '.join(sorted(excused))}")
+                # Gate 5 设计为 WARN 不 HALT：直接记入 issues 但带 [WARN] 前缀
+                issues.append(warns_note)
+            still_missing = missing_skills - excused
+            if still_missing:
+                issues.append(f"AGENTS.md 引用了但 .agents/skills/ 中不存在: {', '.join(sorted(still_missing))}")
 
     # ── 3. 配置文件一致性 ──
     config_checks = [

@@ -1,0 +1,40 @@
+{
+  "verdict": {
+    "claim_type": "quantitative",
+    "n_windows": 29,
+    "ndraw": 100,
+    "nstock": 10,
+    "conc_rule": ">= 4/10 同行业 (>=40%)",
+    "p_conc_mean": 0.4020689655172413,
+    "p_conc_ci": [
+      0.24181818181818188,
+      0.5049999999999999
+    ],
+    "p_div_mean": 0.38620689655172413,
+    "threshold": 0.5,
+    "oos_p_conc": 0.36,
+    "oos_p_div": 0.33199999999999996,
+    "per_market": {
+      "US": {
+        "n_windows": 29,
+        "p_conc_med": 0.31,
+        "p_div_med": 0.36
+      }
+    },
+    "supported": false
+  },
+  "per_market": {
+    "US": {
+      "n_windows": 29,
+      "p_conc_med": 0.31,
+      "p_div_med": 0.36
+    }
+  },
+  "protocol_lights": {
+    "primary_metric_is_claim_quantity": true,
+    "all_in_scope_markets": true,
+    "oos": true,
+    "no_lookahead": true,
+    "survivorship_note": "DB 仅存当前存在标的，退市股缺失 → -30% 回撤概率被低估；若仍 >50% 则结论更稳"
+  }
+}

@@ -1,0 +1,565 @@
+{
+  "claim": {
+    "id": 2,
+    "title": "年线过滤策略的最大回撤比买入持有降低 >50%",
+    "statement": "仅当收盘价 ≥ MA200 时持仓（否则空仓现金 0%），其最大回撤（全程 NAV 口径） 相比始终持仓降低 >50%。",
+    "h0": "回撤降幅 ≤50%（旧口径 2026-08 实测约 43%，与台账\"✅7/7\"记录冲突，本次复测定谳）。",
+    "price_basis": "前复权 close",
+    "cost_bps": 25,
+    "signal_def": {
+      "key": "策略A（过滤）：第 t 日收益 = close_t/close_{t-1} − 1 若 close_{t-1} ≥ MA200_{t-1}， 否则 0（现金不计息，保守）；每次仓位切换扣 25bps（2×25bps/往返）。 策略B（买入持有）：始终全额持仓同口径收益。两策略均从 MA200 有效首日起累计 NAV。 MDD = max(1 − NAV_t / max_{s≤t} NAV_s)；降幅 = 1 − MDD_A/MDD_B（每股一个值）",
+      "lookahead": "信号用 T-1 收盘（含 MA200_{t-1}），收益落在 T 日——无同bar双用"
+    },
+    "verdict_metric": {
+      "primary": "每股回撤降幅的股票级 EW 均值 >50%（判据即论断声称的量本身，铁律一）",
+      "secondary": "股票级 bootstrap 95% CI；分市场降幅表",
+      "note": "旧口径\"每月采样窗口 MDD\"改为主口径全程 NAV MDD（论断未限定窗口，取最直接读法）； 63/126/252 天窗口 MDD 作为参考列一并报告"
+    },
+    "data_scope": {
+      "markets": [
+        "AU",
+        "CA",
+        "CH",
+        "CN",
+        "DE",
+        "ES",
+        "FR",
+        "HK",
+        "IN",
+        "IT",
+        "JP",
+        "KR",
+        "NL",
+        "NZ",
+        "SE",
+        "SG",
+        "TW",
+        "UK",
+        "US"
+      ],
+      "category": "stock",
+      "survivorship": "本地库仅当前成分快照（幸存者高估源，对两策略同向影响）"
+    }
+  },
+  "generated_at": "2026-09-11 08:07:12",
+  "engine": "annual-line-filter-mdd",
+  "config": {
+    "bootstrap_iters": 2000,
+    "rng_seed": 20260820,
+    "oos_frac": 0.2,
+    "ma_window": 200,
+    "cost_bps_per_switch": 25,
+    "cash_yield": 0.0,
+    "markets": [
+      "AU",
+      "CA",
+      "CH",
+      "CN",
+      "DE",
+      "ES",
+      "FR",
+      "HK",
+      "IN",
+      "IT",
+      "JP",
+      "KR",
+      "NL",
+      "NZ",
+      "SE",
+      "SG",
+      "TW",
+      "UK",
+      "US"
+    ]
+  },
+  "pools": {
+    "stocks_total": 2072
+  },
+  "survivorship_note": "本地库 indices 仅当前成分股快照；幸存者偏差对两策略同向影响，如实记录",
+  "protocol_lights": [
+    {
+      "item": "判据对齐（论断=回撤降幅>50%）",
+      "status": "✅",
+      "note": "主判据就是论断声称的回撤降幅本身（1−MDD_A/MDD_B），不用收益替代（铁律一）"
+    },
+    {
+      "item": "价格口径（前复权 close）",
+      "status": "✅",
+      "note": "daily_data.close 为前复权（000-data-biases.md A.1）"
+    },
+    {
+      "item": "时机（无前视）",
+      "status": "✅",
+      "note": "信号用 T-1 收盘（close 与 MA200 均为 T-1），收益落在 T 日——无同bar双用"
+    },
+    {
+      "item": "交易成本",
+      "status": "✅",
+      "note": "策略A每次仓位切换扣 25bps；策略B一次性建仓不扣（对降幅判据偏保守）"
+    },
+    {
+      "item": "显著性/区间（Bootstrap 2000 次）",
+      "status": "✅",
+      "note": "股票级 bootstrap（每股坍缩为降幅，种子 20260820 可复现）"
+    },
+    {
+      "item": "重叠样本处理",
+      "status": "⚠️",
+      "note": "全程 NAV MDD 天然强自相关 → 每股坍缩后股票级 bootstrap；跨股同日历相关未建模"
+    },
+    {
+      "item": "样本外验证（后 20%）",
+      "status": "✅",
+      "note": "每标的自有交易日后 20% 子区间两策略 MDD 重算降幅"
+    },
+    {
+      "item": "幸存者偏差（含退市股）",
+      "status": "⚠️",
+      "note": "本地库仅当前成分快照；对两策略同向影响，降幅判据受污染方向不确定，如实记录"
+    },
+    {
+      "item": "现金收益假设",
+      "status": "⚠️",
+      "note": "空仓期现金计 0%（不计利息，保守）；计息会进一步抬高策略A降幅"
+    }
+  ],
+  "per_market": {
+    "AU": {
+      "stocks_total": 197,
+      "stocks_processed": 194,
+      "mean_reduction_pct": 3.14,
+      "median_reduction_pct": 7.14,
+      "oos_mean_reduction_pct": -5.1
+    },
+    "CA": {
+      "stocks_total": 59,
+      "stocks_processed": 53,
+      "mean_reduction_pct": 10.15,
+      "median_reduction_pct": 10.77,
+      "oos_mean_reduction_pct": -15.98
+    },
+    "CH": {
+      "stocks_total": 20,
+      "stocks_processed": 19,
+      "mean_reduction_pct": 12.18,
+      "median_reduction_pct": 27.62,
+      "oos_mean_reduction_pct": 15.33
+    },
+    "CN": {
+      "stocks_total": 300,
+      "stocks_processed": 299,
+      "mean_reduction_pct": 4.34,
+      "median_reduction_pct": 5.06,
+      "oos_mean_reduction_pct": 7.96
+    },
+    "DE": {
+      "stocks_total": 40,
+      "stocks_processed": 40,
+      "mean_reduction_pct": 12.5,
+      "median_reduction_pct": 10.93,
+      "oos_mean_reduction_pct": 6.45
+    },
+    "ES": {
+      "stocks_total": 35,
+      "stocks_processed": 35,
+      "mean_reduction_pct": 6.15,
+      "median_reduction_pct": 12.88,
+      "oos_mean_reduction_pct": -15.11
+    },
+    "FR": {
+      "stocks_total": 39,
+      "stocks_processed": 39,
+      "mean_reduction_pct": 7.49,
+      "median_reduction_pct": 13.66,
+      "oos_mean_reduction_pct": -3.25
+    },
+    "HK": {
+      "stocks_total": 85,
+      "stocks_processed": 85,
+      "mean_reduction_pct": -1.37,
+      "median_reduction_pct": -2.0,
+      "oos_mean_reduction_pct": 9.96
+    },
+    "IN": {
+      "stocks_total": 50,
+      "stocks_processed": 50,
+      "mean_reduction_pct": 2.32,
+      "median_reduction_pct": 1.63,
+      "oos_mean_reduction_pct": 1.62
+    },
+    "IT": {
+      "stocks_total": 40,
+      "stocks_processed": 40,
+      "mean_reduction_pct": 7.55,
+      "median_reduction_pct": 10.27,
+      "oos_mean_reduction_pct": 14.64
+    },
+    "JP": {
+      "stocks_total": 223,
+      "stocks_processed": 204,
+      "mean_reduction_pct": 5.01,
+      "median_reduction_pct": 8.4,
+      "oos_mean_reduction_pct": -14.98
+    },
+    "KR": {
+      "stocks_total": 200,
+      "stocks_processed": 196,
+      "mean_reduction_pct": 0.21,
+      "median_reduction_pct": 0.42,
+      "oos_mean_reduction_pct": -0.48
+    },
+    "NL": {
+      "stocks_total": 24,
+      "stocks_processed": 24,
+      "mean_reduction_pct": 15.3,
+      "median_reduction_pct": 24.67,
+      "oos_mean_reduction_pct": 23.5
+    },
+    "NZ": {
+      "stocks_total": 47,
+      "stocks_processed": 47,
+      "mean_reduction_pct": -8.08,
+      "median_reduction_pct": -1.37,
+      "oos_mean_reduction_pct": -37.04
+    },
+    "SE": {
+      "stocks_total": 30,
+      "stocks_processed": 30,
+      "mean_reduction_pct": 11.6,
+      "median_reduction_pct": 14.41,
+      "oos_mean_reduction_pct": -1.62
+    },
+    "SG": {
+      "stocks_total": 30,
+      "stocks_processed": 30,
+      "mean_reduction_pct": 10.01,
+      "median_reduction_pct": 16.56,
+      "oos_mean_reduction_pct": -17.06
+    },
+    "TW": {
+      "stocks_total": 50,
+      "stocks_processed": 50,
+      "mean_reduction_pct": 1.14,
+      "median_reduction_pct": 6.74,
+      "oos_mean_reduction_pct": 3.17
+    },
+    "UK": {
+      "stocks_total": 97,
+      "stocks_processed": 96,
+      "mean_reduction_pct": -6.78,
+      "median_reduction_pct": 1.46,
+      "oos_mean_reduction_pct": -1.49
+    },
+    "US": {
+      "stocks_total": 506,
+      "stocks_processed": 481,
+      "mean_reduction_pct": 3.38,
+      "median_reduction_pct": 4.37,
+      "oos_mean_reduction_pct": 1.32
+    }
+  },
+  "index_reference": {
+    "US:^GSPC": {
+      "name": "S&P 500",
+      "n_days": 24789,
+      "mdd_filter_pct": 54.74,
+      "mdd_hold_pct": 86.19,
+      "reduction_pct": 36.48,
+      "oos_reduction_pct": 54.73,
+      "switches": 589
+    },
+    "JP:^N225": {
+      "name": "日经225",
+      "n_days": 15151,
+      "mdd_filter_pct": 41.56,
+      "mdd_hold_pct": 81.87,
+      "reduction_pct": 49.24,
+      "oos_reduction_pct": -30.7,
+      "switches": 391
+    },
+    "US:^IXIC": {
+      "name": "纳斯达克综合指数",
+      "n_days": 14013,
+      "mdd_filter_pct": 51.6,
+      "mdd_hold_pct": 77.93,
+      "reduction_pct": 33.79,
+      "oos_reduction_pct": 34.46,
+      "switches": 305
+    },
+    "EU:^FTSE": {
+      "name": "富时100 (英国)",
+      "n_days": 10771,
+      "mdd_filter_pct": 73.22,
+      "mdd_hold_pct": 52.57,
+      "reduction_pct": -39.29,
+      "oos_reduction_pct": -12.99,
+      "switches": 403
+    },
+    "HK:^HSI": {
+      "name": "恒生指数",
+      "n_days": 9782,
+      "mdd_filter_pct": 53.87,
+      "mdd_hold_pct": 65.18,
+      "reduction_pct": 17.36,
+      "oos_reduction_pct": 21.34,
+      "switches": 266
+    },
+    "US:^RUT": {
+      "name": "罗素2000",
+      "n_days": 9821,
+      "mdd_filter_pct": 53.09,
+      "mdd_hold_pct": 59.89,
+      "reduction_pct": 11.36,
+      "oos_reduction_pct": 16.42,
+      "switches": 303
+    },
+    "AP:^STI": {
+      "name": "新加坡海峡时报指数",
+      "n_days": 9658,
+      "mdd_filter_pct": 44.04,
+      "mdd_hold_pct": 67.72,
+      "reduction_pct": 34.97,
+      "oos_reduction_pct": 1.73,
+      "switches": 281
+    },
+    "EU:^GDAXI": {
+      "name": "德国 DAX",
+      "n_days": 9772,
+      "mdd_filter_pct": 39.26,
+      "mdd_hold_pct": 72.68,
+      "reduction_pct": 45.99,
+      "oos_reduction_pct": 49.44,
+      "switches": 215
+    },
+    "US:^SP500TR": {
+      "name": "S&P 500 Total Return Index",
+      "n_days": 9742,
+      "mdd_filter_pct": 30.37,
+      "mdd_hold_pct": 55.25,
+      "reduction_pct": 45.03,
+      "oos_reduction_pct": 29.19,
+      "switches": 225
+    },
+    "EU:^FCHI": {
+      "name": "法国 CAC 40",
+      "n_days": 9264,
+      "mdd_filter_pct": 36.25,
+      "mdd_hold_pct": 65.29,
+      "reduction_pct": 44.47,
+      "oos_reduction_pct": 30.45,
+      "switches": 277
+    },
+    "AP:^JKSE": {
+      "name": "印尼雅加达综合",
+      "n_days": 8853,
+      "mdd_filter_pct": 43.53,
+      "mdd_hold_pct": 65.33,
+      "reduction_pct": 33.37,
+      "oos_reduction_pct": 36.51,
+      "switches": 196
+    },
+    "US:^DJI": {
+      "name": "道琼斯工业平均",
+      "n_days": 8731,
+      "mdd_filter_pct": 54.3,
+      "mdd_hold_pct": 53.78,
+      "reduction_pct": -0.97,
+      "oos_reduction_pct": 39.25,
+      "switches": 305
+    },
+    "AP:^AXJO": {
+      "name": "澳大利亚 ASX 200",
+      "n_days": 8531,
+      "mdd_filter_pct": 36.7,
+      "mdd_hold_pct": 53.94,
+      "reduction_pct": 31.96,
+      "oos_reduction_pct": 33.07,
+      "switches": 271
+    },
+    "HK:^HSCE": {
+      "name": "恒生中国企业指数 (H股)",
+      "n_days": 8164,
+      "mdd_filter_pct": 75.36,
+      "mdd_hold_pct": 86.55,
+      "reduction_pct": 12.93,
+      "oos_reduction_pct": 16.41,
+      "switches": 272
+    },
+    "AP:^KLSE": {
+      "name": "马来西亚 KLCI",
+      "n_days": 8040,
+      "mdd_filter_pct": 47.48,
+      "mdd_hold_pct": 79.34,
+      "reduction_pct": 40.16,
+      "oos_reduction_pct": -57.05,
+      "switches": 233
+    },
+    "KR:^KS11": {
+      "name": "KOSPI 综合指数",
+      "n_days": 7309,
+      "mdd_filter_pct": 58.11,
+      "mdd_hold_pct": 55.74,
+      "reduction_pct": -4.26,
+      "oos_reduction_pct": -7.05,
+      "switches": 233
+    },
+    "IN:^BSESN": {
+      "name": "印度 SENSEX 30",
+      "n_days": 7179,
+      "mdd_filter_pct": 50.78,
+      "mdd_hold_pct": 60.91,
+      "reduction_pct": 16.62,
+      "oos_reduction_pct": -16.44,
+      "switches": 208
+    },
+    "CN:000001.SS": {
+      "name": "上证综指",
+      "n_days": 7060,
+      "mdd_filter_pct": 56.21,
+      "mdd_hold_pct": 71.98,
+      "reduction_pct": 21.91,
+      "oos_reduction_pct": -21.42,
+      "switches": 194
+    },
+    "TW:^TWII": {
+      "name": "台湾加权指数",
+      "n_days": 7141,
+      "mdd_filter_pct": 42.31,
+      "mdd_hold_pct": 66.22,
+      "reduction_pct": 36.11,
+      "oos_reduction_pct": 40.91,
+      "switches": 215
+    },
+    "CN:399001.SZ": {
+      "name": "深证成指",
+      "n_days": 7027,
+      "mdd_filter_pct": 59.84,
+      "mdd_hold_pct": 70.98,
+      "reduction_pct": 15.68,
+      "oos_reduction_pct": 20.31,
+      "switches": 230
+    },
+    "KR:^KQ11": {
+      "name": "KOSDAQ 指数",
+      "n_days": 6369,
+      "mdd_filter_pct": 61.01,
+      "mdd_hold_pct": 72.3,
+      "reduction_pct": 15.62,
+      "oos_reduction_pct": 26.51,
+      "switches": 232
+    },
+    "CN:000016.SS": {
+      "name": "上证50",
+      "n_days": 5498,
+      "mdd_filter_pct": 41.41,
+      "mdd_hold_pct": 72.41,
+      "reduction_pct": 42.81,
+      "oos_reduction_pct": 27.15,
+      "switches": 122
+    },
+    "CN:000905.SS": {
+      "name": "中证500",
+      "n_days": 5255,
+      "mdd_filter_pct": 68.58,
+      "mdd_hold_pct": 72.42,
+      "reduction_pct": 5.3,
+      "oos_reduction_pct": 38.74,
+      "switches": 128
+    },
+    "EU:^STOXX50E": {
+      "name": "欧洲斯托克50",
+      "n_days": 4861,
+      "mdd_filter_pct": 39.38,
+      "mdd_hold_pct": 54.7,
+      "reduction_pct": 28.0,
+      "oos_reduction_pct": 14.1,
+      "switches": 143
+    },
+    "IN:^NSEI": {
+      "name": "印度 Nifty 50",
+      "n_days": 4644,
+      "mdd_filter_pct": 29.7,
+      "mdd_hold_pct": 45.37,
+      "reduction_pct": 34.55,
+      "oos_reduction_pct": -25.18,
+      "switches": 144
+    },
+    "GLOBAL:ACWI": {
+      "name": "基准",
+      "n_days": 4196,
+      "mdd_filter_pct": 31.0,
+      "mdd_hold_pct": 33.53,
+      "reduction_pct": 7.52,
+      "oos_reduction_pct": 36.96,
+      "switches": 121
+    },
+    "CN:399006.SZ": {
+      "name": "创业板指",
+      "n_days": 3941,
+      "mdd_filter_pct": 71.55,
+      "mdd_hold_pct": 69.74,
+      "reduction_pct": -2.6,
+      "oos_reduction_pct": 6.63,
+      "switches": 99
+    },
+    "CN:399673.SZ": {
+      "name": "创业板50",
+      "n_days": 2963,
+      "mdd_filter_pct": 69.3,
+      "mdd_hold_pct": 74.93,
+      "reduction_pct": 7.5,
+      "oos_reduction_pct": -17.68,
+      "switches": 68
+    },
+    "CN:000688.SS": {
+      "name": "科创板50",
+      "n_days": 1609,
+      "mdd_filter_pct": 31.56,
+      "mdd_hold_pct": 60.08,
+      "reduction_pct": 47.46,
+      "oos_reduction_pct": 0.0,
+      "switches": 43
+    },
+    "CN:000300.SS": {
+      "name": "沪深300",
+      "n_days": 1324,
+      "mdd_filter_pct": 20.11,
+      "mdd_hold_pct": 36.05,
+      "reduction_pct": 44.23,
+      "oos_reduction_pct": -91.76,
+      "switches": 40
+    }
+  },
+  "index_reference_note": "指数层面参照（同算法同成本）：论断实战语境为指数择时；主判据仍为个股层面股票级统计",
+  "aggregate": {
+    "n_stocks": 2012,
+    "mean_reduction_pct": 3.34,
+    "median_reduction_pct": 5.23
+  },
+  "aggregate_oos": {
+    "n_stocks": 2012,
+    "mean_reduction_pct": -1.14
+  },
+  "verdict": {
+    "threshold_pct": 50.0,
+    "mean_reduction_pct": 3.34,
+    "median_reduction_pct": 5.23,
+    "n_stocks": 2012,
+    "stock_ew_boot": {
+      "mean_pct": 3.34,
+      "ci95_low_pct": 2.16,
+      "ci95_high_pct": 4.48
+    },
+    "above_threshold_pooled": false,
+    "ci_low_above_threshold": false,
+    "oos_mean_reduction_pct": -1.14,
+    "oos_n_stocks": 2012,
+    "oos_stock_ew_boot": {
+      "mean_pct": -1.14,
+      "ci95_low_pct": -2.9,
+      "ci95_high_pct": 0.66
+    },
+    "oos_above_threshold_pooled": false,
+    "supported": false
+  }
+}

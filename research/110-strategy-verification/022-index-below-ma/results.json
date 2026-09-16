@@ -1,83 +1,390 @@
 {
-  "US": {
-    "market": "US",
-    "index": "^GSPC",
-    "name": "S&P 500",
-    "signal_count": 7872,
-    "lookahead_20": {
-      "signal_count": 7872,
-      "drawdown_A_avg": 0.017402,
-      "drawdown_B_avg": 0.057014,
-      "reduction_pct": 69.48,
-      "claim_supported": true
+  "claim": {
+    "id": 22,
+    "title": "大盘低于年线时降仓位至 <30%，比不降仓位的组合在短期内回撤低",
+    "statement": "定性论断：指数收盘低于 MA200（年线）时把仓位降到 30%，其余时间 100% 持仓， 相对始终满仓，126 交易日（约 6 个月）滚动窗口内最大回撤更低。",
+    "h0": "不降仓位无额外风险（窗口回撤降幅 <=0）。",
+    "price_basis": "前复权 close",
+    "cost_bps": 25,
+    "signal_def": {
+      "key": "第 t 日仓位 = 30% 若 close_{t-1} < MA200_{t-1}，否则 100%；日收益 = 仓位 x r_t， 调仓日对交易部分扣 25bps；现金不计息（保守）。对照 = 始终满仓。 每 126 日窗口（每 21 日滚动一窗）内从窗口起点累计 NAV 取 MDD， 每窗降幅 = 1 - MDD_reduce/MDD_hold；全部指数的窗口混合同池统计",
+      "lookahead": "仓位由 T-1 收盘（含 MA200_{T-1}）决定，作用于 T 日收益——无同bar双用"
     },
-    "lookahead_63": {
-      "signal_count": 7872,
-      "drawdown_A_avg": 0.033184,
-      "drawdown_B_avg": 0.106912,
-      "reduction_pct": 68.96,
-      "claim_supported": true
+    "verdict_metric": {
+      "primary": "全指数窗口池降幅均值 >0 且 bootstrap 95% CI 下限 >0（定性论断，判据=方向而非阈值，铁律一）",
+      "secondary": "分指数全程 NAV MDD 降幅表（与旧口径 ~69% 对照）；窗口中位数",
+      "note": "与"
     },
-    "lookahead_126": {
-      "signal_count": 7859,
-      "drawdown_A_avg": 0.047432,
-      "drawdown_B_avg": 0.150429,
-      "reduction_pct": 68.47,
-      "claim_supported": true
+    "data_scope": {
+      "markets": "全部库内指数（category=index，剔除 ^VIX；含 CN/US/HK/JP/KR/EU/AP/GLOBAL）",
+      "category": "index",
+      "survivorship": "指数层面不适用"
     }
   },
-  "CN": {
-    "market": "CN",
-    "index": "000001.SS",
-    "name": "上证指数",
-    "signal_count": 3217,
-    "lookahead_20": {
-      "signal_count": 3207,
-      "drawdown_A_avg": 0.017718,
-      "drawdown_B_avg": 0.058043,
-      "reduction_pct": 69.48,
-      "claim_supported": true
+  "generated_at": "2026-09-11 08:24:36",
+  "engine": "annual-line-reduce-mdd",
+  "config": {
+    "bootstrap_iters": 2000,
+    "rng_seed": 20260820,
+    "oos_frac": 0.2,
+    "low_position": 0.3,
+    "ma_window": 200,
+    "window_days": 126,
+    "step_days": 21,
+    "block": 22,
+    "cost_bps_on_traded": 25
+  },
+  "survivorship_note": "指数层面不适用幸存者偏差",
+  "protocol_lights": [
+    {
+      "item": "判据对齐（定性方向论断）",
+      "status": "✅",
+      "note": "论断只声称回撤更低，主判据 = 降幅>0 且 CI 下限>0，不硬安阈值（铁律一；#2 教训）"
     },
-    "lookahead_63": {
-      "signal_count": 3206,
-      "drawdown_A_avg": 0.035099,
-      "drawdown_B_avg": 0.112751,
-      "reduction_pct": 68.87,
-      "claim_supported": true
+    {
+      "item": "价格口径（前复权 close）",
+      "status": "✅",
+      "note": "000-data-biases.md A.1"
     },
-    "lookahead_126": {
-      "signal_count": 3205,
-      "drawdown_A_avg": 0.04913,
-      "drawdown_B_avg": 0.154311,
-      "reduction_pct": 68.16,
-      "claim_supported": true
+    {
+      "item": "时机（无前视）",
+      "status": "✅",
+      "note": "仓位由 T-1 收盘（含 MA200_{T-1}）决定，作用 T 日收益"
+    },
+    {
+      "item": "交易成本",
+      "status": "✅",
+      "note": "只对仓位变动部分扣 25bps；现金不计息（保守）"
+    },
+    {
+      "item": "显著性/区间（Bootstrap 2000 次）",
+      "status": "✅",
+      "note": "窗口池圆形块 bootstrap 块长 22，种子 20260820"
+    },
+    {
+      "item": "重叠样本处理",
+      "status": "⚠️",
+      "note": "相邻窗共享约 83% 数据且跨指数同日历相关；块 bootstrap 缓解，非完全消除"
+    },
+    {
+      "item": "样本外验证（后 20%）",
+      "status": "✅",
+      "note": "每指数后 20% 窗口混池报告"
+    },
+    {
+      "item": "幸存者偏差",
+      "status": "✅",
+      "note": "指数层面不适用"
+    },
+    {
+      "item": "口径对照旧结论",
+      "status": "⚠️",
+      "note": "旧 ✅约69% 为 US/CN/HK 三指数旧窗口法；本次全指数混池，数字不可直接比，方向结论可比"
+    },
+    {
+      "item": "可复现",
+      "status": "✅",
+      "note": "种子固定重跑同数"
+    }
+  ],
+  "per_index": {
+    "US:^GSPC": {
+      "name": "S&P 500",
+      "n_days": 24789,
+      "full_mdd_reduce_pct": 26.5,
+      "window_mean_reduction_pct": 17.33,
+      "window_median_reduction_pct": 0.0,
+      "oos_window_mean_reduction_pct": 12.23,
+      "pct_days_below_ma200": 32.0
+    },
+    "JP:^N225": {
+      "name": "日经225",
+      "n_days": 15151,
+      "full_mdd_reduce_pct": 36.47,
+      "window_mean_reduction_pct": 19.86,
+      "window_median_reduction_pct": 3.15,
+      "oos_window_mean_reduction_pct": 13.41,
+      "pct_days_below_ma200": 36.1
+    },
+    "US:^IXIC": {
+      "name": "纳斯达克综合指数",
+      "n_days": 14013,
+      "full_mdd_reduce_pct": 24.93,
+      "window_mean_reduction_pct": 15.85,
+      "window_median_reduction_pct": 0.0,
+      "oos_window_mean_reduction_pct": 13.92,
+      "pct_days_below_ma200": 29.0
+    },
+    "EU:^FTSE": {
+      "name": "富时100 (英国)",
+      "n_days": 10771,
+      "full_mdd_reduce_pct": -3.91,
+      "window_mean_reduction_pct": 10.38,
+      "window_median_reduction_pct": 0.0,
+      "oos_window_mean_reduction_pct": 3.13,
+      "pct_days_below_ma200": 31.3
+    },
+    "HK:^HSI": {
+      "name": "恒生指数",
+      "n_days": 9782,
+      "full_mdd_reduce_pct": 26.6,
+      "window_mean_reduction_pct": 20.13,
+      "window_median_reduction_pct": 1.29,
+      "oos_window_mean_reduction_pct": 24.98,
+      "pct_days_below_ma200": 38.3
+    },
+    "US:^RUT": {
+      "name": "罗素2000",
+      "n_days": 9821,
+      "full_mdd_reduce_pct": 22.5,
+      "window_mean_reduction_pct": 14.39,
+      "window_median_reduction_pct": 0.0,
+      "oos_window_mean_reduction_pct": 17.35,
+      "pct_days_below_ma200": 31.1
+    },
+    "AP:^STI": {
+      "name": "新加坡海峡时报指数",
+      "n_days": 9658,
+      "full_mdd_reduce_pct": 36.44,
+      "window_mean_reduction_pct": 18.87,
+      "window_median_reduction_pct": 9.46,
+      "oos_window_mean_reduction_pct": 8.69,
+      "pct_days_below_ma200": 38.8
+    },
+    "EU:^GDAXI": {
+      "name": "德国 DAX",
+      "n_days": 9772,
+      "full_mdd_reduce_pct": 45.83,
+      "window_mean_reduction_pct": 15.46,
+      "window_median_reduction_pct": 0.0,
+      "oos_window_mean_reduction_pct": 11.89,
+      "pct_days_below_ma200": 29.4
+    },
+    "US:^SP500TR": {
+      "name": "S&P 500 Total Return Index",
+      "n_days": 9742,
+      "full_mdd_reduce_pct": 44.43,
+      "window_mean_reduction_pct": 9.08,
+      "window_median_reduction_pct": 0.0,
+      "oos_window_mean_reduction_pct": 11.32,
+      "pct_days_below_ma200": 21.1
+    },
+    "EU:^FCHI": {
+      "name": "法国 CAC 40",
+      "n_days": 9264,
+      "full_mdd_reduce_pct": 41.52,
+      "window_mean_reduction_pct": 17.22,
+      "window_median_reduction_pct": 3.86,
+      "oos_window_mean_reduction_pct": 20.94,
+      "pct_days_below_ma200": 35.8
+    },
+    "AP:^JKSE": {
+      "name": "印尼雅加达综合",
+      "n_days": 8853,
+      "full_mdd_reduce_pct": 36.3,
+      "window_mean_reduction_pct": 19.08,
+      "window_median_reduction_pct": 4.43,
+      "oos_window_mean_reduction_pct": 17.23,
+      "pct_days_below_ma200": 35.7
+    },
+    "US:^DJI": {
+      "name": "道琼斯工业平均",
+      "n_days": 8731,
+      "full_mdd_reduce_pct": 13.93,
+      "window_mean_reduction_pct": 9.47,
+      "window_median_reduction_pct": 0.0,
+      "oos_window_mean_reduction_pct": 12.1,
+      "pct_days_below_ma200": 24.5
+    },
+    "AP:^AXJO": {
+      "name": "澳大利亚 ASX 200",
+      "n_days": 8531,
+      "full_mdd_reduce_pct": 45.29,
+      "window_mean_reduction_pct": 12.48,
+      "window_median_reduction_pct": 0.0,
+      "oos_window_mean_reduction_pct": 14.05,
+      "pct_days_below_ma200": 29.8
+    },
+    "HK:^HSCE": {
+      "name": "恒生中国企业指数 (H股)",
+      "n_days": 8164,
+      "full_mdd_reduce_pct": 17.47,
+      "window_mean_reduction_pct": 22.46,
+      "window_median_reduction_pct": 13.14,
+      "oos_window_mean_reduction_pct": 21.97,
+      "pct_days_below_ma200": 49.1
+    },
+    "AP:^KLSE": {
+      "name": "马来西亚 KLCI",
+      "n_days": 8040,
+      "full_mdd_reduce_pct": 46.29,
+      "window_mean_reduction_pct": 19.72,
+      "window_median_reduction_pct": 6.69,
+      "oos_window_mean_reduction_pct": 9.39,
+      "pct_days_below_ma200": 41.1
+    },
+    "KR:^KS11": {
+      "name": "KOSPI 综合指数",
+      "n_days": 7309,
+      "full_mdd_reduce_pct": 9.87,
+      "window_mean_reduction_pct": 18.24,
+      "window_median_reduction_pct": 9.76,
+      "oos_window_mean_reduction_pct": 23.33,
+      "pct_days_below_ma200": 40.2
+    },
+    "IN:^BSESN": {
+      "name": "印度 SENSEX 30",
+      "n_days": 7179,
+      "full_mdd_reduce_pct": 18.02,
+      "window_mean_reduction_pct": 12.3,
+      "window_median_reduction_pct": 0.0,
+      "oos_window_mean_reduction_pct": 4.73,
+      "pct_days_below_ma200": 30.7
+    },
+    "CN:000001.SS": {
+      "name": "上证综指",
+      "n_days": 7060,
+      "full_mdd_reduce_pct": 26.57,
+      "window_mean_reduction_pct": 22.75,
+      "window_median_reduction_pct": 14.65,
+      "oos_window_mean_reduction_pct": 16.18,
+      "pct_days_below_ma200": 47.2
+    },
+    "TW:^TWII": {
+      "name": "台湾加权指数",
+      "n_days": 7141,
+      "full_mdd_reduce_pct": 42.14,
+      "window_mean_reduction_pct": 18.04,
+      "window_median_reduction_pct": 2.28,
+      "oos_window_mean_reduction_pct": 15.48,
+      "pct_days_below_ma200": 34.3
+    },
+    "CN:399001.SZ": {
+      "name": "深证成指",
+      "n_days": 7027,
+      "full_mdd_reduce_pct": 16.86,
+      "window_mean_reduction_pct": 21.9,
+      "window_median_reduction_pct": 13.48,
+      "oos_window_mean_reduction_pct": 21.69,
+      "pct_days_below_ma200": 49.9
+    },
+    "KR:^KQ11": {
+      "name": "KOSDAQ 指数",
+      "n_days": 6369,
+      "full_mdd_reduce_pct": 27.38,
+      "window_mean_reduction_pct": 22.95,
+      "window_median_reduction_pct": 18.33,
+      "oos_window_mean_reduction_pct": 27.35,
+      "pct_days_below_ma200": 47.6
+    },
+    "CN:000016.SS": {
+      "name": "上证50",
+      "n_days": 5498,
+      "full_mdd_reduce_pct": 35.72,
+      "window_mean_reduction_pct": 23.88,
+      "window_median_reduction_pct": 12.62,
+      "oos_window_mean_reduction_pct": 21.3,
+      "pct_days_below_ma200": 50.7
+    },
+    "CN:000905.SS": {
+      "name": "中证500",
+      "n_days": 5255,
+      "full_mdd_reduce_pct": 11.33,
+      "window_mean_reduction_pct": 20.86,
+      "window_median_reduction_pct": 5.58,
+      "oos_window_mean_reduction_pct": 27.05,
+      "pct_days_below_ma200": 40.4
+    },
+    "EU:^STOXX50E": {
+      "name": "欧洲斯托克50",
+      "n_days": 4861,
+      "full_mdd_reduce_pct": 40.44,
+      "window_mean_reduction_pct": 20.22,
+      "window_median_reduction_pct": 11.6,
+      "oos_window_mean_reduction_pct": 8.61,
+      "pct_days_below_ma200": 38.3
+    },
+    "IN:^NSEI": {
+      "name": "印度 Nifty 50",
+      "n_days": 4644,
+      "full_mdd_reduce_pct": 46.78,
+      "window_mean_reduction_pct": 10.19,
+      "window_median_reduction_pct": 0.0,
+      "oos_window_mean_reduction_pct": 7.99,
+      "pct_days_below_ma200": 28.1
+    },
+    "GLOBAL:ACWI": {
+      "name": "基准",
+      "n_days": 4196,
+      "full_mdd_reduce_pct": 21.3,
+      "window_mean_reduction_pct": 10.98,
+      "window_median_reduction_pct": 0.0,
+      "oos_window_mean_reduction_pct": 8.79,
+      "pct_days_below_ma200": 23.1
+    },
+    "CN:399006.SZ": {
+      "name": "创业板指",
+      "n_days": 3941,
+      "full_mdd_reduce_pct": 1.71,
+      "window_mean_reduction_pct": 24.49,
+      "window_median_reduction_pct": 11.22,
+      "oos_window_mean_reduction_pct": 20.92,
+      "pct_days_below_ma200": 49.0
+    },
+    "CN:399673.SZ": {
+      "name": "创业板50",
+      "n_days": 2963,
+      "full_mdd_reduce_pct": 8.63,
+      "window_mean_reduction_pct": 28.87,
+      "window_median_reduction_pct": 23.32,
+      "oos_window_mean_reduction_pct": -0.97,
+      "pct_days_below_ma200": 52.2
+    },
+    "CN:000688.SS": {
+      "name": "科创板50",
+      "n_days": 1609,
+      "full_mdd_reduce_pct": 31.99,
+      "window_mean_reduction_pct": 26.28,
+      "window_median_reduction_pct": 18.34,
+      "oos_window_mean_reduction_pct": -5.65,
+      "pct_days_below_ma200": 51.8
+    },
+    "CN:000300.SS": {
+      "name": "沪深300",
+      "n_days": 1324,
+      "full_mdd_reduce_pct": 35.31,
+      "window_mean_reduction_pct": 22.96,
+      "window_median_reduction_pct": 0.53,
+      "oos_window_mean_reduction_pct": -10.98,
+      "pct_days_below_ma200": 52.2
     }
   },
-  "HK": {
-    "market": "HK",
-    "index": "^HSI",
-    "name": "恒生指数",
-    "signal_count": 3659,
-    "lookahead_20": {
-      "signal_count": 3639,
-      "drawdown_A_avg": 0.021196,
-      "drawdown_B_avg": 0.069246,
-      "reduction_pct": 69.39,
-      "claim_supported": true
+  "aggregate": {
+    "n_windows": 11048,
+    "n_indices": 30,
+    "mean_window_reduction_pct": 17.29,
+    "median_window_reduction_pct": 0.99
+  },
+  "aggregate_oos": {
+    "n_windows": 2122,
+    "mean_window_reduction_pct": 14.47
+  },
+  "verdict": {
+    "claim_type": "qualitative（方向性：降幅>0 即支持）",
+    "mean_window_reduction_pct": 17.29,
+    "median_window_reduction_pct": 0.99,
+    "n_windows": 11048,
+    "n_indices": 30,
+    "window_boot_ci": {
+      "mean_pct": 17.29,
+      "ci95_low_pct": 15.32,
+      "ci95_high_pct": 17.84
     },
-    "lookahead_63": {
-      "signal_count": 3612,
-      "drawdown_A_avg": 0.040158,
-      "drawdown_B_avg": 0.128938,
-      "reduction_pct": 68.86,
-      "claim_supported": true
-    },
-    "lookahead_126": {
-      "signal_count": 3595,
-      "drawdown_A_avg": 0.05761,
-      "drawdown_B_avg": 0.181791,
-      "reduction_pct": 68.31,
-      "claim_supported": true
-    }
+    "above_zero_pooled": true,
+    "ci_low_above_zero": true,
+    "oos_mean_window_reduction_pct": 14.47,
+    "oos_n_windows": 2122,
+    "oos_above_zero": true,
+    "supported": true
   }
 }

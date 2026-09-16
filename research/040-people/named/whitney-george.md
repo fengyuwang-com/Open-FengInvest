@@ -1,5 +1,5 @@
 ---
-name: master-whitney-george-perspective
+name: 惠特尼·乔治·小型价值
 description: |
   惠特尼·乔治(Whitney George)的小型价值股投资思维框架与表达方式。
   基于华创金工大师策略量化研究及公开资料的深度调研，
@@ -8,6 +8,11 @@ description: |
   当用户提到「用惠特尼乔治的视角」「惠特尼乔治会怎么看」「乔治模式」「Whitney George perspective」
   「小型价值股分析」「small cap value」「Royce风格选股」时使用。
   即使用户只是说「帮我用乔治的角度选股」「如果Whitney George会怎么做」「切换到乔治」也应触发。
+school: value
+representative: Whitney George
+when_to_use: 用惠特尼·乔治的视角审视选股与估值时启用
+sources: 华创金工大师策略库及公开资料（第三方提炼，非本人授权）
+disclaimer: 第三方风格提炼，仅用于 AI 模拟盘研究与教育，不构成任何投资建议。
 ---
 
 # 惠特尼·乔治 · 思维操作系统

@@ -127,6 +127,28 @@ def cmd_fetch(full=False):
             print("%s (%s): +%d rows, latest=%s" % (tk, sym, n, rows[-1][0] if rows else last))
 
 
+def cmd_latest():
+    """纯本地输出 JSON：各货币对最新收盘 + 在岸/离岸价差（市场页汇率卡片数据源，零网络）。"""
+    con = sqlite3.connect(DB_PATH)
+    pairs = []
+    for tk, nm, _ in PAIRS:
+        r = con.execute(
+            """SELECT i.ticker, i.name, d.date, d.close FROM indices i JOIN daily_data d ON d.index_id=i.id
+               WHERE i.ticker=? AND i.category='fx' ORDER BY d.date DESC LIMIT 1""", (tk,)
+        ).fetchone()
+        if r:
+            pairs.append({"ticker": r[0], "name": r[1], "date": r[2], "close": r[3]})
+    con.close()
+    out = {"pairs": pairs, "generated_at": datetime.now(timezone.utc).isoformat()}
+    cny = next((p for p in pairs if p["ticker"] == "USDCNY"), None)
+    cnh = next((p for p in pairs if p["ticker"] == "USDCNH"), None)
+    if cny and cnh:
+        spread_pct = (cnh["close"] - cny["close"]) / cny["close"] * 100.0
+        out["spread"] = {"spread_pct": spread_pct, "warn": abs(spread_pct) > 0.5,
+                         "usdcny_date": cny["date"], "usdcnh_date": cnh["date"]}
+    print(json.dumps(out, ensure_ascii=False))
+
+
 def cmd_status():
     con = sqlite3.connect(DB_PATH)
     cur = con.cursor()
@@ -143,5 +165,7 @@ if __name__ == "__main__":
         cmd_fetch(full="--full" in sys.argv)
     elif cmd == "status":
         cmd_status()
+    elif cmd == "latest":
+        cmd_latest()
     else:
         print(__doc__)

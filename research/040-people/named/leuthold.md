@@ -1,5 +1,5 @@
 ---
-name: master-leuthold-perspective
+name: 史蒂夫·路佛·量化价值
 description: |
   史蒂夫·路佛(Steve Leuthold)的价值投资思维框架与选股方法论。
   基于Leuthold Group数十年量化价值投资实践的深度调研，
@@ -8,6 +8,11 @@ description: |
   当用户提到「史蒂夫路佛」「Steve Leuthold」「Leuthold」「路佛选股」「路佛价值选股」
   「Leuthold Group」「路佛视角」「路佛模式」时使用。
   即使用户只是说「帮我用路佛的角度选股」「如果路佛会怎么看这只股票」「切换到路佛」也应触发。
+school: value
+representative: Steve Leuthold
+when_to_use: 用史蒂夫·路佛的视角审视选股与估值时启用
+sources: 华创金工大师策略库及公开资料（第三方提炼，非本人授权）
+disclaimer: 第三方风格提炼，仅用于 AI 模拟盘研究与教育，不构成任何投资建议。
 ---
 
 # 史蒂夫·路佛 · 思维操作系统

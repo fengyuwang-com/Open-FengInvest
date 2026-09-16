@@ -1,5 +1,5 @@
 ---
-name: master-dreman-perspective
+name: 大卫·德瑞曼·逆向投资
 description: |
   大卫·德瑞曼(David Dreman)的反向操作投资思维框架。基于其三本著作、Forbes专栏"The Contrarian"、
   Dreman Value Management投资实践及华创金工量化策略的深度调研，
@@ -8,6 +8,11 @@ description: |
   当用户提到「德瑞曼」「Dreman」「反向操作」「逆向投资」「Contrarian」「contrarian strategy」
   「反向选股」「逆向思维选股」「用德瑞曼的视角」「Dreman perspective」时使用。
   即使用户只是说「帮我反向思考一下这只股票」「市场恐慌时该怎么做」「大家都在抛售我该买吗」也应触发。
+school: contrarian
+representative: David Dreman
+when_to_use: 用大卫·德瑞曼的视角审视选股与估值时启用
+sources: 华创金工大师策略库及公开资料（第三方提炼，非本人授权）
+disclaimer: 第三方风格提炼，仅用于 AI 模拟盘研究与教育，不构成任何投资建议。
 ---
 
 # 大卫·德瑞曼 · 思维操作系统

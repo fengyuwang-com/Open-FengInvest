@@ -405,7 +405,7 @@ def main():
         if not any(fil for fil in (s.get("file") for s in report["subjects"].values())):
             print()
             print("提示：本地未找到 FinEval 学术 val 数据。请按官方 docs 准备（FinEval 为只读仓库，不代写入）")
-            print("  1) cd ~/FinEval\\code\\data")
+            print("  1) cd ~/FinEval/code/data")
             print("  2) wget https://huggingface.co/datasets/SUFE-AIFLM-Lab/FinEval/resolve/main/FinEval.zip")
             print("  3) unzip FinEval.zip   # 期望出现 dev/val/test 目录结构")
             print("  也可以用 --data-dir <你的 val 目录> 指定别的位置。")

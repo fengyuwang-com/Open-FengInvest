@@ -5,46 +5,46 @@
 
 <!-- Action Bar -->
 <div class="card" style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
-  <button class="btn btn-primary" onclick="loadHistory()">刷新数据</button>
-  <span id="status-spinner" style="display:none;font-size:13px;color:var(--primary);">⏳ 加载中...</span>
+  <button class="btn btn-primary" onclick="loadHistory()" data-i18n="watchhist.refresh">刷新数据</button>
+  <span id="status-spinner" style="display:none;font-size:13px;color:var(--primary);" data-i18n="watchhist.loading">⏳ 加载中...</span>
 </div>
 
 <!-- Summary Dashboard -->
 <div class="dashboard-grid" id="summary-grid">
   <div class="stat-card">
     <div class="stat-value" id="total-trades" style="color:var(--text);">—</div>
-    <div class="stat-label">总交易</div>
+    <div class="stat-label" data-i18n="watchhist.statTotal">总交易</div>
   </div>
   <div class="stat-card">
     <div class="stat-value positive" id="wins">—</div>
-    <div class="stat-label">盈利 🟢</div>
+    <div class="stat-label" data-i18n="watchhist.statWins">盈利 🟢</div>
   </div>
   <div class="stat-card">
     <div class="stat-value negative" id="losses">—</div>
-    <div class="stat-label">亏损 🔴</div>
+    <div class="stat-label" data-i18n="watchhist.statLosses">亏损 🔴</div>
   </div>
   <div class="stat-card">
     <div class="stat-value" id="win-rate" style="color:var(--primary);">—</div>
-    <div class="stat-label">胜率</div>
+    <div class="stat-label" data-i18n="watchhist.statWinRate">胜率</div>
   </div>
 </div>
 
 <!-- Active Holdings -->
-<div class="section-title">当前持仓</div>
+<div class="section-title" data-i18n="watchhist.active">当前持仓</div>
 <div id="active-list">
-  <div class="empty-state"><p>加载中...</p></div>
+  <div class="empty-state"><p data-i18n="watchhist.loadingText">加载中...</p></div>
 </div>
 
 <!-- Closed Holdings -->
-<div class="section-title" style="margin-top:24px">已平仓</div>
+<div class="section-title" style="margin-top:24px" data-i18n="watchhist.closed">已平仓</div>
 <div id="closed-list">
-  <div class="empty-state"><p>加载中...</p></div>
+  <div class="empty-state"><p data-i18n="watchhist.loadingText">加载中...</p></div>
 </div>
 
 <!-- Loss Analysis -->
-<div class="section-title" style="margin-top:24px;color:var(--red);">亏损交易分析</div>
+<div class="section-title" style="margin-top:24px;color:var(--danger);" data-i18n="watchhist.lossAnalysis">亏损交易分析</div>
 <div id="loss-list">
-  <div class="empty-state"><p>加载中...</p></div>
+  <div class="empty-state"><p data-i18n="watchhist.loadingText">加载中...</p></div>
 </div>
 
 <script>
@@ -69,7 +69,7 @@ async function loadHistory() {
     renderClosed(closed);
     renderLosses(closed);
   } catch (e) {
-    document.getElementById('active-list').innerHTML = '<div class="empty-state"><p>加载失败: ' + e.message + '</p></div>';
+    document.getElementById('active-list').innerHTML = '<div class="empty-state"><p>' + FengI18n.t('watchhist.loadFailed', '加载失败: ') + e.message + '</p></div>';
   } finally {
     document.getElementById('status-spinner').style.display = 'none';
   }
@@ -78,7 +78,7 @@ async function loadHistory() {
 function renderActive(active) {
   const container = document.getElementById('active-list');
   if (active.length === 0) {
-    container.innerHTML = '<div class="empty-state"><p>暂无当前持仓</p></div>';
+    container.innerHTML = '<div class="empty-state"><p>' + FengI18n.t('watchhist.noActive', '暂无当前持仓') + '</p></div>';
     return;
   }
   let html = '<div class="entry-list">';
@@ -89,7 +89,7 @@ function renderActive(active) {
     const retStr = ret != null ? (ret >= 0 ? '+' : '') + ret.toFixed(1) + '%' : '—';
     html += '<a href="/holdings/' + h.ticker + '" class="entry-item">';
     html += '<div class="entry-title">🟢 ' + h.ticker + '</div>';
-    html += '<div class="entry-preview">成本 ' + pos.avg_cost + ' → 现价 ' + pos.current_price + '  <span class="' + retCls + '">' + retStr + '</span></div>';
+    html += '<div class="entry-preview">' + FengI18n.t('watchhist.cost', '成本 ') + pos.avg_cost + FengI18n.t('watchhist.now', ' → 现价 ') + pos.current_price + '  <span class="' + retCls + '">' + retStr + '</span></div>';
     html += '</a>';
   });
   html += '</div>';
@@ -99,7 +99,7 @@ function renderActive(active) {
 function renderClosed(closed) {
   const container = document.getElementById('closed-list');
   if (closed.length === 0) {
-    container.innerHTML = '<div class="empty-state"><p>暂无平仓记录</p></div>';
+    container.innerHTML = '<div class="empty-state"><p>' + FengI18n.t('watchhist.noClosed', '暂无平仓记录') + '</p></div>';
     return;
   }
   let totalPnl = 0;
@@ -113,9 +113,9 @@ function renderClosed(closed) {
     const retCls = pct >= 0 ? 'positive' : 'negative';
     html += '<div class="entry-item">';
     html += '<div class="entry-title">' + icon + ' ' + h.ticker + '</div>';
-    html += '<div class="entry-preview">' + (s.sell_date || '?') + '  盈亏 <span class="' + retCls + '">' + pct.toFixed(1) + '%</span>  (' + (pnl >= 0 ? '+' : '') + pnl.toFixed(0) + ')  持有' + (s.hold_period_days || '?') + '天</div>';
+    html += '<div class="entry-preview">' + (s.sell_date || '?') + '  ' + FengI18n.t('watchhist.pnl', '盈亏 ') + '<span class="' + retCls + '">' + pct.toFixed(1) + '%</span>  (' + (pnl >= 0 ? '+' : '') + pnl.toFixed(0) + ')  ' + FengI18n.t('watchhist.heldDays1', '持有') + (s.hold_period_days || '?') + FengI18n.t('watchhist.heldDays2', '天') + '</div>';
     if (s.sell_reason) {
-      html += '<div class="entry-preview" style="font-style:italic;">理由: ' + s.sell_reason + '</div>';
+      html += '<div class="entry-preview" style="font-style:italic;">' + FengI18n.t('watchhist.reason', '理由: ') + s.sell_reason + '</div>';
     }
     html += '</div>';
   });
@@ -127,7 +127,7 @@ function renderLosses(closed) {
   const container = document.getElementById('loss-list');
   const losses = closed.filter(h => (h.sell_info?.return_pct || 0) < 0);
   if (losses.length === 0) {
-    container.innerHTML = '<div class="empty-state"><p>🎉 暂无亏损记录！</p></div>';
+    container.innerHTML = '<div class="empty-state"><p>' + FengI18n.t('watchhist.noLosses', '🎉 暂无亏损记录！') + '</p></div>';
     return;
   }
   losses.sort((a, b) => (a.sell_info?.return_pct || 0) - (b.sell_info?.return_pct || 0));
@@ -138,15 +138,15 @@ function renderLosses(closed) {
     const pct = s.return_pct || 0;
     const pnl = (s.total_returned || 0) - (s.total_invested || 0);
     totalLost += pnl;
-    html += '<div class="entry-item" style="border-color:var(--red);">';
+    html += '<div class="entry-item" style="border-color:var(--danger);">';
     html += '<div class="entry-title">#' + (i + 1) + ' 🔴 ' + h.ticker + '</div>';
-    html += '<div class="entry-preview"><span class="negative">' + pct.toFixed(1) + '%</span> (' + pnl.toFixed(0) + ')  持有' + (s.hold_period_days || '?') + '天</div>';
+    html += '<div class="entry-preview"><span class="negative">' + pct.toFixed(1) + '%</span> (' + pnl.toFixed(0) + ')  ' + FengI18n.t('watchhist.heldDays1', '持有') + (s.hold_period_days || '?') + FengI18n.t('watchhist.heldDays2', '天') + '</div>';
     if (s.sell_reason) {
-      html += '<div class="entry-preview" style="font-style:italic;">理由: ' + s.sell_reason + '</div>';
+      html += '<div class="entry-preview" style="font-style:italic;">' + FengI18n.t('watchhist.reason', '理由: ') + s.sell_reason + '</div>';
     }
     html += '</div>';
   });
-  html += '<div class="card" style="margin-top:8px;"><strong>总亏损: </strong><span class="negative">' + totalLost.toFixed(0) + '</span></div>';
+  html += '<div class="card" style="margin-top:8px;"><strong>' + FengI18n.t('watchhist.totalLoss', '总亏损: ') + '</strong><span class="negative">' + totalLost.toFixed(0) + '</span></div>';
   html += '</div>';
   container.innerHTML = html;
 }

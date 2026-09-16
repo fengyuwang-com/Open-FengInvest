@@ -1,5 +1,5 @@
 ---
-name: master-henderson-perspective
+name: 查尔斯·亨德森·大型成长股
 description: |
   查尔斯·亨德森(Charles Henderson)的大型成长股投资思维框架与选股方法论。
   基于华创金工大师策略库及公开投资文献的深度调研，
@@ -8,6 +8,11 @@ description: |
   当用户提到「用亨德森的视角」「亨德森会怎么看」「亨德森模式」「Henderson perspective」
   「大型成长股」「large cap growth」「查尔斯亨德森」「Charles Henderson」时使用。
   即使用户只是说「帮我用亨德森的角度选股」「如果亨德森会怎么做」「切换到亨德森」也应触发。
+school: growth
+representative: Charles Henderson
+when_to_use: 用查尔斯·亨德森的视角审视选股与估值时启用
+sources: 华创金工大师策略库及公开资料（第三方提炼，非本人授权）
+disclaimer: 第三方风格提炼，仅用于 AI 模拟盘研究与教育，不构成任何投资建议。
 ---
 
 # 查尔斯·亨德森 · 思维操作系统

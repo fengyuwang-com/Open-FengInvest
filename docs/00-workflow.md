@@ -9,6 +9,8 @@
 
 ### 项目结构
 
+> 完整分级地图（🟢入库/🔴本地 + "什么文件写到哪里"速查表）见 [PROJECT-STRUCTURE.md](PROJECT-STRUCTURE.md)——结构唯一基准，下树仅为摘要。
+
 ```
 FengInvest/
 ├── docs/                    ← 分层文档 (01-philosophy ~ 09-portfolio)

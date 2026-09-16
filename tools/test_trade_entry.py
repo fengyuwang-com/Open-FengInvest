@@ -40,7 +40,7 @@ def base_trading():
         "capital_zone": "OVERSEAS",
         "market": "US",
         "segment": "动量/事件",
-        "broker": "FUTUSECURITIES",
+        "broker": "TESTBROKER",
         "account_type": "TRADING",
         "position": {"shares": 200, "avg_cost": 360.0},
         "capital": {"total_invested": 72000, "total_fees": 30, "total_dividends": 0,

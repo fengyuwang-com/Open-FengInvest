@@ -11,22 +11,20 @@ AI+代码协作投资分析系统。7层：能力圈(L0)→市场数据(M)→硬
 
 ## 目录结构
 
+> **结构唯一基准 = [docs/PROJECT-STRUCTURE.md](docs/PROJECT-STRUCTURE.md)**（全目录树 + 入库🟢/本地🔴分级 + "什么文件写到哪里"速查表）。本节只留摘要，改结构先改基准文件再同步这里。
+
 ```
 FengInvest/
-├── CLAUDE.md, README.md
-├── docs/              ← 分层文档 + 结构标准
-├── tools/             ← 62 个 Python 工具
-├── knowledge/         ← DK知识库(principles/discipline/methodology/market_view)
-├── holdings/          ← 持仓 (hold_<TICKER>.json) — 本地，gitignored
-├── alerts/            ← 触发引擎输出 — 本地
-├── logs/              ← 决策日志 (journal.jsonl) — 本地
-├── reviews/           ← 复盘 (review_*.md) — 本地
-├── portfolio/         ← 持仓管理 (current.md 盘面) — 本地
-├── rules/             ← 纪律规则
-├── research/          ← 分析产出+参考(010-macro ~ 110-strategy-verification; 060-companies 本地)
-├── fengweb/           ← Web UI (TS/Express/EJS, 端口 23456)
-├── start-web.bat/sh   ← 启动脚本
-└── start-system-map.bat/sh ← 系统架构图静态服务
+├── docs/ tools/ rules/ knowledge/   🟢 框架文档 / 71 工具 / 纪律规则 / DK知识库
+├── design/ Discussion/              🟢 设计决策+创始人原话存档 / 讨论档案（入库公开）
+├── research/                        🟢 研究参考（060-companies/state/speculative 除外）
+├── data/config/                     🟢 清单类（research_list/opensource_list/…）；llm_config.json 除外🔴
+├── fengweb/                         🟢 Web UI (TS/Express/EJS, 端口 23456)
+├── data/market_data.db 2.7GB        🔴 金融数据库本体不入 git；对外只传 data/changesets/ 增量
+├── holdings/ portfolio/ logs/ reviews/ alerts/   🔴 个人持仓与决策（本地）
+├── research/060-companies/ state/ speculative/   🔴 个股分析/状态机/投机（本地）
+├── FENGMEM.md todo.md Temp/         🔴 会话记忆/任务账本（本地）
+└── start-web.bat/sh                 🟢 启动脚本
 ```
 
 ## 入口
@@ -55,7 +53,7 @@ FengInvest/
 | M | docs/02-market.md | fengdata.py+搜索 | 交叉验证 |
 | L1 | docs/03-discipline.md | fengrule.py | 纪律检查 |
 | L2b | docs/05-quantitative.md | fengquant.py | 因子解读 |
-| L2a | docs/04-qualitative.md | investment-team(4 Agent) | 四大师分析 |
+| L2a | docs/04-qualitative.md | Skill("investment-team")·skill 引用非 tools/ 文件 | 四大师分析 |
 | L3 | docs/06-collision.md | — | 反方检查+碰撞 |
 | P | docs/09-portfolio.md | fengportfolio.py | 三轴集中度+预算 |
 | L4 | docs/07-report.md | — | 双报告 |
@@ -80,12 +78,12 @@ cd fengweb && npm run build && node dist/index.js  # 或双击 start-web.bat →
 
 11 页 + 5 详情路由：总览 / 系统架构 / 持仓总览+详情 / 研究 / 知识库 / 钱仓滚存 / 决策日志 / 市场数据(53源) / 持仓监控(exit+复盘+卖出) / 持仓历史 / 股票分析。持仓页显示市场/板块徽章 + 准现金标注 + 实时汇率脚注（快照回退）。
 
-## Python 工具集（62 个）
+## Python 工具集（71 个）
 
 | 类别 | 工具 | 功能 |
 |:-----|:-----|:------|
 | **引擎** | fengstate.py | 状态机 |
-| | fenginvest.py | 单命令编排 |
+| | fenginvest.py | 快查 screen/status（纯数据，非编排；完整七层由 skill 驱动）；fenginvest 强依赖 |
 | | fengcollision.py | L3 碰撞引擎(规则树) |
 | **数据** | fengdata.py | 行情采集 + `fx` 实时汇率模式 |
 | | fengmarket.py / fengmarketdata.py | 市场数据 |
@@ -93,7 +91,7 @@ cd fengweb && npm run build && node dist/index.js  # 或双击 start-web.bat →
 | | fengdbrefine.py | 分红回填 |
 | | fengindexdb.py (+akshare/verify) | 指数数据 |
 | | fengstockdb.py / fengstockcnfix.py | 股票 DB 构建/补爬 |
-| | fengdb.py | 统一安全写库：safe_batch 自动产可回滚变更集 + undo/snapshot/status（批量写库必经） |
+| | fengdb.py | 统一安全写库：safe_batch 自动产可回滚变更集 + undo/snapshot/status（批量写库必经）。safe_batch 为 Python import 接口（上下文管理器），CLI 仅 undo/snapshot/status，见 docs/DATA-MANAGEMENT.md |
 | | fengfuyao.py | A股财报回填（同花顺 fuyao 免费接口，全市场 5,828 只断点续传） |
 | | fengastock.py | A股 12 端点按需取数（估值史/申万行业变迁/复权因子/社融PMI/龙虎榜等，不入库） |
 | | fengstockintl.py | 国际日线四源适配器（probe/fetch/fill，默认 dry-run） |
@@ -105,14 +103,18 @@ cd fengweb && npm run build && node dist/index.js  # 或双击 start-web.bat →
 | | xueqiu_scraper.py / twstock_data.py | 数据采集 |
 | **回测** | fengbacktest.py | 信号驱动组合回测（vnpy 范式+成本+T+1+涨跌停过滤+quantstats 报告 + `--sig-csv`/`--walkforward-fold`/`--grid` 三参数） |
 | | backtest_core.py | 共享回测引擎库（前复权/防前视/前向收益/2000 次 bootstrap/成本 25bps/样本外 20%/协议打标/统一事实包=白话卡唯一填数源） |
-| | fengverify.py | 论断复核引擎（cli: `fengverify.py <claim_id>`；#1 年线 → ❌、#8 月暴涨 → ❌；#3/#5/#6 已登记待实现） |
+| | fengverify.py | 论断复核引擎（cli: `fengverify.py <claim_id>`；#1 年线 → ❌、#8 月暴涨 → ❌；#3 ✅27.98%落带 / #5 🟡1.12有条件 / #6 ✅2.43倍，2026-09-10 复测） |
+| | data_inventory.py | data/ 只读盘点（体积/可回收快照清单，报告落 data/inventory_report.md 不入库） |
+| | fengverify_gate.py | 五门快败闸门（state/structure/report/pipeline/consistency）；fengcheck 强依赖 |
+| | fengdoclint.py | 文档结构合规扫描（双格式+总览，--strict 作闸门）；fengcheck 强依赖（Gate 2） |
+| | fengquality.py | M 层数据质量交叉验证（stockanalysis PE 对比，>10% FAIL）；fenginvest/fengcheck 强依赖 |
 | **侧车** | fengtick.py | tickflow 投机侧车薄桥（T0 候选/T2 防线位/T4 监控，纯本地零依赖，幽灵原则） |
 | **门禁** | fengbench.py | FinEval 金融知识门禁（学术 dev/val/test 集本地就绪，selfcheck 全绿；评分需 API key） |
 | **分析** | fengquant.py | 量化因子 z-score |
 | | fengrule.py | 纪律检查 |
 | | fengscreen.py | 多因子全市场筛选 + `--hard-rules` 纯规则精筛（7硬指标+3豁免） |
-| | fengbatch.py | 批量选股流水线：plan/status/summary（公开list→粗筛→精筛→幸存者→逐只七层） |
-| | financial_rigor.py | 市值验算+三情景估值 |
+| | fengbatch.py | 批量选股流水线：plan/status/summary（公开list→粗筛→精筛→幸存者→逐只七层）；幸存者七层走 fenginvest，fengbatch/fenginvest 强依赖 |
+| | financial_rigor.py | 市值验算+三情景估值+多源交叉；fenginvest 强依赖 |
 | | morningstar_fair_value.py | 晨星公允价值 |
 | | leftright.py | 左侧/右侧回测 |
 | | star_history_chart.py | 明星股历史回测 |
@@ -128,8 +130,8 @@ cd fengweb && npm run build && node dist/index.js  # 或双击 start-web.bat →
 | | fenglearn.py | 学习路径 |
 | | fenghealth.py | 系统健康检查 |
 | | fengcost.py | 交易规费(19市场三档) |
-| | clashproxy.py | Clash 代理切换 |
-| | report_audit.py | 报告准出抽检 |
+| | clashproxy.py | Clash 代理切换（yfinance 限流时主动切）；fenginvest 数据采集强依赖 |
+| | report_audit.py | 报告准出抽检（check+sources+csvdetect）；fenginvest（L4）/fengcheck 强依赖（Gate 3） |
 | | sync-ai-berkshire.py | AI Berkshire 同步 |
 | | fengquick.py | 快速查询 |
 | | renumber_refs.py | 编号重排 |
@@ -214,6 +216,6 @@ with open(path, "r", encoding="utf-8") as f:
 每层结果必须由对应工具产生，AI不得冒充：
 - L1→fengrule.py / L2b→fengquant.py / M→fengdata.py
 - 搜索→opencli（或等价搜索工具），失败标"未验证"
-- 定性→investment-team 4 Agent并行
+- 定性→Skill("investment-team") 4 Agent并行（skill 引用，非 tools/ 下 .py 文件）
 
 状态机 cmd_complete 已配备输出验证(缺关键字段 exit(1))。

@@ -26,7 +26,7 @@ CLASH_API = "http://127.0.0.1:9097"
 CLASH_SECRET = "set-your-secret"
 CLASH_MIXED_PORT = 7897  # from verge config
 CLASH_VERGE_CONFIG = os.path.expanduser(
-    r"~\AppData\Roaming\io.github.clash-verge-rev.clash-verge-rev\verge.yaml"
+    r"~/AppData/Roaming/io.github.clash-verge-rev.clash-verge-rev/verge.yaml"
 )
 
 # ── API 请求 ──

@@ -16,6 +16,9 @@ from datetime import datetime, timedelta
 
 import yfinance as yf
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import fengdb  # noqa: E402  安全写库入口（safe_batch 批量写入可回滚）
+
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "market_data.db")
 
 # ─── Index Registry ──────────────────────────────────────────────────────────
@@ -128,17 +131,18 @@ def seed_indices(conn):
     """Populate the indices table from registry."""
     cur = conn.execute("SELECT ticker FROM indices")
     existing = {row[0] for row in cur.fetchall()}
-    inserted = 0
-    for ticker, (name, market, cat) in INDICES.items():
-        if ticker not in existing:
-            conn.execute(
+    to_add = [
+        (ticker, name, market, cat)
+        for ticker, (name, market, cat) in INDICES.items()
+        if ticker not in existing
+    ]
+    if to_add:
+        with fengdb.safe_batch(["indices"], "indexdb_seed") as wcon:
+            wcon.executemany(
                 "INSERT OR IGNORE INTO indices (ticker, name, market, category) VALUES (?, ?, ?, ?)",
-                (ticker, name, market, cat),
+                to_add,
             )
-            inserted += 1
-    if inserted:
-        conn.commit()
-        print(f"  新增 {inserted} 个指数到注册表")
+        print(f"  新增 {len(to_add)} 个指数到注册表")
     return len(INDICES)
 
 
@@ -208,20 +212,17 @@ def download_index(conn, ticker, force_all=False):
     if not new_rows:
         return 0
 
-    # Batch insert
-    conn.executemany(
-        "INSERT OR IGNORE INTO daily_data (index_id, date, open, high, low, close, volume) VALUES (?,?,?,?,?,?,?)",
-        new_rows,
-    )
-    conn.commit()
-
-    # Update log
+    # Batch insert — 经 fengdb.safe_batch 写入（可回滚 changeset），读过滤逻辑不变
     last = new_rows[-1][1]
-    conn.execute(
-        "INSERT OR REPLACE INTO update_log (ticker, last_date, rows, updated_at) VALUES (?, ?, ?, ?)",
-        (ticker, last, len(new_rows), datetime.now().isoformat()),
-    )
-    conn.commit()
+    with fengdb.safe_batch(["daily_data", "update_log"], f"indexdb_{ticker}") as wcon:
+        wcon.executemany(
+            "INSERT OR IGNORE INTO daily_data (index_id, date, open, high, low, close, volume) VALUES (?,?,?,?,?,?,?)",
+            new_rows,
+        )
+        wcon.execute(
+            "INSERT OR REPLACE INTO update_log (ticker, last_date, rows, updated_at) VALUES (?, ?, ?, ?)",
+            (ticker, last, len(new_rows), datetime.now().isoformat()),
+        )
 
     print(f"  [OK] {ticker}: +{len(new_rows)} rows -> {last} ({name})")
     return len(new_rows)

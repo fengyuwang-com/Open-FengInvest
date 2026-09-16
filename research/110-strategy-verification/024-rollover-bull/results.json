@@ -1,0 +1,311 @@
+{
+  "claim": {
+    "id": 24,
+    "title": "钱仓滚存在长期牛市中必然大幅跑输买入持有",
+    "statement": "承接 #23 引擎（504 日窗口、浮盈>=30% 收回本金）：在长期牛市域 （窗口末收盘相对入场涨幅 > +30%，即滚存必然已触发且价格持续走高）中， 滚存终值差（滚存 - 买入持有）< 0 且幅度随涨幅扩大。",
+    "h0": "滚存可以追上（终值差 >=0）。",
+    "price_basis": "前复权 close",
+    "cost_bps": 25,
+    "signal_def": {
+      "key": "与 id=23 完全同构（首个收盘 >=1.3x 入场日卖出收回本金 1.0，保留 1-1/v*， 25bps，现金不计息），唯一区别：论断域 = final/base - 1 > 0.30（牛市域， 触发必已发生且期末仍在 trigger 上方）。结构性：v*=1.3 时 diff = 1 - 0.7692x(final/base) - 成本， 随涨幅单调变负——论断自称\"数学必然\"，本引擎验证其实证幅度",
+      "lookahead": "同"
+    },
+    "verdict_metric": {
+      "primary": "牛市域终值差均值 <0 且股票级 bootstrap 95% CI 上限 <0（方向）；\"大幅\"= 幅度报告（对照中位/分位）",
+      "secondary": "分市场均值；终值差 vs 期末涨幅的幅度表；触发窗口 MDD 降幅（同",
+      "note": "牛市域为路径条件域（outcome-based），与"
+    },
+    "data_scope": {
+      "markets": [
+        "AU",
+        "CA",
+        "CH",
+        "CN",
+        "DE",
+        "ES",
+        "FR",
+        "HK",
+        "IN",
+        "IT",
+        "JP",
+        "KR",
+        "NL",
+        "NZ",
+        "SE",
+        "SG",
+        "TW",
+        "UK",
+        "US"
+      ],
+      "category": "stock",
+      "survivorship": "仅当前成分快照；滚存与 BH 同框架对比，对差值中性"
+    }
+  },
+  "generated_at": "2026-09-11 08:47:27",
+  "engine": "rollover-bull-mark",
+  "config": {
+    "bootstrap_iters": 2000,
+    "rng_seed": 20260820,
+    "oos_frac": 0.2,
+    "window_days": 504,
+    "step_days": 126,
+    "trigger": 1.3,
+    "bull_domain": "final/base-1 > 0.30",
+    "cost_bps_on_principal": 25
+  },
+  "survivorship_note": "仅当前成分快照；差值口径中性",
+  "protocol_lights": [
+    {
+      "item": "判据对齐（方向+幅度）",
+      "status": "✅",
+      "note": "主判据=牛市域终值差<0 且 CI 上限<0；'大幅'以均值/中位/涨幅分箱报告（铁律一）"
+    },
+    {
+      "item": "价格口径（前复权 close）",
+      "status": "✅",
+      "note": "000-data-biases.md A.1"
+    },
+    {
+      "item": "时机（无前视）",
+      "status": "⚠️",
+      "note": "同 #23：触发日收盘判定+当日收盘成交（实盘需尾盘单，已披露）"
+    },
+    {
+      "item": "交易成本",
+      "status": "✅",
+      "note": "同 #23：收回本金 1.0 扣 25bps，现金不计息"
+    },
+    {
+      "item": "显著性/区间（Bootstrap 2000 次）",
+      "status": "✅",
+      "note": "股票级 bootstrap（每股坍缩为牛市域平均差，种子 20260820）"
+    },
+    {
+      "item": "重叠样本处理",
+      "status": "⚠️",
+      "note": "相邻窗共享 ~75% 数据；股级坍缩缓解"
+    },
+    {
+      "item": "样本外验证（后 20%）",
+      "status": "✅",
+      "note": "每股后 20% 牛市域窗口单独报告"
+    },
+    {
+      "item": "幸存者偏差",
+      "status": "⚠️",
+      "note": "仅当前成分；差值口径中性；牛市域缺退市股影响有限"
+    },
+    {
+      "item": "条件域披露",
+      "status": "⚠️",
+      "note": "牛市域=窗口末涨幅>30%，outcome-based；'必然'部分为结构性质（v*=1.3 时 diff 随涨幅单调变负），实证给幅度"
+    },
+    {
+      "item": "可复现",
+      "status": "✅",
+      "note": "种子固定重跑同数"
+    }
+  ],
+  "per_market": {
+    "AU": {
+      "stocks_total": 197,
+      "stocks_processed": 191,
+      "bull_windows": 3927,
+      "diff_mean_pct": -79.17,
+      "diff_median_pct": -30.17,
+      "oos_diff_mean_pct": -53.31
+    },
+    "CA": {
+      "stocks_total": 59,
+      "stocks_processed": 53,
+      "bull_windows": 1225,
+      "diff_mean_pct": -40.41,
+      "diff_median_pct": -22.41,
+      "oos_diff_mean_pct": -54.53
+    },
+    "CH": {
+      "stocks_total": 20,
+      "stocks_processed": 18,
+      "bull_windows": 385,
+      "diff_mean_pct": -33.34,
+      "diff_median_pct": -22.09,
+      "oos_diff_mean_pct": -21.64
+    },
+    "CN": {
+      "stocks_total": 300,
+      "stocks_processed": 297,
+      "bull_windows": 2842,
+      "diff_mean_pct": -75.16,
+      "diff_median_pct": -36.84,
+      "oos_diff_mean_pct": -45.16
+    },
+    "DE": {
+      "stocks_total": 40,
+      "stocks_processed": 40,
+      "bull_windows": 746,
+      "diff_mean_pct": -34.92,
+      "diff_median_pct": -22.16,
+      "oos_diff_mean_pct": -44.59
+    },
+    "ES": {
+      "stocks_total": 35,
+      "stocks_processed": 35,
+      "bull_windows": 556,
+      "diff_mean_pct": -53.45,
+      "diff_median_pct": -24.56,
+      "oos_diff_mean_pct": -47.62
+    },
+    "FR": {
+      "stocks_total": 39,
+      "stocks_processed": 39,
+      "bull_windows": 792,
+      "diff_mean_pct": -33.23,
+      "diff_median_pct": -20.48,
+      "oos_diff_mean_pct": -23.39
+    },
+    "HK": {
+      "stocks_total": 85,
+      "stocks_processed": 84,
+      "bull_windows": 1151,
+      "diff_mean_pct": -70.27,
+      "diff_median_pct": -29.11,
+      "oos_diff_mean_pct": -36.09
+    },
+    "IN": {
+      "stocks_total": 50,
+      "stocks_processed": 50,
+      "bull_windows": 1292,
+      "diff_mean_pct": -79.02,
+      "diff_median_pct": -37.7,
+      "oos_diff_mean_pct": -40.22
+    },
+    "IT": {
+      "stocks_total": 40,
+      "stocks_processed": 40,
+      "bull_windows": 643,
+      "diff_mean_pct": -44.96,
+      "diff_median_pct": -28.78,
+      "oos_diff_mean_pct": -62.69
+    },
+    "JP": {
+      "stocks_total": 223,
+      "stocks_processed": 204,
+      "bull_windows": 3685,
+      "diff_mean_pct": -169.74,
+      "diff_median_pct": -26.95,
+      "oos_diff_mean_pct": -45.25
+    },
+    "KR": {
+      "stocks_total": 200,
+      "stocks_processed": 193,
+      "bull_windows": 2779,
+      "diff_mean_pct": -81.05,
+      "diff_median_pct": -41.63,
+      "oos_diff_mean_pct": -85.01
+    },
+    "NL": {
+      "stocks_total": 24,
+      "stocks_processed": 24,
+      "bull_windows": 405,
+      "diff_mean_pct": -41.88,
+      "diff_median_pct": -21.73,
+      "oos_diff_mean_pct": -29.93
+    },
+    "NZ": {
+      "stocks_total": 47,
+      "stocks_processed": 47,
+      "bull_windows": 696,
+      "diff_mean_pct": -34.42,
+      "diff_median_pct": -18.73,
+      "oos_diff_mean_pct": -28.09
+    },
+    "SE": {
+      "stocks_total": 30,
+      "stocks_processed": 30,
+      "bull_windows": 638,
+      "diff_mean_pct": -36.06,
+      "diff_median_pct": -23.54,
+      "oos_diff_mean_pct": -27.07
+    },
+    "SG": {
+      "stocks_total": 30,
+      "stocks_processed": 30,
+      "bull_windows": 438,
+      "diff_mean_pct": -171.76,
+      "diff_median_pct": -23.13,
+      "oos_diff_mean_pct": -34.01
+    },
+    "TW": {
+      "stocks_total": 50,
+      "stocks_processed": 49,
+      "bull_windows": 950,
+      "diff_mean_pct": -62.68,
+      "diff_median_pct": -28.36,
+      "oos_diff_mean_pct": -95.57
+    },
+    "UK": {
+      "stocks_total": 97,
+      "stocks_processed": 95,
+      "bull_windows": 2076,
+      "diff_mean_pct": -52.35,
+      "diff_median_pct": -17.73,
+      "oos_diff_mean_pct": -33.98
+    },
+    "US": {
+      "stocks_total": 506,
+      "stocks_processed": 480,
+      "bull_windows": 15574,
+      "diff_mean_pct": -43.97,
+      "diff_median_pct": -23.89,
+      "oos_diff_mean_pct": -34.11
+    }
+  },
+  "aggregate": {
+    "bull_n_windows": 40800,
+    "diff_mean_pct": -66.76,
+    "gain_bins": {
+      "30-60": {
+        "n": 17740,
+        "mean_pct": -9.14
+      },
+      "60-100": {
+        "n": 11675,
+        "mean_pct": -33.99
+      },
+      ">100": {
+        "n": 11385,
+        "mean_pct": -190.16
+      }
+    }
+  },
+  "verdict": {
+    "claim_type": "qualitative+幅度（牛市域终值差<0；幅度报告）",
+    "bull_diff_mean_pct": -66.76,
+    "bull_diff_median_pct": -26.0,
+    "bull_n_windows": 40800,
+    "stock_ew_boot": {
+      "mean_pct": -69.19,
+      "ci95_low_pct": -93.54,
+      "ci95_high_pct": -55.57
+    },
+    "diff_negative_share_pct": 97.2,
+    "gain_bins": {
+      "30-60": {
+        "n": 17740,
+        "mean_pct": -9.14
+      },
+      "60-100": {
+        "n": 11675,
+        "mean_pct": -33.99
+      },
+      ">100": {
+        "n": 11385,
+        "mean_pct": -190.16
+      }
+    },
+    "oos_diff_mean_pct": -43.91,
+    "mean_below_zero": true,
+    "ci_high_below_zero": true,
+    "supported": true
+  }
+}
