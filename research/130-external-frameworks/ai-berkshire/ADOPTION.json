@@ -1,0 +1,175 @@
+{
+  "_schema": {
+    "version": "1.0",
+    "说明": "外部框架逐文件归属台账——每个上游 skill 正文在本仓的状态。四档口径与 AGENTS.md「外部框架并入铁律」一致。校验命令：python tools/fengadopt.py verify",
+    "status": {
+      "absorbed": "并入：正文物理在本仓 + 落在本仓可读路径 + 有明确的自有承接者（owner 必须指向本仓真实存在的 skill/tool）。三条全中才算",
+      "kept": "留档：正文物理在本仓、供查阅，但本系统没有自有承接者、也不注册任何入口；owner 必须为空",
+      "referenced": "引用：本仓无正文副本，仅文档写明上游仓库 + 上游文件路径",
+      "superseded": "自有承接：上游有该能力，本系统已用自有 skill/工具承接，不再引用上游；owner 必填"
+    },
+    "fields": {
+      "upstream_file": "上游仓库内的相对路径（与 UPSTREAM.json 的 files 键一一对应）",
+      "status": "absorbed | kept | referenced | superseded",
+      "owner": "条件必填——absorbed / superseded 必须非空（= 本仓真实存在的承接者，多个用 + 连接，token 必须能在 .agents/skills/<owner>/ 或 tools/<owner>.py 解析到）；kept 必须为空（null）；referenced 允许为空",
+      "landing": "本仓相对路径（仓库根为基准，禁止绝对路径）",
+      "note": "一句话依据（为什么是这个 status / 承接者是谁；kept 要写明为何没有承接者）"
+    }
+  },
+  "project": "ai-berkshire",
+  "upstream": {
+    "repo": "https://github.com/xbtlin/ai-berkshire",
+    "commit": "6354c68",
+    "license": "MIT (c) 2026 xbtlin",
+    "synced_at": "2026-09-17"
+  },
+  "entries": [
+    {
+      "upstream_file": "skills/bottleneck-hunter.md",
+      "status": "superseded",
+      "owner": "fengsource",
+      "landing": "research/130-external-frameworks/ai-berkshire/skills/bottleneck-hunter.md",
+      "note": "供应链瓶颈套利扫描 = fengsource 发现路径 2「产业链瓶颈」（已锁定某条产业链 → 从咽喉环节反找标的）；承接者 fengsource，本仓另有 research/120-idea-sourcing/README.md 机制说明书"
+    },
+    {
+      "upstream_file": "skills/deep-company-series.md",
+      "status": "kept",
+      "owner": null,
+      "landing": "research/130-external-frameworks/ai-berkshire/skills/deep-company-series.md",
+      "note": "公众号/视频号《看懂XX》3-8 篇系列长文的公开出版工作流；本系统是内部决策系统，无公开出版管线和自有承接者，也没有任何入口会调用它，故判 kept：正文全量留档作方法参考"
+    },
+    {
+      "upstream_file": "skills/dyp-ask.md",
+      "status": "superseded",
+      "owner": "fengdiscuss",
+      "landing": "research/130-external-frameworks/ai-berkshire/skills/dyp-ask.md",
+      "note": "角色扮演段永平无锚作答 = fengdiscuss「有锚的讨论对手」（读 Discussion/discuss-config.json 建锚，AI 不随用户指令漂移）；本系统明令不采用「扮演大师即兴回答」这种无锚模式"
+    },
+    {
+      "upstream_file": "skills/earnings-review.md",
+      "status": "superseded",
+      "owner": "fenginvest",
+      "landing": "research/130-external-frameworks/ai-berkshire/skills/earnings-review.md",
+      "note": "单份财报精读 = fenginvest L2a（定性）/L4（报告）承接；一手财报取数由 tools/fengsec.py（SEC EDGAR）、tools/fengdata.py --sina-financials（A股三表）、tools/fengfuyao.py 承接"
+    },
+    {
+      "upstream_file": "skills/earnings-team.md",
+      "status": "superseded",
+      "owner": "fenginvest",
+      "landing": "research/130-external-frameworks/ai-berkshire/skills/earnings-team.md",
+      "note": "财报精读团队（四大师并行 + 编辑 + 读者） = fenginvest L2a 的四角色并行（investment-team）+ L4 报告流程承接；其中「公众号发布」一段本系统无对应，仅作参考"
+    },
+    {
+      "upstream_file": "skills/financial-data.md",
+      "status": "superseded",
+      "owner": "fengquality+fengdata.py",
+      "landing": "research/130-external-frameworks/ai-berkshire/skills/financial-data.md",
+      "note": "财务数据两源交叉验证规范 = fengquality.py（stockanalysis PE 对拍，>10% FAIL）承接；取数侧由 fengdata.py 承接。上游的信源表（macrotrends/stockanalysis/aastocks/东方财富/巨潮/FinMind）已作为表述参考保留在本副本"
+    },
+    {
+      "upstream_file": "skills/income-investment.md",
+      "status": "kept",
+      "owner": null,
+      "landing": "research/130-external-frameworks/ai-berkshire/skills/income-investment.md",
+      "note": "可分配现金流「可持续性/机会性」双轨分析；本仓有策略文档 research/050-strategies/003-dividend.md、005-low-vol-dividend.md 与 fengbatch 的 cn_dividend/us_dividend 名单，但没有任何自有 skill/tool 承接「分配可持续性」这一分析动作，即无承接者，故判 kept：正文留档"
+    },
+    {
+      "upstream_file": "skills/industry-funnel.md",
+      "status": "superseded",
+      "owner": "fengsource+fengbatch",
+      "landing": "research/130-external-frameworks/ai-berkshire/skills/industry-funnel.md",
+      "note": "行业漏斗（全市场 → 3 家） = fengbatch 批量流水线（公开 list → 粗筛 → 精筛 → 幸存者 → 逐只七层）+ fengsource 三道闸门承接；入口不许跑筛子的铁律见 fengsource"
+    },
+    {
+      "upstream_file": "skills/industry-research.md",
+      "status": "kept",
+      "owner": null,
+      "landing": "research/130-external-frameworks/ai-berkshire/skills/industry-research.md",
+      "note": "产业链全景 + 全球上市公司逐环节四大师 + 行业级组合配置，粒度细于自有任何一个承接者（fengsource 只做瓶颈发现、fengbatch 只做给定名单、fengsector 只做板块轮动），没有任何自有文件消费它，故判 kept：正文留档作深度行业研究参考"
+    },
+    {
+      "upstream_file": "skills/investment-checklist.md",
+      "status": "superseded",
+      "owner": "fengscreen+fengrule.py",
+      "landing": "research/130-external-frameworks/ai-berkshire/skills/investment-checklist.md",
+      "note": "巴菲特买入前 Checklist = fengscreen 去劣筛选（7 硬指标 + 3 豁免）承接，其中买入前硬纪律部分由 L1 fengrule.py（四灯 + 四 DK）承接"
+    },
+    {
+      "upstream_file": "codex-skills/investment-memo-craft/SKILL.md",
+      "status": "kept",
+      "owner": null,
+      "landing": "research/130-external-frameworks/ai-berkshire/skills/investment-memo-craft.md",
+      "note": "上游第 21 个 skill（在 codex-skills/ 下，skills/ 目录无同名件）：研究报告的写作与版式工艺覆盖层（商业机理写法、逆向思维、行动阈值、克制的 Markdown 排版）；自有 L4 只规定报告结构与 report_audit 准出，无同粒度写作工艺规范、也就没有承接者；上游原文自带「Codex-only」定位，本仓只作参考、不入任何发现路径，故判 kept"
+    },
+    {
+      "upstream_file": "skills/investment-research.md",
+      "status": "superseded",
+      "owner": "investment-team",
+      "landing": "research/130-external-frameworks/ai-berkshire/skills/investment-research.md",
+      "note": "四大师七模块顺序研究 = investment-team 四角色并行框架承接（本系统 L2a 的正式入口）"
+    },
+    {
+      "upstream_file": "skills/investment-team.md",
+      "status": "absorbed",
+      "owner": "investment-team",
+      "landing": "research/130-external-frameworks/ai-berkshire/skills/investment-team.md",
+      "note": "本台账唯一的 absorbed 条目：正文在本仓 + 落本仓可读相对路径 + 有自有承接者（owner=investment-team，能真实解析到 .agents/skills/investment-team/SKILL.md）。该承接者已是完整正文，由 fenginvest L2a（05-qualitative）调用；本副本是逐字原文（供对账与 diff）"
+    },
+    {
+      "upstream_file": "skills/management-deep-dive.md",
+      "status": "superseded",
+      "owner": "investment-team",
+      "landing": "research/130-external-frameworks/ai-berkshire/skills/management-deep-dive.md",
+      "note": "管理层纵深研究 = investment-team 的 risk-assessor（李录视角：管理层诚信/能力圈/资本配置）承接，且「管理层」是本系统 L2a 输出契约 05-qualitative_lights.json 的固定键之一、由 fengreview 在持有期复检"
+    },
+    {
+      "upstream_file": "skills/news-pulse.md",
+      "status": "superseded",
+      "owner": "fengwatch",
+      "landing": "research/130-external-frameworks/ai-berkshire/skills/news-pulse.md",
+      "note": "股价异动快速归因 + 是否触发论文重审 = fengwatch（daily/check/review/sell/history/outcome + 10 条退出规则）承接，输出落 alerts/today.json"
+    },
+    {
+      "upstream_file": "skills/portfolio-review.md",
+      "status": "superseded",
+      "owner": "fengportfolio",
+      "landing": "research/130-external-frameworks/ai-berkshire/skills/portfolio-review.md",
+      "note": "组合审视与优化 = fengportfolio.py（三轴正交盘面 / check 买入预算 / optimize 约束再平衡 / risk 风险归因 / hrp 层次风险平价）承接"
+    },
+    {
+      "upstream_file": "skills/private-company-research.md",
+      "status": "kept",
+      "owner": null,
+      "landing": "research/130-external-frameworks/ai-berkshire/skills/private-company-research.md",
+      "note": "未上市公司多 Agent 并行研究（1071 行，本副本 46KB 为全量最大件）；七层状态机 M 层要求行情/市值/三表，自有流水线不承接未上市标的、没有承接者，故判 kept：正文全量留档作方法参考"
+    },
+    {
+      "upstream_file": "skills/quality-screen.md",
+      "status": "superseded",
+      "owner": "fengscreen",
+      "landing": "research/130-external-frameworks/ai-berkshire/skills/quality-screen.md",
+      "note": "7 条指标去劣筛选与 fengscreen 同构（fengscreen = 7 硬指标 + 3 豁免，宁可漏网不可误杀），且已从入口后移为 fengsource 的闸门 3"
+    },
+    {
+      "upstream_file": "skills/thesis-drift.md",
+      "status": "superseded",
+      "owner": "fengreview",
+      "landing": "research/130-external-frameworks/ai-berkshire/skills/thesis-drift.md",
+      "note": "论文漂移检测（分清事实变化与措辞变化）= fengreview 的四态假设评估（thesis_valid）+ 红线 + 健康度评分承接，写回 reviews 数组并推进下次回顾日期"
+    },
+    {
+      "upstream_file": "skills/thesis-tracker.md",
+      "status": "superseded",
+      "owner": "fengreview",
+      "landing": "research/130-external-frameworks/ai-berkshire/skills/thesis-tracker.md",
+      "note": "买入后论文追踪纪律 = fengreview（定期回顾 + 论文是否有效 + 推进下次回顾日期）承接；持有期检查另有 fengholding"
+    },
+    {
+      "upstream_file": "skills/wechat-article.md",
+      "status": "kept",
+      "owner": null,
+      "landing": "research/130-external-frameworks/ai-berkshire/skills/wechat-article.md",
+      "note": "作者-编辑-读者三 Agent 公众号文章工作流；本系统无公开出版管线、无自有承接者，故判 kept：正文留档（可作对外输出时的写法参考）"
+    }
+  ]
+}

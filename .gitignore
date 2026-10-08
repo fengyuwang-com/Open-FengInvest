@@ -1,38 +1,58 @@
-# ============================================================
-# FengInvest — .gitignore
-# 防止个人/敏感数据泄露。修改前请确认是否影响开源fork
-# ============================================================
+# Open-FengInvest — 开源替代版本的 .gitignore
+# 往外出的只能是系统本身（工具/框架/文档/Web/研究参考/选股机制/外部框架台账/示例）。
+# 个人数据、个人研究过程、数据库本体及其伴生物、凭据、私人配置不进 git。
 
-# ── Python ──
+# ── Python/Node/构建 ──
 __pycache__/
 *.py[cod]
 *.egg-info/
 dist/
 build/
-
-# ── Node ──
 node_modules/
 fengweb/node_modules/
-
-# ── 构建产物 ──
 fengweb/dist/
 
-# ── 个人数据（不开源）──────────────────────────────────────
+# ── 数据目录（本体太大，且含个人行情缓存/中间过程） ──
+data/*.db
+data/*.db-shm
+data/*.db-wal
+data/changesets/
+data/cache/
+data/sec/
+data/pit/
+data/reports/
+data/snapshots/
+*.db
+*.sqlite
+*.sqlite3
+*.duckdb
+
+# ── 工具里的本地专属/运行测试/示例跑掉的中间产物、不往外推的目录 ──
+tools/_market_test.json
+tools/renumber-manifest.json
+tools/start_cognee.py
+tools/test_cognee_sdk.py
+tools/test_fengtools.py
+tools/__pycache__/
+tools/alpha-skills/
+
+# ── 个人数据（不开源） ──
 alerts/
 holdings/
 logs/
 reviews/
 research/060-companies/
 portfolio/
-fengmem.md
-FENGMEM.md
 
-# ── 个人配置 ──
+# ── 个人配置与记忆 ──
 .claude/
 .agents/
 .vscode/
 .idea/
 *.code-workspace
+fengmem.md
+FENGMEM.md
+todo.md
 
 # ── 凭据与密钥 ──
 .env
@@ -47,35 +67,24 @@ credentials.json
 token*
 secret*
 
-# ── 数据库（过大，不入git） ──
-data/*.db
-data/*.db-shm
-data/*.db-wal
-*.db
-*.sqlite
-*.sqlite3
-*.duckdb
-
-# ── 系统文件 ──
+# ── 系统/临时/日志/生成物 ──
 .DS_Store
 Thumbs.db
 *.swp
 *.swo
 *~
-
-# ── 日志与检查点 ──
 *.log
-data/.refine_checkpoint.json
-data/.fundamentals_checkpoint.json
-data/.ai-berkshire-sync.json
 logs/backfill_*.log
 logs/checkpoint_*.txt
-
-# ── skill / 临时生成文件 ──
 skills-lock.json
 research/temp_*
 research/state/
-
-# ── 已知废弃/旧目录 ──
-tools/alpha-skills/
+research/speculative/
 research/080-state/
+
+# ── 計画/說明류（此版本暫不入 git，只留在本地） ──
+SYNC-PLAN.md
+OPEN-ALTERNATIVE-PLAN.md
+START-OPEN-ALTERNATIVE.md
+LOCAL-OPENSOURCE-SEPARATION.md
+AI-BERKSHIRE-SYNC-PLAN.md

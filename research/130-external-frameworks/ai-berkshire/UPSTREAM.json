@@ -1,0 +1,32 @@
+{
+  "repo": "https://github.com/xbtlin/ai-berkshire",
+  "commit": "6354c68",
+  "commit_full": "6354c68c7955dd6ccf6f735173c4193b67485dee",
+  "commit_date": "2026-08-20",
+  "license": "MIT (c) 2026 xbtlin",
+  "synced_at": "2026-09-17",
+  "file_count": 21,
+  "files": {
+    "skills/bottleneck-hunter.md": "14f0fdfb93a0ff767a93d8d4e85af3c96231e466fe1fbae8b178e6301413dbcc",
+    "skills/deep-company-series.md": "713d1a953a9ccde795d68360045c9fab764731ea4f4cd84c2fc5a0eac1daea18",
+    "skills/dyp-ask.md": "0bb9eda3f52826bf323dea6420517dedc9873045784dbbd22e2a361c8777025a",
+    "skills/earnings-review.md": "2ee351f81bca78ac8f8522b93bf9e6e4de1e915c0dad6b92bb332b9d0e2db4bc",
+    "skills/earnings-team.md": "dc00d60fd2f5e8cbf1c9c8a9ec21f52ae63ba659f818c4bb19f908d700a54cf3",
+    "skills/financial-data.md": "ff91ce6e65bb12163fc0e830d676c886f42bf2807fa0c256fed00545ceef7617",
+    "skills/income-investment.md": "6d7b7e9d1ac2ecfbd2d053b06558f88d4fec4edc8297226bfc5dd46c044dc771",
+    "skills/industry-funnel.md": "2f2ac00c452c287f1ec1bdc54566160b5a262716e61f3440e82f569d698fb009",
+    "skills/industry-research.md": "43c2314f21c683f8408d7f31075851f440f6bbf1b7286d68ad4ac62cee64e120",
+    "skills/investment-checklist.md": "a029d964f5fe4d6d27aa2b6f683aec1468cdb0b295f3b06584df902bb58f06c7",
+    "skills/investment-research.md": "2a95c150bc1fe6d8a219819c6369956fd779eb2f2a78f95b09006a7070cf5bd3",
+    "skills/investment-team.md": "e6c5367fa7d34cbd6b61595daa53afff346aca6455b29b0ce5d8a8fa90df5a90",
+    "skills/management-deep-dive.md": "56fe665c1bc968cce8dd7a6d837a4475611d1aa63a1f2a4aa5013a8fe428dd12",
+    "skills/news-pulse.md": "31958a3463655eaa1ac7807a28437e885bf6ad6c1abc46a863e5484cef8f439a",
+    "skills/portfolio-review.md": "0eae70b48bd7e75347382b394104aa3e6869142be81d9c0ab9d4730b130627f4",
+    "skills/private-company-research.md": "e89c365996f325507c83caf5c0d56b7b53d9f548bf2d860e8c166b5d0f04d46f",
+    "skills/quality-screen.md": "366d10a5917606507c66035aa6b4f342379aef621c3859b0e4950ee502d41e4d",
+    "skills/thesis-drift.md": "7ab49942ea8d8ed7f03da94e7f2e084e7f337fe94804b68e1f855d071867fbff",
+    "skills/thesis-tracker.md": "4d9db4a39a5a3a23c4ff8dfc0c79f1cbe3c24336cb3ee5cdeaa42db3da0708d7",
+    "skills/wechat-article.md": "6dca96f75a693b7ad69b3c0152c8bda3a4fb84afd756b78536d32037c8f16ee2",
+    "codex-skills/investment-memo-craft/SKILL.md": "8001ba52303ee29cbfa19fbea6cd3f962d42202312f594ae48e21c82951b5c1f"
+  }
+}

@@ -1,0 +1,457 @@
+{
+  "_schema": {
+    "version": "2.0",
+    "说明": "开源项目决策台账——任何对话/文档中提及的开源项目（无论是否采用）必须登记到这里。与 data/config/research_list.json 平行：那份管公司，这份管开源项目。v2 起从「登记簿」升级为「可机器校验的决策台账」：结论必须落进 verdict / salvage / reused_into 结构化字段，不允许只写在 note 散文里；evaluating 不允许长期烂尾（超期用 tools/fengoslist.py due 揪出）。校验命令：python tools/fengoslist.py validate",
+    "status": {
+      "adopted": "已集成进本项目工具链。条件必填：reused_into（数组，落点文件相对仓库根路径，必须真实存在）",
+      "evaluating": "评估中：有明确评估任务、尚未收口。条件必填：verdict，且必须写明还在评什么（形如「待办：...」）",
+      "noted": "已记录备查：只登记不评估，或评估后仅作参考不落地。无额外必填字段",
+      "rejected": "评估后不采用。条件必填：verdict（一句话结论）+ salvage（数组，可提取清单；没有任何可提取项就写 []）"
+    },
+    "kind": {
+      "data": "数据源（行情/财务/宏观等取数库或接口）",
+      "framework": "方法/框架（建模、回测范式、知识标准等）",
+      "toolchain": "工具链（本机开发/抓取/转换类工具）",
+      "project": "外部项目/资料（完整项目、教程、百科、curated list）",
+      "benchmark": "评测集/门禁（知识/能力评测基准）"
+    },
+    "fields": {
+      "name": "必填，项目名（可括注中文别名/原仓名）",
+      "repo": "必填，仓库 URL 或来源说明（非公开项目写清来源）",
+      "kind": "必填，五取值之一：data | framework | toolchain | project | benchmark",
+      "status": "必填，四取值之一：adopted | evaluating | noted | rejected",
+      "added": "必填，登记日期，格式 YYYY-MM-DD",
+      "updated": "必填，最后更新日期，格式 YYYY-MM-DD（不得早于 added）",
+      "note": "必填，一句话：这是什么 / 为什么在清单里（写事实与描述，不写结论）",
+      "reused_into": "status=adopted 必填，数组，落点文件相对路径（校验时要求真实存在）",
+      "verdict": "status=rejected/evaluating 必填；rejected=一句话结论，evaluating=写明还在评什么（含「待办：」）",
+      "salvage": "status=rejected 必填，数组，可提取清单（没有就写 []）；其他状态如仍有未落地可提取项亦可用",
+      "eval_doc": "可选，评估文档相对路径",
+      "decided_at": "可选，定案日期 YYYY-MM-DD",
+      "depends_on": "可选，字符串，依赖的登记项 name（如 playwright 依赖 Search-King）",
+      "trigger": "可选，登记缘起（哪一天的哪件事把它带进清单）；本清单当前全量已填"
+    }
+  },
+  "projects": [
+    {
+      "name": "tickflow",
+      "repo": "https://github.com/tickflow/tickflow",
+      "kind": "data",
+      "status": "adopted",
+      "added": "2026-08-30",
+      "updated": "2026-08-30",
+      "reused_into": [
+        "tools/fengtick.py"
+      ],
+      "trigger": "2026-08-30 开源项目首次批量登记（投机侧车批复）",
+      "note": "投机侧车：T0候选/T2防线位/T4监控；fengtick.py 薄桥对接，幽灵原则只供数据"
+    },
+    {
+      "name": "pwb-toolbox (PapersWithBacktest)",
+      "repo": "https://github.com/paperswithbacktest/pwb-toolbox",
+      "kind": "framework",
+      "status": "adopted",
+      "added": "2026-08-30",
+      "updated": "2026-09-26",
+      "verdict": "2026-09-26 直接合并落地：6 个纯函数（ulcer_index/ulcer_performance_index/variance_ratio/acf/pacf + 内核 _ols/_invert_matrix/cagr）逐字移植进 tools/fengmetrics.py（MIT 归属+上游行号标注），零 backtrader 依赖；selfcheck 对拍自检 5 项全 PASS（含 FF 回归 vs 手工 OLS）。其余模块维持原判不采纳（引擎/执行连接器/GA/SSRN）。",
+      "salvage": [
+        "Fama-French 3/5 因子回归",
+        "Ulcer Index / UPI",
+        "Lo-MacKinlay 方差比检验",
+        "ACF / PACF",
+        "QQ图 / 日历热力图",
+        "implementation shortfall / slippage 分析",
+        "ETF proxy 历史扩展（~200行纯函数）"
+      ],
+      "eval_doc": "research/opensource-eval/pwb-toolbox-EVAL.md",
+      "trigger": "2026-08-30 开源项目首次批量登记；2026-09-03 深度评估",
+      "note": "Backtrader 量化工具箱：7 资产类 parquet 数据集 + 11 组合策略模板 + 25 指标 + 17 绘图 + GA 优化 + IB/CCXT 执行",
+      "reused_into": [
+        "tools/fengmetrics.py"
+      ]
+    },
+    {
+      "name": "FinEval",
+      "repo": "https://github.com/SUFE-AIBLM/FinEval",
+      "kind": "benchmark",
+      "status": "adopted",
+      "added": "2026-08-30",
+      "updated": "2026-08-30",
+      "reused_into": [
+        "tools/fengbench.py"
+      ],
+      "trigger": "2026-08-30 开源项目首次批量登记（金融知识门禁）",
+      "note": "金融知识门禁：fengbench.py 接入，学术 dev/val/test 集本地就绪，资产域 3 科 113 题"
+    },
+    {
+      "name": "a-stock-data",
+      "repo": "https://github.com/zsrl/a-stock-data",
+      "kind": "data",
+      "status": "adopted",
+      "added": "2026-08-30",
+      "updated": "2026-08-30",
+      "reused_into": [
+        "tools/fengastock.py"
+      ],
+      "trigger": "2026-08-30 开源项目首次批量登记（A股数据后端）",
+      "note": "A股数据后端 54 端点零鉴权：fengastock.py 12 端点已按需集成（估值史/退市日/申万变迁/复权因子等）"
+    },
+    {
+      "name": "yfinance",
+      "repo": "https://github.com/ranaroussi/yfinance",
+      "kind": "data",
+      "status": "adopted",
+      "added": "2026-08-30",
+      "updated": "2026-08-30",
+      "reused_into": [
+        "tools/fengstockintl.py"
+      ],
+      "trigger": "2026-08-30 开源项目首次批量登记（国际日线主源）",
+      "note": "国际日线主源（fengstockintl.py）；注意 Yahoo 403 降级路径已有记录"
+    },
+    {
+      "name": "akshare",
+      "repo": "https://github.com/akfamily/akshare",
+      "kind": "data",
+      "status": "adopted",
+      "added": "2026-08-30",
+      "updated": "2026-08-30",
+      "reused_into": [
+        "tools/fengdata.py",
+        "tools/fengexpand_hk.py",
+        "tools/fengstockdb.py"
+      ],
+      "trigger": "2026-08-30 开源项目首次批量登记（A股多源交叉验证）",
+      "note": "A股数据源之一，多源交叉验证用"
+    },
+    {
+      "name": "baostock",
+      "repo": "https://github.com/baostock/baostock",
+      "kind": "data",
+      "status": "adopted",
+      "added": "2026-08-30",
+      "updated": "2026-08-30",
+      "reused_into": [
+        "tools/fengastock.py",
+        "tools/fengstockdb.py"
+      ],
+      "trigger": "2026-08-30 开源项目首次批量登记（A股多源交叉验证）",
+      "note": "A股数据源之一，多源交叉验证用"
+    },
+    {
+      "name": "vnpy (VeighNa)",
+      "repo": "https://github.com/vnpy/vnpy",
+      "kind": "framework",
+      "status": "adopted",
+      "added": "2026-08-30",
+      "updated": "2026-08-30",
+      "reused_into": [
+        "tools/fengbacktest.py"
+      ],
+      "trigger": "2026-08-30 开源项目首次批量登记（回测范式参考）",
+      "note": "量化交易框架范式：fengbacktest.py 采用 vnpy 范式（未直接依赖其代码）"
+    },
+    {
+      "name": "QuantMind (LLMQuant/quant-mind)",
+      "repo": "https://github.com/LLMQuant/quant-mind",
+      "kind": "framework",
+      "status": "noted",
+      "added": "2026-08-30",
+      "updated": "2026-09-26",
+      "verdict": "2026-09-26 复审降级 evaluating→noted：与选股系统定位不同（学术论文知识提取 vs 投资分析），news 采集（PR Newswire 英文源）与知识标准（as_of/Citation）暂无排期需求；verify.sh/lint-imports 模式已由本仓 fengcheck/fengverify_gate 等价覆盖。如未来需要英文新闻监控可复活（EVAL §6.1 有现成落地路径）。",
+      "eval_doc": "research/opensource-eval/quant-mind-EVAL.md",
+      "trigger": "2026-08-30 开源项目首次批量登记；2026-09-03 深度评估",
+      "note": "LLMQuant 社区的开源量化知识框架（quant-mind）：知识标准 / news 采集管线 / 架构边界与执行机制 / skill 镜像"
+    },
+    {
+      "name": "QuantBuddy (宽宝)",
+      "repo": "https://www.quantbuddy.cn/ (GitHub: pseudo-longinus/quant-buddy-view)",
+      "kind": "project",
+      "status": "rejected",
+      "added": "2026-08-30",
+      "updated": "2026-08-30",
+      "verdict": "评估：非完全开源、无公开 API、定价未公开；思路与本项目'L4报告+持续监控'相通但形态在线服务，只宜借鉴'研究活页=持续更新资产'理念，不宜集成",
+      "salvage": [
+        "研究活页=持续更新资产 的理念"
+      ],
+      "trigger": "2026-08-30 开源项目首次批量登记（在线量化研究平台线索）",
+      "note": "在线量化研究「活页」平台（杭州两叶科技）：说出问题→自动调数据/公式/范式生成持续更新的交互研究页，主打 A股+全球宏观"
+    },
+    {
+      "name": "quant-wiki",
+      "repo": "https://github.com/LLMQuant/quant-wiki",
+      "kind": "project",
+      "status": "noted",
+      "added": "2026-08-30",
+      "updated": "2026-08-30",
+      "trigger": "2026-08-30 调研 QuantMind 时顺带发现",
+      "note": "LLMQuant 社区的开源中文量化百科，调研 QuantMind 时顺带发现"
+    },
+    {
+      "name": "awesome-quant",
+      "repo": "https://github.com/wilsonfreitas/awesome-quant",
+      "kind": "project",
+      "status": "noted",
+      "added": "2026-08-30",
+      "updated": "2026-08-30",
+      "trigger": "2026-08-30 开源项目首次批量登记（新工具入口目录）",
+      "note": "量化开源项目总目录（curated list），找新工具先翻这里"
+    },
+    {
+      "name": "Qlib (Microsoft)",
+      "repo": "https://github.com/microsoft/qlib",
+      "kind": "framework",
+      "status": "adopted",
+      "added": "2026-08-30",
+      "updated": "2026-09-03",
+      "reused_into": [
+        "tools/fengtechnicals.py"
+      ],
+      "verdict": "部分采纳：Alpha158 的 ROC/STD/BETA/RSQR/CORR/CNTP 技术因子可扩展 fengquant.py（原评估），实际已落地为 tools/fengtechnicals.py（该文件首行 docstring 即「fengtechnicals — Qlib Alpha158 六因子技术分析」，20 日滚动 + 历史分位数）；POET 协方差 + Brinson 归因可直接复用增强组合层，仍待做；其余（模型库/存储层/RL）不适用",
+      "salvage": [
+        "POET 协方差（增强组合层风险模型，仍待做）",
+        "Brinson 归因（增强组合层业绩归因，仍待做）"
+      ],
+      "eval_doc": "research/opensource-eval/qlib-EVAL.md",
+      "trigger": "2026-08-30 开源项目首次批量登记；2026-09-03 深度评估",
+      "note": "微软 AI 量化平台：30+ ML 模型 / POET 协方差 / Brinson 归因 / Alpha158 因子 / 表达式引擎"
+    },
+    {
+      "name": "Stock (RockyZSU)",
+      "repo": "https://github.com/RockyZSU/Stock",
+      "kind": "project",
+      "status": "adopted",
+      "added": "2026-08-30",
+      "updated": "2026-09-03",
+      "reused_into": [
+        "tools/fengwatch.py"
+      ],
+      "verdict": "部分采纳：SSE/SZSE 直连基金份额 API 已集成到 fengwatch.py 的 fund-share 子命令（query.sse.com.cn + fund.szse.cn）；尚未落地的可提取项：Eastmoney push2ex 5 池 clean 函数可直接导入，CNINFO 公告 API / CSI Index 成分 / 宁稳 42 字段可参考；不适用：ML（优矿已死）/旧 tushare/汇率/选股/实时监控（均依赖废弃 API）",
+      "eval_doc": "research/opensource-eval/RockyZSU-Stock-EVAL.md",
+      "trigger": "2026-08-30 开源项目首次批量登记；2026-09-03 深度评估",
+      "note": "A股量化交易学习教程（RockyZSU/Stock）"
+    },
+    {
+      "name": "tick-stock-panel (原TickFlowStockPanel)",
+      "repo": "https://github.com/shy3130/tick-stock-panel",
+      "kind": "project",
+      "status": "noted",
+      "added": "2026-09-11",
+      "updated": "2026-09-11",
+      "verdict": "借鉴不采用：可借鉴不直接跑——盘中/连板向与我们日线低频错位，fengweb 已有同等定位面板；原笔记借4点见 salvage",
+      "salvage": [
+        "能力路由数据源插件",
+        "选股回测监控共用Parquet单一事实管道",
+        "AI克制因子候选需人工确认",
+        "回测约束清单对拍"
+      ],
+      "eval_doc": "research/opensource-eval/tick-stock-panel-EVAL.md",
+      "trigger": "2026-09-11 开源项目批量评估",
+      "note": "自托管 A股选股+回测+盘中监控面板（原仓 shy3130/tick-stock-panel，4.5k星 MIT 活跃，TickFlow 是其数据源插件；hzy1522 等同名仓皆 fork）"
+    },
+    {
+      "name": "finvizfinance",
+      "repo": "https://github.com/lit26/finvizfinance",
+      "kind": "data",
+      "status": "adopted",
+      "added": "2026-09-11",
+      "updated": "2026-09-26",
+      "verdict": "2026-09-26 旁路薄封装落地：tools/fengfinviz.py（ratings/news/insider/fundament 四路，pip 装上游库 finvizfinance 后薄封装），实测 MSFT 三路 20/100/24 条全通；定位=旁路参考不进核心链路（爬虫无 API 承诺，失败降级不阻塞），PIT 口径仍以 fengsec 为准。",
+      "eval_doc": "research/opensource-eval/finvizfinance-EVAL.md",
+      "trigger": "2026-09-11 开源项目批量评估",
+      "note": "Finviz 网页爬虫封装（1.6k星, MIT, 活跃, 仅美股）",
+      "reused_into": [
+        "tools/fengfinviz.py"
+      ]
+    },
+    {
+      "name": "stock-scanner",
+      "repo": "https://github.com/DR-lin-eng/stock-scanner",
+      "kind": "project",
+      "status": "rejected",
+      "added": "2026-09-11",
+      "updated": "2026-09-11",
+      "verdict": "用不上（非筛选器，与 fengscreen 零互补）：它是单股 AI 深度分析器，可借鉴项见 salvage",
+      "salvage": [
+        "L2a 新闻情绪聚合",
+        "AI 失效规则降级思路"
+      ],
+      "eval_doc": "research/opensource-eval/stock-scanner-EVAL.md",
+      "trigger": "2026-09-11 开源项目批量评估",
+      "note": "单股 AI 深度分析器（akshare+Flask+LLM, 1.1k星, MIT, A股为主）：25 项财务指标 + 技术评分 + 新闻情绪"
+    },
+    {
+      "name": "MarkText",
+      "repo": "https://github.com/marktext/marktext",
+      "kind": "toolchain",
+      "status": "noted",
+      "added": "2026-09-13",
+      "updated": "2026-09-13",
+      "verdict": "评估结论：2026-09-13 董事长问全局美观 md 浏览器时评估推荐，未安装（未进入本机工具链）",
+      "trigger": "2026-09-13 董事长问全局美观 md 浏览器",
+      "note": "全局 md 阅读器候选：MIT 开源 WYSIWYG 编辑器，稳定版 v0.19.1（2026-06），维护活跃，支持 KaTeX/mermaid10/多主题，跨 Win/mac/Linux"
+    },
+    {
+      "name": "adata",
+      "repo": "https://github.com/1nchaos/adata",
+      "kind": "data",
+      "status": "noted",
+      "added": "2026-09-13",
+      "updated": "2026-09-13",
+      "trigger": "2026-09-13 数据库扩张数据源线索",
+      "note": "A股K线/概念数据Python库，纯国内源直连；数据库扩张备选采集库，现有 akshare 覆盖为主力，暂不集成"
+    },
+    {
+      "name": "pytdx",
+      "repo": "https://github.com/rainx/pytdx",
+      "kind": "data",
+      "status": "evaluating",
+      "added": "2026-09-13",
+      "updated": "2026-09-13",
+      "verdict": "待办：还在评「是否把它接入为运行时数据源」——通达信行情协议 Python 实现，直连通达信行情服务器（国内直连无鉴权），可拉全市场 A股日线/分钟线，是数据库永动扩张的关键整包级数据源。现状已定：已参照其 .day 二进制格式写了 tools/fengexpand_tdx.py / tools/fengexpand_tdxfin.py / tools/fengexpand_tdxgp.py，但 pytdx 本身未被 import（仅 fengexpand_tdxfin.py 注释引用 history_financial_crawler.py 作格式参照），仍非运行时依赖",
+      "trigger": "2026-09-13 数据库扩张数据源线索（通达信官方包格式研究）",
+      "note": "通达信行情协议 Python 实现（rainx/pytdx），下轮评估集成"
+    },
+    {
+      "name": "tdx2db",
+      "repo": "https://github.com/jing2uo/tdx2db",
+      "kind": "toolchain",
+      "status": "noted",
+      "added": "2026-09-13",
+      "updated": "2026-09-13",
+      "trigger": "2026-09-13 数据库扩张数据源线索",
+      "note": "通达信本地数据转 SQLite/数据库工具，30s 建 A股行情库；配合 pytdx 或通达信客户端使用"
+    },
+    {
+      "name": "沧海数据 tsanghi",
+      "repo": "https://tsanghi.com/",
+      "kind": "data",
+      "status": "noted",
+      "added": "2026-09-14",
+      "updated": "2026-09-14",
+      "trigger": "2026-09-14 日韩扩源数据源线索",
+      "note": "全球金融数据API(股票/指数/基金/外汇/加密),大陆直连可用,XJPX 日股等行情实测 HIT;demo token 限 10 行,全历史日线需付费套餐;候选日韩扩源方案 a"
+    },
+    {
+      "name": "JPX东证上市名单 data_j",
+      "repo": "https://www.jpx.co.jp/markets/statistics-equities/misc/tvdivq0000001vg2-att/data_j.xlsx",
+      "kind": "data",
+      "status": "adopted",
+      "added": "2026-09-14",
+      "updated": "2026-09-14",
+      "reused_into": [
+        "data/config/universe_JP.json"
+      ],
+      "trigger": "2026-09-14 日韩扩源数据源线索",
+      "note": "东证全市场名单 228KB xlsx，3601 只股票（剔 ETF/REIT），已建成 data/config/universe_JP.json；日线回填待新轮"
+    },
+    {
+      "name": "edgartools",
+      "repo": "https://github.com/dgunning/edgartools",
+      "kind": "data",
+      "status": "adopted",
+      "added": "2026-09-15",
+      "updated": "2026-09-15",
+      "reused_into": [
+        "tools/fengsec.py"
+      ],
+      "trigger": "2026-09-15 美股 SEC 一手资料（AAPL 分析）",
+      "note": "美股 SEC EDGAR 一手资料库：fengsec.py 的 edgartools 数据层用它提 facts PIT 双轴 / financials XBRL / ownership Form3-5 / 13F；AAPL 分析（2026-09-15）全部三表数字走它取数，sources/sec_aapl_facts.json 的 meta.source 即为 edgartools"
+    },
+    {
+      "name": "ai-berkshire",
+      "repo": "https://github.com/xbtlin/ai-berkshire",
+      "kind": "project",
+      "status": "adopted",
+      "added": "2026-09-16",
+      "updated": "2026-09-17",
+      "reused_into": [
+        ".agents/skills/investment-team/SKILL.md",
+        "research/130-external-frameworks/ai-berkshire/ADOPTION.json",
+        "research/130-external-frameworks/ai-berkshire/UPSTREAM.json",
+        "research/130-external-frameworks/ai-berkshire/README.md",
+        "tools/fengadopt.py",
+        "tools/sync-ai-berkshire.py",
+        "tools/financial_rigor.py",
+        "tools/report_audit.py",
+        "tools/stock_screener.py",
+        "tools/morningstar_fair_value.py",
+        "tools/star_history_chart.py",
+        "tools/twstock_data.py",
+        "tools/xueqiu_scraper.py"
+      ],
+      "verdict": "已并入（2026-09-17 收口，逐文件判定见 ADOPTION.json）：21 个 skill 正文物理并入 research/130-external-frameworks/ai-berkshire/skills/（20 个取自上游 skills/*.md + 1 个取自上游 codex-skills/investment-memo-craft/SKILL.md，逐字原文 + 2 行来源标注头，sha256 指纹记于 UPSTREAM.json）；四档分布 absorbed 1 / kept 6 / referenced 0 / superseded 14（2026-09-17 增设 kept 档后实测：无自有承接者的纯留档件不再冒充 absorbed）。其中 investment-team 是本台账唯一的 absorbed 条目（.agents/skills/investment-team/SKILL.md 为本仓正本，已用完整上游正文替换残缺派生版、补回丢失的 45 行；owner 能真实解析到），其余 20 个只落 130 目录、不进 .agents/skills/（防绕过七层状态机的平行入口）。另有 7 个 Python 工具（financial_rigor / report_audit / stock_screener / morningstar_fair_value / star_history_chart / twstock_data / xueqiu_scraper）经 tools/sync-ai-berkshire.py 同步（同步型：上游为源、本仓副本为使用准据）。上游 commit = 6354c68（2026-08-20，MIT (c) 2026 xbtlin）。对账命令：python tools/fengadopt.py verify。",
+      "trigger": "2026-09-16 补登记同级 sibling 项目（ai-berkshire 同步）；2026-09-17 由「单份残缺派生 + 挂在项目外目录」改为「正文物理并入本仓 + 逐文件归属台账」",
+      "note": "四大师投研框架外部项目 ai-berkshire。上游本地克隆在同机 sibling 目录（本地不入库，不是本系统运行依赖）；21 个 skill 正文已物理并入本仓，对外只需上游仓库 URL + commit，不需要本机路径"
+    },
+    {
+      "name": "Search-King",
+      "repo": "(本机自建搜索工具，非公开仓库)",
+      "kind": "toolchain",
+      "status": "adopted",
+      "added": "2026-09-16",
+      "updated": "2026-09-16",
+      "reused_into": [
+        "tools/fengstate.py"
+      ],
+      "verdict": "已集成：本机搜索工具 scraper.py（搜文字/读网页/搜图/爬取），唐山港分析全程用它取一手资料；读页遇 Cloudflare 拦截时自动切手动模式。代码落点 = tools/fengstate.py 的可用性探针（SEARCH_KING_DIR），非本仓代码依赖",
+      "trigger": "2026-09-16 补登记本机工具链",
+      "note": "本机搜索工具 scraper.py：搜文字/读网页/搜图/爬取（项目外的兄弟目录，脚本路径由环境变量 SEARCH_KING_DIR 指定，本仓 tools/fengstate.py 的可用性探针据此取用）"
+    },
+    {
+      "name": "playwright",
+      "repo": "https://github.com/microsoft/playwright",
+      "kind": "toolchain",
+      "status": "noted",
+      "added": "2026-09-16",
+      "updated": "2026-09-16",
+      "depends_on": "Search-King",
+      "trigger": "2026-09-16 补登记本机工具链（Search-King 依赖清点）",
+      "note": "Search-King 的浏览器自动化底座（项目工具依赖表声明已装）；本项目分析经搜索工具间接使用，未直接调用，仅经 Search-King 间接使用"
+    },
+    {
+      "name": "crawl4ai",
+      "repo": "https://github.com/unclecode/crawl4ai",
+      "kind": "toolchain",
+      "status": "noted",
+      "added": "2026-09-16",
+      "updated": "2026-09-16",
+      "depends_on": "Search-King",
+      "trigger": "2026-09-16 补登记本机工具链（Search-King 依赖清点）",
+      "note": "Search-King 的深度爬取后端（项目工具依赖表声明已装）；本项目分析经搜索工具间接使用，未直接调用"
+    },
+    {
+      "name": "CloakBrowser",
+      "repo": "(Search-King 反爬后端)",
+      "kind": "toolchain",
+      "status": "noted",
+      "added": "2026-09-16",
+      "updated": "2026-09-16",
+      "depends_on": "Search-King",
+      "trigger": "2026-09-16 补登记本机工具链（Search-King 依赖清点）",
+      "note": "Search-King 的反爬切换后端；用于绕过站点风控取正文"
+    },
+    {
+      "name": "yt-dlp",
+      "repo": "https://github.com/yt-dlp/yt-dlp",
+      "kind": "toolchain",
+      "status": "noted",
+      "added": "2026-09-16",
+      "updated": "2026-09-16",
+      "depends_on": "Search-King",
+      "trigger": "2026-09-16 补登记本机工具链（Search-King 依赖清点）",
+      "note": "Search-King 依赖之一（项目工具依赖表声明已装）；本项目分析未使用（无视频资料需求）"
+    },
+    {
+      "name": "cognee",
+      "repo": "https://github.com/topoteretes/cognee",
+      "kind": "framework",
+      "status": "evaluating",
+      "added": "2026-09-17",
+      "updated": "2026-09-17",
+      "verdict": "实验性：有启动器与 SDK 测试脚本，未进入正式工具链（AGENTS.md 工具表与 docs/ 均无记载，仅 DEPENDENCIES.md 把它列为「可挂」第三方库）。待办：还在评「是否把 cognee 知识图谱接进正式链路」——现有证据仅 tools/start_cognee.py（from cognee.api.client import start_api_server）与 tools/test_cognee_sdk.py（import cognee / from cognee.modules.search.types import SearchType），需明确用途（知识图谱/记忆）与落点后再定 adopted 或 rejected",
+      "trigger": "2026-09-17 cognee 知识图谱实验（启动器 + SDK 测试脚本）",
+      "note": "第三方开源知识图谱/记忆框架（topoteretes/cognee）：独立图谱功能，本仓已有启动器与 SDK 冒烟脚本"
+    }
+  ]
+}
