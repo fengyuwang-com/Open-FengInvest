@@ -1,0 +1,112 @@
+{
+  "claim": {
+    "id": 5,
+    "title": "上证年线持续期对称",
+    "statement": "上证指数年线上方与下方持续期对称（上/下比≈1.0），与 #4 美股 2.8x 构成反例对照。",
+    "h0": "上证年线上下持续期比例 ≠ 1.0。",
+    "price_basis": "前复权 close（指数）",
+    "cost_bps": 25,
+    "signal_def": {
+      "key": "指数收盘价站上/跌破 MA200 的持续期（连续交易日数）",
+      "lookahead": "持续期按 T 日收盘后可确定的信号分段"
+    },
+    "verdict_metric": {
+      "primary": "上方持续期总和 / 下方持续期总和（判据≈1.0，给出 95% CI 说明容差）",
+      "note": "事件统计型论断"
+    },
+    "data_scope": {
+      "markets": [
+        "CN"
+      ],
+      "category": "index",
+      "survivorship": "指数为全历史连续序列，无退市问题"
+    }
+  },
+  "generated_at": "2026-09-10 08:52:41",
+  "engine": "annual-line-duration-ratio",
+  "config": {
+    "bootstrap_iters": 2000,
+    "rng_seed": 20260820,
+    "oos_frac": 0.2,
+    "vma_window": 200,
+    "block_days": 250,
+    "index": {
+      "id": 26,
+      "ticker": "000001.SS",
+      "name": "上证综指"
+    }
+  },
+  "survivorship_note": "指数为全历史连续序列，无退市问题（claims-def data_scope）",
+  "protocol_lights": [
+    {
+      "item": "判据对齐（论断=上/下持续期总和之比 ≈ 1.0）",
+      "status": "✅",
+      "note": "事件计数型论断，主判据就是论断声称的那个量本身，不用收益/胜率替代（铁律一）"
+    },
+    {
+      "item": "价格口径（前复权 close）",
+      "status": "✅",
+      "note": "daily_data.close 为前复权（000-data-biases.md A.1），避免除权假跳空制造假穿越"
+    },
+    {
+      "item": "时机（无前视）",
+      "status": "✅",
+      "note": "穿越事件在 T 日收盘后即可确定；噪音/持续期判定只用 T 及其之后的交易日，MA 用全历史滚动不含未来窗口"
+    },
+    {
+      "item": "交易成本",
+      "status": "⚠️",
+      "note": "事件统计不涉及交易，成本不参与计算；保留 cost_bps 字段与 schema 一致"
+    },
+    {
+      "item": "显著性/区间（Bootstrap 2000 次）",
+      "status": "✅",
+      "note": "股票级 block bootstrap（每股坍缩为统计量，种子 20260820 可复现）"
+    },
+    {
+      "item": "重叠样本处理",
+      "status": "⚠️",
+      "note": "穿越事件间至少隔 1 个交易日但相邻事件相关 → 每股坍缩为统计量后做股票级 bootstrap；跨股同日历相关未建模"
+    },
+    {
+      "item": "样本外验证（后 20%）",
+      "status": "✅",
+      "note": "每标的自有交易日后 20% 内的事件/区间单独跑同口径"
+    },
+    {
+      "item": "幸存者偏差（含退市股）",
+      "status": "⚠️",
+      "note": "本地库 indices 仅当前成分股快照，不含退市/被剔除股 → 穿越事件样本缺退市前下跌段，方向已知、现有数据无法修复"
+    }
+  ],
+  "result": {
+    "primary": "上方持续期总和 / 下方持续期总和 ≈ 1.0",
+    "full": {
+      "ratio": 1.1176,
+      "ci95": [
+        0.7213,
+        1.7325
+      ],
+      "ci_contains_1": true,
+      "within_20pct_band": true
+    },
+    "oos": {
+      "ratio": 1.5906,
+      "ci95": [
+        0.6383,
+        4.8682
+      ],
+      "ci_contains_1": true,
+      "within_20pct_band": false
+    },
+    "n_days_above": 3621,
+    "n_days_below": 3240,
+    "n_days_valid": 6861,
+    "date_span": [
+      "1998-04-29",
+      "2026-08-21"
+    ],
+    "oos_n_days": 1373,
+    "supported": true
+  }
+}

@@ -1,0 +1,825 @@
+{
+  "claim": {
+    "id": 8,
+    "title": "月度暴涨后动量反转",
+    "statement": "单月涨幅 >30% 的标的，次月继续上涨的概率 <40%（月度动量反转）。",
+    "h0": "月涨幅>30% 无预测能力（次月上涨概率 = 50%）。",
+    "price_basis": "前复权 close",
+    "cost_bps": 25,
+    "holding_days": [
+      20
+    ],
+    "signal_def": {
+      "key": "过去 20 个交易日（≈1 月）涨幅 >30% → 信号组；其余为对照组",
+      "lookahead": "信号 T 日收盘确定；评估 T+1 起 20 个交易日（次月）内上涨与否"
+    },
+    "verdict_metric": {
+      "primary": "信号组\"次月上涨概率\"是否 <40%（判据=概率阈值，非收益差）",
+      "secondary": "信号组与对照组上涨概率之差 + 显著性"
+    },
+    "data_scope": {
+      "markets": [
+        "AU",
+        "CA",
+        "CH",
+        "CN",
+        "DE",
+        "ES",
+        "FR",
+        "HK",
+        "IN",
+        "IT",
+        "JP",
+        "KR",
+        "NL",
+        "NZ",
+        "SE",
+        "SG",
+        "TW",
+        "UK",
+        "US"
+      ],
+      "category": "stock",
+      "survivorship": "本地库仅含当前成分快照（幸存者高估源）"
+    }
+  },
+  "generated_at": "2026-08-20 23:29:18",
+  "config": {
+    "bootstrap_iters": 2000,
+    "rng_seed": 20260820,
+    "oos_frac": 0.2,
+    "momentum_window_days": 20,
+    "signal_threshold": 0.3,
+    "eval_window_days": 20,
+    "threshold_pct": 40.0,
+    "markets": [
+      "AU",
+      "CA",
+      "CH",
+      "CN",
+      "DE",
+      "ES",
+      "FR",
+      "HK",
+      "IN",
+      "IT",
+      "JP",
+      "KR",
+      "NL",
+      "NZ",
+      "SE",
+      "SG",
+      "TW",
+      "UK",
+      "US"
+    ]
+  },
+  "pools": {
+    "markets": [
+      "AU",
+      "CA",
+      "CH",
+      "CN",
+      "DE",
+      "ES",
+      "FR",
+      "HK",
+      "IN",
+      "IT",
+      "JP",
+      "KR",
+      "NL",
+      "NZ",
+      "SE",
+      "SG",
+      "TW",
+      "UK",
+      "US"
+    ],
+    "stocks_total_by_market": {
+      "AU": 197,
+      "CA": 53,
+      "CH": 19,
+      "CN": 300,
+      "DE": 40,
+      "ES": 35,
+      "FR": 39,
+      "HK": 85,
+      "IN": 50,
+      "IT": 40,
+      "JP": 204,
+      "KR": 197,
+      "NL": 24,
+      "NZ": 47,
+      "SE": 30,
+      "SG": 30,
+      "TW": 50,
+      "UK": 96,
+      "US": 484
+    },
+    "stocks_processed_by_market": {
+      "AU": 196,
+      "CA": 53,
+      "CH": 19,
+      "CN": 300,
+      "DE": 40,
+      "ES": 35,
+      "FR": 39,
+      "HK": 85,
+      "IN": 50,
+      "IT": 40,
+      "JP": 204,
+      "KR": 197,
+      "NL": 24,
+      "NZ": 47,
+      "SE": 30,
+      "SG": 30,
+      "TW": 50,
+      "UK": 96,
+      "US": 482
+    }
+  },
+  "survivorship_note": "本地库 indices 仅当前成分股快照，不含退市/被剔除股；结果方向影响已知（高估收益、低估下跌概率）",
+  "protocol_lights": [
+    {
+      "item": "判据对齐（论断=次月上涨概率 → 判据=信号组上涨概率 vs 40% 阈值）",
+      "status": "✅",
+      "note": "主判据=信号组 pooled 次月上涨率；EW 均值与 95%CI 佐证；对照差异仅参考（铁律一）"
+    },
+    {
+      "item": "价格口径（前复权 close）",
+      "status": "✅",
+      "note": "daily_data.close 为前复权（000-data-biases.md A.1），避免未复权假跳空污染"
+    },
+    {
+      "item": "成交时机（无前视）",
+      "status": "✅",
+      "note": "信号 T 日收盘确定（20 日涨幅>30%），评估窗口从 T+1 起 20 个交易日；不用当日收盘价又做信号又做评估"
+    },
+    {
+      "item": "交易成本",
+      "status": "⚠️",
+      "note": "本论断为概率统计、非策略收益，成本不参与上涨率计算；保留 cost_bps 字段与 schema 一致"
+    },
+    {
+      "item": "显著性检验（股票级 block Bootstrap 95% CI）",
+      "status": "✅",
+      "note": "信号组 EW 上涨率单组 2000 次重抽样 CI + 配对差 Bootstrap（种子 20260820，可复现）"
+    },
+    {
+      "item": "重叠样本处理",
+      "status": "⚠️",
+      "note": "逐日滚动 20 日窗口高度重叠 → 每股坍缩为均值再做股票级 bootstrap（等价降采样到每股）；跨股同日历相关未建模"
+    },
+    {
+      "item": "样本外验证（后 20%）",
+      "status": "✅",
+      "note": "每标的自有交易日后 20% 数据单独跑同口径，报告上涨率与配对差 CI"
+    },
+    {
+      "item": "幸存者偏差（含退市股）",
+      "status": "⚠️",
+      "note": "本地库 indices 仅当前成分股快照，不含退市/被剔除股 → 上涨率被系统性高估（方向已知，现有数据无法修复）"
+    }
+  ],
+  "per_market": {
+    "AU": {
+      "stocks_total": 197,
+      "stocks_processed": 196,
+      "signal": {
+        "n_days": 24483,
+        "n_up": 12006,
+        "win_rate_pct": 49.04,
+        "n_stocks": 167
+      },
+      "control": {
+        "n_days": 1097264,
+        "n_up": 587272,
+        "win_rate_pct": 53.52,
+        "n_stocks": 196
+      },
+      "oos": {
+        "signal": {
+          "n_days": 3064,
+          "n_up": 1652,
+          "win_rate_pct": 53.92,
+          "n_stocks": 101
+        },
+        "control": {
+          "n_days": 218844,
+          "n_up": 119028,
+          "win_rate_pct": 54.39,
+          "n_stocks": 196
+        }
+      }
+    },
+    "CA": {
+      "stocks_total": 53,
+      "stocks_processed": 53,
+      "signal": {
+        "n_days": 2292,
+        "n_up": 1319,
+        "win_rate_pct": 57.55,
+        "n_stocks": 44
+      },
+      "control": {
+        "n_days": 332603,
+        "n_up": 193335,
+        "win_rate_pct": 58.13,
+        "n_stocks": 53
+      },
+      "oos": {
+        "signal": {
+          "n_days": 437,
+          "n_up": 265,
+          "win_rate_pct": 60.64,
+          "n_stocks": 16
+        },
+        "control": {
+          "n_days": 65888,
+          "n_up": 38779,
+          "win_rate_pct": 58.86,
+          "n_stocks": 53
+        }
+      }
+    },
+    "CH": {
+      "stocks_total": 19,
+      "stocks_processed": 19,
+      "signal": {
+        "n_days": 747,
+        "n_up": 459,
+        "win_rate_pct": 61.45,
+        "n_stocks": 16
+      },
+      "control": {
+        "n_days": 125448,
+        "n_up": 71771,
+        "win_rate_pct": 57.21,
+        "n_stocks": 19
+      },
+      "oos": {
+        "signal": {
+          "n_days": 20,
+          "n_up": 11,
+          "win_rate_pct": 55.0,
+          "n_stocks": 4
+        },
+        "control": {
+          "n_days": 24985,
+          "n_up": 13969,
+          "win_rate_pct": 55.91,
+          "n_stocks": 19
+        }
+      }
+    },
+    "CN": {
+      "stocks_total": 300,
+      "stocks_processed": 300,
+      "signal": {
+        "n_days": 35458,
+        "n_up": 16758,
+        "win_rate_pct": 47.26,
+        "n_stocks": 291
+      },
+      "control": {
+        "n_days": 1203622,
+        "n_up": 589415,
+        "win_rate_pct": 48.97,
+        "n_stocks": 300
+      },
+      "oos": {
+        "signal": {
+          "n_days": 5815,
+          "n_up": 2960,
+          "win_rate_pct": 50.9,
+          "n_stocks": 213
+        },
+        "control": {
+          "n_days": 238273,
+          "n_up": 113161,
+          "win_rate_pct": 47.49,
+          "n_stocks": 300
+        }
+      }
+    },
+    "DE": {
+      "stocks_total": 40,
+      "stocks_processed": 40,
+      "signal": {
+        "n_days": 1533,
+        "n_up": 943,
+        "win_rate_pct": 61.51,
+        "n_stocks": 38
+      },
+      "control": {
+        "n_days": 245371,
+        "n_up": 136514,
+        "win_rate_pct": 55.64,
+        "n_stocks": 40
+      },
+      "oos": {
+        "signal": {
+          "n_days": 173,
+          "n_up": 105,
+          "win_rate_pct": 60.69,
+          "n_stocks": 11
+        },
+        "control": {
+          "n_days": 48710,
+          "n_up": 26634,
+          "win_rate_pct": 54.68,
+          "n_stocks": 40
+        }
+      }
+    },
+    "ES": {
+      "stocks_total": 35,
+      "stocks_processed": 35,
+      "signal": {
+        "n_days": 1460,
+        "n_up": 727,
+        "win_rate_pct": 49.79,
+        "n_stocks": 33
+      },
+      "control": {
+        "n_days": 183539,
+        "n_up": 102338,
+        "win_rate_pct": 55.76,
+        "n_stocks": 35
+      },
+      "oos": {
+        "signal": {
+          "n_days": 113,
+          "n_up": 53,
+          "win_rate_pct": 46.9,
+          "n_stocks": 11
+        },
+        "control": {
+          "n_days": 36459,
+          "n_up": 21890,
+          "win_rate_pct": 60.04,
+          "n_stocks": 35
+        }
+      }
+    },
+    "FR": {
+      "stocks_total": 39,
+      "stocks_processed": 39,
+      "signal": {
+        "n_days": 1564,
+        "n_up": 883,
+        "win_rate_pct": 56.46,
+        "n_stocks": 34
+      },
+      "control": {
+        "n_days": 258093,
+        "n_up": 142456,
+        "win_rate_pct": 55.2,
+        "n_stocks": 39
+      },
+      "oos": {
+        "signal": {
+          "n_days": 137,
+          "n_up": 86,
+          "win_rate_pct": 62.77,
+          "n_stocks": 12
+        },
+        "control": {
+          "n_days": 51323,
+          "n_up": 28278,
+          "win_rate_pct": 55.1,
+          "n_stocks": 39
+        }
+      }
+    },
+    "HK": {
+      "stocks_total": 85,
+      "stocks_processed": 85,
+      "signal": {
+        "n_days": 6592,
+        "n_up": 3188,
+        "win_rate_pct": 48.36,
+        "n_stocks": 82
+      },
+      "control": {
+        "n_days": 367762,
+        "n_up": 193795,
+        "win_rate_pct": 52.7,
+        "n_stocks": 85
+      },
+      "oos": {
+        "signal": {
+          "n_days": 1024,
+          "n_up": 384,
+          "win_rate_pct": 37.5,
+          "n_stocks": 51
+        },
+        "control": {
+          "n_days": 72787,
+          "n_up": 36576,
+          "win_rate_pct": 50.25,
+          "n_stocks": 85
+        }
+      }
+    },
+    "IN": {
+      "stocks_total": 50,
+      "stocks_processed": 50,
+      "signal": {
+        "n_days": 4832,
+        "n_up": 2713,
+        "win_rate_pct": 56.15,
+        "n_stocks": 49
+      },
+      "control": {
+        "n_days": 292212,
+        "n_up": 166552,
+        "win_rate_pct": 57.0,
+        "n_stocks": 50
+      },
+      "oos": {
+        "signal": {
+          "n_days": 232,
+          "n_up": 129,
+          "win_rate_pct": 55.6,
+          "n_stocks": 16
+        },
+        "control": {
+          "n_days": 58561,
+          "n_up": 33683,
+          "win_rate_pct": 57.52,
+          "n_stocks": 50
+        }
+      }
+    },
+    "IT": {
+      "stocks_total": 40,
+      "stocks_processed": 40,
+      "signal": {
+        "n_days": 1716,
+        "n_up": 989,
+        "win_rate_pct": 57.63,
+        "n_stocks": 34
+      },
+      "control": {
+        "n_days": 221108,
+        "n_up": 121826,
+        "win_rate_pct": 55.1,
+        "n_stocks": 40
+      },
+      "oos": {
+        "signal": {
+          "n_days": 359,
+          "n_up": 179,
+          "win_rate_pct": 49.86,
+          "n_stocks": 19
+        },
+        "control": {
+          "n_days": 43710,
+          "n_up": 25637,
+          "win_rate_pct": 58.65,
+          "n_stocks": 40
+        }
+      }
+    },
+    "JP": {
+      "stocks_total": 204,
+      "stocks_processed": 204,
+      "signal": {
+        "n_days": 10555,
+        "n_up": 5442,
+        "win_rate_pct": 51.56,
+        "n_stocks": 191
+      },
+      "control": {
+        "n_days": 1257620,
+        "n_up": 676699,
+        "win_rate_pct": 53.81,
+        "n_stocks": 204
+      },
+      "oos": {
+        "signal": {
+          "n_days": 2091,
+          "n_up": 1237,
+          "win_rate_pct": 59.16,
+          "n_stocks": 124
+        },
+        "control": {
+          "n_days": 248982,
+          "n_up": 140484,
+          "win_rate_pct": 56.42,
+          "n_stocks": 204
+        }
+      }
+    },
+    "KR": {
+      "stocks_total": 197,
+      "stocks_processed": 197,
+      "signal": {
+        "n_days": 24786,
+        "n_up": 12143,
+        "win_rate_pct": 48.99,
+        "n_stocks": 196
+      },
+      "control": {
+        "n_days": 927278,
+        "n_up": 472499,
+        "win_rate_pct": 50.96,
+        "n_stocks": 197
+      },
+      "oos": {
+        "signal": {
+          "n_days": 6059,
+          "n_up": 2873,
+          "win_rate_pct": 47.42,
+          "n_stocks": 170
+        },
+        "control": {
+          "n_days": 181879,
+          "n_up": 92057,
+          "win_rate_pct": 50.61,
+          "n_stocks": 197
+        }
+      }
+    },
+    "NL": {
+      "stocks_total": 24,
+      "stocks_processed": 24,
+      "signal": {
+        "n_days": 1192,
+        "n_up": 703,
+        "win_rate_pct": 58.98,
+        "n_stocks": 18
+      },
+      "control": {
+        "n_days": 125442,
+        "n_up": 70597,
+        "win_rate_pct": 56.28,
+        "n_stocks": 24
+      },
+      "oos": {
+        "signal": {
+          "n_days": 200,
+          "n_up": 102,
+          "win_rate_pct": 51.0,
+          "n_stocks": 12
+        },
+        "control": {
+          "n_days": 24833,
+          "n_up": 14014,
+          "win_rate_pct": 56.43,
+          "n_stocks": 24
+        }
+      }
+    },
+    "NZ": {
+      "stocks_total": 47,
+      "stocks_processed": 47,
+      "signal": {
+        "n_days": 1366,
+        "n_up": 661,
+        "win_rate_pct": 48.39,
+        "n_stocks": 36
+      },
+      "control": {
+        "n_days": 238046,
+        "n_up": 128755,
+        "win_rate_pct": 54.09,
+        "n_stocks": 47
+      },
+      "oos": {
+        "signal": {
+          "n_days": 102,
+          "n_up": 26,
+          "win_rate_pct": 25.49,
+          "n_stocks": 11
+        },
+        "control": {
+          "n_days": 47199,
+          "n_up": 24196,
+          "win_rate_pct": 51.26,
+          "n_stocks": 47
+        }
+      }
+    },
+    "SE": {
+      "stocks_total": 30,
+      "stocks_processed": 30,
+      "signal": {
+        "n_days": 893,
+        "n_up": 550,
+        "win_rate_pct": 61.59,
+        "n_stocks": 27
+      },
+      "control": {
+        "n_days": 176467,
+        "n_up": 100533,
+        "win_rate_pct": 56.97,
+        "n_stocks": 30
+      },
+      "oos": {
+        "signal": {
+          "n_days": 91,
+          "n_up": 56,
+          "win_rate_pct": 61.54,
+          "n_stocks": 6
+        },
+        "control": {
+          "n_days": 35000,
+          "n_up": 19654,
+          "win_rate_pct": 56.15,
+          "n_stocks": 30
+        }
+      }
+    },
+    "SG": {
+      "stocks_total": 30,
+      "stocks_processed": 30,
+      "signal": {
+        "n_days": 1355,
+        "n_up": 729,
+        "win_rate_pct": 53.8,
+        "n_stocks": 26
+      },
+      "control": {
+        "n_days": 162218,
+        "n_up": 88429,
+        "win_rate_pct": 54.51,
+        "n_stocks": 30
+      },
+      "oos": {
+        "signal": {
+          "n_days": 60,
+          "n_up": 21,
+          "win_rate_pct": 35.0,
+          "n_stocks": 7
+        },
+        "control": {
+          "n_days": 32285,
+          "n_up": 17534,
+          "win_rate_pct": 54.31,
+          "n_stocks": 30
+        }
+      }
+    },
+    "TW": {
+      "stocks_total": 50,
+      "stocks_processed": 50,
+      "signal": {
+        "n_days": 5983,
+        "n_up": 3535,
+        "win_rate_pct": 59.08,
+        "n_stocks": 47
+      },
+      "control": {
+        "n_days": 285729,
+        "n_up": 156368,
+        "win_rate_pct": 54.73,
+        "n_stocks": 50
+      },
+      "oos": {
+        "signal": {
+          "n_days": 1999,
+          "n_up": 1327,
+          "win_rate_pct": 66.38,
+          "n_stocks": 39
+        },
+        "control": {
+          "n_days": 55714,
+          "n_up": 32366,
+          "win_rate_pct": 58.09,
+          "n_stocks": 50
+        }
+      }
+    },
+    "UK": {
+      "stocks_total": 96,
+      "stocks_processed": 96,
+      "signal": {
+        "n_days": 4000,
+        "n_up": 2426,
+        "win_rate_pct": 60.65,
+        "n_stocks": 89
+      },
+      "control": {
+        "n_days": 741308,
+        "n_up": 404956,
+        "win_rate_pct": 54.63,
+        "n_stocks": 96
+      },
+      "oos": {
+        "signal": {
+          "n_days": 610,
+          "n_up": 389,
+          "win_rate_pct": 63.77,
+          "n_stocks": 53
+        },
+        "control": {
+          "n_days": 147266,
+          "n_up": 81290,
+          "win_rate_pct": 55.2,
+          "n_stocks": 96
+        }
+      }
+    },
+    "US": {
+      "stocks_total": 484,
+      "stocks_processed": 482,
+      "signal": {
+        "n_days": 41667,
+        "n_up": 22825,
+        "win_rate_pct": 54.78,
+        "n_stocks": 465
+      },
+      "control": {
+        "n_days": 4140464,
+        "n_up": 2357904,
+        "win_rate_pct": 56.95,
+        "n_stocks": 482
+      },
+      "oos": {
+        "signal": {
+          "n_days": 5351,
+          "n_up": 3031,
+          "win_rate_pct": 56.64,
+          "n_stocks": 288
+        },
+        "control": {
+          "n_days": 825080,
+          "n_up": 467955,
+          "win_rate_pct": 56.72,
+          "n_stocks": 482
+        }
+      }
+    }
+  },
+  "aggregate": {
+    "signal": {
+      "n_days": 172474,
+      "n_up": 88999,
+      "win_rate_pct": 51.6,
+      "n_stocks": 1883
+    },
+    "control": {
+      "n_days": 12381594,
+      "n_up": 6762014,
+      "win_rate_pct": 54.61,
+      "n_stocks": 2017
+    }
+  },
+  "aggregate_oos": {
+    "signal": {
+      "n_days": 27937,
+      "n_up": 14886,
+      "win_rate_pct": 53.28,
+      "n_stocks": 1164
+    },
+    "control": {
+      "n_days": 2457778,
+      "n_up": 1347185,
+      "win_rate_pct": 54.81,
+      "n_stocks": 2017
+    }
+  },
+  "verdict": {
+    "threshold_pct": 40.0,
+    "signal_win_rate_pooled_pct": 51.6,
+    "signal_win_rate_ew_pct": 50.66,
+    "control_win_rate_pooled_pct": 54.61,
+    "diff_vs_control_pooled_pp": -3.01,
+    "n_signal_days": 172474,
+    "n_control_days": 12381594,
+    "n_signal_stocks": 1883,
+    "n_control_stocks": 2017,
+    "sig_ci95": {
+      "mean_pct": 50.66,
+      "ci95_low_pct": 49.62,
+      "ci95_high_pct": 51.63
+    },
+    "diff_bootstrap": {
+      "n_stocks": 1883,
+      "obs_mean_diff": -0.031295640255381674,
+      "n_boot": 2000,
+      "ci95_low": -0.04111624028412582,
+      "ci95_high": -0.021462608517449813,
+      "p_directional_above_gt_below": 1.0,
+      "p_two_sided": 0.0
+    },
+    "oos_signal_win_rate_pooled_pct": 53.28,
+    "oos_control_win_rate_pooled_pct": 54.81,
+    "oos_diff_bootstrap": {
+      "n_stocks": 1164,
+      "obs_mean_diff": -0.0596013625716052,
+      "n_boot": 2000,
+      "ci95_low": -0.07827769636165016,
+      "ci95_high": -0.041178511234880505,
+      "p_directional_above_gt_below": 1.0,
+      "p_two_sided": 0.0
+    },
+    "supported_pooled": false,
+    "supported_ew": false,
+    "supported_at_95": false,
+    "supported": false
+  }
+}

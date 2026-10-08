@@ -1,0 +1,468 @@
+{
+  "claim": {
+    "id": 3,
+    "title": "年线穿越噪音占比",
+    "statement": "各市场年线（MA200）穿越事件中，约 25-33% 为 1 日噪音（假突破：信号 后 1 个交易日内即被反向穿越还原）。",
+    "h0": "年线穿越事件中 1 日噪音占比为 0（无假突破）。",
+    "price_basis": "前复权 close",
+    "cost_bps": 25,
+    "signal_def": {
+      "key": "收盘价上穿/下穿 MA200 的穿越事件（事件计数型）",
+      "lookahead": "事件在 T 日收盘后确定，噪音判定只涉及 T 与 T+1 两日"
+    },
+    "verdict_metric": {
+      "primary": "1 日噪音占全部穿越事件的比例（论断口径 25-33%）",
+      "note": "事件统计型论断，主判据是占比而非收益差"
+    },
+    "data_scope": {
+      "markets": [
+        "AU",
+        "CA",
+        "CH",
+        "CN",
+        "DE",
+        "ES",
+        "FR",
+        "HK",
+        "IN",
+        "IT",
+        "JP",
+        "KR",
+        "NL",
+        "NZ",
+        "SE",
+        "SG",
+        "TW",
+        "UK",
+        "US"
+      ],
+      "category": "stock",
+      "survivorship": "本地库仅含当前成分快照（幸存者高估源）"
+    }
+  },
+  "generated_at": "2026-09-10 08:59:09",
+  "engine": "annual-line-crossing-noise",
+  "config": {
+    "bootstrap_iters": 2000,
+    "rng_seed": 20260820,
+    "oos_frac": 0.2,
+    "vma_window": 200,
+    "noise_def": "T 日穿越后 T+1 日即反向穿越还原（1 个交易日内翻转）",
+    "markets": [
+      "AU",
+      "CA",
+      "CH",
+      "CN",
+      "DE",
+      "ES",
+      "FR",
+      "HK",
+      "IN",
+      "IT",
+      "JP",
+      "KR",
+      "NL",
+      "NZ",
+      "SE",
+      "SG",
+      "TW",
+      "UK",
+      "US"
+    ]
+  },
+  "pools": {
+    "markets": [
+      "AU",
+      "CA",
+      "CH",
+      "CN",
+      "DE",
+      "ES",
+      "FR",
+      "HK",
+      "IN",
+      "IT",
+      "JP",
+      "KR",
+      "NL",
+      "NZ",
+      "SE",
+      "SG",
+      "TW",
+      "UK",
+      "US"
+    ],
+    "stocks_total_by_market": {
+      "AU": 197,
+      "CA": 59,
+      "CH": 20,
+      "CN": 300,
+      "DE": 40,
+      "ES": 35,
+      "FR": 39,
+      "HK": 85,
+      "IN": 50,
+      "IT": 40,
+      "JP": 223,
+      "KR": 200,
+      "NL": 24,
+      "NZ": 47,
+      "SE": 30,
+      "SG": 30,
+      "TW": 50,
+      "UK": 97,
+      "US": 506
+    },
+    "stocks_processed_by_market": {
+      "AU": 196,
+      "CA": 53,
+      "CH": 19,
+      "CN": 299,
+      "DE": 40,
+      "ES": 35,
+      "FR": 39,
+      "HK": 85,
+      "IN": 50,
+      "IT": 40,
+      "JP": 204,
+      "KR": 196,
+      "NL": 24,
+      "NZ": 47,
+      "SE": 30,
+      "SG": 30,
+      "TW": 50,
+      "UK": 96,
+      "US": 482
+    }
+  },
+  "survivorship_note": "本地库 indices 仅当前成分股快照，不含退市/被剔除股；穿越事件统计的幸存者偏差方向已知（缺退市前下跌段的噪音），如实记录",
+  "protocol_lights": [
+    {
+      "item": "判据对齐（论断=1 日噪音占比 vs 25-33% 区间）",
+      "status": "✅",
+      "note": "事件计数型论断，主判据就是论断声称的那个量本身，不用收益/胜率替代（铁律一）"
+    },
+    {
+      "item": "价格口径（前复权 close）",
+      "status": "✅",
+      "note": "daily_data.close 为前复权（000-data-biases.md A.1），避免除权假跳空制造假穿越"
+    },
+    {
+      "item": "时机（无前视）",
+      "status": "✅",
+      "note": "穿越事件在 T 日收盘后即可确定；噪音/持续期判定只用 T 及其之后的交易日，MA 用全历史滚动不含未来窗口"
+    },
+    {
+      "item": "交易成本",
+      "status": "⚠️",
+      "note": "事件统计不涉及交易，成本不参与计算；保留 cost_bps 字段与 schema 一致"
+    },
+    {
+      "item": "显著性/区间（Bootstrap 2000 次）",
+      "status": "✅",
+      "note": "股票级 block bootstrap（每股坍缩为统计量，种子 20260820 可复现）"
+    },
+    {
+      "item": "重叠样本处理",
+      "status": "⚠️",
+      "note": "穿越事件间至少隔 1 个交易日但相邻事件相关 → 每股坍缩为统计量后做股票级 bootstrap；跨股同日历相关未建模"
+    },
+    {
+      "item": "样本外验证（后 20%）",
+      "status": "✅",
+      "note": "每标的自有交易日后 20% 内的事件/区间单独跑同口径"
+    },
+    {
+      "item": "幸存者偏差（含退市股）",
+      "status": "⚠️",
+      "note": "本地库 indices 仅当前成分股快照，不含退市/被剔除股 → 穿越事件样本缺退市前下跌段，方向已知、现有数据无法修复"
+    }
+  ],
+  "per_market": {
+    "AU": {
+      "stocks_total": 197,
+      "stocks_processed": 196,
+      "events": 33614,
+      "noise": 9666,
+      "unclassifiable": 5,
+      "noise_ratio_pct": 28.76,
+      "oos": {
+        "events": 8442,
+        "noise": 2485,
+        "noise_ratio_pct": 29.44
+      }
+    },
+    "CA": {
+      "stocks_total": 59,
+      "stocks_processed": 53,
+      "events": 10290,
+      "noise": 2890,
+      "unclassifiable": 5,
+      "noise_ratio_pct": 28.09,
+      "oos": {
+        "events": 2253,
+        "noise": 644,
+        "noise_ratio_pct": 28.58
+      }
+    },
+    "CH": {
+      "stocks_total": 20,
+      "stocks_processed": 19,
+      "events": 3704,
+      "noise": 970,
+      "unclassifiable": 2,
+      "noise_ratio_pct": 26.19,
+      "oos": {
+        "events": 700,
+        "noise": 181,
+        "noise_ratio_pct": 25.86
+      }
+    },
+    "CN": {
+      "stocks_total": 300,
+      "stocks_processed": 299,
+      "events": 40003,
+      "noise": 11058,
+      "unclassifiable": 5,
+      "noise_ratio_pct": 27.64,
+      "oos": {
+        "events": 9219,
+        "noise": 2566,
+        "noise_ratio_pct": 27.83
+      }
+    },
+    "DE": {
+      "stocks_total": 40,
+      "stocks_processed": 40,
+      "events": 7856,
+      "noise": 2122,
+      "unclassifiable": 6,
+      "noise_ratio_pct": 27.01,
+      "oos": {
+        "events": 1602,
+        "noise": 428,
+        "noise_ratio_pct": 26.72
+      }
+    },
+    "ES": {
+      "stocks_total": 35,
+      "stocks_processed": 35,
+      "events": 5993,
+      "noise": 1678,
+      "unclassifiable": 3,
+      "noise_ratio_pct": 28.0,
+      "oos": {
+        "events": 1213,
+        "noise": 331,
+        "noise_ratio_pct": 27.29
+      }
+    },
+    "FR": {
+      "stocks_total": 39,
+      "stocks_processed": 39,
+      "events": 8393,
+      "noise": 2337,
+      "unclassifiable": 2,
+      "noise_ratio_pct": 27.84,
+      "oos": {
+        "events": 1766,
+        "noise": 500,
+        "noise_ratio_pct": 28.31
+      }
+    },
+    "HK": {
+      "stocks_total": 85,
+      "stocks_processed": 85,
+      "events": 12984,
+      "noise": 3624,
+      "unclassifiable": 0,
+      "noise_ratio_pct": 27.91,
+      "oos": {
+        "events": 2820,
+        "noise": 795,
+        "noise_ratio_pct": 28.19
+      }
+    },
+    "IN": {
+      "stocks_total": 50,
+      "stocks_processed": 50,
+      "events": 8944,
+      "noise": 2550,
+      "unclassifiable": 2,
+      "noise_ratio_pct": 28.51,
+      "oos": {
+        "events": 1899,
+        "noise": 522,
+        "noise_ratio_pct": 27.49
+      }
+    },
+    "IT": {
+      "stocks_total": 40,
+      "stocks_processed": 40,
+      "events": 6118,
+      "noise": 1682,
+      "unclassifiable": 1,
+      "noise_ratio_pct": 27.49,
+      "oos": {
+        "events": 1158,
+        "noise": 323,
+        "noise_ratio_pct": 27.89
+      }
+    },
+    "JP": {
+      "stocks_total": 223,
+      "stocks_processed": 204,
+      "events": 44341,
+      "noise": 12370,
+      "unclassifiable": 6,
+      "noise_ratio_pct": 27.9,
+      "oos": {
+        "events": 9193,
+        "noise": 2543,
+        "noise_ratio_pct": 27.66
+      }
+    },
+    "KR": {
+      "stocks_total": 200,
+      "stocks_processed": 196,
+      "events": 33279,
+      "noise": 9379,
+      "unclassifiable": 10,
+      "noise_ratio_pct": 28.18,
+      "oos": {
+        "events": 7034,
+        "noise": 2035,
+        "noise_ratio_pct": 28.93
+      }
+    },
+    "NL": {
+      "stocks_total": 24,
+      "stocks_processed": 24,
+      "events": 4058,
+      "noise": 1050,
+      "unclassifiable": 1,
+      "noise_ratio_pct": 25.87,
+      "oos": {
+        "events": 794,
+        "noise": 213,
+        "noise_ratio_pct": 26.83
+      }
+    },
+    "NZ": {
+      "stocks_total": 47,
+      "stocks_processed": 47,
+      "events": 7979,
+      "noise": 2507,
+      "unclassifiable": 0,
+      "noise_ratio_pct": 31.42,
+      "oos": {
+        "events": 2188,
+        "noise": 770,
+        "noise_ratio_pct": 35.19
+      }
+    },
+    "SE": {
+      "stocks_total": 30,
+      "stocks_processed": 30,
+      "events": 5494,
+      "noise": 1555,
+      "unclassifiable": 5,
+      "noise_ratio_pct": 28.3,
+      "oos": {
+        "events": 1164,
+        "noise": 315,
+        "noise_ratio_pct": 27.06
+      }
+    },
+    "SG": {
+      "stocks_total": 30,
+      "stocks_processed": 30,
+      "events": 5062,
+      "noise": 1490,
+      "unclassifiable": 1,
+      "noise_ratio_pct": 29.44,
+      "oos": {
+        "events": 1131,
+        "noise": 317,
+        "noise_ratio_pct": 28.03
+      }
+    },
+    "TW": {
+      "stocks_total": 50,
+      "stocks_processed": 50,
+      "events": 9321,
+      "noise": 2614,
+      "unclassifiable": 0,
+      "noise_ratio_pct": 28.04,
+      "oos": {
+        "events": 1828,
+        "noise": 528,
+        "noise_ratio_pct": 28.88
+      }
+    },
+    "UK": {
+      "stocks_total": 97,
+      "stocks_processed": 96,
+      "events": 25083,
+      "noise": 6850,
+      "unclassifiable": 4,
+      "noise_ratio_pct": 27.31,
+      "oos": {
+        "events": 5381,
+        "noise": 1530,
+        "noise_ratio_pct": 28.43
+      }
+    },
+    "US": {
+      "stocks_total": 506,
+      "stocks_processed": 482,
+      "events": 135107,
+      "noise": 37677,
+      "unclassifiable": 19,
+      "noise_ratio_pct": 27.89,
+      "oos": {
+        "events": 28962,
+        "noise": 8069,
+        "noise_ratio_pct": 27.86
+      }
+    }
+  },
+  "aggregate": {
+    "events": 407623,
+    "noise": 114069,
+    "noise_ratio_pct": 27.98
+  },
+  "aggregate_oos": {
+    "events": 88747,
+    "noise": 25095,
+    "noise_ratio_pct": 28.28
+  },
+  "verdict": {
+    "band_pct": [
+      25.0,
+      33.0
+    ],
+    "noise_ratio_pooled_pct": 27.98,
+    "n_events": 407623,
+    "n_noise": 114069,
+    "n_unclassifiable": 77,
+    "n_stocks": 2011,
+    "stock_ew_boot": {
+      "mean_pct": 27.68,
+      "ci95_low_pct": 27.48,
+      "ci95_high_pct": 27.89
+    },
+    "in_band_pooled": true,
+    "in_band_ew_point": true,
+    "oos_noise_ratio_pooled_pct": 28.28,
+    "oos_events": 88747,
+    "oos_noise": 25095,
+    "oos_stock_ew_boot": {
+      "mean_pct": 26.87,
+      "ci95_low_pct": 26.47,
+      "ci95_high_pct": 27.29
+    },
+    "oos_in_band_pooled": true,
+    "supported": true
+  }
+}

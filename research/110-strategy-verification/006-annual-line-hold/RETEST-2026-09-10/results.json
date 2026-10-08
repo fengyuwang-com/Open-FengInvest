@@ -1,0 +1,388 @@
+{
+  "claim": {
+    "id": 6,
+    "title": "年线上停留条件期望",
+    "statement": "指数已站上年线 10 天后，额外停留的期望天数 ≥ 无条件期望的 2 倍。",
+    "h0": "条件额外停留期望 ≤ 无条件期望（倍数 ≤ 1）。",
+    "price_basis": "前复权 close",
+    "cost_bps": 25,
+    "signal_def": {
+      "key": "站上年线 ≥10 天后继续停留的额外天数 vs 无条件停留天数",
+      "lookahead": "条件判定在 T 日收盘后可确定"
+    },
+    "verdict_metric": {
+      "primary": "条件额外期望天数 / 无条件期望天数 的倍数（判据≥2）",
+      "note": "事件统计型论断"
+    },
+    "data_scope": {
+      "markets": [
+        "AU",
+        "CA",
+        "CH",
+        "CN",
+        "DE",
+        "ES",
+        "FR",
+        "HK",
+        "IN",
+        "IT",
+        "JP",
+        "KR",
+        "NL",
+        "NZ",
+        "SE",
+        "SG",
+        "TW",
+        "UK",
+        "US"
+      ],
+      "category": "stock",
+      "survivorship": "本地库仅含当前成分快照（幸存者高估源）"
+    }
+  },
+  "generated_at": "2026-09-10 08:54:28",
+  "engine": "annual-line-hold-expectation",
+  "config": {
+    "bootstrap_iters": 2000,
+    "rng_seed": 20260820,
+    "oos_frac": 0.2,
+    "vma_window": 200,
+    "checkpoint_day": 10,
+    "censoring": "序列末仍未跌破年线的段（右删失）不计入均值，数量单列",
+    "markets": [
+      "AU",
+      "CA",
+      "CH",
+      "CN",
+      "DE",
+      "ES",
+      "FR",
+      "HK",
+      "IN",
+      "IT",
+      "JP",
+      "KR",
+      "NL",
+      "NZ",
+      "SE",
+      "SG",
+      "TW",
+      "UK",
+      "US"
+    ]
+  },
+  "pools": {
+    "markets": [
+      "AU",
+      "CA",
+      "CH",
+      "CN",
+      "DE",
+      "ES",
+      "FR",
+      "HK",
+      "IN",
+      "IT",
+      "JP",
+      "KR",
+      "NL",
+      "NZ",
+      "SE",
+      "SG",
+      "TW",
+      "UK",
+      "US"
+    ],
+    "stocks_total_by_market": {
+      "AU": 197,
+      "CA": 59,
+      "CH": 20,
+      "CN": 300,
+      "DE": 40,
+      "ES": 35,
+      "FR": 39,
+      "HK": 85,
+      "IN": 50,
+      "IT": 40,
+      "JP": 223,
+      "KR": 200,
+      "NL": 24,
+      "NZ": 47,
+      "SE": 30,
+      "SG": 30,
+      "TW": 50,
+      "UK": 97,
+      "US": 506
+    },
+    "stocks_processed_by_market": {
+      "AU": 196,
+      "CA": 53,
+      "CH": 19,
+      "CN": 299,
+      "DE": 40,
+      "ES": 35,
+      "FR": 39,
+      "HK": 85,
+      "IN": 50,
+      "IT": 40,
+      "JP": 204,
+      "KR": 196,
+      "NL": 24,
+      "NZ": 47,
+      "SE": 30,
+      "SG": 30,
+      "TW": 50,
+      "UK": 96,
+      "US": 482
+    }
+  },
+  "survivorship_note": "本地库 indices 仅当前成分股快照，不含退市/被剔除股；缺退市前下跌段会截短长段，方向已知、如实记录",
+  "protocol_lights": [
+    {
+      "item": "判据对齐（论断=条件额外停留期望 / 无条件停留期望 ≥ 2）",
+      "status": "✅",
+      "note": "事件计数型论断，主判据就是论断声称的那个量本身，不用收益/胜率替代（铁律一）"
+    },
+    {
+      "item": "价格口径（前复权 close）",
+      "status": "✅",
+      "note": "daily_data.close 为前复权（000-data-biases.md A.1），避免除权假跳空制造假穿越"
+    },
+    {
+      "item": "时机（无前视）",
+      "status": "✅",
+      "note": "穿越事件在 T 日收盘后即可确定；噪音/持续期判定只用 T 及其之后的交易日，MA 用全历史滚动不含未来窗口"
+    },
+    {
+      "item": "交易成本",
+      "status": "⚠️",
+      "note": "事件统计不涉及交易，成本不参与计算；保留 cost_bps 字段与 schema 一致"
+    },
+    {
+      "item": "显著性/区间（Bootstrap 2000 次）",
+      "status": "✅",
+      "note": "股票级 block bootstrap（每股坍缩为统计量，种子 20260820 可复现）"
+    },
+    {
+      "item": "重叠样本处理",
+      "status": "⚠️",
+      "note": "穿越事件间至少隔 1 个交易日但相邻事件相关 → 每股坍缩为统计量后做股票级 bootstrap；跨股同日历相关未建模"
+    },
+    {
+      "item": "样本外验证（后 20%）",
+      "status": "✅",
+      "note": "每标的自有交易日后 20% 内的事件/区间单独跑同口径"
+    },
+    {
+      "item": "幸存者偏差（含退市股）",
+      "status": "⚠️",
+      "note": "本地库 indices 仅当前成分股快照，不含退市/被剔除股 → 穿越事件样本缺退市前下跌段，方向已知、现有数据无法修复"
+    }
+  ],
+  "per_market": {
+    "AU": {
+      "stocks_total": 197,
+      "stocks_processed": 196,
+      "episodes": 16825,
+      "censored_excluded": 0,
+      "oos_episodes": 4125
+    },
+    "CA": {
+      "stocks_total": 59,
+      "stocks_processed": 53,
+      "episodes": 5152,
+      "censored_excluded": 0,
+      "oos_episodes": 1100
+    },
+    "CH": {
+      "stocks_total": 20,
+      "stocks_processed": 19,
+      "episodes": 1855,
+      "censored_excluded": 0,
+      "oos_episodes": 339
+    },
+    "CN": {
+      "stocks_total": 300,
+      "stocks_processed": 299,
+      "episodes": 20016,
+      "censored_excluded": 2,
+      "oos_episodes": 4489
+    },
+    "DE": {
+      "stocks_total": 40,
+      "stocks_processed": 40,
+      "episodes": 3931,
+      "censored_excluded": 0,
+      "oos_episodes": 777
+    },
+    "ES": {
+      "stocks_total": 35,
+      "stocks_processed": 35,
+      "episodes": 2998,
+      "censored_excluded": 1,
+      "oos_episodes": 585
+    },
+    "FR": {
+      "stocks_total": 39,
+      "stocks_processed": 39,
+      "episodes": 4200,
+      "censored_excluded": 0,
+      "oos_episodes": 855
+    },
+    "HK": {
+      "stocks_total": 85,
+      "stocks_processed": 85,
+      "episodes": 6495,
+      "censored_excluded": 0,
+      "oos_episodes": 1371
+    },
+    "IN": {
+      "stocks_total": 50,
+      "stocks_processed": 50,
+      "episodes": 4472,
+      "censored_excluded": 0,
+      "oos_episodes": 921
+    },
+    "IT": {
+      "stocks_total": 40,
+      "stocks_processed": 40,
+      "episodes": 3058,
+      "censored_excluded": 3,
+      "oos_episodes": 555
+    },
+    "JP": {
+      "stocks_total": 223,
+      "stocks_processed": 204,
+      "episodes": 22157,
+      "censored_excluded": 2,
+      "oos_episodes": 4441
+    },
+    "KR": {
+      "stocks_total": 200,
+      "stocks_processed": 196,
+      "episodes": 16637,
+      "censored_excluded": 1,
+      "oos_episodes": 3414
+    },
+    "NL": {
+      "stocks_total": 24,
+      "stocks_processed": 24,
+      "episodes": 2032,
+      "censored_excluded": 0,
+      "oos_episodes": 384
+    },
+    "NZ": {
+      "stocks_total": 47,
+      "stocks_processed": 47,
+      "episodes": 3992,
+      "censored_excluded": 1,
+      "oos_episodes": 1068
+    },
+    "SE": {
+      "stocks_total": 30,
+      "stocks_processed": 30,
+      "episodes": 2745,
+      "censored_excluded": 0,
+      "oos_episodes": 561
+    },
+    "SG": {
+      "stocks_total": 30,
+      "stocks_processed": 30,
+      "episodes": 2532,
+      "censored_excluded": 0,
+      "oos_episodes": 548
+    },
+    "TW": {
+      "stocks_total": 50,
+      "stocks_processed": 50,
+      "episodes": 4644,
+      "censored_excluded": 1,
+      "oos_episodes": 869
+    },
+    "UK": {
+      "stocks_total": 97,
+      "stocks_processed": 96,
+      "episodes": 12547,
+      "censored_excluded": 0,
+      "oos_episodes": 2644
+    },
+    "US": {
+      "stocks_total": 506,
+      "stocks_processed": 482,
+      "episodes": 67565,
+      "censored_excluded": 2,
+      "oos_episodes": 14179
+    }
+  },
+  "aggregate": {
+    "episodes": 203853,
+    "episodes_ge_10": 71723,
+    "mean_hold_all": 36.4,
+    "median_hold_all": 4.0,
+    "mean_additional_after_10": 88.38,
+    "ratio": 2.4278,
+    "bootstrap": {
+      "point": 2.4278,
+      "ci95_low": 2.4143,
+      "ci95_high": 2.4407
+    },
+    "stock_ew": {
+      "point": 2.3824,
+      "ci95_low": 2.3567,
+      "ci95_high": 2.404,
+      "n_stocks": 2007
+    },
+    "censored_excluded": 13,
+    "stocks": 2015
+  },
+  "aggregate_oos": {
+    "episodes": 43225,
+    "episodes_ge_10": 14666,
+    "mean_hold_all": 30.3,
+    "median_hold_all": 4.0,
+    "mean_additional_after_10": 73.96,
+    "ratio": 2.4413,
+    "bootstrap": {
+      "point": 2.4413,
+      "ci95_low": 2.4108,
+      "ci95_high": 2.4709
+    },
+    "stock_ew": {
+      "point": 2.3211,
+      "ci95_low": 2.2712,
+      "ci95_high": 2.3732,
+      "n_stocks": 1915
+    },
+    "censored_excluded": 1040,
+    "stocks": 2015
+  },
+  "verdict": {
+    "threshold": 2.0,
+    "checkpoint_day": 10,
+    "ratio_pooled": 2.4278,
+    "mean_hold_all": 36.4,
+    "mean_additional_after_10": 88.38,
+    "bootstrap": {
+      "point": 2.4278,
+      "ci95_low": 2.4143,
+      "ci95_high": 2.4407
+    },
+    "stock_ew": {
+      "point": 2.3824,
+      "ci95_low": 2.3567,
+      "ci95_high": 2.404,
+      "n_stocks": 2007
+    },
+    "supported_pooled": true,
+    "oos_ratio_pooled": 2.4413,
+    "oos_bootstrap": {
+      "point": 2.4413,
+      "ci95_low": 2.4108,
+      "ci95_high": 2.4709
+    },
+    "oos_supported": true,
+    "n_episodes": 203853,
+    "n_censored_excluded": 13,
+    "supported": true
+  }
+}

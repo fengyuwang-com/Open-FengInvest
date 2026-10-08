@@ -1,0 +1,283 @@
+{
+  "claim": {
+    "id": 27,
+    "title": "时间止损（6 个月论文未兑现）退出的机会成本低于继续持有的下行风险",
+    "statement": "买入后 126 交易日（约 6 个月）论文未兑现（区间收益 <=0）时退出（空仓）， 相比继续持有后续 126 交易日，机会成本低于继续持有的下行风险。",
+    "h0": "继续持有与退出无差异（后续 126 日收益均值 >=0）。",
+    "price_basis": "前复权 close",
+    "cost_bps": 25,
+    "signal_def": {
+      "key": "每股每 252 交易日窗口（步长 126）：前半 r1 = close_{w+126}/close_w - 1。 论断域 = r1 <= 0（论文未兑现）。两条路： 退出 = 空仓 126 日（净 0，卖出成本 25bps 单列参考）； 继续持有 = r2 = close_{w+252}/close_{w+126} - 1。 主判据 = 域内 r2 均值与股票级 bootstrap；支持 = 均值 <0 且 CI 上限 <0（继续持有平均为负 → 时间止损胜）",
+      "lookahead": "r1 用前 126 日、r2 用后 126 日，序列不重叠——无前视"
+    },
+    "verdict_metric": {
+      "primary": "域内 r2 均值 <0 且股票级 bootstrap 95% CI 上限 <0（定性方向论断，铁律一）",
+      "secondary": "分市场 r2 均值（对照旧 🟡 CN 支持/US·HK 拒绝）；r2 胜率（<0 占比）；域内继续持有半段 MDD",
+      "note": "论断域（r1<=0）为路径条件域，与"
+    },
+    "data_scope": {
+      "markets": [
+        "AU",
+        "CA",
+        "CH",
+        "CN",
+        "DE",
+        "ES",
+        "FR",
+        "HK",
+        "IN",
+        "IT",
+        "JP",
+        "KR",
+        "NL",
+        "NZ",
+        "SE",
+        "SG",
+        "TW",
+        "UK",
+        "US"
+      ],
+      "category": "stock",
+      "survivorship": "本地库仅当前成分快照（幸存者偏差使\"继续持有\"偏乐观，对判据保守）"
+    }
+  },
+  "generated_at": "2026-09-11 08:42:38",
+  "engine": "time-stop-6m",
+  "config": {
+    "bootstrap_iters": 2000,
+    "rng_seed": 20260820,
+    "oos_frac": 0.2,
+    "half_days": 126,
+    "domain": "r1<=0",
+    "exit_cost_bps": 25
+  },
+  "survivorship_note": "仅当前成分快照；偏差方向使 r2 偏乐观，对'继续持有为负'判据保守",
+  "protocol_lights": [
+    {
+      "item": "判据对齐（定性方向论断）",
+      "status": "✅",
+      "note": "论断=机会成本<下行风险 → 主判据=继续持有后半段 r2 均值<0 且 CI 上限<0（铁律一）"
+    },
+    {
+      "item": "价格口径（前复权 close）",
+      "status": "✅",
+      "note": "000-data-biases.md A.1"
+    },
+    {
+      "item": "时机（无前视）",
+      "status": "✅",
+      "note": "r1 前半段/r2 后半段不重叠；退出在第 126 日收盘"
+    },
+    {
+      "item": "交易成本",
+      "status": "✅",
+      "note": "退出 25bps 作为机会成本基准单列（不改变主判据方向）"
+    },
+    {
+      "item": "显著性/区间（Bootstrap 2000 次）",
+      "status": "✅",
+      "note": "股票级 bootstrap（每股坍缩为域内平均 r2，种子 20260820）"
+    },
+    {
+      "item": "重叠样本处理",
+      "status": "⚠️",
+      "note": "相邻窗不重叠（步长=126）但跨股同日历相关；股级坍缩缓解"
+    },
+    {
+      "item": "样本外验证（后 20%）",
+      "status": "✅",
+      "note": "每股后 20% 窗口单独报告"
+    },
+    {
+      "item": "幸存者偏差",
+      "status": "⚠️",
+      "note": "仅当前成分快照，崩退市股缺失使 r2 偏乐观；判据要求 r2<0，偏差方向对结论保守"
+    },
+    {
+      "item": "条件域披露",
+      "status": "⚠️",
+      "note": "论断域 r1<=0 为路径条件域（论文未兑现的事后判定），与 #23 同理披露"
+    },
+    {
+      "item": "可复现",
+      "status": "✅",
+      "note": "种子固定重跑同数"
+    }
+  ],
+  "per_market": {
+    "AU": {
+      "stocks_total": 197,
+      "stocks_processed": 194,
+      "domain_windows": 3291,
+      "r2_mean_pct": 11.78,
+      "r2_winrate_lt0_pct": 41.29,
+      "oos_r2_mean_pct": 7.92
+    },
+    "CA": {
+      "stocks_total": 59,
+      "stocks_processed": 53,
+      "domain_windows": 843,
+      "r2_mean_pct": 8.02,
+      "r2_winrate_lt0_pct": 37.01,
+      "oos_r2_mean_pct": 7.41
+    },
+    "CH": {
+      "stocks_total": 20,
+      "stocks_processed": 19,
+      "domain_windows": 365,
+      "r2_mean_pct": 5.56,
+      "r2_winrate_lt0_pct": 41.92,
+      "oos_r2_mean_pct": 3.66
+    },
+    "CN": {
+      "stocks_total": 300,
+      "stocks_processed": 299,
+      "domain_windows": 4853,
+      "r2_mean_pct": 4.92,
+      "r2_winrate_lt0_pct": 51.64,
+      "oos_r2_mean_pct": 6.45
+    },
+    "DE": {
+      "stocks_total": 40,
+      "stocks_processed": 40,
+      "domain_windows": 735,
+      "r2_mean_pct": 6.61,
+      "r2_winrate_lt0_pct": 38.64,
+      "oos_r2_mean_pct": 4.83
+    },
+    "ES": {
+      "stocks_total": 35,
+      "stocks_processed": 35,
+      "domain_windows": 552,
+      "r2_mean_pct": 5.25,
+      "r2_winrate_lt0_pct": 42.03,
+      "oos_r2_mean_pct": 10.51
+    },
+    "FR": {
+      "stocks_total": 39,
+      "stocks_processed": 39,
+      "domain_windows": 753,
+      "r2_mean_pct": 5.71,
+      "r2_winrate_lt0_pct": 39.71,
+      "oos_r2_mean_pct": 3.63
+    },
+    "HK": {
+      "stocks_total": 85,
+      "stocks_processed": 85,
+      "domain_windows": 1283,
+      "r2_mean_pct": 8.23,
+      "r2_winrate_lt0_pct": 45.44,
+      "oos_r2_mean_pct": 5.8
+    },
+    "IN": {
+      "stocks_total": 50,
+      "stocks_processed": 50,
+      "domain_windows": 798,
+      "r2_mean_pct": 14.83,
+      "r2_winrate_lt0_pct": 35.71,
+      "oos_r2_mean_pct": 7.65
+    },
+    "IT": {
+      "stocks_total": 40,
+      "stocks_processed": 40,
+      "domain_windows": 695,
+      "r2_mean_pct": 3.45,
+      "r2_winrate_lt0_pct": 45.04,
+      "oos_r2_mean_pct": 4.58
+    },
+    "JP": {
+      "stocks_total": 223,
+      "stocks_processed": 204,
+      "domain_windows": 4140,
+      "r2_mean_pct": 51.22,
+      "r2_winrate_lt0_pct": 43.99,
+      "oos_r2_mean_pct": 9.33
+    },
+    "KR": {
+      "stocks_total": 200,
+      "stocks_processed": 196,
+      "domain_windows": 3359,
+      "r2_mean_pct": 8.79,
+      "r2_winrate_lt0_pct": 46.09,
+      "oos_r2_mean_pct": 11.09
+    },
+    "NL": {
+      "stocks_total": 24,
+      "stocks_processed": 24,
+      "domain_windows": 358,
+      "r2_mean_pct": 5.83,
+      "r2_winrate_lt0_pct": 42.74,
+      "oos_r2_mean_pct": 5.95
+    },
+    "NZ": {
+      "stocks_total": 47,
+      "stocks_processed": 47,
+      "domain_windows": 694,
+      "r2_mean_pct": 4.11,
+      "r2_winrate_lt0_pct": 42.07,
+      "oos_r2_mean_pct": 1.19
+    },
+    "SE": {
+      "stocks_total": 30,
+      "stocks_processed": 30,
+      "domain_windows": 470,
+      "r2_mean_pct": 7.9,
+      "r2_winrate_lt0_pct": 37.23,
+      "oos_r2_mean_pct": 12.08
+    },
+    "SG": {
+      "stocks_total": 30,
+      "stocks_processed": 30,
+      "domain_windows": 472,
+      "r2_mean_pct": 4.95,
+      "r2_winrate_lt0_pct": 40.25,
+      "oos_r2_mean_pct": 7.14
+    },
+    "TW": {
+      "stocks_total": 50,
+      "stocks_processed": 50,
+      "domain_windows": 867,
+      "r2_mean_pct": 10.75,
+      "r2_winrate_lt0_pct": 38.64,
+      "oos_r2_mean_pct": 23.09
+    },
+    "UK": {
+      "stocks_total": 97,
+      "stocks_processed": 96,
+      "domain_windows": 2266,
+      "r2_mean_pct": 5.6,
+      "r2_winrate_lt0_pct": 38.79,
+      "oos_r2_mean_pct": 5.8
+    },
+    "US": {
+      "stocks_total": 506,
+      "stocks_processed": 481,
+      "domain_windows": 11106,
+      "r2_mean_pct": 9.99,
+      "r2_winrate_lt0_pct": 34.39,
+      "oos_r2_mean_pct": 7.47
+    }
+  },
+  "aggregate": {
+    "domain_n_windows": 37900,
+    "r2_mean_pct": 13.03
+  },
+  "verdict": {
+    "claim_type": "qualitative（方向性：继续持有后半段均值为负 → 时间止损胜）",
+    "domain_r2_mean_pct": 13.03,
+    "domain_r2_median_pct": 4.53,
+    "domain_n_windows": 37900,
+    "stock_ew_boot": {
+      "mean_pct": 11.79,
+      "ci95_low_pct": 8.05,
+      "ci95_high_pct": 19.16
+    },
+    "r2_negative_share_pct": 41.0,
+    "continuation_mdd_mean_pct": 25.6,
+    "oos_r2_mean_pct": 7.72,
+    "oos_n_windows": 6087,
+    "mean_below_zero": false,
+    "ci_high_below_zero": false,
+    "supported": false
+  }
+}

@@ -1,0 +1,157 @@
+{
+  "schema_version": "1.0",
+  "db_name": "speculative-masters-manifest",
+  "generated_at": "2026-08-20",
+  "purpose": "投机/交易钱包(fengspec)知识底座机器可读索引——价值钱包(/fenginvest)不消费本库",
+  "isolation_note": "两钱包隔离:本库人物供 fengspec 投研使用;价值分析与 fengscreen 的 7 硬指标不适用于投机标的",
+  "source_principle": "无来源=不存在;所有观点以奇衡(DK Capital)对原著解读为本地一手锚点",
+  "concept_doc": "docs/11-speculation-track.md",
+  "readable_map": "knowledge/methodology/speculative-masters-map.md",
+  "qiheng_overview_doc": "~/Qiheng/docs/research/奇衡论投机性买入-研究文档.md",
+  "masters": [
+    {
+      "slug": "sperandeo",
+      "name": "维克多·斯波朗迪",
+      "school": "trend",
+      "representative": "Victor Sperandeo",
+      "file": "research/040-people/named/sperandeo.md",
+      "weapons": ["2B/1-2-3法则", "鳄鱼法则无条件止损", "批判继承道氏(指数互验/牛熊界定)", "三大指导原则", "年线上方做牛下方做熊"],
+      "steps": {
+        "T0触发": ["2B结构=趋势反转扳机,用'结构'而非'顶/底'表述"],
+        "T1环境闸": ["指数相互验证(沪深同向创新高/破位才算全面牛熊)", "年线上方当牛做、年线下方当熊做(做减法)"],
+        "T2结构确认": ["设底线(前高/前低)以静制动,不看破不动", "2B与旗形/扩散形区分", "创新高=牛特征/创新低=熊特征"],
+        "T3纪律捆": ["鳄鱼法则:犯错立即出场,不补仓/不加钱回本/不无效对冲", "禁心理止损,用条件单/算法化执行", "交易频率上限≤有利波动次数(先算成本)"],
+        "T4监控": ["设底线以静制动,只看破不破"],
+        "T5卖出复盘": ["索罗斯式出场:泡沫被共识前离场", "卖飞不悔+替代品后招"]
+      },
+      "sources": [
+        "~/Qiheng/output_bilibili/系列·奇衡解读专业投机原理/",
+        "~/Qiheng/output_bilibili/BV1qt4y1S7MZ_维克多三大指导原则_corrected.md",
+        "~/Qiheng/output_bilibili/BV1UK4y147rY_为什么巴菲特要斩仓达美航空？_corrected.md",
+        "~/Qiheng/output_bilibili/BV1Ak4y1B7ku_你懂不懂看股市资金流进进出出？_corrected.md",
+        "~/Qiheng/output_bilibili/BV17A411n7ZC_第十课 如何在信息不完备的市场执行交易？_corrected.md"
+      ],
+      "distilled_at": "2026-08-20"
+    },
+    {
+      "slug": "larry-williams",
+      "name": "拉里·威廉姆斯",
+      "school": "trend",
+      "representative": "Larry Williams",
+      "file": "research/040-people/named/larry-williams.md",
+      "weapons": ["3%首笔试盘", "单用资金30%+设止损永不爆仓", "趋势起爆点", "波幅坍缩倒计时", "盈利出金/左侧禁杠杆"],
+      "steps": {
+        "T0触发": ["趋势起爆点=今日开盘价+前日波幅(最高−收盘),起点盯开盘价"],
+        "T1环境闸": ["波幅坍缩→必然扩大=大涨/大跌倒计时,坍缩才开始研究标的"],
+        "T2结构确认": ["止损位放'不可能去到的地方'(矩形极限/年线)", "底部底分形阴线最高点作救生艇保护锚"],
+        "T3纪律捆": ["第一笔3%试盘;盈利加仓、亏损(市值下行当下)减仓", "任意时点单用资金30%交易+设止损=永不爆仓", "盈利出金、左侧禁用杠杆"],
+        "T4监控": ["止损位是'不可能去到的地方',不破不动"],
+        "T5卖出复盘": ["跌破救生艇锚即走(机械执行)"]
+      },
+      "sources": [
+        "~/Qiheng/output_bilibili/系列·奇衡以短线交易秘诀为生/",
+        "~/Qiheng/output_bilibili/系列·奇衡以短线交易秘诀为生/BV1Xv411k7xG_第二课   交易仓位管理：Ulimited Blade Works_corrected.md",
+        "~/Qiheng/output_bilibili/BV1Ut4y1k7dn_第十课 趋势起爆点计算_corrected.md",
+        "~/Qiheng/output_bilibili/BV1EZ4y1g7ke_第七课 威廉时钟…_corrected.md"
+      ],
+      "distilled_at": "2026-08-20"
+    },
+    {
+      "slug": "elder",
+      "name": "亚历山大·艾尔德",
+      "school": "trend",
+      "representative": "Alexander Elder",
+      "file": "research/040-people/named/elder.md",
+      "weapons": ["三重滤网多级确认", "支撑/压力三维评估", "恐慌抛盘终结论"],
+      "steps": {
+        "T0触发": ["三重滤网逐层独立过滤,'单一技术指标会死人的',多级确认后才给扳机"],
+        "T1环境闸": ["群体同时斩仓→恐慌抛盘结束只向上下"],
+        "T2结构确认": ["支撑/压力=区域长度·高度·成交量三维评估,时间越久越强"],
+        "T3纪律捆": [],
+        "T4监控": [],
+        "T5卖出复盘": ["群体贪婪再起=退出窗口而非追高"]
+      },
+      "sources": [
+        "~/Qiheng/output_bilibili/系列·奇衡以短线交易秘诀为生/BV1264y1d7Eu_二十五课 三重滤网交易系统_corrected.md",
+        "~/Qiheng/output_bilibili/系列·奇衡以短线交易秘诀为生/BV1Lp4y1p7bW_第十五课 如何一眼看出短线反转点？_corrected.md",
+        "~/Qiheng/output_bilibili/系列·奇衡以短线交易秘诀为生/BV1ko4y1R7XA_第十四课 用三根K线判断买入拐点_corrected.md"
+      ],
+      "distilled_at": "2026-08-20"
+    },
+    {
+      "slug": "livermore",
+      "name": "杰西·利弗莫尔",
+      "school": "trend",
+      "representative": "Jesse Livermore",
+      "file": "research/040-people/named/livermore.md",
+      "weapons": ["关键点跟庄", "最小阻力线(一价定律补丁)", "只做C/D点不做A/B点", "分笔金字塔重仓", "主升浪缩量回撤"],
+      "steps": {
+        "T0触发": ["关键点出手=一个点+一个方向;判断新庄家进场且没止损后跟庄"],
+        "T1环境闸": ["大盘基调(general conditions)是第一变量"],
+        "T2结构确认": ["主升浪特征=放量涨、缩量跌、一两天内创新高;领头羊=庄家与市场沟通的'鼓声'(行为学,与业绩无关)", "最小阻力线'最'字是本质缺陷,用一价定律/价值回归补底座"],
+        "T3纪律捆": ["只做C/D点,绝不做A/B点(逃顶/抄底=赌博)", "重仓=分笔金字塔顺势加仓,不是all in;每笔分别管理", "移位:杠杆者只做右侧,左侧不加杠杆(初版系统仍为0)"],
+        "T4监控": ["趋势不破就坐住(浮盈不是卖出理由,结构破坏才是)"],
+        "T5卖出复盘": ["反转关键点/趋势破坏才卖;放弃最后一段;大势转向全线退出"]
+      },
+      "sources": [
+        "~/Qiheng/output_bilibili/系列·奇衡解读股票作手操盘术/",
+        "~/Qiheng/output_bilibili/BV1iE411c7Gu_奇衡交易课：关键点出手_corrected.md",
+        "~/Qiheng/output_bilibili/BV1oA41187FV_14、筑顶、领头羊、顺势与低开_corrected.md",
+        "~/Qiheng/output_bilibili/BV1sz411i76D_每一位交易者，奥利给！_corrected.md",
+        "~/Qiheng/output_bilibili/BV1Hg4y187pU_听完这一课你投资少走十年弯路_corrected.md",
+        "~/Qiheng/output_bilibili/BV1Qk4y167FM_怎样从股票玩你逆袭成你玩股票？_corrected.md"
+      ],
+      "notes": "§13 为 2026-08-20 追加的奇衡解读附录(10 点带源)",
+      "distilled_at": "2026-06-16"
+    },
+    {
+      "slug": "edward-thorpe",
+      "name": "爱德华·索普",
+      "school": "quant",
+      "representative": "Edward O. Thorp",
+      "file": "research/040-people/named/edward-thorpe.md",
+      "weapons": ["概率优势P最大", "分数凯利κ≤1/2", "破产/续航控制", "跨市场错位(两个必输游戏组合翻正)"],
+      "steps": {
+        "T0触发": ["只认有可量化错位的标的(正股vs权证/价差/相对定价),不靠'我感觉会涨'"],
+        "T1环境闸": ["错位闸:价差在统计上是否有依据地偏离;市场无效部分是否还存在('它不会一直存在')"],
+        "T2结构确认": ["对冲两腿是否'两边各做各的、组合起来用'、是否不同步;能否构造一腿成本归零", "确认帕龙多组合'至少一个局部正期望'成立"],
+        "T3纪律捆": ["分数凯利硬上限κ≤1/2;赔率分母=风险敞口", "单笔与连亏熔断;预算/续航核算", "禁全凯利与'无限子弹'幻觉"],
+        "T4监控": ["跟踪价差是回归还是更异常;中性组合回报vs现货回报率;黑天鹅前置信号"],
+        "T5卖出复盘": ["价差回归即兑现;成本归零后免费腿等事件驱动;复盘错位是否真给超额并写回归因"]
+      },
+      "sources": [
+        "~/Qiheng/output_bilibili/合集·奇衡DK的AM2025/",
+        "~/Qiheng/output_bilibili/合集·奇衡DK的AM2025/BV15bPueSEWB_唯一识破巴菲特“诡计”的人【AM2025第一课】_corrected.md",
+        "~/Qiheng/output_bilibili/合集·奇衡DK的AM2025/BV1dnR4Y1EhW_如何在必输的游戏里取胜？【AM2025第二课】_corrected.md"
+      ],
+      "distilled_at": "2026-08-20"
+    },
+    {
+      "slug": "nassim-taleb",
+      "name": "纳西姆·塔勒布",
+      "school": "contrarian",
+      "representative": "Nassim N. Taleb",
+      "file": "research/040-people/named/nassim-taleb.md",
+      "weapons": ["非对称/杠铃", "永不爆仓倒推单点上限", "保护费优先", "禁止杠杆赌尾部", "火鸡警告(拒五年短样本)"],
+      "steps": {
+        "T0触发": ["只在赔率非对称处触发('有缝的蛋'压反转);'稳赚不赔'式话术一律不触发"],
+        "T1环境闸": ["黑天鹅前置信号闸(库存堆满/价差收窄/对手盘消失/流动性收缩);尾部高发期收紧,拒绝'过去五年没事'"],
+        "T2结构确认": ["盈亏形状是否非对称、保护腿/订单/期权是否把最坏一边封底、杠铃分布是否成立、分散后剩余集中度是否显式核出"],
+        "T3纪律捆": ["永不爆仓倒推单点暴露上限", "保护费支出优先于仓位(保费不可省)", "把'血汗钱'隔离在不确定性之外", "禁止杠杆赌尾部(长期资本式禁令)"],
+        "T4监控": ["实时跟踪封底结构有效性;封底失效即预警"],
+        "T5卖出复盘": ["证伪即退('退game重来')", "复盘是否曾把他人置于不确定性/过度求非对称造成反效果;火鸡式外推写进教训库"]
+      },
+      "sources": [
+        "~/Qiheng/output_bilibili/合集·奇衡DK的AM2025/",
+        "~/Qiheng/output_bilibili/合集·奇衡DK的AM2025/BV13Ctbz9EDW_如何做出让自己不会后悔的选择？在非对称中反脆弱！【AM2025第七课】_corrected.md",
+        "~/Qiheng/output_bilibili/合集·奇衡DK的AM2025/BV1dnR4Y1EhW_如何在必输的游戏里取胜？【AM2025第二课】_corrected.md"
+      ],
+      "distilled_at": "2026-08-20"
+    }
+  ],
+  "open_gaps": [
+    "威科夫(Wyckoff)", "斯坦利·克罗(Kroll)", "杰拉尔德·勒布(Loeb)", "欧奈尔(CANSLIM)",
+    "海龟交易法则", "幽灵的礼物", "Minervini(股票魔法师)", "Darvas", "艾略特(波浪)"
+  ],
+  "gap_note": "以上大师奇衡库当前无解读来源,按'无来源=不存在'暂不入库;待补来源后再建档"
+}

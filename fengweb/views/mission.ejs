@@ -1,0 +1,158 @@
+<div class="page-header">
+  <h2 data-i18n="mission.title">🚀 自主进化看板</h2>
+  <div class="breadcrumb"><a href="/" data-i18n="common.sysOverview">系统总览</a> / <span data-i18n="mission.crumb">自主进化</span></div>
+</div>
+
+<div id="mission-loading" class="card"><p class="mkt-muted" data-i18n="mission.loading">加载中…</p></div>
+<div id="mission-body" class="mkt-hidden">
+
+  <section class="card" style="margin-bottom:16px;">
+    <h3 class="section-title" data-i18n="mission.goalTitle">🎯 总目标与 DoD（完成定义，勾选权归董事长）</h3>
+    <p id="m-goal" style="font-weight:600;"></p>
+    <ul id="m-dod"></ul>
+  </section>
+
+  <div style="display:flex;gap:16px;flex-wrap:wrap;">
+    <section class="card" style="flex:1;min-width:300px;">
+      <h3 class="section-title" data-i18n="mission.claimsTitle">🔬 论断复测台账（52 条）</h3>
+      <ul id="m-claims"></ul>
+    </section>
+    <section class="card" style="flex:1;min-width:300px;">
+      <h3 class="section-title" data-i18n="mission.strategyTitle">📇 普通人策略库</h3>
+      <ul id="m-strategy"></ul>
+    </section>
+    <section class="card" style="flex:1;min-width:300px;">
+      <h3 class="section-title" data-i18n="mission.freshTitle">🗓️ 数据新鲜度（本地库）</h3>
+      <table class="data-table" id="m-fresh"><thead><tr>
+        <th data-i18n="mission.mkt">市场</th><th data-i18n="mission.divs">分红最新除息日</th><th data-i18n="mission.daily">日线最新</th>
+      </tr></thead><tbody></tbody></table>
+    </section>
+  </div>
+
+  <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:16px;">
+    <section class="card" style="flex:1;min-width:300px;">
+      <h3 class="section-title" data-i18n="mission.todoTitle">📋 任务队列（todo 待办区）</h3>
+      <p id="m-todo-sum" class="mkt-muted"></p>
+      <ul id="m-todo"></ul>
+    </section>
+    <section class="card" style="flex:1;min-width:300px;">
+      <h3 class="section-title" data-i18n="mission.evalTitle">📦 开源项目调研（EVAL 落盘）</h3>
+      <ul id="m-evals"></ul>
+    </section>
+  </div>
+
+  <section class="card" style="margin-top:16px;">
+    <h3 class="section-title" data-i18n="mission.probeTitle">🧯 工具链冒烟体检（每日铁律真跑 · fengprobe）</h3>
+    <p id="m-probe-sum" class="mkt-muted"></p>
+    <table class="data-table" id="m-probe"><thead><tr>
+      <th data-i18n="mission.probeLayer">层</th><th data-i18n="mission.probeTool">工具</th><th data-i18n="mission.probeLight">灯</th><th data-i18n="mission.probeMs">用时</th><th data-i18n="mission.probeNote">说明</th>
+    </tr></thead><tbody></tbody></table>
+    <p style="margin-top:8px;"><button id="m-probe-run" class="btn btn-sm btn-accent" data-i18n="mission.probeRun">▶ 立即跑一次体检</button></p>
+  </section>
+
+  <section class="card" style="margin-top:16px;">
+    <h3 class="section-title" data-i18n="mission.roundsTitle">🧾 通宵台账 · 最近 8 轮（FENGMEM）</h3>
+    <div id="m-rounds"></div>
+  </section>
+
+</div>
+
+<script>
+(async () => {
+  let d;
+  try { d = await (await fetch('/api/mission/overview')).json(); }
+  catch (e) { document.getElementById('mission-loading').innerHTML = '<p class="mkt-muted">加载失败：' + e.message + '</p>'; return; }
+  document.getElementById('mission-loading').style.display = 'none';
+  document.getElementById('mission-body').classList.remove('mkt-hidden');
+  // DoD
+  document.getElementById('m-goal').textContent = (d.mission && d.mission.goal) || '（MISSION.md 无总目标）';
+  const dod = document.getElementById('m-dod');
+  ((d.mission && d.mission.dod) || []).forEach((x) => {
+    const li = document.createElement('li');
+    li.textContent = (x.done ? '✅ ' : '⬜ ') + x.text;
+    dod.appendChild(li);
+  });
+  // claims
+  const c = d.claims || {};
+  const cl = document.getElementById('m-claims');
+  [['mission.clSettled|论断行 52 条全定谳（✅/❌/🟡 按列计）', c.settled], ['mission.clOk|✅ 复测支持', c.ok], ['mission.clNo|❌ 复测否定', c.no], ['mission.clCond|🟡 有条件/存疑', c.cond], ['mission.clNodata|数据不可得（待拍板）', c.nodata]].forEach(([k, v]) => {
+    const [key, fallback] = String(k).split('|');
+    const li = document.createElement('li');
+    li.setAttribute('data-i18n', key); li.textContent = fallback + '：' + (v ?? 0);
+    cl.appendChild(li);
+  });
+  // strategy
+  (d.strategy.cards || []).forEach((f) => {
+    const li = document.createElement('li');
+    const a = document.createElement('a'); a.href = '/knowledge'; a.textContent = f.replace('.md', '');
+    li.appendChild(a); document.getElementById('m-strategy').appendChild(li);
+  });
+  // freshness
+  const tb = document.querySelector('#m-fresh tbody');
+  Object.entries(d.freshness || {}).forEach(([mkt, v]) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = '<td>' + mkt + '</td><td>' + (v.dividends_max || '—') + '</td><td>' + (v.daily_max || '—') + '</td>';
+    tb.appendChild(tr);
+  });
+  // todo
+  const t = d.todo || {};
+  document.getElementById('m-todo-sum').textContent = '待办 ' + t.open + ' 条，其中阻塞/待拍板 ' + t.blocked + ' 条';
+  (t.items || []).forEach((x) => {
+    const li = document.createElement('li');
+    li.textContent = (x.blocked ? '⏸ ' : '▪ ') + x.text;
+    document.getElementById('m-todo').appendChild(li);
+  });
+  // evals
+  (d.evals || []).forEach((f) => {
+    const li = document.createElement('li'); li.textContent = f;
+    document.getElementById('m-evals').appendChild(li);
+  });
+  // 工具链冒烟体检灯（fengprobe → tool_health.json，缺灯/过期也亮声音）
+  const ptb = document.querySelector('#m-probe tbody');
+  const psum = document.getElementById('m-probe-sum');
+  const LIGHT = { ok: '🟢', partial: '🟡', fail: '🔴', skip: '⚪', missing: '⚫', corrupt: '⚫' };
+  const renderProbe = (h) => {
+    ptb.innerHTML = '';
+    if (!h || h.status === 'missing' || h.status === 'corrupt') {
+      psum.textContent = '⚠️ ' + ((h && h.note) || '体检报告缺失——从未跑过');
+      return;
+    }
+    const s = h.summary || {};
+    psum.textContent = '最近运行 ' + (h.generated_at || '?') + '（约 ' + (h.age_hours ?? '?') + ' 小时前）'
+      + (h.stale ? ' ⚠️ 已过期：每日探针没在跑！' : '')
+      + '　🟢' + (s.ok || 0) + ' 🟡' + (s.partial || 0) + ' 🔴' + (s.fail || 0) + ' ⚪' + (s.skip || 0);
+    (h.items || []).forEach((x) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = '<td>' + esc(x.layer || '') + '</td><td>' + esc(x.tool || '') + '</td><td>'
+        + (LIGHT[x.status] || esc(x.status)) + '</td><td>' + (x.elapsed_ms ?? 0) + 'ms</td><td>' + esc(x.note || '') + '</td>';
+      ptb.appendChild(tr);
+    });
+  };
+  renderProbe(d.toolHealth);
+  const pbtn = document.getElementById('m-probe-run');
+  pbtn.addEventListener('click', async () => {
+    pbtn.disabled = true;
+    psum.textContent = '体检中…… 全链真跑约 1–5 分钟，勿关页面';
+    try {
+      const r = await (await fetch('/api/mission/probe', { method: 'POST' })).json();
+      if (r.report) { renderProbe(r.report); if (r.exit) psum.textContent += '（有死灯 🔴）'; }
+      else psum.textContent = '探针失败：' + (r.error || '无报告');
+    } catch (e) { psum.textContent = '探针请求失败：' + e.message; }
+    pbtn.disabled = false;
+  });
+
+  // rounds
+  const rb = document.getElementById('m-rounds');
+  (d.rounds || []).forEach((r) => {
+    const div = document.createElement('div');
+    div.className = 'mission-round';
+    div.style.cssText = 'border-bottom:1px solid var(--border-color);padding:8px 0;';
+    div.innerHTML = '<b>' + esc(r.head || '') + '</b>'
+      + (r.act ? '<div>AI：' + esc(r.act) + '</div>' : '')
+      + (r.out ? '<div class="mkt-muted">产出：' + esc(r.out) + '</div>' : '');
+    rb.appendChild(div);
+  });
+  function esc(s) { const d2 = document.createElement('div'); d2.textContent = String(s).slice(0, 200); return d2.innerHTML; }
+  if (window.FengI18n && FengI18n.apply) FengI18n.apply(FengI18n.lang || 'zh-CN');
+})();
+</script>

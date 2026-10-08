@@ -1,0 +1,26 @@
+{
+  "cn_dividend": {
+    "description": "中证红利指数 (000922) 成分股",
+    "market": "CN",
+    "ticker_format": "yfinance (600519.SS / 000001.SZ)",
+    "source": "akshare index_stock_cons_csindex",
+    "static_file": "data/config/list_cn_dividend.txt",
+    "manual_hint": "akshare 拉取失败时：手动从中证指数官网 https://www.csindex.com.cn/#/indices/family/detail?indexCode=000922 下载成分股（或用 ak.index_stock_cons_csindex('000922')），每行一个 6 位代码写入 data/config/list_cn_dividend.txt，纯数字代码自动补 .SS/.SZ 后缀"
+  },
+  "us_quality": {
+    "description": "纳斯达克100 (NDX) 成分股",
+    "market": "US",
+    "ticker_format": "yfinance (AAPL)",
+    "source": "akshare index_stock_cons_nasdaq100，失败回退静态文件",
+    "static_file": "data/config/list_us_quality.txt",
+    "manual_hint": "akshare 拉取失败时：手动把纳指100成分每行一个代码写入 data/config/list_us_quality.txt（可从 https://www.nasdaq.com/market-activity/indices/ndx/components 复制）"
+  },
+  "us_dividend": {
+    "description": "SCHD (Schwab US Dividend Equity ETF) 持仓",
+    "market": "US",
+    "ticker_format": "yfinance (KO / JNJ)",
+    "source": "静态文件（SCHD 官网持仓无稳定开放接口）",
+    "static_file": "data/config/list_us_dividend.txt",
+    "manual_hint": "从 https://www.schwabassetmanagement.com/products/schd 复制持仓，每行一个代码写入 data/config/list_us_dividend.txt；接口源升级后此处自动切换"
+  }
+}

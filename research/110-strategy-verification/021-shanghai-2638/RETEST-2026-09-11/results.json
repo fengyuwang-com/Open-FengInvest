@@ -1,0 +1,131 @@
+{
+  "claim": {
+    "id": 21,
+    "title": "上证<2638 时仓位≤30%，比不控制的组合 6 个月内回撤低 >30%",
+    "statement": "2638 法则：上证综指收盘 < 2638 时仓位降至 30%（70% 现金不计息），否则 100% 持仓； 相对始终满仓，126 交易日（约 6 个月）滚动窗口内的最大回撤降低 >30%。",
+    "h0": "仓位控制不降低回撤（窗口回撤降幅 ≤30%）。",
+    "price_basis": "前复权 close",
+    "cost_bps": 25,
+    "signal_def": {
+      "key": "第 t 日仓位 = 30% 若 close_{t-1} < 2638，否则 100%；日收益 = 仓位×r_t， 调仓日对交易部分（仓位差）扣 25bps。对照组合 = 始终 100%。 两策略在每 126 日窗口内从窗口起点累计 NAV，取窗口内 MDD； 每窗口降幅 = 1 − MDD_rule/MDD_hold，窗口按月滚动（每 21 日一个窗）",
+      "lookahead": "仓位由 T-1 收盘决定，作用于 T 日收益——无同bar双用"
+    },
+    "verdict_metric": {
+      "primary": "全部 126 日窗口降幅均值 >30%（判据即论断声称的量，铁律一）",
+      "secondary": "窗口序列圆形块 bootstrap（块长 22 保窗口重叠结构）95% CI；全程 NAV MDD 降幅参考",
+      "note": "2638 是固定价位非移动均线——这是它与"
+    },
+    "data_scope": {
+      "markets": [
+        "CN"
+      ],
+      "category": "index",
+      "survivorship": "指数本身无幸存者问题；2638 为 2016 年熔断低点的固定价位（规则原文）"
+    }
+  },
+  "generated_at": "2026-09-11 08:14:08",
+  "engine": "rule-2638-position-cap",
+  "config": {
+    "bootstrap_iters": 2000,
+    "rng_seed": 20260820,
+    "oos_frac": 0.2,
+    "threshold_price": 2638.0,
+    "low_position": 0.3,
+    "window_days": 126,
+    "step_days": 21,
+    "block": 22,
+    "cost_bps_on_traded": 25
+  },
+  "index": {
+    "ticker": "000001.SS",
+    "name": "上证综指",
+    "n_days": 7060,
+    "date_span": [
+      "1997-07-02",
+      "2026-08-21"
+    ]
+  },
+  "survivorship_note": "指数层面不适用幸存者偏差；2638 固定价位存在轻微事后选择风险（规则原文引用）",
+  "protocol_lights": [
+    {
+      "item": "判据对齐（6个月窗口回撤降幅>30%）",
+      "status": "✅",
+      "note": "主判据 = 论断声称的窗口回撤降幅本身，不换量（铁律一）"
+    },
+    {
+      "item": "价格口径（前复权 close）",
+      "status": "✅",
+      "note": "000-data-biases.md A.1"
+    },
+    {
+      "item": "时机（无前视）",
+      "status": "✅",
+      "note": "仓位由 T-1 收盘 vs 2638 决定，作用于 T 日收益；2638 为规则原文固定价位，无参数拟合"
+    },
+    {
+      "item": "交易成本",
+      "status": "✅",
+      "note": "只对仓位变动部分扣 25bps；现金不计息（保守）"
+    },
+    {
+      "item": "显著性/区间（Bootstrap 2000 次）",
+      "status": "✅",
+      "note": "窗口序列圆形块 bootstrap 块长 22（保 21 日步长造成的强重叠），种子 20260820"
+    },
+    {
+      "item": "重叠样本处理",
+      "status": "⚠️",
+      "note": "126 日窗 + 21 日步长 → 相邻窗共享 ~83% 数据；块 bootstrap 缓解，非完全消除；单指数无股票级坍缩可用"
+    },
+    {
+      "item": "样本外验证（后 20%）",
+      "status": "✅",
+      "note": "后 20% 交易日的窗口单独报告"
+    },
+    {
+      "item": "幸存者偏差",
+      "status": "✅",
+      "note": "指数层面，不适用"
+    },
+    {
+      "item": "固定价位规则拟合风险",
+      "status": "⚠️",
+      "note": "2638 取自 2016 熔断低点（规则原文非事后拟合）；但规则在 2016 后才可能被提出，存在轻微事后选择风险，如实记录"
+    },
+    {
+      "item": "可复现",
+      "status": "✅",
+      "note": "种子固定重跑同数"
+    }
+  ],
+  "aggregate": {
+    "n_windows": 321,
+    "mean_window_reduction_pct": 29.05,
+    "median_window_reduction_pct": 0.0,
+    "full_nav_mdd_reduction_pct": 3.63
+  },
+  "aggregate_oos": {
+    "n_windows": 61,
+    "mean_window_reduction_pct": -0.0
+  },
+  "verdict": {
+    "threshold_pct": 30.0,
+    "mean_window_reduction_pct": 29.05,
+    "n_windows": 321,
+    "window_boot_ci": {
+      "mean_pct": 29.05,
+      "ci95_low_pct": 11.02,
+      "ci95_high_pct": 47.83
+    },
+    "above_threshold_pooled": false,
+    "ci_low_above_threshold": false,
+    "full_nav_mdd_reduction_pct": 3.63,
+    "days_below_2638": 3214,
+    "first_below": "1998-04-30",
+    "last_below": "2019-02-11",
+    "oos_mean_window_reduction_pct": -0.0,
+    "oos_n_windows": 61,
+    "oos_above_threshold": false,
+    "supported": false
+  }
+}

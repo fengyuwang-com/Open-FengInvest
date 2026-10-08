@@ -1,0 +1,245 @@
+{
+  "verdict": {
+    "claim_type": "quantitative（解释阈值已在契约披露：接近>=0.9 / 约一半=40-60%）",
+    "quarter": {
+      "n_stocks": 1953,
+      "cagr_ratio_med": 0.31221082172365544,
+      "mdd_red_med": 0.7659328362254616,
+      "oos_cagr_ratio_med": 0.3163146123195806,
+      "oos_mdd_red_med": 0.7645237285924882
+    },
+    "half": {
+      "n_stocks": 1953,
+      "cagr_ratio_med": 0.5829322360714332,
+      "mdd_red_med": 0.5216204651314914,
+      "oos_cagr_ratio_med": 0.5885740981552203,
+      "oos_mdd_red_med": 0.5198784780595639
+    },
+    "robustness_fstar_cap2": {
+      "n_stocks": 1953,
+      "cagr_ratio_med": 0.30974967221249716,
+      "mdd_red_med": 0.7653396678296251,
+      "oos_cagr_ratio_med": 0.31295984630059687,
+      "oos_mdd_red_med": 0.7640477822470602
+    },
+    "ci_cagr_ratio": [
+      0.31066808757806746,
+      0.31371801632171176
+    ],
+    "ci_mdd_red": [
+      0.7654526262291594,
+      0.7662897313312096
+    ],
+    "fstar_theory_ratio": 0.4375,
+    "per_market": {
+      "CN": {
+        "n_stocks": 279,
+        "cagr_ratio_med": 0.30253880213787643,
+        "mdd_red_med": 0.7606579128609086
+      },
+      "KR": {
+        "n_stocks": 184,
+        "cagr_ratio_med": 0.32171996563745775,
+        "mdd_red_med": 0.7653906015516186
+      },
+      "HK": {
+        "n_stocks": 79,
+        "cagr_ratio_med": 0.2956579428610274,
+        "mdd_red_med": 0.7589074288156006
+      },
+      "TW": {
+        "n_stocks": 49,
+        "cagr_ratio_med": 0.32739381908034526,
+        "mdd_red_med": 0.7702038435341578
+      },
+      "JP": {
+        "n_stocks": 204,
+        "cagr_ratio_med": 0.30375491998927184,
+        "mdd_red_med": 0.7639776441602906
+      },
+      "AU": {
+        "n_stocks": 190,
+        "cagr_ratio_med": 0.31684041333158836,
+        "mdd_red_med": 0.7680563367746336
+      },
+      "SG": {
+        "n_stocks": 29,
+        "cagr_ratio_med": 0.3124382039998435,
+        "mdd_red_med": 0.7644059298165397
+      },
+      "US": {
+        "n_stocks": 478,
+        "cagr_ratio_med": 0.3198837655183226,
+        "mdd_red_med": 0.7687678089067689
+      },
+      "IT": {
+        "n_stocks": 35,
+        "cagr_ratio_med": 0.3121101556538005,
+        "mdd_red_med": 0.7661891484660479
+      },
+      "UK": {
+        "n_stocks": 95,
+        "cagr_ratio_med": 0.3022610017356042,
+        "mdd_red_med": 0.7621685469875557
+      },
+      "SE": {
+        "n_stocks": 30,
+        "cagr_ratio_med": 0.32213850311843234,
+        "mdd_red_med": 0.7681130207975735
+      },
+      "CH": {
+        "n_stocks": 18,
+        "cagr_ratio_med": 0.2974690548340536,
+        "mdd_red_med": 0.7649046893788458
+      },
+      "NL": {
+        "n_stocks": 22,
+        "cagr_ratio_med": 0.3168402206483856,
+        "mdd_red_med": 0.7638207438213032
+      },
+      "CA": {
+        "n_stocks": 53,
+        "cagr_ratio_med": 0.3211308577166393,
+        "mdd_red_med": 0.7706885871059329
+      },
+      "FR": {
+        "n_stocks": 39,
+        "cagr_ratio_med": 0.3052772018498078,
+        "mdd_red_med": 0.7640565901231817
+      },
+      "ES": {
+        "n_stocks": 34,
+        "cagr_ratio_med": 0.300883045498917,
+        "mdd_red_med": 0.767280535319099
+      },
+      "IN": {
+        "n_stocks": 50,
+        "cagr_ratio_med": 0.3224329607298809,
+        "mdd_red_med": 0.7685860196614271
+      },
+      "DE": {
+        "n_stocks": 40,
+        "cagr_ratio_med": 0.3006205567339884,
+        "mdd_red_med": 0.7617949721112834
+      },
+      "NZ": {
+        "n_stocks": 46,
+        "cagr_ratio_med": 0.3111197247585159,
+        "mdd_red_med": 0.7655506679256637
+      }
+    },
+    "skipped_infeasible_windows": 178,
+    "thresholds": {
+      "cagr_ratio_min": 0.9,
+      "mdd_red_lo": 0.4,
+      "mdd_red_hi": 0.6
+    },
+    "cagr_ok": false,
+    "mdd_ok": false,
+    "supported": false
+  },
+  "per_market": {
+    "CN": {
+      "n_stocks": 279,
+      "cagr_ratio_med": 0.30253880213787643,
+      "mdd_red_med": 0.7606579128609086
+    },
+    "KR": {
+      "n_stocks": 184,
+      "cagr_ratio_med": 0.32171996563745775,
+      "mdd_red_med": 0.7653906015516186
+    },
+    "HK": {
+      "n_stocks": 79,
+      "cagr_ratio_med": 0.2956579428610274,
+      "mdd_red_med": 0.7589074288156006
+    },
+    "TW": {
+      "n_stocks": 49,
+      "cagr_ratio_med": 0.32739381908034526,
+      "mdd_red_med": 0.7702038435341578
+    },
+    "JP": {
+      "n_stocks": 204,
+      "cagr_ratio_med": 0.30375491998927184,
+      "mdd_red_med": 0.7639776441602906
+    },
+    "AU": {
+      "n_stocks": 190,
+      "cagr_ratio_med": 0.31684041333158836,
+      "mdd_red_med": 0.7680563367746336
+    },
+    "SG": {
+      "n_stocks": 29,
+      "cagr_ratio_med": 0.3124382039998435,
+      "mdd_red_med": 0.7644059298165397
+    },
+    "US": {
+      "n_stocks": 478,
+      "cagr_ratio_med": 0.3198837655183226,
+      "mdd_red_med": 0.7687678089067689
+    },
+    "IT": {
+      "n_stocks": 35,
+      "cagr_ratio_med": 0.3121101556538005,
+      "mdd_red_med": 0.7661891484660479
+    },
+    "UK": {
+      "n_stocks": 95,
+      "cagr_ratio_med": 0.3022610017356042,
+      "mdd_red_med": 0.7621685469875557
+    },
+    "SE": {
+      "n_stocks": 30,
+      "cagr_ratio_med": 0.32213850311843234,
+      "mdd_red_med": 0.7681130207975735
+    },
+    "CH": {
+      "n_stocks": 18,
+      "cagr_ratio_med": 0.2974690548340536,
+      "mdd_red_med": 0.7649046893788458
+    },
+    "NL": {
+      "n_stocks": 22,
+      "cagr_ratio_med": 0.3168402206483856,
+      "mdd_red_med": 0.7638207438213032
+    },
+    "CA": {
+      "n_stocks": 53,
+      "cagr_ratio_med": 0.3211308577166393,
+      "mdd_red_med": 0.7706885871059329
+    },
+    "FR": {
+      "n_stocks": 39,
+      "cagr_ratio_med": 0.3052772018498078,
+      "mdd_red_med": 0.7640565901231817
+    },
+    "ES": {
+      "n_stocks": 34,
+      "cagr_ratio_med": 0.300883045498917,
+      "mdd_red_med": 0.767280535319099
+    },
+    "IN": {
+      "n_stocks": 50,
+      "cagr_ratio_med": 0.3224329607298809,
+      "mdd_red_med": 0.7685860196614271
+    },
+    "DE": {
+      "n_stocks": 40,
+      "cagr_ratio_med": 0.3006205567339884,
+      "mdd_red_med": 0.7617949721112834
+    },
+    "NZ": {
+      "n_stocks": 46,
+      "cagr_ratio_med": 0.3111197247585159,
+      "mdd_red_med": 0.7655506679256637
+    }
+  },
+  "protocol_lights": {
+    "primary_metric_is_claim_quantity": true,
+    "all_in_scope_markets": true,
+    "oos": true,
+    "no_lookahead": true,
+    "survivorship_note": "DB 仅存当前存在标的，退市股缺失，结果偏乐观"
+  }
+}
