@@ -1,0 +1,94 @@
+{
+  "_demo": true,
+  "_demo_note": "影子数据（AGENTS.md §一.3 影子替代原则）：本文件为苹果 AAPL 虚构替代持仓，份额/成本/盈亏均为编造，非真实持仓、非投资建议。派生指标由工具真算。",
+  "id": "AAPL",
+  "name": "苹果公司（影子）",
+  "asset_type": "stock",
+  "currency": "USD",
+  "capital_zone": "OVERSEAS",
+  "market_access": "us_direct",
+  "market": "US",
+  "segment": "消费电子",
+  "qualifier": null,
+  "broker": "DEMO_BROKER",
+  "account_type": "INVESTMENT",
+  "lifecycle_phase": "holding",
+  "position": {
+    "shares": 16,
+    "avg_cost": 300.0,
+    "current_price": 336.6700134277344,
+    "market_value": 5386.72021484375,
+    "unrealized_pl": 586.72
+  },
+  "capital": {
+    "cost_basis": 4800.0,
+    "cost_basis_equiv_cny": 32352.0,
+    "currency": "CNY",
+    "realized_pl": 0,
+    "market_value_equiv_cny": 36306.49
+  },
+  "capital_rollover": {
+    "total_invested": 4800.0,
+    "recovered": 0,
+    "recoverable_at_price": null,
+    "zero_cost_shares": 0,
+    "phase": "capital_at_risk"
+  },
+  "trades": [
+    {
+      "date": "2026-08-12",
+      "action": "BUY",
+      "shares": 16,
+      "price": 300.0,
+      "note": "影子交易记录（虚构）"
+    }
+  ],
+  "thesis": {
+    "original": "影子论文：服务业务高毛利 + 生态粘性 + 回购缩股本，现金牛属性。",
+    "summary": "影子论文：现金流稳定 + 服务收入占比提升 + 估值合理",
+    "principles": [
+      "坐标原则",
+      "息价原则"
+    ],
+    "benchmark": null,
+    "valuation_gap": 0.1,
+    "expected_return": 0.12,
+    "time_horizon_months": 36,
+    "exit_conditions": [
+      "论文失效：iPhone 出货连续两季下滑",
+      "红线：反垄断拆分风险落地"
+    ],
+    "mirror_test": "影子：我以 300 美元买入苹果，因为服务业务毛利 70%++持续回购，估值折让约 10%，错了收现金流。",
+    "financials_asof": "FY2026-Q3（影子虚构）",
+    "hypotheses": [
+      {
+        "text": "服务业务收入占比升至 28%+",
+        "state": "unknown"
+      }
+    ],
+    "redlines": [
+      {
+        "text": "反垄断判决要求拆分业务",
+        "state": "intact"
+      }
+    ]
+  },
+  "reviews": [],
+  "triggers": {
+    "next_review_date": "2027-01-20"
+  },
+  "meta": {
+    "created_at": "2026-08-12",
+    "updated_at": "2026-10-08 16:20",
+    "version": 2,
+    "source": "demo",
+    "fx_rates": {
+      "date": "2026-10-08",
+      "HKD_CNY": 0.92,
+      "USD_CNY": 6.74,
+      "source": "影子快照"
+    },
+    "note": "DEMO 影子持仓"
+  },
+  "health_score": 8
+}

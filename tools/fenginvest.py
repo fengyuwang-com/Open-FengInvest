@@ -96,7 +96,7 @@ def cmd_status(ticker: str):
         print(f"无进行中的分析: {ticker}")
         return 1
 
-    with open(state_path) as f:
+    with open(state_path, encoding="utf-8") as f:
         state = json.load(f)
 
     SEQUENCE = ["01-capability", "02-market", "03-discipline", "04-quantitative",

@@ -1,0 +1,240 @@
+{
+  "date": "2026-10-08",
+  "total_holdings": 5,
+  "red": 1,
+  "yellow": 4,
+  "green": 0,
+  "results": [
+    {
+      "ticker": "09988.HK",
+      "name": null,
+      "overall": "YELLOW",
+      "position": {
+        "shares": 1000,
+        "avg_cost": 88.0,
+        "current_price": 104.30000305175781,
+        "total_invested": 88000.0,
+        "market_value": 104300.0,
+        "return_pct": 18.5
+      },
+      "checks": {
+        "price_stop": {
+          "level": "GREEN",
+          "signal": "OK",
+          "label": "回撤18.5%",
+          "value": 18.5
+        },
+        "trend": {
+          "level": "YELLOW",
+          "signal": "WARN",
+          "label": "MA50(114.0)<MA200(127.6)，趋势偏弱",
+          "value": -13.6
+        },
+        "thesis": {
+          "level": "GREEN",
+          "signal": "OK",
+          "label": "论文有效"
+        },
+        "review_due": {
+          "level": "GREEN",
+          "signal": "OK",
+          "label": "下次审核: 2026-12-01（54天后）"
+        },
+        "price_trigger": null,
+        "rollover": {
+          "level": "YELLOW",
+          "signal": "OPPORTUNITY",
+          "label": "可滚存: 卖843股回收88000, 留157股零成本",
+          "value": 16300.0
+        },
+        "fundamental": null,
+        "valuation": null
+      },
+      "thesis": "影子论文：平台电商 + 云计算双轮，估值处于历史低位区间。",
+      "capital_phase": "capital_at_risk"
+    },
+    {
+      "ticker": "3690.HK",
+      "name": null,
+      "overall": "RED",
+      "position": {
+        "shares": 400,
+        "avg_cost": 76.0,
+        "current_price": 69.4000015258789,
+        "total_invested": 30400.0,
+        "market_value": 27760.0,
+        "return_pct": -8.7
+      },
+      "checks": {
+        "price_stop": {
+          "level": "GREEN",
+          "signal": "OK",
+          "label": "回撤-8.7%",
+          "value": -8.7
+        },
+        "trend": {
+          "level": "RED",
+          "signal": "EXIT_HALF",
+          "label": "趋势反转: MA50(80.2)<MA200(84.3), 月跌-13.9%",
+          "value": -13.9
+        },
+        "thesis": {
+          "level": "GREEN",
+          "signal": "OK",
+          "label": "论文有效"
+        },
+        "review_due": {
+          "level": "GREEN",
+          "signal": "OK",
+          "label": "下次审核: 2026-12-20（73天后）"
+        },
+        "price_trigger": null,
+        "rollover": null,
+        "fundamental": null,
+        "valuation": null
+      },
+      "thesis": "影子论文：本地生活护城河 + 到店业务利润释放，外卖大战补贴见顶。",
+      "capital_phase": "capital_at_risk"
+    },
+    {
+      "ticker": "600519.SS",
+      "name": null,
+      "overall": "YELLOW",
+      "position": {
+        "shares": 30,
+        "avg_cost": 1320.0,
+        "current_price": 1255.7900390625,
+        "total_invested": 39600.0,
+        "market_value": 37674.0,
+        "return_pct": -4.9
+      },
+      "checks": {
+        "price_stop": {
+          "level": "GREEN",
+          "signal": "OK",
+          "label": "回撤-4.9%",
+          "value": -4.9
+        },
+        "trend": {
+          "level": "YELLOW",
+          "signal": "WARN",
+          "label": "MA50(1297.3)<MA200(1328.5)，趋势偏弱",
+          "value": -31.1
+        },
+        "thesis": {
+          "level": "GREEN",
+          "signal": "OK",
+          "label": "论文有效"
+        },
+        "review_due": {
+          "level": "GREEN",
+          "signal": "OK",
+          "label": "下次审核: 2026-12-15（68天后）"
+        },
+        "price_trigger": null,
+        "rollover": null,
+        "fundamental": null,
+        "valuation": null
+      },
+      "thesis": "影子论文：高端白酒品牌壁垒 + 现金流稳定，估值回到合理区间。",
+      "capital_phase": "capital_at_risk"
+    },
+    {
+      "ticker": "601088.SS",
+      "name": null,
+      "overall": "YELLOW",
+      "position": {
+        "shares": 1300,
+        "avg_cost": 38.5,
+        "current_price": 47.4900016784668,
+        "total_invested": 50050.0,
+        "market_value": 61737.0,
+        "return_pct": 23.4
+      },
+      "checks": {
+        "price_stop": {
+          "level": "GREEN",
+          "signal": "OK",
+          "label": "回撤23.4%",
+          "value": 23.4
+        },
+        "trend": {
+          "level": "GREEN",
+          "signal": "OK",
+          "label": "趋势正常 MA50>MA200",
+          "value": null
+        },
+        "thesis": {
+          "level": "GREEN",
+          "signal": "OK",
+          "label": "论文有效"
+        },
+        "review_due": {
+          "level": "GREEN",
+          "signal": "OK",
+          "label": "下次审核: 2027-01-10（94天后）"
+        },
+        "price_trigger": null,
+        "rollover": {
+          "level": "YELLOW",
+          "signal": "OPPORTUNITY",
+          "label": "可滚存: 卖1053股回收50050, 留247股零成本",
+          "value": 11687.0
+        },
+        "fundamental": null,
+        "valuation": null
+      },
+      "thesis": "影子论文：长协煤价稳定 + 高股息 + 一体化发电，类现金属性。",
+      "capital_phase": "capital_at_risk"
+    },
+    {
+      "ticker": "AAPL",
+      "name": null,
+      "overall": "YELLOW",
+      "position": {
+        "shares": 16,
+        "avg_cost": 300.0,
+        "current_price": 336.6700134277344,
+        "total_invested": 4800.0,
+        "market_value": 5387.0,
+        "return_pct": 12.2
+      },
+      "checks": {
+        "price_stop": {
+          "level": "GREEN",
+          "signal": "OK",
+          "label": "回撤12.2%",
+          "value": 12.2
+        },
+        "trend": {
+          "level": "GREEN",
+          "signal": "OK",
+          "label": "趋势正常 MA50>MA200",
+          "value": null
+        },
+        "thesis": {
+          "level": "GREEN",
+          "signal": "OK",
+          "label": "论文有效"
+        },
+        "review_due": {
+          "level": "GREEN",
+          "signal": "OK",
+          "label": "下次审核: 2027-01-20（104天后）"
+        },
+        "price_trigger": null,
+        "rollover": {
+          "level": "YELLOW",
+          "signal": "OPPORTUNITY",
+          "label": "可滚存: 卖14股回收4800, 留2股零成本",
+          "value": 587.0
+        },
+        "fundamental": null,
+        "valuation": null
+      },
+      "thesis": "影子论文：服务业务高毛利 + 生态粘性 + 回购缩股本，现金牛属性。",
+      "capital_phase": "capital_at_risk"
+    }
+  ],
+  "generated_at": "2026-10-08T08:25:31.227567+00:00"
+}

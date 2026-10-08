@@ -3749,6 +3749,10 @@ def main():
         print(f"    [{datetime.now():%H:%M:%S}] {m} done "
               f"({mr['stocks_processed']}/{mr['stocks_total']})", file=sys.stderr, flush=True)
 
+    if not per_market:
+        print("错误：无任何市场数据可复测（data/market_data.db 缺失或为空）", file=sys.stderr)
+        return 1
+
     # --- 汇总块 ---
     def make_aggregate_block(h, buckets, pairs, sig):
         ab_net = np.concatenate(buckets[h]["above_net"]) if buckets[h]["above_net"] else np.empty(0)
@@ -3836,8 +3840,9 @@ def main():
     print("输出:", res_path)
     for h in holding_days:
         v = verdict[f"d{h}"]
+        p_dir = f"{v['p_directional']:.4f}" if v['p_directional'] is not None else "None(样本不足)"
         print(f"  d{h}: 收益差(净,pooled)={v['diff_net_pooled_pp']}pp "
-              f"p(one-sided)={v['p_directional']:.4f} CI=[{v['ci95_low_pp']},{v['ci95_high_pp']}] "
+              f"p(one-sided)={p_dir} CI=[{v['ci95_low_pp']},{v['ci95_high_pp']}] "
               f"OOS差={v['oos_diff_net_pooled_pp']}pp "
               f"→ 95%显著支持={v['supported_at_95']}")
     return 0

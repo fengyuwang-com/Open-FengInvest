@@ -1,0 +1,14 @@
+{
+  "_demo": true,
+  "_demo_note": "影子状态（AGENTS.md §一.3）",
+  "ticker": "09988.HK",
+  "status": "completed",
+  "completed": {
+    "01-capability": {
+      "timestamp": "2026-10-08T02:00:00+00:00",
+      "output": "research/060-companies/09988.HK-阿里巴巴/2026-10-08/01-capability.md"
+    }
+  },
+  "created_at": "2026-10-08T01:00:00+00:00",
+  "updated_at": "2026-10-08T02:00:00+00:00"
+}

@@ -26,6 +26,9 @@ data/snapshots/
 *.sqlite
 *.sqlite3
 *.duckdb
+# 例外：合成样例库（AGENTS §一.3「小样例数据集」）——schema 同真仓、数据全合成零个人数据，
+# indices.name 带「合成样例·非真实行情」标记，随仓分发使 fengverify/探针开箱可跑
+!data/market_data.db
 
 # ── 工具里的本地专属/运行测试/示例跑掉的中间产物、不往外推的目录 ──
 tools/_market_test.json
@@ -36,13 +39,30 @@ tools/test_fengtools.py
 tools/__pycache__/
 tools/alpha-skills/
 
-# ── 个人数据（不开源） ──
-alerts/
-holdings/
-logs/
-reviews/
-research/060-companies/
-portfolio/
+# ── 个人数据：真实数据不入；影子/框架文件白名单放行（见 AGENTS.md §一 开源改写原则） ──
+# 规则形态：目录内全忽略 → 用 ! 放行影子与框架文件。理由：不留空壳，
+# 影子数据（换标的+编数据）必须入库，否则 fengholding/fengportfolio/fengstate 读不到，
+# 违反「所有原来的工具都要能跑」原则。
+# ⚠️ 提交前必须跑敏感扫描（真实持仓/成本/凭据 0 命中），防止误把真实数据拷进来。
+alerts/*
+!alerts/today.json
+holdings/*
+!holdings/SCHEMA.md
+!holdings/hold_*.json
+logs/*
+!logs/journal.jsonl
+reviews/*
+!reviews/review_*.md
+portfolio/*
+!portfolio/current.md
+!portfolio/check-*.json
+!portfolio/portfolio_*.json
+research/060-companies/*
+!research/060-companies/README.md
+# 影子分析目录（换标的+编数据）放行；真实标的目录仍被上面的 research/060-companies/* 排除
+!research/060-companies/09988.HK-阿里巴巴/
+research/state/*
+!research/state/temp_state_*.json
 
 # ── 个人配置与记忆 ──
 .claude/
@@ -80,9 +100,11 @@ logs/backfill_*.log
 logs/checkpoint_*.txt
 skills-lock.json
 research/temp_*
-research/state/
 research/speculative/
 research/080-state/
+# 探针/验证引擎的本地运行输出（fengprobe --out、fengverify 复测中间产物）
+Temp/
+temp/
 
 # ── 計画/說明류（此版本暫不入 git，只留在本地） ──
 SYNC-PLAN.md
@@ -90,3 +112,5 @@ OPEN-ALTERNATIVE-PLAN.md
 START-OPEN-ALTERNATIVE.md
 LOCAL-OPENSOURCE-SEPARATION.md
 AI-BERKSHIRE-SYNC-PLAN.md
+# 市场温度采集缓存（真仓同款忽略；公开行情、每次采集即变）
+research/market/

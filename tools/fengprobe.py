@@ -6,7 +6,7 @@
   ok      真跑成功且输出结构 sanity 通过
   partial 能跑但工具自报取数降级（fengmarket 缺源 / fengquant peer 失败 / data_health FAILED）
   fail    非零退出 / 超时 / 输出不可解析——死灯
-  skip    前置文件缺失（如 159766 层产物被归档）——灰灯，不算工具死
+  skip    前置文件缺失（如冒烟标的层产物未生成）——灰灯，不算工具死
 结果写 data/reports/tool_health.json，/mission 看板（fengmission.py 只读渲染）挂灯；
 探针自身退出码：有 fail → 1（定时任务/cron 里也有声音）。
 
@@ -38,8 +38,9 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPORT = os.path.join(ROOT, "data", "reports", "tool_health.json")
 PY = sys.executable
 
-# 冒烟标的：159766.SZ（七层产物齐全的 ETF 分析样例）+ AAPL（yfinance 链路样例）
-SMOKE_TICKER = "159766.SZ"
+# 冒烟标的：09988.HK（影子持仓样例，状态机有真状态、七层可跑）+ AAPL（yfinance 链路样例）
+# 注：开源版不带真仓的完整七层产物样例（个人研究不开源，AGENTS §一.3），故冒烟改用影子标的。
+SMOKE_TICKER = "09988.HK"
 SMOKE_US = "AAPL"
 
 
@@ -139,7 +140,7 @@ def _resolve_dynamic(spec: dict) -> tuple[bool, str]:
     for layer_file, flag in spec.get("prereq_layers", []):
         p = _layer_file(SMOKE_TICKER, layer_file)
         if not p:
-            return False, f"缺前置产物 {layer_file}（159766 分析目录未就绪）"
+            return False, f"缺前置产物 {layer_file}（{SMOKE_TICKER} 分析目录未就绪）"
         rel = os.path.relpath(p, ROOT).replace("\\", "/")
         files += [flag, f'"{rel}"']
     spec["cmd"] = [PY, "tools/fengcollision.py", SMOKE_TICKER] + files

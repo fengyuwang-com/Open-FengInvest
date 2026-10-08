@@ -1,0 +1,88 @@
+{
+  "_demo": true,
+  "_demo_note": "影子数据（AGENTS.md §一.3 影子替代原则）：本文件为贵州茅台 600519.SS 虚构替代持仓，份额/成本/盈亏均为编造，非真实持仓、非投资建议。派生指标由工具真算。",
+  "id": "600519.SS",
+  "name": "贵州茅台（影子）",
+  "asset_type": "stock",
+  "currency": "CNY",
+  "capital_zone": "CN_IN",
+  "market_access": "a_share",
+  "market": "CN_A",
+  "segment": "白酒",
+  "qualifier": null,
+  "broker": "DEMO_BROKER",
+  "account_type": "INVESTMENT",
+  "lifecycle_phase": "holding",
+  "position": {
+    "shares": 30,
+    "avg_cost": 1320.0,
+    "current_price": 1255.7900390625,
+    "market_value": 37673.701171875,
+    "unrealized_pl": -1926.3
+  },
+  "capital": {
+    "cost_basis": 39600.0,
+    "cost_basis_equiv_cny": 47400.0,
+    "currency": "CNY",
+    "realized_pl": 0,
+    "market_value_equiv_cny": 37673.7
+  },
+  "capital_rollover": {
+    "total_invested": 39600.0,
+    "recovered": 0,
+    "recoverable_at_price": null,
+    "zero_cost_shares": 0,
+    "phase": "capital_at_risk"
+  },
+  "trades": [
+    {
+      "date": "2026-07-20",
+      "action": "BUY",
+      "shares": 30,
+      "price": 1320.0,
+      "note": "影子交易记录（虚构）"
+    }
+  ],
+  "thesis": {
+    "original": "影子论文：高端白酒品牌壁垒 + 现金流稳定，估值回到合理区间。",
+    "summary": "影子论文：生意质量优秀 + 估值合理 + 批价企稳",
+    "principles": [
+      "坐标原则",
+      "息价原则"
+    ],
+    "benchmark": null,
+    "valuation_gap": 0.15,
+    "expected_return": 0.15,
+    "time_horizon_months": 24,
+    "exit_conditions": [
+      "论文失效：批价连续两季下行",
+      "红线：消费税改革重大变化"
+    ],
+    "mirror_test": "影子：我以 1320 元买入贵州茅台，因为品牌提价权+高毛利，估值折让约 15%，错了下行可控。",
+    "financials_asof": "2026-Q2（影子虚构）",
+    "hypotheses": [
+      {
+        "text": "批价企稳回升至 2600+",
+        "state": "unknown"
+      }
+    ],
+    "redlines": [
+      {
+        "text": "飞天批价跌破 2000",
+        "state": "intact"
+      }
+    ]
+  },
+  "reviews": [],
+  "triggers": {
+    "next_review_date": "2026-12-15"
+  },
+  "meta": {
+    "created_at": "2026-07-20",
+    "updated_at": "2026-10-08 16:20",
+    "version": 2,
+    "source": "demo",
+    "note": "DEMO 影子持仓"
+  },
+  "health_score": 8
+}

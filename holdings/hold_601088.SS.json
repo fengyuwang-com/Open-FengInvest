@@ -1,0 +1,88 @@
+{
+  "_demo": true,
+  "_demo_note": "影子数据（AGENTS.md §一.3 影子替代原则）：本文件为中国神华 601088.SS 虚构替代持仓，份额/成本/盈亏均为编造，非真实持仓、非投资建议。派生指标由工具真算。",
+  "id": "601088.SS",
+  "name": "中国神华（影子）",
+  "asset_type": "stock",
+  "currency": "CNY",
+  "capital_zone": "CN_IN",
+  "market_access": "a_share",
+  "market": "CN_A",
+  "segment": "煤炭",
+  "qualifier": null,
+  "broker": "DEMO_BROKER",
+  "account_type": "INVESTMENT",
+  "lifecycle_phase": "holding",
+  "position": {
+    "shares": 1300,
+    "avg_cost": 38.5,
+    "current_price": 47.4900016784668,
+    "market_value": 61737.002182006836,
+    "unrealized_pl": 11687.0
+  },
+  "capital": {
+    "cost_basis": 50050.0,
+    "cost_basis_equiv_cny": 50050.0,
+    "currency": "CNY",
+    "realized_pl": 0,
+    "market_value_equiv_cny": 61737.0
+  },
+  "capital_rollover": {
+    "total_invested": 50050.0,
+    "recovered": 0,
+    "recoverable_at_price": null,
+    "zero_cost_shares": 0,
+    "phase": "capital_at_risk"
+  },
+  "trades": [
+    {
+      "date": "2026-07-25",
+      "action": "BUY",
+      "shares": 1300,
+      "price": 38.5,
+      "note": "影子交易记录（虚构）"
+    }
+  ],
+  "thesis": {
+    "original": "影子论文：长协煤价稳定 + 高股息 + 一体化发电，类现金属性。",
+    "summary": "影子论文：现金流稳定 + 股息率高 + 估值低位",
+    "principles": [
+      "息价原则",
+      "取舍原则"
+    ],
+    "benchmark": null,
+    "valuation_gap": 0.2,
+    "expected_return": 0.12,
+    "time_horizon_months": 36,
+    "exit_conditions": [
+      "论文失效：长协价大幅下调",
+      "红线：股息政策改变"
+    ],
+    "mirror_test": "影子：我以 38.5 元买入中国神华，因为长协价锁定+股息率 6%+，错了收息等估值。",
+    "financials_asof": "2026-Q2（影子虚构）",
+    "hypotheses": [
+      {
+        "text": "年度长协价维持高位",
+        "state": "unknown"
+      }
+    ],
+    "redlines": [
+      {
+        "text": "长协基准价下调超 10%",
+        "state": "intact"
+      }
+    ]
+  },
+  "reviews": [],
+  "triggers": {
+    "next_review_date": "2027-01-10"
+  },
+  "meta": {
+    "created_at": "2026-07-25",
+    "updated_at": "2026-10-08 16:20",
+    "version": 2,
+    "source": "demo",
+    "note": "DEMO 影子持仓"
+  },
+  "health_score": 7
+}

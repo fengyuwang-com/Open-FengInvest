@@ -114,12 +114,19 @@ def save_holding(h):
         json.dump(h, fh, indent=2, ensure_ascii=False)
 
 
+def _norm_yf_code(ticker):
+    """yfinance 港股代码去前导零：09988.HK → 9988.HK（与 fengdata 同规则，Yahoo 对 5 位码返 404）。"""
+    t = str(ticker).upper().strip()
+    m = re.match(r'^0(\d{4})\.HK$', t)
+    return f"{m.group(1)}.HK" if m else t
+
+
 def fetch_price_data(ticker):
     """Fetch current price + MA data via fengdata.py (Futu primary, yfinance fallback)."""
     try:
         result = subprocess.run(
             [sys.executable, os.path.join(TOOLS, "fengdata.py"), ticker, "--price", "--backend=auto"],
-            capture_output=True, text=True, timeout=30
+            capture_output=True, text=True, timeout=60
         )
         if result.returncode == 0:
             data = json.loads(result.stdout)
@@ -137,9 +144,9 @@ def fetch_price_data(ticker):
     except Exception:
         pass
 
-    # Direct yfinance fallback
+    # Direct yfinance fallback（港股代码先归一化，否则 5 位码 404）
     import yfinance as yf
-    t = yf.Ticker(ticker)
+    t = yf.Ticker(_norm_yf_code(ticker))
     hist = t.history(period="1y")
     if hist.empty:
         try:
@@ -171,7 +178,7 @@ def fetch_financials(ticker):
     try:
         result = subprocess.run(
             [sys.executable, os.path.join(TOOLS, "fengdata.py"), ticker, "--financials", "--backend=auto"],
-            capture_output=True, text=True, timeout=30
+            capture_output=True, text=True, timeout=60
         )
         if result.returncode == 0:
             data = json.loads(result.stdout)

@@ -1,0 +1,4454 @@
+{
+ "date": "2026-09-26",
+ "market": "HK",
+ "generated_at": "2026-09-26 08:48:29",
+ "method": {
+  "member_source": "fundamentals.industry x sw_global_map",
+  "rank_key": "worst_profitable>years>gm_range",
+  "min_rank_years": 5,
+  "gate": "fengsource judge B/C only"
+ },
+ "unique_tickers": 43,
+ "cells_ranked": 35,
+ "cells_abstain": 68,
+ "domains": {
+  "吃": [
+   {
+    "cell": "needs-002",
+    "domain": "乳制品",
+    "rows": [
+     {
+      "ticker": "0288.HK",
+      "name": "0288.HK",
+      "gm_range_pp": 3.9,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "0291.HK",
+      "name": "0291.HK",
+      "gm_range_pp": 9.3,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "1876.HK",
+      "name": "1876.HK",
+      "gm_range_pp": 5.7,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     }
+    ],
+    "members_all": [
+     {
+      "ticker": "0288.HK",
+      "name": "0288.HK",
+      "gm_range_pp": 3.9,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "0291.HK",
+      "name": "0291.HK",
+      "gm_range_pp": 9.3,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "1876.HK",
+      "name": "1876.HK",
+      "gm_range_pp": 5.7,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "2319.HK",
+      "name": "2319.HK",
+      "gm_range_pp": 4.7,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "9633.HK",
+      "name": "9633.HK",
+      "gm_range_pp": 7.2,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9
+     }
+    ],
+    "notes": [
+     "行业成员来源: fundamentals.industry LIKE ['Beverages - Brewers', 'Beverages - Non-Alcoholic', 'Packaged Foods']（去重前 5 家）"
+    ]
+   },
+   {
+    "cell": "needs-009",
+    "domain": "白酒与其他酒类",
+    "rows": [
+     {
+      "ticker": "0291.HK",
+      "name": "0291.HK",
+      "gm_range_pp": 9.3,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "1876.HK",
+      "name": "1876.HK",
+      "gm_range_pp": 5.7,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "9633.HK",
+      "name": "9633.HK",
+      "gm_range_pp": 7.2,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     }
+    ],
+    "members_all": [
+     {
+      "ticker": "0291.HK",
+      "name": "0291.HK",
+      "gm_range_pp": 9.3,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "1876.HK",
+      "name": "1876.HK",
+      "gm_range_pp": 5.7,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "9633.HK",
+      "name": "9633.HK",
+      "gm_range_pp": 7.2,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9
+     }
+    ],
+    "notes": [
+     "行业成员来源: fundamentals.industry LIKE ['Beverages - Brewers', 'Beverages - Distillers', 'Beverages - Non-Alcoholic', 'Beverages - Wineries']（去重前 3 家）"
+    ]
+   },
+   {
+    "cell": "needs-010",
+    "domain": "软饮料与包装水",
+    "rows": [
+     {
+      "ticker": "0288.HK",
+      "name": "0288.HK",
+      "gm_range_pp": 3.9,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "0291.HK",
+      "name": "0291.HK",
+      "gm_range_pp": 9.3,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "1876.HK",
+      "name": "1876.HK",
+      "gm_range_pp": 5.7,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     }
+    ],
+    "members_all": [
+     {
+      "ticker": "0288.HK",
+      "name": "0288.HK",
+      "gm_range_pp": 3.9,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "0291.HK",
+      "name": "0291.HK",
+      "gm_range_pp": 9.3,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "1876.HK",
+      "name": "1876.HK",
+      "gm_range_pp": 5.7,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "2319.HK",
+      "name": "2319.HK",
+      "gm_range_pp": 4.7,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "9633.HK",
+      "name": "9633.HK",
+      "gm_range_pp": 7.2,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9
+     }
+    ],
+    "notes": [
+     "行业成员来源: fundamentals.industry LIKE ['Beverages - Brewers', 'Beverages - Non-Alcoholic', 'Packaged Foods']（去重前 5 家）"
+    ]
+   },
+   {
+    "cell": "needs-011",
+    "domain": "咖啡与茶饮供应链",
+    "rows": [
+     {
+      "ticker": "0288.HK",
+      "name": "0288.HK",
+      "gm_range_pp": 3.9,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "0291.HK",
+      "name": "0291.HK",
+      "gm_range_pp": 9.3,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "1876.HK",
+      "name": "1876.HK",
+      "gm_range_pp": 5.7,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     }
+    ],
+    "members_all": [
+     {
+      "ticker": "0288.HK",
+      "name": "0288.HK",
+      "gm_range_pp": 3.9,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "0291.HK",
+      "name": "0291.HK",
+      "gm_range_pp": 9.3,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "1876.HK",
+      "name": "1876.HK",
+      "gm_range_pp": 5.7,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "2319.HK",
+      "name": "2319.HK",
+      "gm_range_pp": 4.7,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "9633.HK",
+      "name": "9633.HK",
+      "gm_range_pp": 7.2,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9
+     }
+    ],
+    "notes": [
+     "行业成员来源: fundamentals.industry LIKE ['Beverages - Brewers', 'Beverages - Non-Alcoholic', 'Consumer Defensive', 'Packaged Foods']（去重前 5 家）"
+    ]
+   }
+  ],
+  "住": [
+   {
+    "cell": "needs-025",
+    "domain": "物业与资产管理",
+    "rows": [
+     {
+      "ticker": "1209.HK",
+      "name": "1209.HK",
+      "gm_range_pp": 22.5,
+      "resid_std": 0.03,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "B"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "0012.HK",
+      "name": "0012.HK",
+      "gm_range_pp": 29.3,
+      "resid_std": 0.06,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "B"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "0101.HK",
+      "name": "0101.HK",
+      "gm_range_pp": 15.9,
+      "resid_std": 0.04,
+      "worst_year_profitable": false,
+      "years": 9,
+      "lane": "深周期",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "B",
+       "C"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "1997.HK",
+      "name": "1997.HK",
+      "gm_range_pp": 18.1,
+      "resid_std": 0.05,
+      "worst_year_profitable": false,
+      "years": 9,
+      "lane": "深周期",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "B",
+       "C"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     }
+    ],
+    "members_all": [
+     {
+      "ticker": "1209.HK",
+      "name": "1209.HK",
+      "gm_range_pp": 22.5,
+      "resid_std": 0.03,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "0012.HK",
+      "name": "0012.HK",
+      "gm_range_pp": 29.3,
+      "resid_std": 0.06,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "0101.HK",
+      "name": "0101.HK",
+      "gm_range_pp": 15.9,
+      "resid_std": 0.04,
+      "worst_year_profitable": false,
+      "years": 9
+     },
+     {
+      "ticker": "1997.HK",
+      "name": "1997.HK",
+      "gm_range_pp": 18.1,
+      "resid_std": 0.05,
+      "worst_year_profitable": false,
+      "years": 9
+     }
+    ],
+    "notes": [
+     "行业成员来源: fundamentals.industry LIKE ['REIT - Retail', 'Real Estate - Diversified', 'Real Estate Development', 'Real Estate Services']（去重前 5 家）"
+    ]
+   },
+   {
+    "cell": "needs-026",
+    "domain": "房地产开发商",
+    "rows": [
+     {
+      "ticker": "0688.HK",
+      "name": "0688.HK",
+      "gm_range_pp": 22.3,
+      "resid_std": 0.02,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "B"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "0960.HK",
+      "name": "0960.HK",
+      "gm_range_pp": 24.4,
+      "resid_std": 0.02,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "B"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "1109.HK",
+      "name": "1109.HK",
+      "gm_range_pp": 22.2,
+      "resid_std": 0.02,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "B"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     }
+    ],
+    "members_all": [
+     {
+      "ticker": "0688.HK",
+      "name": "0688.HK",
+      "gm_range_pp": 22.3,
+      "resid_std": 0.02,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "0960.HK",
+      "name": "0960.HK",
+      "gm_range_pp": 24.4,
+      "resid_std": 0.02,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "1109.HK",
+      "name": "1109.HK",
+      "gm_range_pp": 22.2,
+      "resid_std": 0.02,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "0016.HK",
+      "name": "0016.HK",
+      "gm_range_pp": 18.5,
+      "resid_std": 0.03,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "1113.HK",
+      "name": "1113.HK",
+      "gm_range_pp": 13.3,
+      "resid_std": 0.04,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "0012.HK",
+      "name": "0012.HK",
+      "gm_range_pp": 29.3,
+      "resid_std": 0.06,
+      "worst_year_profitable": true,
+      "years": 9
+     }
+    ],
+    "notes": [
+     "行业成员来源: fundamentals.industry LIKE ['Real Estate - Development', 'Real Estate - Diversified']（去重前 6 家）"
+    ]
+   },
+   {
+    "cell": "needs-027",
+    "domain": "收租型 REIT 与地标商业",
+    "rows": [
+     {
+      "ticker": "1209.HK",
+      "name": "1209.HK",
+      "gm_range_pp": 22.5,
+      "resid_std": 0.03,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "B"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "0012.HK",
+      "name": "0012.HK",
+      "gm_range_pp": 29.3,
+      "resid_std": 0.06,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "B"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "0101.HK",
+      "name": "0101.HK",
+      "gm_range_pp": 15.9,
+      "resid_std": 0.04,
+      "worst_year_profitable": false,
+      "years": 9,
+      "lane": "深周期",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "B",
+       "C"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "1997.HK",
+      "name": "1997.HK",
+      "gm_range_pp": 18.1,
+      "resid_std": 0.05,
+      "worst_year_profitable": false,
+      "years": 9,
+      "lane": "深周期",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "B",
+       "C"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     }
+    ],
+    "members_all": [
+     {
+      "ticker": "1209.HK",
+      "name": "1209.HK",
+      "gm_range_pp": 22.5,
+      "resid_std": 0.03,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "0012.HK",
+      "name": "0012.HK",
+      "gm_range_pp": 29.3,
+      "resid_std": 0.06,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "0101.HK",
+      "name": "0101.HK",
+      "gm_range_pp": 15.9,
+      "resid_std": 0.04,
+      "worst_year_profitable": false,
+      "years": 9
+     },
+     {
+      "ticker": "1997.HK",
+      "name": "1997.HK",
+      "gm_range_pp": 18.1,
+      "resid_std": 0.05,
+      "worst_year_profitable": false,
+      "years": 9
+     }
+    ],
+    "notes": [
+     "行业成员来源: fundamentals.industry LIKE ['Apparel Retail', 'Discount Stores', 'Grocery Stores', 'REIT - Retail', 'Real Estate - Diversified', 'Real Estate Development', 'Real Estate Services', 'Specialty Retail', 'Travel Retail']（去重前 5 家）"
+    ]
+   }
+  ],
+  "行": [
+   {
+    "cell": "needs-028",
+    "domain": "收费公路",
+    "rows": [
+     {
+      "ticker": "2057.HK",
+      "name": "2057.HK",
+      "gm_range_pp": 11.6,
+      "resid_std": 0.04,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "0066.HK",
+      "name": "0066.HK",
+      "gm_range_pp": 0.5,
+      "resid_std": 0.0,
+      "worst_year_profitable": false,
+      "years": 9,
+      "lane": "深周期",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "C"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "2618.HK",
+      "name": "2618.HK",
+      "gm_range_pp": 7.4,
+      "resid_std": 0.01,
+      "worst_year_profitable": false,
+      "years": 8,
+      "lane": "深周期",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "C"
+      ],
+      "gm_window": [
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     }
+    ],
+    "members_all": [
+     {
+      "ticker": "2057.HK",
+      "name": "2057.HK",
+      "gm_range_pp": 11.6,
+      "resid_std": 0.04,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "0066.HK",
+      "name": "0066.HK",
+      "gm_range_pp": 0.5,
+      "resid_std": 0.0,
+      "worst_year_profitable": false,
+      "years": 9
+     },
+     {
+      "ticker": "2618.HK",
+      "name": "2618.HK",
+      "gm_range_pp": 7.4,
+      "resid_std": 0.01,
+      "worst_year_profitable": false,
+      "years": 8
+     }
+    ],
+    "notes": [
+     "行业成员来源: fundamentals.industry LIKE ['Infrastructure Operations', 'Integrated Freight & Logistics', 'Railroads']（去重前 3 家）"
+    ]
+   },
+   {
+    "cell": "needs-029",
+    "domain": "港口",
+    "rows": [
+     {
+      "ticker": "2057.HK",
+      "name": "2057.HK",
+      "gm_range_pp": 11.6,
+      "resid_std": 0.04,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "0316.HK",
+      "name": "0316.HK",
+      "gm_range_pp": 43.2,
+      "resid_std": 0.15,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "B"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "2618.HK",
+      "name": "2618.HK",
+      "gm_range_pp": 7.4,
+      "resid_std": 0.01,
+      "worst_year_profitable": false,
+      "years": 8,
+      "lane": "深周期",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "C"
+      ],
+      "gm_window": [
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     }
+    ],
+    "members_all": [
+     {
+      "ticker": "2057.HK",
+      "name": "2057.HK",
+      "gm_range_pp": 11.6,
+      "resid_std": 0.04,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "0316.HK",
+      "name": "0316.HK",
+      "gm_range_pp": 43.2,
+      "resid_std": 0.15,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "2618.HK",
+      "name": "2618.HK",
+      "gm_range_pp": 7.4,
+      "resid_std": 0.01,
+      "worst_year_profitable": false,
+      "years": 8
+     }
+    ],
+    "notes": [
+     "行业成员来源: fundamentals.industry LIKE ['Aerospace & Defense', 'Integrated Freight & Logistics', 'Marine Shipping', 'Ports & Harbors']（去重前 3 家）"
+    ]
+   },
+   {
+    "cell": "needs-031",
+    "domain": "铁路运输",
+    "rows": [
+     {
+      "ticker": "2057.HK",
+      "name": "2057.HK",
+      "gm_range_pp": 11.6,
+      "resid_std": 0.04,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "0066.HK",
+      "name": "0066.HK",
+      "gm_range_pp": 0.5,
+      "resid_std": 0.0,
+      "worst_year_profitable": false,
+      "years": 9,
+      "lane": "深周期",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "C"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "2618.HK",
+      "name": "2618.HK",
+      "gm_range_pp": 7.4,
+      "resid_std": 0.01,
+      "worst_year_profitable": false,
+      "years": 8,
+      "lane": "深周期",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "C"
+      ],
+      "gm_window": [
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     }
+    ],
+    "members_all": [
+     {
+      "ticker": "2057.HK",
+      "name": "2057.HK",
+      "gm_range_pp": 11.6,
+      "resid_std": 0.04,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "0066.HK",
+      "name": "0066.HK",
+      "gm_range_pp": 0.5,
+      "resid_std": 0.0,
+      "worst_year_profitable": false,
+      "years": 9
+     },
+     {
+      "ticker": "2618.HK",
+      "name": "2618.HK",
+      "gm_range_pp": 7.4,
+      "resid_std": 0.01,
+      "worst_year_profitable": false,
+      "years": 8
+     }
+    ],
+    "notes": [
+     "行业成员来源: fundamentals.industry LIKE ['Infrastructure Operations', 'Integrated Freight & Logistics', 'Railroads']（去重前 3 家）"
+    ]
+   },
+   {
+    "cell": "needs-033",
+    "domain": "快递物流",
+    "rows": [
+     {
+      "ticker": "2057.HK",
+      "name": "2057.HK",
+      "gm_range_pp": 11.6,
+      "resid_std": 0.04,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "0316.HK",
+      "name": "0316.HK",
+      "gm_range_pp": 43.2,
+      "resid_std": 0.15,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "B"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "2618.HK",
+      "name": "2618.HK",
+      "gm_range_pp": 7.4,
+      "resid_std": 0.01,
+      "worst_year_profitable": false,
+      "years": 8,
+      "lane": "深周期",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "C"
+      ],
+      "gm_window": [
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     }
+    ],
+    "members_all": [
+     {
+      "ticker": "2057.HK",
+      "name": "2057.HK",
+      "gm_range_pp": 11.6,
+      "resid_std": 0.04,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "0316.HK",
+      "name": "0316.HK",
+      "gm_range_pp": 43.2,
+      "resid_std": 0.15,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "2618.HK",
+      "name": "2618.HK",
+      "gm_range_pp": 7.4,
+      "resid_std": 0.01,
+      "worst_year_profitable": false,
+      "years": 8
+     }
+    ],
+    "notes": [
+     "行业成员来源: fundamentals.industry LIKE ['Airline Services', 'Integrated Freight & Logistics', 'Marine Shipping']（去重前 3 家）"
+    ]
+   },
+   {
+    "cell": "needs-034",
+    "domain": "货代与跨境物流",
+    "rows": [
+     {
+      "ticker": "2057.HK",
+      "name": "2057.HK",
+      "gm_range_pp": 11.6,
+      "resid_std": 0.04,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "0316.HK",
+      "name": "0316.HK",
+      "gm_range_pp": 43.2,
+      "resid_std": 0.15,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "B"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "2618.HK",
+      "name": "2618.HK",
+      "gm_range_pp": 7.4,
+      "resid_std": 0.01,
+      "worst_year_profitable": false,
+      "years": 8,
+      "lane": "深周期",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "C"
+      ],
+      "gm_window": [
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     }
+    ],
+    "members_all": [
+     {
+      "ticker": "2057.HK",
+      "name": "2057.HK",
+      "gm_range_pp": 11.6,
+      "resid_std": 0.04,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "0316.HK",
+      "name": "0316.HK",
+      "gm_range_pp": 43.2,
+      "resid_std": 0.15,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "2618.HK",
+      "name": "2618.HK",
+      "gm_range_pp": 7.4,
+      "resid_std": 0.01,
+      "worst_year_profitable": false,
+      "years": 8
+     }
+    ],
+    "notes": [
+     "行业成员来源: fundamentals.industry LIKE ['Airline Services', 'Integrated Freight & Logistics', 'Marine Shipping']（去重前 3 家）"
+    ]
+   },
+   {
+    "cell": "needs-035",
+    "domain": "船运与造船",
+    "rows": [
+     {
+      "ticker": "2057.HK",
+      "name": "2057.HK",
+      "gm_range_pp": 11.6,
+      "resid_std": 0.04,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "0316.HK",
+      "name": "0316.HK",
+      "gm_range_pp": 43.2,
+      "resid_std": 0.15,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "B"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "2618.HK",
+      "name": "2618.HK",
+      "gm_range_pp": 7.4,
+      "resid_std": 0.01,
+      "worst_year_profitable": false,
+      "years": 8,
+      "lane": "深周期",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "C"
+      ],
+      "gm_window": [
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     }
+    ],
+    "members_all": [
+     {
+      "ticker": "2057.HK",
+      "name": "2057.HK",
+      "gm_range_pp": 11.6,
+      "resid_std": 0.04,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "0316.HK",
+      "name": "0316.HK",
+      "gm_range_pp": 43.2,
+      "resid_std": 0.15,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "2618.HK",
+      "name": "2618.HK",
+      "gm_range_pp": 7.4,
+      "resid_std": 0.01,
+      "worst_year_profitable": false,
+      "years": 8
+     }
+    ],
+    "notes": [
+     "行业成员来源: fundamentals.industry LIKE ['Aerospace & Defense', 'Integrated Freight & Logistics', 'Marine Shipping', 'Ports & Harbors']（去重前 3 家）"
+    ]
+   },
+   {
+    "cell": "needs-036",
+    "domain": "汽车整车",
+    "rows": [
+     {
+      "ticker": "0175.HK",
+      "name": "0175.HK",
+      "gm_range_pp": 6.1,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "1211.HK",
+      "name": "1211.HK",
+      "gm_range_pp": 9.0,
+      "resid_std": 0.02,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "2015.HK",
+      "name": "2015.HK",
+      "gm_range_pp": 22.2,
+      "resid_std": 0.05,
+      "worst_year_profitable": false,
+      "years": 7,
+      "lane": "深周期",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "B",
+       "C"
+      ],
+      "gm_window": [
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     }
+    ],
+    "members_all": [
+     {
+      "ticker": "0175.HK",
+      "name": "0175.HK",
+      "gm_range_pp": 6.1,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "1211.HK",
+      "name": "1211.HK",
+      "gm_range_pp": 9.0,
+      "resid_std": 0.02,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "2015.HK",
+      "name": "2015.HK",
+      "gm_range_pp": 22.2,
+      "resid_std": 0.05,
+      "worst_year_profitable": false,
+      "years": 7
+     }
+    ],
+    "notes": [
+     "行业成员来源: fundamentals.industry LIKE ['Auto Manufacturers', 'Auto Parts', 'Trucks & Other Vehicles']（去重前 3 家）"
+    ]
+   },
+   {
+    "cell": "needs-039",
+    "domain": "两轮车与低速电动",
+    "rows": [
+     {
+      "ticker": "0175.HK",
+      "name": "0175.HK",
+      "gm_range_pp": 6.1,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "1211.HK",
+      "name": "1211.HK",
+      "gm_range_pp": 9.0,
+      "resid_std": 0.02,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "2015.HK",
+      "name": "2015.HK",
+      "gm_range_pp": 22.2,
+      "resid_std": 0.05,
+      "worst_year_profitable": false,
+      "years": 7,
+      "lane": "深周期",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "B",
+       "C"
+      ],
+      "gm_window": [
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     }
+    ],
+    "members_all": [
+     {
+      "ticker": "0175.HK",
+      "name": "0175.HK",
+      "gm_range_pp": 6.1,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "1211.HK",
+      "name": "1211.HK",
+      "gm_range_pp": 9.0,
+      "resid_std": 0.02,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "2015.HK",
+      "name": "2015.HK",
+      "gm_range_pp": 22.2,
+      "resid_std": 0.05,
+      "worst_year_profitable": false,
+      "years": 7
+     }
+    ],
+    "notes": [
+     "行业成员来源: fundamentals.industry LIKE ['Auto Manufacturers', 'Recreational Vehicles']（去重前 3 家）"
+    ]
+   },
+   {
+    "cell": "needs-040",
+    "domain": "出行平台与出租车",
+    "rows": [
+     {
+      "ticker": "0762.HK",
+      "name": "0762.HK",
+      "gm_range_pp": 6.6,
+      "resid_std": 0.02,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "0700.HK",
+      "name": "0700.HK",
+      "gm_range_pp": 13.2,
+      "resid_std": 0.03,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "0941.HK",
+      "name": "0941.HK",
+      "gm_range_pp": 23.5,
+      "resid_std": 0.04,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "B"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     }
+    ],
+    "members_all": [
+     {
+      "ticker": "0762.HK",
+      "name": "0762.HK",
+      "gm_range_pp": 6.6,
+      "resid_std": 0.02,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "0700.HK",
+      "name": "0700.HK",
+      "gm_range_pp": 13.2,
+      "resid_std": 0.03,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "0941.HK",
+      "name": "0941.HK",
+      "gm_range_pp": 23.5,
+      "resid_std": 0.04,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "9888.HK",
+      "name": "9888.HK",
+      "gm_range_pp": 10.2,
+      "resid_std": 0.03,
+      "worst_year_profitable": true,
+      "years": 8
+     }
+    ],
+    "notes": [
+     "行业成员来源: fundamentals.industry LIKE ['Information Technology Services', 'Internet Content & Information', 'Software - Infrastructure', 'Telecom Services']（去重前 4 家）"
+    ]
+   }
+  ],
+  "健康": [
+   {
+    "cell": "needs-041",
+    "domain": "创新药",
+    "rows": [
+     {
+      "ticker": "3692.HK",
+      "name": "3692.HK",
+      "gm_range_pp": 2.8,
+      "resid_std": 0.0,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "1177.HK",
+      "name": "1177.HK",
+      "gm_range_pp": 4.0,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "2269.HK",
+      "name": "2269.HK",
+      "gm_range_pp": 6.8,
+      "resid_std": 0.02,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     }
+    ],
+    "members_all": [
+     {
+      "ticker": "3692.HK",
+      "name": "3692.HK",
+      "gm_range_pp": 2.8,
+      "resid_std": 0.0,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "1177.HK",
+      "name": "1177.HK",
+      "gm_range_pp": 4.0,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "2269.HK",
+      "name": "2269.HK",
+      "gm_range_pp": 6.8,
+      "resid_std": 0.02,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "2359.HK",
+      "name": "2359.HK",
+      "gm_range_pp": 12.2,
+      "resid_std": 0.03,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "1093.HK",
+      "name": "1093.HK",
+      "gm_range_pp": 15.4,
+      "resid_std": 0.04,
+      "worst_year_profitable": true,
+      "years": 9
+     }
+    ],
+    "notes": [
+     "行业成员来源: fundamentals.industry LIKE ['Biotechnology', 'Diagnostics & Research', 'Drug Manufacturers']（去重前 5 家）"
+    ]
+   },
+   {
+    "cell": "needs-042",
+    "domain": "仿制药与原料药",
+    "rows": [
+     {
+      "ticker": "3692.HK",
+      "name": "3692.HK",
+      "gm_range_pp": 2.8,
+      "resid_std": 0.0,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "1177.HK",
+      "name": "1177.HK",
+      "gm_range_pp": 4.0,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "2269.HK",
+      "name": "2269.HK",
+      "gm_range_pp": 6.8,
+      "resid_std": 0.02,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     }
+    ],
+    "members_all": [
+     {
+      "ticker": "3692.HK",
+      "name": "3692.HK",
+      "gm_range_pp": 2.8,
+      "resid_std": 0.0,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "1177.HK",
+      "name": "1177.HK",
+      "gm_range_pp": 4.0,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "2269.HK",
+      "name": "2269.HK",
+      "gm_range_pp": 6.8,
+      "resid_std": 0.02,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "1093.HK",
+      "name": "1093.HK",
+      "gm_range_pp": 15.4,
+      "resid_std": 0.04,
+      "worst_year_profitable": true,
+      "years": 9
+     }
+    ],
+    "notes": [
+     "行业成员来源: fundamentals.industry LIKE ['Biotechnology', 'Drug Manufacturers']（去重前 4 家）"
+    ]
+   },
+   {
+    "cell": "needs-046",
+    "domain": "IVD 与检验服务",
+    "rows": [
+     {
+      "ticker": "1099.HK",
+      "name": "1099.HK",
+      "gm_range_pp": 1.8,
+      "resid_std": 0.0,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "3692.HK",
+      "name": "3692.HK",
+      "gm_range_pp": 2.8,
+      "resid_std": 0.0,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "1177.HK",
+      "name": "1177.HK",
+      "gm_range_pp": 4.0,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     }
+    ],
+    "members_all": [
+     {
+      "ticker": "1099.HK",
+      "name": "1099.HK",
+      "gm_range_pp": 1.8,
+      "resid_std": 0.0,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "3692.HK",
+      "name": "3692.HK",
+      "gm_range_pp": 2.8,
+      "resid_std": 0.0,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "1177.HK",
+      "name": "1177.HK",
+      "gm_range_pp": 4.0,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "2269.HK",
+      "name": "2269.HK",
+      "gm_range_pp": 6.8,
+      "resid_std": 0.02,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "2359.HK",
+      "name": "2359.HK",
+      "gm_range_pp": 12.2,
+      "resid_std": 0.03,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "1093.HK",
+      "name": "1093.HK",
+      "gm_range_pp": 15.4,
+      "resid_std": 0.04,
+      "worst_year_profitable": true,
+      "years": 9
+     }
+    ],
+    "notes": [
+     "行业成员来源: fundamentals.industry LIKE ['Biotechnology', 'Diagnostics & Research', 'Drug Manufacturers', 'Medical Devices', 'Medical Distribution', 'Medical Instruments']（去重前 6 家）"
+    ]
+   },
+   {
+    "cell": "needs-048",
+    "domain": "疫苗与血制品",
+    "rows": [
+     {
+      "ticker": "3692.HK",
+      "name": "3692.HK",
+      "gm_range_pp": 2.8,
+      "resid_std": 0.0,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "1177.HK",
+      "name": "1177.HK",
+      "gm_range_pp": 4.0,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "2269.HK",
+      "name": "2269.HK",
+      "gm_range_pp": 6.8,
+      "resid_std": 0.02,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     }
+    ],
+    "members_all": [
+     {
+      "ticker": "3692.HK",
+      "name": "3692.HK",
+      "gm_range_pp": 2.8,
+      "resid_std": 0.0,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "1177.HK",
+      "name": "1177.HK",
+      "gm_range_pp": 4.0,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "2269.HK",
+      "name": "2269.HK",
+      "gm_range_pp": 6.8,
+      "resid_std": 0.02,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "2359.HK",
+      "name": "2359.HK",
+      "gm_range_pp": 12.2,
+      "resid_std": 0.03,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "1093.HK",
+      "name": "1093.HK",
+      "gm_range_pp": 15.4,
+      "resid_std": 0.04,
+      "worst_year_profitable": true,
+      "years": 9
+     }
+    ],
+    "notes": [
+     "行业成员来源: fundamentals.industry LIKE ['Biotechnology', 'Diagnostics & Research', 'Drug Manufacturers']（去重前 5 家）"
+    ]
+   },
+   {
+    "cell": "needs-050",
+    "domain": "医药流通与药店",
+    "rows": [
+     {
+      "ticker": "1099.HK",
+      "name": "1099.HK",
+      "gm_range_pp": 1.8,
+      "resid_std": 0.0,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "3692.HK",
+      "name": "3692.HK",
+      "gm_range_pp": 2.8,
+      "resid_std": 0.0,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "1093.HK",
+      "name": "1093.HK",
+      "gm_range_pp": 15.4,
+      "resid_std": 0.04,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "B"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "6618.HK",
+      "name": "6618.HK",
+      "gm_range_pp": 4.8,
+      "resid_std": 0.01,
+      "worst_year_profitable": false,
+      "years": 9,
+      "lane": "深周期",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "C"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "0241.HK",
+      "name": "0241.HK",
+      "gm_range_pp": 6.8,
+      "resid_std": 0.02,
+      "worst_year_profitable": false,
+      "years": 9,
+      "lane": "深周期",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "C"
+      ],
+      "gm_window": [
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025,
+       2026
+      ]
+     }
+    ],
+    "members_all": [
+     {
+      "ticker": "1099.HK",
+      "name": "1099.HK",
+      "gm_range_pp": 1.8,
+      "resid_std": 0.0,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "3692.HK",
+      "name": "3692.HK",
+      "gm_range_pp": 2.8,
+      "resid_std": 0.0,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "1093.HK",
+      "name": "1093.HK",
+      "gm_range_pp": 15.4,
+      "resid_std": 0.04,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "6618.HK",
+      "name": "6618.HK",
+      "gm_range_pp": 4.8,
+      "resid_std": 0.01,
+      "worst_year_profitable": false,
+      "years": 9
+     },
+     {
+      "ticker": "0241.HK",
+      "name": "0241.HK",
+      "gm_range_pp": 6.8,
+      "resid_std": 0.02,
+      "worst_year_profitable": false,
+      "years": 9
+     }
+    ],
+    "notes": [
+     "行业成员来源: fundamentals.industry LIKE ['Apparel Retail', 'Discount Stores', 'Drug Manufacturers', 'Grocery Stores', 'Medical Distribution', 'Pharmaceutical Retailers', 'Specialty Retail']（去重前 5 家）"
+    ]
+   }
+  ],
+  "能源": [
+   {
+    "cell": "needs-051",
+    "domain": "水电",
+    "rows": [
+     {
+      "ticker": "0002.HK",
+      "name": "0002.HK",
+      "gm_range_pp": 16.5,
+      "resid_std": 0.05,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "B"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "0836.HK",
+      "name": "0836.HK",
+      "gm_range_pp": 20.2,
+      "resid_std": 0.06,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "B"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "1038.HK",
+      "name": "1038.HK",
+      "gm_range_pp": 42.3,
+      "resid_std": 0.08,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "B"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     }
+    ],
+    "members_all": [
+     {
+      "ticker": "0002.HK",
+      "name": "0002.HK",
+      "gm_range_pp": 16.5,
+      "resid_std": 0.05,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "0836.HK",
+      "name": "0836.HK",
+      "gm_range_pp": 20.2,
+      "resid_std": 0.06,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "1038.HK",
+      "name": "1038.HK",
+      "gm_range_pp": 42.3,
+      "resid_std": 0.08,
+      "worst_year_profitable": true,
+      "years": 9
+     }
+    ],
+    "notes": [
+     "行业成员来源: fundamentals.industry LIKE ['Utilities - Diversified', 'Utilities - Independent Power Producers', 'Utilities - Regulated Electric', 'Utilities - Renewable']（去重前 4 家）",
+     "另有 1 家命中但历史 <5 年不参排（非排除）：0006.HK(2年)"
+    ]
+   },
+   {
+    "cell": "needs-052",
+    "domain": "核电",
+    "rows": [
+     {
+      "ticker": "0002.HK",
+      "name": "0002.HK",
+      "gm_range_pp": 16.5,
+      "resid_std": 0.05,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "B"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "0836.HK",
+      "name": "0836.HK",
+      "gm_range_pp": 20.2,
+      "resid_std": 0.06,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "B"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "1038.HK",
+      "name": "1038.HK",
+      "gm_range_pp": 42.3,
+      "resid_std": 0.08,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "B"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     }
+    ],
+    "members_all": [
+     {
+      "ticker": "0002.HK",
+      "name": "0002.HK",
+      "gm_range_pp": 16.5,
+      "resid_std": 0.05,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "0836.HK",
+      "name": "0836.HK",
+      "gm_range_pp": 20.2,
+      "resid_std": 0.06,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "1038.HK",
+      "name": "1038.HK",
+      "gm_range_pp": 42.3,
+      "resid_std": 0.08,
+      "worst_year_profitable": true,
+      "years": 9
+     }
+    ],
+    "notes": [
+     "行业成员来源: fundamentals.industry LIKE ['Utilities - Diversified', 'Utilities - Independent Power Producers', 'Utilities - Regulated Electric', 'Utilities - Renewable']（去重前 4 家）",
+     "另有 1 家命中但历史 <5 年不参排（非排除）：0006.HK(2年)"
+    ]
+   },
+   {
+    "cell": "needs-054",
+    "domain": "风电光伏运营",
+    "rows": [
+     {
+      "ticker": "0002.HK",
+      "name": "0002.HK",
+      "gm_range_pp": 16.5,
+      "resid_std": 0.05,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "B"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "0836.HK",
+      "name": "0836.HK",
+      "gm_range_pp": 20.2,
+      "resid_std": 0.06,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "B"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "0981.HK",
+      "name": "0981.HK",
+      "gm_range_pp": 19.9,
+      "resid_std": 0.06,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "B"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     }
+    ],
+    "members_all": [
+     {
+      "ticker": "0002.HK",
+      "name": "0002.HK",
+      "gm_range_pp": 16.5,
+      "resid_std": 0.05,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "0836.HK",
+      "name": "0836.HK",
+      "gm_range_pp": 20.2,
+      "resid_std": 0.06,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "0981.HK",
+      "name": "0981.HK",
+      "gm_range_pp": 19.9,
+      "resid_std": 0.06,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "1038.HK",
+      "name": "1038.HK",
+      "gm_range_pp": 42.3,
+      "resid_std": 0.08,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "0968.HK",
+      "name": "0968.HK",
+      "gm_range_pp": 37.6,
+      "resid_std": 0.09,
+      "worst_year_profitable": true,
+      "years": 9
+     }
+    ],
+    "notes": [
+     "行业成员来源: fundamentals.industry LIKE ['Electrical Equipment & Parts', 'Semiconductors', 'Solar', 'Utilities - Diversified', 'Utilities - Independent Power Producers', 'Utilities - Regulated Electric', 'Utilities - Renewable']（去重前 6 家）",
+     "另有 1 家命中但历史 <5 年不参排（非排除）：0006.HK(2年)"
+    ]
+   },
+   {
+    "cell": "needs-058",
+    "domain": "石油天然气开采",
+    "rows": [
+     {
+      "ticker": "0857.HK",
+      "name": "0857.HK",
+      "gm_range_pp": 4.5,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "0386.HK",
+      "name": "0386.HK",
+      "gm_range_pp": 5.9,
+      "resid_std": 0.02,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "0883.HK",
+      "name": "0883.HK",
+      "gm_range_pp": 18.6,
+      "resid_std": 0.05,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "B"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     }
+    ],
+    "members_all": [
+     {
+      "ticker": "0857.HK",
+      "name": "0857.HK",
+      "gm_range_pp": 4.5,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "0386.HK",
+      "name": "0386.HK",
+      "gm_range_pp": 5.9,
+      "resid_std": 0.02,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "0883.HK",
+      "name": "0883.HK",
+      "gm_range_pp": 18.6,
+      "resid_std": 0.05,
+      "worst_year_profitable": true,
+      "years": 9
+     }
+    ],
+    "notes": [
+     "行业成员来源: fundamentals.industry LIKE ['Oil & Gas E&P', 'Oil & Gas Integrated', 'Oil & Gas Midstream', 'Oil & Gas Refining']（去重前 3 家）"
+    ]
+   },
+   {
+    "cell": "needs-059",
+    "domain": "油服与油运",
+    "rows": [
+     {
+      "ticker": "2057.HK",
+      "name": "2057.HK",
+      "gm_range_pp": 11.6,
+      "resid_std": 0.04,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "0883.HK",
+      "name": "0883.HK",
+      "gm_range_pp": 18.6,
+      "resid_std": 0.05,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "B"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "0316.HK",
+      "name": "0316.HK",
+      "gm_range_pp": 43.2,
+      "resid_std": 0.15,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "B"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "2618.HK",
+      "name": "2618.HK",
+      "gm_range_pp": 7.4,
+      "resid_std": 0.01,
+      "worst_year_profitable": false,
+      "years": 8,
+      "lane": "深周期",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "C"
+      ],
+      "gm_window": [
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     }
+    ],
+    "members_all": [
+     {
+      "ticker": "2057.HK",
+      "name": "2057.HK",
+      "gm_range_pp": 11.6,
+      "resid_std": 0.04,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "0883.HK",
+      "name": "0883.HK",
+      "gm_range_pp": 18.6,
+      "resid_std": 0.05,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "0316.HK",
+      "name": "0316.HK",
+      "gm_range_pp": 43.2,
+      "resid_std": 0.15,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "2618.HK",
+      "name": "2618.HK",
+      "gm_range_pp": 7.4,
+      "resid_std": 0.01,
+      "worst_year_profitable": false,
+      "years": 8
+     }
+    ],
+    "notes": [
+     "行业成员来源: fundamentals.industry LIKE ['Aerospace & Defense', 'Integrated Freight & Logistics', 'Marine Shipping', 'Oil & Gas E&P', 'Oil & Gas Equipment & Services', 'Ports & Harbors']（去重前 4 家）"
+    ]
+   }
+  ],
+  "算力": [
+   {
+    "cell": "needs-066",
+    "domain": "先进封装与测试",
+    "rows": [
+     {
+      "ticker": "0285.HK",
+      "name": "0285.HK",
+      "gm_range_pp": 7.2,
+      "resid_std": 0.02,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "2382.HK",
+      "name": "2382.HK",
+      "gm_range_pp": 8.8,
+      "resid_std": 0.02,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "0981.HK",
+      "name": "0981.HK",
+      "gm_range_pp": 19.9,
+      "resid_std": 0.06,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "B"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     }
+    ],
+    "members_all": [
+     {
+      "ticker": "0285.HK",
+      "name": "0285.HK",
+      "gm_range_pp": 7.2,
+      "resid_std": 0.02,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "2382.HK",
+      "name": "2382.HK",
+      "gm_range_pp": 8.8,
+      "resid_std": 0.02,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "0981.HK",
+      "name": "0981.HK",
+      "gm_range_pp": 19.9,
+      "resid_std": 0.06,
+      "worst_year_profitable": true,
+      "years": 9
+     }
+    ],
+    "notes": [
+     "行业成员来源: fundamentals.industry LIKE ['Contract Manufacturing', 'Electronic Components', 'Semiconductor Equipment & Materials', 'Semiconductors']（去重前 3 家）"
+    ]
+   },
+   {
+    "cell": "needs-068",
+    "domain": "IDC 与云",
+    "rows": [
+     {
+      "ticker": "0762.HK",
+      "name": "0762.HK",
+      "gm_range_pp": 6.6,
+      "resid_std": 0.02,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "0700.HK",
+      "name": "0700.HK",
+      "gm_range_pp": 13.2,
+      "resid_std": 0.03,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "0941.HK",
+      "name": "0941.HK",
+      "gm_range_pp": 23.5,
+      "resid_std": 0.04,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "B"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     }
+    ],
+    "members_all": [
+     {
+      "ticker": "0762.HK",
+      "name": "0762.HK",
+      "gm_range_pp": 6.6,
+      "resid_std": 0.02,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "0700.HK",
+      "name": "0700.HK",
+      "gm_range_pp": 13.2,
+      "resid_std": 0.03,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "0941.HK",
+      "name": "0941.HK",
+      "gm_range_pp": 23.5,
+      "resid_std": 0.04,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "9888.HK",
+      "name": "9888.HK",
+      "gm_range_pp": 10.2,
+      "resid_std": 0.03,
+      "worst_year_profitable": true,
+      "years": 8
+     }
+    ],
+    "notes": [
+     "行业成员来源: fundamentals.industry LIKE ['Information Technology Services', 'Internet Content & Information', 'Software - Infrastructure', 'Telecom Services']（去重前 4 家）"
+    ]
+   },
+   {
+    "cell": "needs-069",
+    "domain": "光模块与光器件",
+    "rows": [
+     {
+      "ticker": "0285.HK",
+      "name": "0285.HK",
+      "gm_range_pp": 7.2,
+      "resid_std": 0.02,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "2382.HK",
+      "name": "2382.HK",
+      "gm_range_pp": 8.8,
+      "resid_std": 0.02,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "1810.HK",
+      "name": "1810.HK",
+      "gm_range_pp": 9.6,
+      "resid_std": 0.01,
+      "worst_year_profitable": false,
+      "years": 9,
+      "lane": "深周期",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "C"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     }
+    ],
+    "members_all": [
+     {
+      "ticker": "0285.HK",
+      "name": "0285.HK",
+      "gm_range_pp": 7.2,
+      "resid_std": 0.02,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "2382.HK",
+      "name": "2382.HK",
+      "gm_range_pp": 8.8,
+      "resid_std": 0.02,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "1810.HK",
+      "name": "1810.HK",
+      "gm_range_pp": 9.6,
+      "resid_std": 0.01,
+      "worst_year_profitable": false,
+      "years": 9
+     }
+    ],
+    "notes": [
+     "行业成员来源: fundamentals.industry LIKE ['Communication Equipment', 'Consumer Electronics', 'Electronic Components', 'Optical']（去重前 3 家）"
+    ]
+   },
+   {
+    "cell": "needs-070",
+    "domain": "PCB 与载板",
+    "rows": [
+     {
+      "ticker": "0285.HK",
+      "name": "0285.HK",
+      "gm_range_pp": 7.2,
+      "resid_std": 0.02,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "2382.HK",
+      "name": "2382.HK",
+      "gm_range_pp": 8.8,
+      "resid_std": 0.02,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "0981.HK",
+      "name": "0981.HK",
+      "gm_range_pp": 19.9,
+      "resid_std": 0.06,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "B"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     }
+    ],
+    "members_all": [
+     {
+      "ticker": "0285.HK",
+      "name": "0285.HK",
+      "gm_range_pp": 7.2,
+      "resid_std": 0.02,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "2382.HK",
+      "name": "2382.HK",
+      "gm_range_pp": 8.8,
+      "resid_std": 0.02,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "0981.HK",
+      "name": "0981.HK",
+      "gm_range_pp": 19.9,
+      "resid_std": 0.06,
+      "worst_year_profitable": true,
+      "years": 9
+     }
+    ],
+    "notes": [
+     "行业成员来源: fundamentals.industry LIKE ['Contract Manufacturing', 'Electronic Components', 'Semiconductors']（去重前 3 家）"
+    ]
+   }
+  ],
+  "支付": [
+   {
+    "cell": "needs-072",
+    "domain": "银行卡收单与支付网络",
+    "rows": [
+     {
+      "ticker": "0762.HK",
+      "name": "0762.HK",
+      "gm_range_pp": 6.6,
+      "resid_std": 0.02,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "0700.HK",
+      "name": "0700.HK",
+      "gm_range_pp": 13.2,
+      "resid_std": 0.03,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "0941.HK",
+      "name": "0941.HK",
+      "gm_range_pp": 23.5,
+      "resid_std": 0.04,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "B"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     }
+    ],
+    "members_all": [
+     {
+      "ticker": "0762.HK",
+      "name": "0762.HK",
+      "gm_range_pp": 6.6,
+      "resid_std": 0.02,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "0700.HK",
+      "name": "0700.HK",
+      "gm_range_pp": 13.2,
+      "resid_std": 0.03,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "0941.HK",
+      "name": "0941.HK",
+      "gm_range_pp": 23.5,
+      "resid_std": 0.04,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "9888.HK",
+      "name": "9888.HK",
+      "gm_range_pp": 10.2,
+      "resid_std": 0.03,
+      "worst_year_profitable": true,
+      "years": 8
+     }
+    ],
+    "notes": [
+     "行业成员来源: fundamentals.industry LIKE ['Asset Management', 'Capital Markets', 'Credit Services', 'Financial Data & Stock Exchanges', 'Internet Content & Information', 'Telecom Services']（去重前 5 家）"
+    ]
+   }
+  ],
+  "通信": [
+   {
+    "cell": "needs-075",
+    "domain": "运营商",
+    "rows": [
+     {
+      "ticker": "0762.HK",
+      "name": "0762.HK",
+      "gm_range_pp": 6.6,
+      "resid_std": 0.02,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "0700.HK",
+      "name": "0700.HK",
+      "gm_range_pp": 13.2,
+      "resid_std": 0.03,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "0941.HK",
+      "name": "0941.HK",
+      "gm_range_pp": 23.5,
+      "resid_std": 0.04,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "B"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     }
+    ],
+    "members_all": [
+     {
+      "ticker": "0762.HK",
+      "name": "0762.HK",
+      "gm_range_pp": 6.6,
+      "resid_std": 0.02,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "0700.HK",
+      "name": "0700.HK",
+      "gm_range_pp": 13.2,
+      "resid_std": 0.03,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "0941.HK",
+      "name": "0941.HK",
+      "gm_range_pp": 23.5,
+      "resid_std": 0.04,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "9888.HK",
+      "name": "9888.HK",
+      "gm_range_pp": 10.2,
+      "resid_std": 0.03,
+      "worst_year_profitable": true,
+      "years": 8
+     }
+    ],
+    "notes": [
+     "行业成员来源: fundamentals.industry LIKE ['Internet Content & Information', 'Telecom Services']（去重前 4 家）"
+    ]
+   }
+  ],
+  "娱乐": [
+   {
+    "cell": "needs-088",
+    "domain": "主题乐园与文旅",
+    "rows": [
+     {
+      "ticker": "0027.HK",
+      "name": "0027.HK",
+      "gm_range_pp": 46.5,
+      "resid_std": 0.11,
+      "worst_year_profitable": false,
+      "years": 9,
+      "lane": "深周期",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "B",
+       "C"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "1928.HK",
+      "name": "1928.HK",
+      "gm_range_pp": 39.6,
+      "resid_std": 0.11,
+      "worst_year_profitable": false,
+      "years": 9,
+      "lane": "深周期",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "B",
+       "C"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "9961.HK",
+      "name": "9961.HK",
+      "gm_range_pp": 4.6,
+      "resid_std": 0.01,
+      "worst_year_profitable": false,
+      "years": 8,
+      "lane": "深周期",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "C"
+      ],
+      "gm_window": [
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     }
+    ],
+    "members_all": [
+     {
+      "ticker": "0027.HK",
+      "name": "0027.HK",
+      "gm_range_pp": 46.5,
+      "resid_std": 0.11,
+      "worst_year_profitable": false,
+      "years": 9
+     },
+     {
+      "ticker": "1928.HK",
+      "name": "1928.HK",
+      "gm_range_pp": 39.6,
+      "resid_std": 0.11,
+      "worst_year_profitable": false,
+      "years": 9
+     },
+     {
+      "ticker": "9961.HK",
+      "name": "9961.HK",
+      "gm_range_pp": 4.6,
+      "resid_std": 0.01,
+      "worst_year_profitable": false,
+      "years": 8
+     }
+    ],
+    "notes": [
+     "行业成员来源: fundamentals.industry LIKE ['Entertainment', 'Resorts & Casinos', 'Travel Services']（去重前 3 家）"
+    ]
+   },
+   {
+    "cell": "needs-089",
+    "domain": "演出与现场娱乐",
+    "rows": [
+     {
+      "ticker": "0288.HK",
+      "name": "0288.HK",
+      "gm_range_pp": 3.9,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "2319.HK",
+      "name": "2319.HK",
+      "gm_range_pp": 4.7,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "2331.HK",
+      "name": "2331.HK",
+      "gm_range_pp": 6.0,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "0027.HK",
+      "name": "0027.HK",
+      "gm_range_pp": 46.5,
+      "resid_std": 0.11,
+      "worst_year_profitable": false,
+      "years": 9,
+      "lane": "深周期",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "B",
+       "C"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "1928.HK",
+      "name": "1928.HK",
+      "gm_range_pp": 39.6,
+      "resid_std": 0.11,
+      "worst_year_profitable": false,
+      "years": 9,
+      "lane": "深周期",
+      "gate_verdict": "CYCLIC_SUSPECT",
+      "gate_hits": [
+       "B",
+       "C"
+      ],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     }
+    ],
+    "members_all": [
+     {
+      "ticker": "0288.HK",
+      "name": "0288.HK",
+      "gm_range_pp": 3.9,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "2319.HK",
+      "name": "2319.HK",
+      "gm_range_pp": 4.7,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "2331.HK",
+      "name": "2331.HK",
+      "gm_range_pp": 6.0,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "2020.HK",
+      "name": "2020.HK",
+      "gm_range_pp": 13.2,
+      "resid_std": 0.02,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "9992.HK",
+      "name": "9992.HK",
+      "gm_range_pp": 24.5,
+      "resid_std": 0.04,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "0027.HK",
+      "name": "0027.HK",
+      "gm_range_pp": 46.5,
+      "resid_std": 0.11,
+      "worst_year_profitable": false,
+      "years": 9
+     },
+     {
+      "ticker": "1928.HK",
+      "name": "1928.HK",
+      "gm_range_pp": 39.6,
+      "resid_std": 0.11,
+      "worst_year_profitable": false,
+      "years": 9
+     },
+     {
+      "ticker": "9961.HK",
+      "name": "9961.HK",
+      "gm_range_pp": 4.6,
+      "resid_std": 0.01,
+      "worst_year_profitable": false,
+      "years": 8
+     }
+    ],
+    "notes": [
+     "行业成员来源: fundamentals.industry LIKE ['Entertainment', 'Leisure', 'Packaged Foods', 'Resorts & Casinos', 'Specialty Retail', 'Travel Services']（去重前 8 家）"
+    ]
+   },
+   {
+    "cell": "needs-091",
+    "domain": "玩具与 IP 消费品",
+    "rows": [
+     {
+      "ticker": "0288.HK",
+      "name": "0288.HK",
+      "gm_range_pp": 3.9,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "2319.HK",
+      "name": "2319.HK",
+      "gm_range_pp": 4.7,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     },
+     {
+      "ticker": "2331.HK",
+      "name": "2331.HK",
+      "gm_range_pp": 6.0,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9,
+      "lane": "稳健",
+      "gate_verdict": "NO_CYCLIC_SIGNAL",
+      "gate_hits": [],
+      "gm_window": [
+       2017,
+       2018,
+       2019,
+       2020,
+       2021,
+       2022,
+       2023,
+       2024,
+       2025
+      ]
+     }
+    ],
+    "members_all": [
+     {
+      "ticker": "0288.HK",
+      "name": "0288.HK",
+      "gm_range_pp": 3.9,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "2319.HK",
+      "name": "2319.HK",
+      "gm_range_pp": 4.7,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "2331.HK",
+      "name": "2331.HK",
+      "gm_range_pp": 6.0,
+      "resid_std": 0.01,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "2020.HK",
+      "name": "2020.HK",
+      "gm_range_pp": 13.2,
+      "resid_std": 0.02,
+      "worst_year_profitable": true,
+      "years": 9
+     },
+     {
+      "ticker": "9992.HK",
+      "name": "9992.HK",
+      "gm_range_pp": 24.5,
+      "resid_std": 0.04,
+      "worst_year_profitable": true,
+      "years": 9
+     }
+    ],
+    "notes": [
+     "行业成员来源: fundamentals.industry LIKE ['Leisure', 'Packaged Foods', 'Specialty Retail']（去重前 5 家）"
+    ]
+   }
+  ]
+ },
+ "abstain_cells": [
+  [
+   "needs-001",
+   "调味品（酱油/醋/复合调味）",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Packaged Foods']）仅命中 2 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-003",
+   "肉制品与屠宰",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Agriculture', 'Packaged Foods']）仅命中 2 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-004",
+   "休闲食品",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Consumer Defensive', 'Packaged Foods']）仅命中 2 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-005",
+   "预制菜与速冻食品",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Packaged Foods']）仅命中 2 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-006",
+   "粮食种植与种业",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Agriculture']）仅命中 0 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-007",
+   "生猪养殖",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Agriculture', 'Packaged Foods']）仅命中 2 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-008",
+   "水产养殖与捕捞",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Agriculture', 'Packaged Foods']）仅命中 2 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-012",
+   "餐饮连锁",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Restaurants', 'Travel Services']）仅命中 2 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-013",
+   "品牌服装",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Apparel Manufacturing', 'Apparel Retail', 'Footwear & Accessories', 'Luxury Goods']）仅命中 1 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-014",
+   "运动鞋服制造",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Apparel Manufacturing', 'Apparel Retail', 'Footwear & Accessories', 'Luxury Goods', 'Packaging & Containers', 'Textile Manufacturing']）仅命中 2 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-015",
+   "面料与功能性纺织",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Apparel Manufacturing', 'Packaging & Containers', 'Textile Manufacturing']）仅命中 1 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-016",
+   "珠宝与黄金饰品",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Gold', 'Luxury Goods', 'Other Precious Metals']）仅命中 2 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-017",
+   "鞋类制造与零售",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Apparel Manufacturing', 'Apparel Retail', 'Footwear & Accessories', 'Luxury Goods', 'Packaging & Containers', 'Textile Manufacturing']）仅命中 2 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-018",
+   "白电（空调/冰洗）",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Furnishings, Fixtures & Appliances', 'Household Durables']）仅命中 1 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-019",
+   "厨电与烟灶",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Building Products & Equipment', 'Household Durables']）仅命中 0 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-020",
+   "小家电与清洁电器",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Consumer Electronics', 'Household Durables']）仅命中 1 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-021",
+   "家居定制与卖场",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Apparel Retail', 'Discount Stores', 'Furnishings, Fixtures & Appliances', 'Grocery Stores', 'Home Improvement Retail', 'Specialty Retail']）仅命中 1 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-022",
+   "卫浴与五金",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Building Products & Equipment', 'Furnishings, Fixtures & Appliances', 'Home Improvement Retail', 'Household Durables']）仅命中 1 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-023",
+   "建材（防水/管材/涂料）",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Building Materials', 'Chemicals', 'Specialty Chemicals']）仅命中 1 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-024",
+   "水泥与骨料",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Building Materials']）仅命中 1 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-030",
+   "机场",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Airlines', 'Airports & Air Services']）仅命中 0 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-032",
+   "航空公司",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Airlines', 'Airports & Air Services']）仅命中 0 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-037",
+   "汽车零部件",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Auto Parts']）仅命中 0 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-038",
+   "经销商与汽车后市场",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Auto & Truck Dealerships', 'Auto Parts']）仅命中 1 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-043",
+   "CXO（研发生产外包）",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Diagnostics & Research', 'Health Information Services', 'Medical Care Facilities']）仅命中 1 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-044",
+   "医疗器械",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Diagnostics & Research', 'Medical Devices', 'Medical Distribution', 'Medical Instruments']）仅命中 2 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-045",
+   "高值耗材与骨科",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Diagnostics & Research', 'Medical Devices', 'Medical Distribution', 'Medical Instruments']）仅命中 2 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-047",
+   "中药与品牌 OTC",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Drug Manufacturers', 'Health Care Plans']）仅命中 2 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-049",
+   "医疗服务与眼科/口腔",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Diagnostics & Research', 'Health Information Services', 'Medical Care Facilities']）仅命中 1 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-053",
+   "电网设备与特高压",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Electrical Equipment & Parts', 'Utilities - Independent Power Producers']）仅命中 2 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-055",
+   "风电光伏制造",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Aerospace & Defense', 'Electrical Equipment & Parts', 'Semiconductors', 'Solar']）仅命中 2 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-056",
+   "储能与电池",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Auto Parts', 'Consumer Electronics', 'Electrical Equipment & Parts']）仅命中 1 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-057",
+   "煤炭",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Coal']）仅命中 1 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-060",
+   "燃气与城燃",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Utilities - Diversified', 'Utilities - Regulated Gas']）仅命中 2 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-061",
+   "锂钴镍资源",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Copper', 'Gold', 'Other Industrial Metals & Mining', 'Other Precious Metals']）仅命中 1 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-062",
+   "AI 芯片设计",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Semiconductor Equipment & Materials', 'Semiconductors']）仅命中 1 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-063",
+   "晶圆代工",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Semiconductor Equipment & Materials', 'Semiconductors']）仅命中 1 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-064",
+   "存储半导体",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Semiconductor Equipment & Materials', 'Semiconductors']）仅命中 1 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-065",
+   "半导体设备与材料",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Semiconductor Equipment & Materials', 'Semiconductors']）仅命中 1 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-067",
+   "服务器与 ODM",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Computer Hardware', 'Consumer Electronics', 'Contract Manufacturing', 'Information Technology Services']）仅命中 2 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-071",
+   "EDA 与 IP",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Software - Application', 'Software - Infrastructure', 'Software Development']）仅命中 0 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-073",
+   "支付硬件与 POS",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Auto Parts', 'Computer Hardware', 'Consumer Electronics', 'Contract Manufacturing', 'Information Technology Services']）仅命中 2 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-074",
+   "跨境支付与换汇",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Asset Management', 'Capital Markets', 'Credit Services', 'Financial Data & Stock Exchanges']）仅命中 1 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-076",
+   "主设备商与光纤光缆",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Communication Equipment', 'Electronic Components']）仅命中 2 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-077",
+   "卫星与导航",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Aerospace & Defense', 'Communication Equipment', 'Electronic Components']）仅命中 2 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-078",
+   "网络安全",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Information Technology Services', 'Internet Content & Information', 'Software - Application', 'Software - Infrastructure', 'Software Development']）仅命中 2 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-079",
+   "军工电子与红外",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Aerospace & Defense', 'Electronic Components']）仅命中 2 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-080",
+   "军工主机与锻件",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Aerospace & Defense']）仅命中 0 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-081",
+   "身份认证与密码管理",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Software - Application', 'Software - Infrastructure', 'Software Development']）仅命中 0 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-082",
+   "职业教育与招录培训",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Education & Training Services']）仅命中 0 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-083",
+   "K9 课外与素质教育",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Education & Training Services']）仅命中 0 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-084",
+   "高教与学历集团",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Education & Training Services']）仅命中 0 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-085",
+   "教育信息化",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Education & Training Services', 'Software - Application', 'Software - Infrastructure', 'Software Development']）仅命中 0 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-086",
+   "游戏",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Electronic Gaming & Multimedia', 'Entertainment']）仅命中 1 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-087",
+   "长视频与内容",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Broadcasting', 'Entertainment', 'Internet Content & Information']）仅命中 2 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-090",
+   "博彩（澳门/拉斯维加斯）",
+   "格子 needs-090 无 sw_codes 映射到英文行业关键词（sw_global_map），港美成员定位不可用 → 走 AI 常识名单"
+  ],
+  [
+   "needs-092",
+   "养老照护与养老社区",
+   "格子 needs-092 无 sw_codes 映射到英文行业关键词（sw_global_map），港美成员定位不可用 → 走 AI 常识名单"
+  ],
+  [
+   "needs-093",
+   "康复与护理设备",
+   "格子 needs-093 无 sw_codes 映射到英文行业关键词（sw_global_map），港美成员定位不可用 → 走 AI 常识名单"
+  ],
+  [
+   "needs-094",
+   "殡葬",
+   "格子 needs-094 无 sw_codes 映射到英文行业关键词（sw_global_map），港美成员定位不可用 → 走 AI 常识名单"
+  ],
+  [
+   "needs-095",
+   "银发经济与适老消费",
+   "格子 needs-095 无 sw_codes 映射到英文行业关键词（sw_global_map），港美成员定位不可用 → 走 AI 常识名单"
+  ],
+  [
+   "needs-096",
+   "财富管理与代销",
+   "行业成员来源: fundamentals.industry LIKE ['Banks - Diversified', 'Banks - Regional', 'Capital Markets', 'Financial Data & Stock Exchanges']（去重前 7 家）；HK 成员中无一家 ≥5 个年度毛利率点，排序器 ABSTAIN → 先跑 fengexpand_fin_global 回填更多标的"
+  ],
+  [
+   "needs-097",
+   "保险（财险/寿险）",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Insurance - Diversified', 'Insurance - Life', 'Insurance - Property & Casualty', 'Insurance - Reinsurance']）仅命中 2 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-098",
+   "银行",
+   "行业成员来源: fundamentals.industry LIKE ['Banks - Diversified', 'Banks - Regional']（去重前 6 家）；HK 成员中无一家 ≥5 个年度毛利率点，排序器 ABSTAIN → 先跑 fengexpand_fin_global 回填更多标的"
+  ],
+  [
+   "needs-099",
+   "交易所与清算",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Asset Management', 'Capital Markets', 'Credit Services', 'Financial Data & Stock Exchanges']）仅命中 1 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-100",
+   "券商与投行",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Capital Markets', 'Financial Data & Stock Exchanges']）仅命中 1 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-101",
+   "资产管理",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Asset Management', 'Capital Markets', 'Credit Services', 'Financial Data & Stock Exchanges']）仅命中 1 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-102",
+   "征信与金融数据服务",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Information Technology Services', 'Internet Content & Information', 'Software - Application', 'Software - Infrastructure', 'Software Development']）仅命中 2 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ],
+  [
+   "needs-103",
+   "金融租赁与消费金融",
+   "HK 行业标注（fundamentals×sw_global_map 关键词 ['Asset Management', 'Capital Markets', 'Credit Services', 'Financial Data & Stock Exchanges']）仅命中 1 家（<3，标注覆盖不足），排序器 ABSTAIN → 走 AI 常识名单；扩大覆盖需回填更多 fundamentals 行业标注"
+  ]
+ ]
+}

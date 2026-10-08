@@ -16,7 +16,17 @@ os.environ.pop("HTTPS_PROXY", None)
 os.environ.pop("http_proxy", None)
 os.environ.pop("https_proxy", None)
 
+import re
 import yfinance as yf
+
+
+def _norm_yf_code(ticker):
+    """yfinance 港股代码去前导零：09988.HK → 9988.HK（Yahoo 对 5 位码返 404）。"""
+    t = str(ticker).upper().strip()
+    m = re.match(r'^0(\d{4})\.HK$', t)
+    return f"{m.group(1)}.HK" if m else t
+
+
 import pandas as pd
 
 
@@ -27,7 +37,7 @@ def _light(level: str, emoji: str) -> str:
 
 def check_no_knife(ticker: str) -> dict:
     """L1-1: 不接飞刀"""
-    t = yf.Ticker(ticker)
+    t = yf.Ticker(_norm_yf_code(ticker))
     hist = t.history(period="1y")
     info = t.info or {}
     # yfinance默认auto_adjust=True → Close为前复权价格（除息调整）
@@ -119,7 +129,7 @@ def check_no_knife(ticker: str) -> dict:
 
 def check_no_fomo(ticker: str) -> dict:
     """L1-2: 不蹭热点"""
-    t = yf.Ticker(ticker)
+    t = yf.Ticker(_norm_yf_code(ticker))
     hist = t.history(period="6mo")
     c = hist["Close"]
 
@@ -159,7 +169,7 @@ def check_no_leverage(ticker: str) -> dict:
 
 def check_true_value(ticker: str) -> dict:
     """L1-4: 真价值"""
-    t = yf.Ticker(ticker)
+    t = yf.Ticker(_norm_yf_code(ticker))
     info = t.info or {}
 
     fcf = info.get("freeCashflow")
@@ -212,7 +222,7 @@ def check_no_2638(ticker: str) -> dict:
     """DK: no_2638 — 大盘位置检查（A股2638分界 / 港股年线 / 美股年线）"""
     idx_ticker = _market_index_for(ticker)
     try:
-        idx = yf.Ticker(idx_ticker)
+        idx = yf.Ticker(_norm_yf_code(idx_ticker))
         hist = idx.history(period="1y")
         c = hist["Close"]
         price = float(c.iloc[-1])
@@ -269,7 +279,7 @@ def check_no_2638(ticker: str) -> dict:
 
 def check_no_chasing(ticker: str) -> dict:
     """DK: no_chasing — 年线检查（个股是否在年线之上追高）"""
-    t = yf.Ticker(ticker)
+    t = yf.Ticker(_norm_yf_code(ticker))
     hist = t.history(period="1y")
     c = hist["Close"]
     price = float(c.iloc[-1])
@@ -326,7 +336,7 @@ def check_no_chasing(ticker: str) -> dict:
 
 def check_no_first_mover(ticker: str) -> dict:
     """DK: no_first_mover — 后发制人（右侧确认检查）"""
-    t = yf.Ticker(ticker)
+    t = yf.Ticker(_norm_yf_code(ticker))
     hist = t.history(period="1y")
     c = hist["Close"]
     price = float(c.iloc[-1])
@@ -403,7 +413,7 @@ def check_no_first_mover(ticker: str) -> dict:
 
 def check_divergence_consensus(ticker: str) -> dict:
     """DK: divergence_or_consensus — 买分歧卖共识（分歧/共识判断）"""
-    t = yf.Ticker(ticker)
+    t = yf.Ticker(_norm_yf_code(ticker))
     hist = t.history(period="6mo")
     c = hist["Close"]
     price = float(c.iloc[-1])

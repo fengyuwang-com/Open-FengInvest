@@ -169,7 +169,7 @@ def cmd_check(ticker, step):
         print(f"ERROR: 状态文件不存在。请先通过 Skill(\"fenginvest\") 入口启动。")
         return 1
 
-    with open(path) as f:
+    with open(path, encoding="utf-8") as f:
         state = json.load(f)
 
     step = step.lower()
@@ -363,7 +363,7 @@ def cmd_complete(ticker, step, output_file=None, verify=True):
         _log_event(ticker, "complete_fail", step or "?", "error", "state file not found")
         return 1
 
-    with open(path) as f:
+    with open(path, encoding="utf-8") as f:
         state = json.load(f)
 
     step = step.lower()
@@ -421,7 +421,7 @@ def cmd_status(ticker):
     if not os.path.exists(path):
         print(f"无进行中的分析: {ticker.upper()}")
         return 1
-    with open(path) as f:
+    with open(path, encoding="utf-8") as f:
         state = json.load(f)
     done = set(state.get("completed", {}))
     print("=== " + ticker.upper() + " 分析状态 ===")
@@ -443,7 +443,7 @@ def cmd_accept(ticker, step):
     if not os.path.exists(path):
         print(f"ERROR: 状态文件不存在: {ticker.upper()}")
         return 1
-    with open(path) as f:
+    with open(path, encoding="utf-8") as f:
         state = json.load(f)
     done = state.get("completed", {})
     if step not in done:
@@ -555,7 +555,7 @@ def cmd_verify(ticker):
     if not os.path.exists(path):
         print(f"ERROR: 状态文件不存在: {ticker.upper()}")
         return 1
-    with open(path) as f:
+    with open(path, encoding="utf-8") as f:
         state = json.load(f)
     done = state.get("completed", {})
     if not done:
@@ -614,7 +614,7 @@ def cmd_skip(ticker):
         print(f"ERROR: 状态文件不存在: {ticker.upper()}")
         return 1
 
-    with open(path) as f:
+    with open(path, encoding="utf-8") as f:
         state = json.load(f)
 
     if state.get("status") != "active":

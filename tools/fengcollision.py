@@ -937,7 +937,7 @@ def _find_file(ticker: str, prefix: str) -> str:
     state_file = os.path.join(state_dir, f"temp_state_{ticker.upper()}.json")
     if os.path.exists(state_file):
         try:
-            with open(state_file) as f:
+            with open(state_file, encoding="utf-8") as f:
                 state = json.load(f)
             for layer, info in state.get("completed", {}).items():
                 if layer == prefix and info.get("output"):

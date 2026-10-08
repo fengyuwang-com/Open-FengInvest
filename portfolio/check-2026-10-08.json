@@ -1,0 +1,24 @@
+{
+  "checked_at": "2026-10-08T16:22:30.947069",
+  "overall_light": "RED",
+  "dashboard": {
+    "total_position": "90%",
+    "cash": "10%",
+    "position_count": 5,
+    "sector_weights": {
+      "互联网": "42%",
+      "煤炭": "22%",
+      "白酒": "13%",
+      "消费电子": "13%"
+    },
+    "warnings": [
+      "🔴 单标超限: 09988.HK (33.5% > 20%)",
+      "🔴 单标超限: 601088.SS (21.6% > 20%)",
+      "🔴 行业超限: 互联网 (42% > 30%)"
+    ]
+  },
+  "drawdown": {
+    "max_single_drawdown": -8.9,
+    "worst_position": "3690.HK"
+  }
+}

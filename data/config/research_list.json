@@ -1,0 +1,329 @@
+{
+  "_说明": "研究清单——所有正在研究或观察的公司，独立于持仓(holdings/)。status 取值: researching=在研(七层分析中/已分析), candidate=候选池(批量筛选幸存者,未做七层), watching=观察中(等待击球区或触发条件), parked=暂缓(不再研究但记录原因,如泡泡玛特)。进持仓后不从这里删除,只把 status 改为 holding(并在 holdings/ 建档)。",
+  "_字段": "ticker | name | status | added(加入日期) | note(一句话为什么在清单里) | updated(最后更新)",
+  "companies": [
+    {
+      "ticker": "9992.HK",
+      "name": "泡泡玛特",
+      "status": "parked",
+      "added": "2026-08-27",
+      "note": "十二轮讨论定稿：赛马后不重注，IP无内容资产；带复活条件(轻内容路线验证成功可重开)",
+      "updated": "2026-08-29"
+    },
+    {
+      "ticker": "NVDA",
+      "name": "英伟达",
+      "status": "watching",
+      "added": "2026-08-29",
+      "note": "关注领域=成长引擎型代表；等击球区",
+      "updated": "2026-08-29"
+    },
+    {
+      "ticker": "601000.SS",
+      "name": "唐山港",
+      "status": "watching",
+      "added": "2026-08-29",
+      "note": "七层分析完成 2026-09-16（research/060-companies/601000.SS-唐山港/2026-09-16/，fengcheck PASS 42/42）：京唐港区垄断岸线、收过路费，会计干净/护城河真实但无定价权（单位装卸收入六年零趋势）。裁决 WAIT @ 0%（置信 0.35 low，命中规则 13 安全边际<30%）；触发价 4.40 元（安全边际达 30%）。原 BORDERLINE 定夺点已解：吞吐量由腹地钢铁/煤电实体需求驱动、非本地产能内部循环，但下游结构性见顶（86.8% 货种绑定钢铁/煤电）。2026-09-16 接力验收通过（机器硬门 exit0 + 人工四项全过）后由 researching 转 watching：分析已完结、裁决为等价格，留在研究队列会变成永久的假队列成员",
+      "updated": "2026-09-16"
+    },
+    {
+      "ticker": "000672.SZ",
+      "name": "上峰水泥",
+      "status": "parked",
+      "added": "2026-08-29",
+      "note": "七层前分级已否：纯周期（收入由大宗商品价格/运价主导），创始人 2026-09-16 立规不研究。详见 research/120-idea-sourcing/rejected/cn_dividend-20260829-护城河分级.md",
+      "updated": "2026-09-16"
+    },
+    {
+      "ticker": "600012.SS",
+      "name": "皖通高速",
+      "status": "candidate",
+      "added": "2026-08-29",
+      "note": "护城河分级 KEEP：政府授予的收费公路特许经营权（排他+期限30/40年）+ 路产位置不可复制；收入=政府定价通行费×车流量，非大宗商品驱动。风险点=收费期限到期不续则护城河归零",
+      "updated": "2026-09-16"
+    },
+    {
+      "ticker": "002756.SZ",
+      "name": "永兴材料",
+      "status": "parked",
+      "added": "2026-08-29",
+      "note": "七层前分级已否：纯周期（收入由大宗商品价格/运价主导），创始人 2026-09-16 立规不研究。详见 research/120-idea-sourcing/rejected/cn_dividend-20260829-护城河分级.md",
+      "updated": "2026-09-16"
+    },
+    {
+      "ticker": "601101.SS",
+      "name": "昊华能源",
+      "status": "parked",
+      "added": "2026-08-29",
+      "note": "七层前分级已否：纯周期（收入由大宗商品价格/运价主导），创始人 2026-09-16 立规不研究。详见 research/120-idea-sourcing/rejected/cn_dividend-20260829-护城河分级.md",
+      "updated": "2026-09-16"
+    },
+    {
+      "ticker": "601225.SS",
+      "name": "陕西煤业",
+      "status": "parked",
+      "added": "2026-08-29",
+      "note": "七层前分级已否：纯周期（收入由大宗商品价格/运价主导），创始人 2026-09-16 立规不研究。详见 research/120-idea-sourcing/rejected/cn_dividend-20260829-护城河分级.md",
+      "updated": "2026-09-16"
+    },
+    {
+      "ticker": "600938.SS",
+      "name": "中国海油",
+      "status": "parked",
+      "added": "2026-08-29",
+      "note": "七层前分级已否：纯周期（收入由大宗商品价格/运价主导），创始人 2026-09-16 立规不研究。详见 research/120-idea-sourcing/rejected/cn_dividend-20260829-护城河分级.md",
+      "updated": "2026-09-16"
+    },
+    {
+      "ticker": "000408.SZ",
+      "name": "藏格矿业",
+      "status": "parked",
+      "added": "2026-08-29",
+      "note": "七层前分级已否：纯周期（收入由大宗商品价格/运价主导），创始人 2026-09-16 立规不研究。详见 research/120-idea-sourcing/rejected/cn_dividend-20260829-护城河分级.md",
+      "updated": "2026-09-16"
+    },
+    {
+      "ticker": "000651.SZ",
+      "name": "格力电器",
+      "status": "candidate",
+      "added": "2026-08-29",
+      "note": "护城河分级 KEEP：家用空调线上零售额份额 25.40% 行业第一（奥维云网）+ 品牌/自建渠道/核心部件自研；收入由消费需求驱动非商品价格。待验证点=2025 消费电器收入 -10.44% 与「有定价权」叙事方向相反",
+      "updated": "2026-09-16"
+    },
+    {
+      "ticker": "002563.SZ",
+      "name": "森马服饰",
+      "status": "parked",
+      "added": "2026-08-29",
+      "note": "七层前分级已否：无护城河（无第三方定价权证据；注意属「证据不足型」DROP，拿到份额+毛利溢价证据可复活）。详见 research/120-idea-sourcing/rejected/cn_dividend-20260829-护城河分级.md",
+      "updated": "2026-09-16"
+    },
+    {
+      "ticker": "002154.SZ",
+      "name": "报喜鸟",
+      "status": "parked",
+      "added": "2026-08-29",
+      "note": "所属批次 cn_dividend-20260829 已整批作废，本只未做定级。如将来有线索可由 /fengsource 重新走闸门",
+      "updated": "2026-09-16"
+    },
+    {
+      "ticker": "600546.SS",
+      "name": "山煤国际",
+      "status": "parked",
+      "added": "2026-08-29",
+      "note": "七层前分级已否：纯周期（收入由大宗商品价格/运价主导），创始人 2026-09-16 立规不研究。详见 research/120-idea-sourcing/rejected/cn_dividend-20260829-护城河分级.md",
+      "updated": "2026-09-16"
+    },
+    {
+      "ticker": "600398.SS",
+      "name": "海澜之家",
+      "status": "parked",
+      "added": "2026-08-29",
+      "note": "七层前分级已否：无护城河（无第三方定价权证据；注意属「证据不足型」DROP，拿到份额+毛利溢价证据可复活）。详见 research/120-idea-sourcing/rejected/cn_dividend-20260829-护城河分级.md",
+      "updated": "2026-09-16"
+    },
+    {
+      "ticker": "000933.SZ",
+      "name": "神火股份",
+      "status": "parked",
+      "added": "2026-08-29",
+      "note": "七层前分级已否：纯周期（收入由大宗商品价格/运价主导），创始人 2026-09-16 立规不研究。详见 research/120-idea-sourcing/rejected/cn_dividend-20260829-护城河分级.md",
+      "updated": "2026-09-16"
+    },
+    {
+      "ticker": "601168.SS",
+      "name": "西部矿业",
+      "status": "parked",
+      "added": "2026-08-29",
+      "note": "七层前分级已否：纯周期（收入由大宗商品价格/运价主导），创始人 2026-09-16 立规不研究。详见 research/120-idea-sourcing/rejected/cn_dividend-20260829-护城河分级.md",
+      "updated": "2026-09-16"
+    },
+    {
+      "ticker": "600256.SS",
+      "name": "广汇能源",
+      "status": "parked",
+      "added": "2026-08-29",
+      "note": "七层前分级已否：纯周期（收入由大宗商品价格/运价主导），创始人 2026-09-16 立规不研究。详见 research/120-idea-sourcing/rejected/cn_dividend-20260829-护城河分级.md",
+      "updated": "2026-09-16"
+    },
+    {
+      "ticker": "301109.SZ",
+      "name": "军信股份",
+      "status": "parked",
+      "added": "2026-08-29",
+      "note": "所属批次 cn_dividend-20260829 已整批作废，本只未做定级。如将来有线索可由 /fengsource 重新走闸门",
+      "updated": "2026-09-16"
+    },
+    {
+      "ticker": "601098.SS",
+      "name": "中南传媒",
+      "status": "parked",
+      "added": "2026-08-29",
+      "note": "所属批次 cn_dividend-20260829 已整批作废，本只未做定级。如将来有线索可由 /fengsource 重新走闸门",
+      "updated": "2026-09-16"
+    },
+    {
+      "ticker": "601216.SS",
+      "name": "君正集团",
+      "status": "parked",
+      "added": "2026-08-29",
+      "note": "七层前分级已否：纯周期（收入由大宗商品价格/运价主导），创始人 2026-09-16 立规不研究。详见 research/120-idea-sourcing/rejected/cn_dividend-20260829-护城河分级.md",
+      "updated": "2026-09-16"
+    },
+    {
+      "ticker": "603565.SS",
+      "name": "中谷物流",
+      "status": "parked",
+      "added": "2026-08-29",
+      "note": "七层前分级已否：纯周期（收入由大宗商品价格/运价主导），创始人 2026-09-16 立规不研究。详见 research/120-idea-sourcing/rejected/cn_dividend-20260829-护城河分级.md",
+      "updated": "2026-09-16"
+    },
+    {
+      "ticker": "603706.SS",
+      "name": "东方环宇",
+      "status": "parked",
+      "added": "2026-08-29",
+      "note": "所属批次 cn_dividend-20260829 已整批作废，本只未做定级。如将来有线索可由 /fengsource 重新走闸门",
+      "updated": "2026-09-16"
+    },
+    {
+      "ticker": "600177.SS",
+      "name": "雅戈尔",
+      "status": "parked",
+      "added": "2026-08-29",
+      "note": "所属批次 cn_dividend-20260829 已整批作废，本只未做定级。如将来有线索可由 /fengsource 重新走闸门",
+      "updated": "2026-09-16"
+    },
+    {
+      "ticker": "600757.SS",
+      "name": "长江传媒",
+      "status": "parked",
+      "added": "2026-08-29",
+      "note": "所属批次 cn_dividend-20260829 已整批作废，本只未做定级。如将来有线索可由 /fengsource 重新走闸门",
+      "updated": "2026-09-16"
+    },
+    {
+      "ticker": "601001.SS",
+      "name": "晋控煤业",
+      "status": "parked",
+      "added": "2026-08-29",
+      "note": "七层前分级已否：纯周期（收入由大宗商品价格/运价主导），创始人 2026-09-16 立规不研究。详见 research/120-idea-sourcing/rejected/cn_dividend-20260829-护城河分级.md",
+      "updated": "2026-09-16"
+    },
+    {
+      "ticker": "159766.SZ",
+      "name": "富国中证旅游主题ETF",
+      "status": "parked",
+      "added": "2026-09-12",
+      "note": "2026-09-12 七层完成：PASS@0%（护城河制度性降租+三维全红），复审2027-05触发器见 06-collision.json"
+    },
+    {
+      "ticker": "LVHI",
+      "name": "富兰克林国际低波高息ETF",
+      "status": "watching",
+      "added": "2026-09-13",
+      "updated": "2026-09-13",
+      "note": "七层分析完成=WAIT@0%（置信0.65，fengcheck PASS 42/42）。触发器：回撤≥25-30%($30-32)且PE≤11→DCA评估(单笔≤2%/总≤5%)；SEC净收益率≥3.5%且降息落地；红线=削减分配/ROC扩大/AUM<$20亿→parked。复评2026-09-16 FOMC后+每季度。产物 research/060-companies/LVHI-富兰克林国际低波高息ETF/2026-09-12/"
+    },
+    {
+      "ticker": "AAPL",
+      "name": "苹果",
+      "status": "watching",
+      "added": "2026-09-15",
+      "note": "七层分析完成(2026-09-15)：好生意/护城河达标但安全边际为负(目标价$259 vs 现价$333.08)，L3判 WAIT@0%；等 $230-$262 重入带或倍数回落(PE<=30x)再评估",
+      "updated": "2026-09-15"
+    },
+    {
+      "ticker": "MU",
+      "name": "美光科技",
+      "status": "watching",
+      "added": "2026-09-16",
+      "note": "七层分析完成 2026-09-16（research/060-companies/MU-美光科技/2026-09-16/，fengcheck 42/42 PASS）：HBM 三寡头之一，周期之上有结构（AI 驱动的 HBM 份额与 DRAM 寡头格局），但当前裁决 PASS @ 0%（L1 硬纪律 RED：收在 924.03 对年线 MA250 540.82 偏离 +70.9% 命中 no_chasing；L3 规则 10：DK 息价原则🔴）。周期之上的护城河论证已立：HBM 技术代差 + 三家寡头供给纪律；未过的是价格（无安全边际）。创始人指定的价格疑点（52 周区间约 10 倍）已四源核证属实、排除拆分/源错/代码错，留档 sources/PRICE-VERIFICATION.md",
+      "updated": "2026-09-16"
+    },
+    {
+      "ticker": "000660.KS",
+      "name": "SK海力士",
+      "status": "watching",
+      "added": "2026-09-16",
+      "note": "七层分析完成 2026-09-16（research/060-companies/000660.KS-SK海力士/2026-09-16/，fengcheck 42/42 PASS）：好生意、真护城河、真结构变化（HBM 领先），但裁决 WAIT @ 0%（置信 0.35 low）——三条独立理由：① L1 硬纪律 年线偏离 MA250 +46.0%（1,716,000 / 1,175,288）>30% 硬拦截；② L2a 息价原则 安全边际<30%（PB 4.63）；③ 引擎规范运行 DATA_BLIND 分支明文让位 L2a。等价格，不是关门。创始人指定的 52 周区间疑点已三口径并列核证（fengdata 250 根 10.901× / 365 天 9.011× / naver 官方 9.015×），并排除未复权拆股",
+      "updated": "2026-09-16"
+    },
+    {
+      "ticker": "005930.KS",
+      "name": "三星电子",
+      "status": "researching",
+      "added": "2026-09-16",
+      "note": "创始人 2026-09-16 点名研究；存储+代工+终端综合半导体。韩股行情走 fengstockintl(naver)",
+      "updated": "2026-09-16"
+    },
+    {
+      "ticker": "600900.SS",
+      "name": "长江电力",
+      "status": "parked",
+      "note": "创始人 2026-09-20 明确拒绝（已研究过，不再研究）；fengsource 当日误立 candidate 已纠正。闸门记录与来源保留于 rejected/600900.SS-长江电力-创始人明确拒绝.md",
+      "added": "2026-09-20",
+      "updated": "2026-09-20"
+    },
+    {
+      "ticker": "002050.SZ",
+      "name": "三花智控",
+      "status": "candidate",
+      "note": "fengsource 路径3 发现 2026-09-20，闸门0/1/2 通过（规模+技术代差：电子膨胀阀全球53%）；待验证点=车用热管理2025首现下滑；候选卡 research/120-idea-sourcing/pool/002050.SZ.md",
+      "added": "2026-09-20",
+      "updated": "2026-09-20"
+    },
+    {
+      "ticker": "601298.SH",
+      "name": "青岛港",
+      "status": "candidate",
+      "note": "fengsource 路径3 发现 2026-09-20，闸门0/1/2 通过（特许+规模：全球货物吞吐量第四）；估值坐标沿用唐山港30%安全边际框架；候选卡 research/120-idea-sourcing/pool/601298.SH.md",
+      "added": "2026-09-20",
+      "updated": "2026-09-20"
+    },
+    {
+      "ticker": "1997.HK",
+      "name": "九龙仓置业",
+      "status": "candidate",
+      "note": "fengsource 路径3 HSI宇宙 发现 2026-09-20，闸门0/1/2 通过（特许型：海港城+时代广场地标收租，呎租+2.8%）；七层必答题=香港零售结构性侵蚀（对照领展先例）；候选卡 research/120-idea-sourcing/pool/1997.HK.md",
+      "added": "2026-09-20",
+      "updated": "2026-09-20"
+    },
+    {
+      "ticker": "0101.HK",
+      "name": "恒隆地产",
+      "status": "candidate",
+      "note": "fengsource 路径3 HSI宇宙 发现 2026-09-20，闸门0/1/2 通过（特许+转换成本：内地高端商场租出率96%，上海恒隆收入+8%）；候选卡 research/120-idea-sourcing/pool/0101.HK.md",
+      "added": "2026-09-20",
+      "updated": "2026-09-20"
+    },
+    {
+      "ticker": "00902.HK",
+      "name": "华能国际电力股份",
+      "status": "watching",
+      "added": "2026-09-29",
+      "updated": "2026-09-29",
+      "note": "七层分析完成 2026-09-29（research/060-companies/00902.HK-华能国际电力股份/2026-09-29/，fengcheck 五门全绿）：🟡 WAIT @ 0%（置信 low 0.35，规则13）。永续债口径陷阱=表观PB 0.56失真，普通股口径PB≈1.23/ROE≈14.25%/PE_TTM 8.6×；股息率7.88%税前，分红覆盖10.7×。触发价：4.16 HKD（安全边际30%）或4.06 HKD（股息率10%），或右侧确认（MA50上穿MA120/收复年线6.04）。等价格，不是关门。"
+    },
+    {
+      "ticker": "600023.SS",
+      "name": "浙能电力",
+      "status": "watching",
+      "added": "2026-09-29",
+      "updated": "2026-09-29",
+      "note": "七层分析完成 2026-09-29（research/060-companies/600023.SS-浙能电力/2026-09-29/，用户口述『浙能股份』，上市简称实为浙能电力）。最终判定：0% 仓位不建仓（L3 规则1 fired=好生意/护城河 RED，position_pct=0；注意 fengcollision 的 decision='PASS' 在 0% 时语义=淘汰，判据是 @ 0%）。核心数字：现价 5.18(09-29)/5.14(09-24 库)；PE TTM 12.63=3年78.2%分位；PB 0.929 配 ROE 5.53%（破净=低回报定价非折价）；股息率 6.37% 但 2026 中期 DPS -60%；2026H1 归母 15.03亿 -57.21%，联营合营投资收益 16.19亿=归母 107.7%（投资者引述口径，核电分项未单独披露→剔后主业亏损区间 -1.16~-3.82亿 全负）；中性 IV ~3.8 元 → 安全边际 -35%(5.14)/-36%(5.18)，安全买点 2.66 元；fengcheck PASS 42/42（AUDIT_REPORT.md）。重看触发器（任一满足重跑）：①价 <2.66；②剔权益法后主业转正或显著收窄；③浙江 2027 长协电价企稳；④年报 DPS 恢复 0.33 量级；⑤组合互联网集中度处置完成。"
+    },
+    {
+      "ticker": "0836.HK",
+      "name": "华润电力",
+      "market": "CN_HK",
+      "status": "watching",
+      "added": "2026-09-30",
+      "decision": "WAIT@0%",
+      "decision_date": "2026-09-30",
+      "confidence": 0.35,
+      "note": "规则4 BUY判定经AI仲裁下调WAIT@0%（规则13安全边际4%<30%=强WAIT建议，2026-09-30创始人立规后为判断依据非机械裁决）；PE7.68/PB0.836/股息5.55%低估值但价格不够便宜；2026H1归母-15.5%+煤价反弹990元/吨。重看触发器：煤价回落800下方/股价≤16港元/派息率上修50%承诺/FCF转正/2026年报新能源机制电价企稳",
+      "source": "fenginvest 2026-09-30 七层"
+    }
+  ]
+}

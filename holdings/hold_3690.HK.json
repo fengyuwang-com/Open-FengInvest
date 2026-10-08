@@ -1,0 +1,94 @@
+{
+  "_demo": true,
+  "_demo_note": "影子数据（AGENTS.md §一.3 影子替代原则）：本文件为美团 3690.HK 虚构替代持仓，份额/成本/盈亏均为编造，非真实持仓、非投资建议。派生指标由工具真算。",
+  "id": "3690.HK",
+  "name": "美团-W（影子）",
+  "asset_type": "stock",
+  "currency": "HKD",
+  "capital_zone": "CN_IN",
+  "market_access": "hksi",
+  "market": "CN_OVS",
+  "segment": "互联网",
+  "qualifier": null,
+  "broker": "DEMO_BROKER",
+  "account_type": "INVESTMENT",
+  "lifecycle_phase": "holding",
+  "position": {
+    "shares": 400,
+    "avg_cost": 76.0,
+    "current_price": 69.19999694824219,
+    "market_value": 27679.998779296875,
+    "unrealized_pl": -2720.0
+  },
+  "capital": {
+    "cost_basis": 30400.0,
+    "cost_basis_equiv_cny": 27968.0,
+    "currency": "CNY",
+    "realized_pl": 0,
+    "market_value_equiv_cny": 25465.6
+  },
+  "capital_rollover": {
+    "total_invested": 30400.0,
+    "recovered": 0,
+    "recoverable_at_price": null,
+    "zero_cost_shares": 0,
+    "phase": "capital_at_risk"
+  },
+  "trades": [
+    {
+      "date": "2026-08-05",
+      "action": "BUY",
+      "shares": 400,
+      "price": 76.0,
+      "note": "影子交易记录（虚构）"
+    }
+  ],
+  "thesis": {
+    "original": "影子论文：本地生活护城河 + 到店业务利润释放，外卖大战补贴见顶。",
+    "summary": "影子论文：份额稳 + 利润率回升 + 估值处于历史低位",
+    "principles": [
+      "坐标原则",
+      "息价原则"
+    ],
+    "benchmark": null,
+    "valuation_gap": 0.3,
+    "expected_return": 0.35,
+    "time_horizon_months": 24,
+    "exit_conditions": [
+      "论文失效：外卖份额连续两季下滑",
+      "红线：补贴战重新升级"
+    ],
+    "mirror_test": "影子：我以 76 港元买入美团，因为本地生活双寡头+利润率回升，估值折让约 30%，错了下行可控。",
+    "financials_asof": "2026-Q2（影子虚构）",
+    "hypotheses": [
+      {
+        "text": "到店酒旅毛利率稳定在 35%+",
+        "state": "unknown"
+      }
+    ],
+    "redlines": [
+      {
+        "text": "外卖市占率跌破 60%",
+        "state": "intact"
+      }
+    ]
+  },
+  "reviews": [],
+  "triggers": {
+    "next_review_date": "2026-12-20"
+  },
+  "meta": {
+    "created_at": "2026-08-05",
+    "updated_at": "2026-10-08 16:20",
+    "version": 2,
+    "source": "demo",
+    "fx_rates": {
+      "date": "2026-10-08",
+      "HKD_CNY": 0.92,
+      "USD_CNY": 6.74,
+      "source": "影子快照"
+    },
+    "note": "DEMO 影子持仓"
+  },
+  "health_score": 7
+}

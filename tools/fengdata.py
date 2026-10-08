@@ -66,6 +66,18 @@ def _to_yahoo_code(ticker: str) -> str:
     return t
 
 
+def _norm_yf_code(ticker: str) -> str:
+    """yfinance 港股代码去前导零：09988.HK → 9988.HK（4 位如 0700.HK 不动）。
+
+    Yahoo 对 5 位港股代码（09988/01024 风格）返回 404，只认 4 位风格。
+    """
+    t = ticker.upper().strip()
+    m = re.match(r'^0(\d{4})\.HK$', t)
+    if m:
+        return f"{m.group(1)}.HK"
+    return t
+
+
 # ─── Backend detection ──────────────────────────────────────────
 
 _FUTU_AVAILABLE = None
@@ -591,25 +603,57 @@ def _update_holdings_prices():
         ticker = m.group(1)
         code = _to_futu_code(ticker)
         try:
-            from futu import OpenQuoteContext, RET_OK
-            ctx = OpenQuoteContext(host='127.0.0.1', port=11111)
-            ret, snap = ctx.get_market_snapshot([code])
-            ctx.close()
-            if ret != RET_OK:
-                failed.append({"ticker": ticker, "error": "Futu snapshot failed"})
-                continue
-            row = snap.iloc[0] if hasattr(snap, 'iloc') else snap[0]
-            price = float(row.get('last_price', 0) if hasattr(row, 'get') else getattr(row, 'last_price', 0))
-            if price <= 0:
-                failed.append({"ticker": ticker, "error": "zero price"})
+            # ── 主源：Futu OpenD 快照 ──
+            price = None
+            err = None
+            try:
+                from futu import OpenQuoteContext, RET_OK
+                ctx = OpenQuoteContext(host='127.0.0.1', port=11111)
+                ret, snap = ctx.get_market_snapshot([code])
+                ctx.close()
+                if ret == RET_OK:
+                    row = snap.iloc[0] if hasattr(snap, 'iloc') else snap[0]
+                    p0 = float(row.get('last_price', 0) if hasattr(row, 'get') else getattr(row, 'last_price', 0))
+                    if p0 > 0:
+                        price = p0
+                    else:
+                        err = "Futu zero price"
+                else:
+                    err = "Futu snapshot failed"
+            except Exception as e:
+                err = f"Futu: {str(e)[:60]}"
+            # ── 回退：yfinance（无 Futu OpenD 环境也能跑，开源版必需）──
+            if price is None:
+                try:
+                    import yfinance as yf
+                    hist = yf.Ticker(_norm_yf_code(ticker)).history(period="5d")
+                    c = hist["Close"].dropna() if not hist.empty else []
+                    if len(c) > 0:
+                        price = float(c.iloc[-1])
+                    else:
+                        err = (err + "; " if err else "") + "yfinance empty"
+                except Exception as e:
+                    err = (err + "; " if err else "") + f"yf: {str(e)[:60]}"
+            if price is None:
+                failed.append({"ticker": ticker, "error": err or "no price source"})
                 continue
             # Update the holding file
             fpath = os.path.join(holdings_dir, fname)
             with open(fpath, "r", encoding="utf-8") as fh:
                 h = json.load(fh)
             old_price = h.get("position", {}).get("current_price", 0)
-            h.setdefault("position", {})["current_price"] = price
-            h.setdefault("position", {})["market_value"] = price * h["position"].get("shares", 0)
+            pos = h.setdefault("position", {})
+            shares = pos.get("shares", 0)
+            avg_cost = pos.get("avg_cost", 0)
+            pos["current_price"] = price
+            pos["market_value"] = price * shares
+            pos["unrealized_pl"] = round((price - avg_cost) * shares, 2)
+            # 派生字段一并重算（人民币等值，按 meta.fx_rates 快照口径）
+            cur = (h.get("currency") or "CNY").upper()
+            fx = (h.get("meta") or {}).get("fx_rates") or {}
+            rate = 1.0 if cur == "CNY" else fx.get(f"{cur}_CNY")
+            if h.get("capital") and rate:
+                h["capital"]["market_value_equiv_cny"] = round(pos["market_value"] * rate, 2)
             h.setdefault("meta", {})["updated_at"] = datetime.now().strftime("%Y-%m-%d %H:%M")
             with open(fpath, "w", encoding="utf-8") as fh:
                 json.dump(h, fh, indent=2, ensure_ascii=False)
@@ -652,6 +696,7 @@ def main():
         sys.exit(1)
 
     ticker = sys.argv[1].upper()
+    yf_ticker = _norm_yf_code(ticker)  # yfinance 后端用归一化代码（09988.HK→9988.HK）
     selected_modes = _ALL_MODES   # default: all
     backend = "auto"
     i = 2
@@ -712,14 +757,14 @@ def main():
         # Fallback
         if (not mode_result or "error" in mode_result) and yf_fn and backend != "futu":
             try:
-                mode_result = yf_fn(ticker)
+                mode_result = yf_fn(yf_ticker)
                 if mode_result and "error" not in mode_result:
                     mode_result["_fallback"] = True
                     sources.append({
                         "source": "yfinance",
                         "type": mode_key,
                         "fetched_at": datetime.now().isoformat(),
-                        "url": f"https://finance.yahoo.com/quote/{_to_yahoo_code(ticker)}",
+                        "url": f"https://finance.yahoo.com/quote/{_to_yahoo_code(yf_ticker)}",
                         "notes": f"BACKUP for {mode_key}",
                     })
             except Exception as e:

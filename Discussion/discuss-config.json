@@ -1,0 +1,21 @@
+{
+  "project_name": "FengInvest",
+  "discussion_dir": "Discussion",
+  "index_file": "README.md",
+  "framework_files": [
+    "docs/01-philosophy.md",
+    "knowledge/principles/坐标原则.md",
+    "knowledge/principles/家国原则.md",
+    "knowledge/principles/息价原则.md",
+    "knowledge/principles/取舍原则.md",
+    "docs/03-discipline.md",
+    "knowledge/discipline/2638法則.md",
+    "knowledge/discipline/年线法则.md",
+    "knowledge/discipline/后发制人.md",
+    "knowledge/discipline/买分歧卖共识.md",
+    "knowledge/discipline/钱仓滚存.md",
+    "knowledge/discipline/双账户制.md",
+    "knowledge/discipline/奇衡卖出艺术.md"
+  ],
+  "archive_pattern": "Discussion/YYYY-MM-DD-topic.md"
+}
