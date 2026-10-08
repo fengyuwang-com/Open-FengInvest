@@ -46,7 +46,9 @@ portfolio/
 
 # ── 个人配置与记忆 ──
 .claude/
-.agents/
+# .agents/ 下只有 skills/<name>/SKILL.md（框架正文，公开可引用），放开；其余仍排除
+.agents/*
+!.agents/skills/
 .vscode/
 .idea/
 *.code-workspace
